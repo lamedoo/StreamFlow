@@ -6,22 +6,53 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/app_main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="0dp"
+        android:background="?colorPrimary"
+        android:fillColor="?attr/colorControlNormal"
+        app:titleTextColor="?colorOnPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/main_background"
+        android:background="?colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toTopOf="@id/nav_main_bottom">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fr_nav_host"
-            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:navGraph="@navigation/main_navigation"/>
+            android:layout_height="match_parent"/>
 
     </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_main_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="15dp"
+        android:background="?colorPrimary"
+        app:elevation="0dp"
+        app:itemBackground="@null"
+        app:itemRippleColor="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        style="@style/Widget.MaterialComponents.BottomNavigationView"
+        app:itemIconTint="@color/top_nav_colors"
+        app:itemTextColor="@color/top_nav_colors"
+        app:labelVisibilityMode="labeled"
+        app:itemIconSize="32dp"
+        app:itemTextAppearanceActive="?android:attr/textAppearanceMedium"
+        app:itemTextAppearanceInactive="?android:attr/textAppearanceMedium"
+        app:menu="@menu/top_navigation_menu"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -138,8 +138,6 @@ data class MoviesList(
         data class Rating(
             @SerializedName("imdb")
             val imdb: Imdb?,
-            @SerializedName("imovies")
-            val imovies: Imovies?,
             @SerializedName("metacritic")
             val metacritic: Metacritic?,
             @SerializedName("rotten")
@@ -148,13 +146,6 @@ data class MoviesList(
             data class Imdb(
                 @SerializedName("score")
                 val score: Double?,
-                @SerializedName("voters")
-                val voters: Int?
-            )
-
-            data class Imovies(
-                @SerializedName("score")
-                val score: Int?,
                 @SerializedName("voters")
                 val voters: Int?
             )
