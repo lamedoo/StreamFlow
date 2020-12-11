@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_video_player.*
 
 class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
     private lateinit var viewModel: VideoPlayerViewModel
+    private val args: VideoPlayerFragmentArgs by navArgs()
 
     private var mPlayer: SimpleExoPlayer? = null
     private var playWhenReady = true
@@ -95,6 +97,6 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
 
         val dataSourceFactory = DefaultHttpDataSourceFactory(userAgent)
 
-        return ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(hlsUrl))
+        return ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(args.mediaLink))
     }
 }

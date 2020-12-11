@@ -5,127 +5,127 @@ import com.google.gson.annotations.SerializedName
 
 data class MovieData(
     @SerializedName("data")
-    val `data`: Data
+    val `data`: Data?
 ) {
     data class Data(
         @SerializedName("adjaraId")
-        val adjaraId: Int,
+        val adjaraId: Int?,
         @SerializedName("adult")
-        val adult: Boolean,
+        val adult: Boolean?,
         @SerializedName("akaNames")
-        val akaNames: AkaNames,
+        val akaNames: AkaNames?,
         @SerializedName("budget")
-        val budget: String,
+        val budget: String?,
         @SerializedName("canBePlayed")
-        val canBePlayed: Boolean,
+        val canBePlayed: Boolean?,
         @SerializedName("countries")
-        val countries: Countries,
+        val countries: Countries?,
         @SerializedName("cover")
-        val cover: Cover,
+        val cover: Cover?,
         @SerializedName("covers")
         val covers: Covers,
         @SerializedName("duration")
-        val duration: Int,
+        val duration: Int?,
         @SerializedName("genres")
-        val genres: Genres,
+        val genres: Genres?,
         @SerializedName("hasSubtitles")
-        val hasSubtitles: Boolean,
+        val hasSubtitles: Boolean?,
         @SerializedName("id")
-        val id: Int,
+        val id: Int?,
         @SerializedName("imdbUrl")
-        val imdbUrl: String,
+        val imdbUrl: String?,
         @SerializedName("income")
-        val income: String,
+        val income: String?,
         @SerializedName("isTvShow")
-        val isTvShow: Boolean,
+        val isTvShow: Boolean?,
         @SerializedName("languages")
-        val languages: Languages,
+        val languages: Languages?,
         @SerializedName("originalName")
-        val originalName: String,
+        val originalName: String?,
         @SerializedName("oscarNominations")
-        val oscarNominations: OscarNominations,
+        val oscarNominations: OscarNominations?,
         @SerializedName("parentalControlRate")
-        val parentalControlRate: String,
+        val parentalControlRate: String?,
         @SerializedName("plot")
-        val plot: Plot,
+        val plot: Plot?,
         @SerializedName("plots")
-        val plots: Plots,
+        val plots: Plots?,
         @SerializedName("poster")
-        val poster: String,
+        val poster: String?,
         @SerializedName("posters")
-        val posters: Posters,
+        val posters: Posters?,
         @SerializedName("primaryName")
-        val primaryName: String,
+        val primaryName: String?,
         @SerializedName("rating")
         val rating: Rating,
         @SerializedName("regionAllowed")
-        val regionAllowed: Boolean,
+        val regionAllowed: Boolean?,
         @SerializedName("releaseDate")
-        val releaseDate: String,
+        val releaseDate: String?,
         @SerializedName("seasons")
-        val seasons: Seasons,
+        val seasons: Seasons?,
         @SerializedName("secondaryName")
-        val secondaryName: String,
+        val secondaryName: String?,
         @SerializedName("studios")
-        val studios: Studios,
+        val studios: Studios?,
         @SerializedName("tertiaryName")
-        val tertiaryName: String,
+        val tertiaryName: String?,
         @SerializedName("trailers")
-        val trailers: Trailers,
+        val trailers: Trailers?,
         @SerializedName("tvcom")
-        val tvcom: Tvcom,
+        val tvcom: Tvcom?,
         @SerializedName("userFollows")
-        val userFollows: UserFollows,
+        val userFollows: UserFollows?,
         @SerializedName("userMovieLists")
-        val userMovieLists: UserMovieLists,
+        val userMovieLists: UserMovieLists?,
         @SerializedName("userRating")
-        val userRating: UserRating,
+        val userRating: UserRating?,
         @SerializedName("userSubscribed")
-        val userSubscribed: UserSubscribed,
+        val userSubscribed: UserSubscribed?,
         @SerializedName("userWantsToWatch")
-        val userWantsToWatch: UserWantsToWatch,
+        val userWantsToWatch: UserWantsToWatch?,
         @SerializedName("userWatch")
-        val userWatch: UserWatch,
+        val userWatch: UserWatch?,
         @SerializedName("vast")
-        val vast: Vast,
+        val vast: Vast?,
         @SerializedName("watchCount")
-        val watchCount: Int,
+        val watchCount: Int?,
         @SerializedName("year")
-        val year: Int
+        val year: Int?
     ) {
         data class AkaNames(
             @SerializedName("data")
-            val `data`: List<Data1>
+            val `data`: List<Data1?>?
         ) {
             data class Data1(
                 @SerializedName("name")
-                val name: String,
+                val name: String?,
                 @SerializedName("type")
-                val type: String
+                val type: String?
             )
         }
 
         data class Countries(
             @SerializedName("data")
-            val `data`: List<Data2>
+            val `data`: List<Data2?>?
         ) {
             data class Data2(
                 @SerializedName("id")
-                val id: Int,
+                val id: Int?,
                 @SerializedName("primaryName")
-                val primaryName: String,
+                val primaryName: String?,
                 @SerializedName("secondaryName")
-                val secondaryName: String,
+                val secondaryName: String?,
                 @SerializedName("tertiaryName")
-                val tertiaryName: String
+                val tertiaryName: String?
             )
         }
 
         data class Cover(
             @SerializedName("large")
-            val large: String,
+            val large: String?,
             @SerializedName("small")
-            val small: String
+            val small: String?
         )
 
         data class Covers(
@@ -134,100 +134,100 @@ data class MovieData(
         ) {
             data class Data(
                 @SerializedName("blurhash")
-                val blurhash: String,
+                val blurhash: String?,
                 @SerializedName("imageHeight")
-                val imageHeight: Int,
+                val imageHeight: Int?,
                 @SerializedName("position")
-                val position: String,
+                val position: String?,
                 @SerializedName("positionPercentage")
-                val positionPercentage: String,
+                val positionPercentage: String?,
                 @SerializedName("1050")
-                val x1050: String,
+                val x1050: String?,
                 @SerializedName("145")
-                val x145: String,
+                val x145: String?,
                 @SerializedName("1920")
-                val x1920: String,
+                val x1920: String?,
                 @SerializedName("367")
-                val x367: String,
+                val x367: String?,
                 @SerializedName("510")
-                val x510: String
+                val x510: String?
             )
         }
 
         data class Genres(
             @SerializedName("data")
-            val `data`: List<Data3>
+            val `data`: List<Data3?>?
         ) {
             data class Data3(
                 @SerializedName("backgroundImage")
-                val backgroundImage: String,
+                val backgroundImage: String?,
                 @SerializedName("id")
-                val id: Int,
+                val id: Int?,
                 @SerializedName("primaryName")
-                val primaryName: String,
+                val primaryName: String?,
                 @SerializedName("secondaryName")
-                val secondaryName: String,
+                val secondaryName: String?,
                 @SerializedName("tertiaryName")
-                val tertiaryName: String
+                val tertiaryName: String?
             )
         }
 
         data class Languages(
             @SerializedName("data")
-            val `data`: List<Data4>
+            val `data`: List<Data4?>?
         ) {
             data class Data4(
                 @SerializedName("code")
-                val code: String,
+                val code: String?,
                 @SerializedName("primaryName")
-                val primaryName: String,
+                val primaryName: String?,
                 @SerializedName("primaryNameTurned")
-                val primaryNameTurned: String,
+                val primaryNameTurned: String?,
                 @SerializedName("secondaryName")
-                val secondaryName: String,
+                val secondaryName: String?,
                 @SerializedName("tertiaryName")
-                val tertiaryName: String
+                val tertiaryName: String?
             )
         }
 
         data class OscarNominations(
             @SerializedName("data")
-            val `data`: List<Any>
+            val `data`: List<Any?>?
         )
 
         data class Plot(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("description")
-                val description: String,
+                val description: String?,
                 @SerializedName("language")
-                val language: String
+                val language: String?
             )
         }
 
         data class Plots(
             @SerializedName("data")
-            val `data`: List<Data5>
+            val `data`: List<Data5?>?
         ) {
             data class Data5(
                 @SerializedName("description")
-                val description: String,
+                val description: String?,
                 @SerializedName("language")
-                val language: String
+                val language: String?
             )
         }
 
         data class Posters(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("blurhash")
-                val blurhash: String,
+                val blurhash: String?,
                 @SerializedName("240")
-                val x240: String
+                val x240: String?
             )
         }
 
@@ -235,170 +235,170 @@ data class MovieData(
             @SerializedName("imdb")
             val imdb: Imdb,
             @SerializedName("imovies")
-            val imovies: Imovies,
+            val imovies: Imovies?,
             @SerializedName("metacritic")
-            val metacritic: Metacritic,
+            val metacritic: Metacritic?,
             @SerializedName("rotten")
-            val rotten: Rotten
+            val rotten: Rotten?
         ) {
             data class Imdb(
                 @SerializedName("score")
-                val score: Double,
+                val score: Double?,
                 @SerializedName("voters")
-                val voters: Int
+                val voters: Int?
             )
 
             data class Imovies(
                 @SerializedName("score")
-                val score: Double,
+                val score: Double?,
                 @SerializedName("voters")
-                val voters: Int
+                val voters: Int?
             )
 
             data class Metacritic(
                 @SerializedName("score")
-                val score: Int,
+                val score: Int?,
                 @SerializedName("voters")
-                val voters: Any
+                val voters: Any?
             )
 
             data class Rotten(
                 @SerializedName("score")
-                val score: Int,
+                val score: Int?,
                 @SerializedName("voters")
-                val voters: Any
+                val voters: Any?
             )
         }
 
         data class Seasons(
             @SerializedName("data")
-            val `data`: List<Data6>
+            val `data`: List<Data6?>?
         ) {
             data class Data6(
                 @SerializedName("episodesCount")
-                val episodesCount: Int,
+                val episodesCount: Int?,
                 @SerializedName("movieId")
-                val movieId: Int,
+                val movieId: Int?,
                 @SerializedName("name")
-                val name: String,
+                val name: String?,
                 @SerializedName("number")
-                val number: Int
+                val number: Int?
             )
         }
 
         data class Studios(
             @SerializedName("data")
-            val `data`: List<Any>
+            val `data`: List<Any?>?
         )
 
         data class Trailers(
             @SerializedName("data")
-            val `data`: List<Data7>
+            val `data`: List<Data7?>?
         ) {
             data class Data7(
                 @SerializedName("fileUrl")
-                val fileUrl: String,
+                val fileUrl: String?,
                 @SerializedName("id")
-                val id: Int,
+                val id: Int?,
                 @SerializedName("language")
-                val language: String,
+                val language: String?,
                 @SerializedName("name")
-                val name: String
+                val name: String?
             )
         }
 
         data class Tvcom(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("url")
-                val url: String
+                val url: String?
             )
         }
 
         data class UserFollows(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("status")
-                val status: Boolean
+                val status: Boolean?
             )
         }
 
         data class UserMovieLists(
             @SerializedName("data")
-            val `data`: List<Any>
+            val `data`: List<Any?>?
         )
 
         data class UserRating(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("rate")
-                val rate: Int,
+                val rate: Int?,
                 @SerializedName("status")
-                val status: Boolean
+                val status: Boolean?
             )
         }
 
         data class UserSubscribed(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("status")
-                val status: Boolean
+                val status: Boolean?
             )
         }
 
         data class UserWantsToWatch(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("status")
-                val status: Boolean
+                val status: Boolean?
             )
         }
 
         data class UserWatch(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("duration")
-                val duration: Int,
+                val duration: Int?,
                 @SerializedName("episode")
-                val episode: Any,
+                val episode: Any?,
                 @SerializedName("language")
-                val language: String,
+                val language: String?,
                 @SerializedName("progress")
-                val progress: Int,
+                val progress: Int?,
                 @SerializedName("quality")
-                val quality: String,
+                val quality: String?,
                 @SerializedName("season")
-                val season: Any,
+                val season: Any?,
                 @SerializedName("updateDate")
-                val updateDate: String,
+                val updateDate: String?,
                 @SerializedName("visible")
-                val visible: Boolean,
+                val visible: Boolean?,
                 @SerializedName("watched")
-                val watched: Boolean
+                val watched: Boolean?
             )
         }
 
         data class Vast(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("pause_url")
-                val pauseUrl: Any,
+                val pauseUrl: Any?,
                 @SerializedName("url")
-                val url: String
+                val url: String?
             )
         }
     }

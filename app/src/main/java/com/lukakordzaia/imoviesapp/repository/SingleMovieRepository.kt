@@ -4,7 +4,6 @@ import com.lukakordzaia.imoviesapp.network.MoviesNetwork
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.ServiceBuilder
 import com.lukakordzaia.imoviesapp.network.models.MovieData
-import com.lukakordzaia.imoviesapp.network.models.MovieFiles
 
 class SingleMovieRepository {
     private val destinationService = ServiceBuilder.buildService(MoviesNetwork::class.java)

@@ -18,7 +18,7 @@ class HomeViewModel : BaseViewModel() {
     val movieList: LiveData<List<MoviesList.Data>> = _movieList
 
     fun onSingleMoviePressed(movieId: Int) {
-        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleMovieFragment(movieId))
+        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleMovieFragmentNav(movieId))
     }
 
     fun getMovies() {

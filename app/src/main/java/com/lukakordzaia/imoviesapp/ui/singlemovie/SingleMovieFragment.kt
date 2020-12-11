@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -26,25 +27,28 @@ class SingleMovieFragment : Fragment(R.layout.fragment_single_movie) {
     private lateinit var viewModel: SingleMovieViewModel
     private val args: SingleMovieFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(SingleMovieViewModel::class.java)
         viewModel.getSingleMovieFiles(args.movieId)
+        Log.d("singlemovie", args.movieId.toString())
 
         viewModel.singleMovieFiles.observe(viewLifecycleOwner, Observer {
             tv_single_movie_title_geo.text = it.primaryName
             tv_single_movie_title_eng.text = it.secondaryName
-            tv_single_movie_imdb_score.text = it.rating.imdb.score.toString()
-            Picasso.get().load(it.covers.data.x1050).into(iv_single_movie_play)
-            tv_single_movie_desc.text = "${it.plot.data.description.substring(0, 100)}..."
+            if (it.rating.imdb.score != null) {
+                tv_single_movie_imdb_score.text = it.rating.imdb.score.toString()
+            } else {
+                tv_single_movie_imdb_score.text = "N/A"
+            }
+            if (!it.covers.data.x1050.isNullOrEmpty()) {
+                Picasso.get().load(it.covers.data.x1050).into(iv_single_movie_play)
+            }
+            tv_single_movie_desc.text = "${it.plot?.data?.description?.substring(0, 100)}..."
 
             tv_single_movie_year.text = it.year.toString()
             tv_single_movie_duration.text = "${it.duration} წ."
-            tv_single_movie_country.text = it.countries.data[0].secondaryName
+            tv_single_movie_country.text = it.countries?.data?.get(0)?.secondaryName
         })
 
         iv_post_video_icon.setOnClickListener {

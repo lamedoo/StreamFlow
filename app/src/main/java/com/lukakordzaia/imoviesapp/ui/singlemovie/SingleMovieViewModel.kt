@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.models.MovieData
-import com.lukakordzaia.imoviesapp.network.models.MovieFiles
 import com.lukakordzaia.imoviesapp.repository.SingleMovieRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
@@ -18,7 +17,7 @@ class SingleMovieViewModel : BaseViewModel() {
     val singleMovieFiles: LiveData<MovieData.Data> = _singleMovieFiles
 
     fun onPlayPressed(movieId: Int) {
-        navigateToNewFragment(SingleMovieFragmentDirections.actionSingleMovieFragmentToVideoPlayerFragment(movieId))
+        navigateToNewFragment(SingleMovieFragmentDirections.actionSingleMovieFragmentToChooseMovieDetailsFragment(movieId))
     }
 
     fun getSingleMovieFiles(movieId: Int) {
