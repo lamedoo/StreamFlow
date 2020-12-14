@@ -46,5 +46,16 @@
         <argument
             android:name="mediaLink"
             app:argType="string" />
+        <argument
+            android:name="chosenSeason"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="chosenEpisode"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
     </fragment>
 </navigation>

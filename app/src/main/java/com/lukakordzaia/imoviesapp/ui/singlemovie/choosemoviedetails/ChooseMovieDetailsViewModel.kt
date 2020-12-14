@@ -27,14 +27,17 @@ class ChooseMovieDetailsViewModel : BaseViewModel() {
     private val _chosenLanguage = MutableLiveData<String>()
     val chosenLanguage: LiveData<String> = _chosenLanguage
 
-    private val _chosenSeason = MutableLiveData<Int>()
+    private val _chosenSeason = MutableLiveData<Int>(0)
     val chosenSeason: LiveData<Int> = _chosenSeason
+
+    private val _chosenEpisode = MutableLiveData<Int>(0)
+    val chosenEpisode: LiveData<Int> = _chosenEpisode
 
     private val _movieFile = MutableLiveData<String>()
     val movieFile: LiveData<String> = _movieFile
 
-    fun onPlayButtonPressed(mediaLink: String) {
-        navigateToNewFragment(ChooseMovieDetailsFragmentDirections.actionChooseMovieDetailsFragmentToVideoPlayerFragment(mediaLink))
+    fun onPlayButtonPressed(mediaLink: String, movieId: Int) {
+        navigateToNewFragment(ChooseMovieDetailsFragmentDirections.actionChooseMovieDetailsFragmentToVideoPlayerFragment(mediaLink, chosenSeason.value!!, chosenEpisode.value!!, movieId))
     }
 
     fun getSingleTitleFiles(movieId: Int) {
@@ -91,6 +94,7 @@ class ChooseMovieDetailsViewModel : BaseViewModel() {
     }
 
     fun getEpisodeFile(language: String, episodeNum: Int, movieId: Int, season: Int) {
+        _chosenEpisode.value = episodeNum
         viewModelScope.launch {
             when (val files = repository.getSingleMovieFiles(movieId, season)) {
                 is Result.Success -> {

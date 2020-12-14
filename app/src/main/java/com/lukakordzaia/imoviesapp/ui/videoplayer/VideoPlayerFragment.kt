@@ -18,6 +18,7 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
+        viewModel.getNextEpisode(args.movieId, args.chosenSeason, args.chosenEpisode)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(false)

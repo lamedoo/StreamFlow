@@ -73,7 +73,7 @@ class ChooseMovieDetailsFragment : BottomSheetDialogFragment() {
 
         viewModel.movieFile.observe(viewLifecycleOwner, Observer {
             choose_movie_details_play.setOnClickListener { _ ->
-                viewModel.onPlayButtonPressed(it)
+                viewModel.onPlayButtonPressed(it, args.movieId)
             }
         })
 
