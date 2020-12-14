@@ -88,7 +88,7 @@
             android:spinnerMode="dialog"
             app:layout_constraintStart_toEndOf="@id/tv_episode_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spinner_season_numbers"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_season_title"/>
 
         <ImageView
             android:id="@+id/choose_movie_details_play"

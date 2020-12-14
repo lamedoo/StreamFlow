@@ -42,7 +42,7 @@ class SingleMovieViewModel : BaseViewModel() {
                     checkTvShowAndFiles()
                 }
                 is Result.Error -> {
-                    Log.d("error", data.exception)
+                    Log.d("errorsinglemovies", data.exception)
                 }
             }
         }

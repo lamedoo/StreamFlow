@@ -9,90 +9,88 @@ data class MovieFiles(
 ) {
     data class Data(
         @SerializedName("covers")
-        val covers: Covers,
+        val covers: Covers?,
         @SerializedName("description")
-        val description: String,
+        val description: String?,
         @SerializedName("episode")
-        val episode: Int,
+        val episode: Int?,
         @SerializedName("episodes_include")
-        val episodesInclude: String,
+        val episodesInclude: String?,
         @SerializedName("files")
-        val files: List<Files>,
+        val files: List<File>?,
         @SerializedName("poster")
-        val poster: String,
-        @SerializedName("rating")
-        val rating: Double,
+        val poster: String?,
         @SerializedName("title")
-        val title: String
+        val title: String?
     ) {
         data class Covers(
             @SerializedName("blurhash")
-            val blurhash: String,
+            val blurhash: String?,
             @SerializedName("imageHeight")
-            val imageHeight: Int,
+            val imageHeight: String?,
             @SerializedName("position")
-            val position: String,
+            val position: String?,
             @SerializedName("positionPercentage")
-            val positionPercentage: String,
+            val positionPercentage: String?,
             @SerializedName("1050")
-            val x1050: String,
+            val x1050: String?,
             @SerializedName("145")
-            val x145: String,
+            val x145: String?,
             @SerializedName("1920")
-            val x1920: String,
+            val x1920: String?,
             @SerializedName("367")
-            val x367: String,
+            val x367: String?,
             @SerializedName("510")
-            val x510: String
+            val x510: String?
         )
 
-        data class Files(
+        data class File(
             @SerializedName("files")
-            val files: List<Files1>,
+            val files: List<File1>?,
             @SerializedName("lang")
-            val lang: String,
+            val lang: String?,
             @SerializedName("subtitles")
-            val subtitles: List<Subtitle>
+            val subtitles: List<Subtitle?>?
         ) {
-            data class Files1(
+            data class File1(
                 @SerializedName("duration")
-                val duration: Int,
+                val duration: Int?,
                 @SerializedName("id")
-                val id: Int,
+                val id: Int?,
                 @SerializedName("quality")
-                val quality: String,
+                val quality: String?,
                 @SerializedName("src")
-                val src: String,
+                val src: String?,
                 @SerializedName("thumbnails")
-                val thumbnails: List<Thumbnail>
+                val thumbnails: List<Thumbnail?>?
             ) {
                 data class Thumbnail(
                     @SerializedName("columns")
-                    val columns: Int,
+                    val columns: Int?,
                     @SerializedName("duration")
-                    val duration: Int,
+                    val duration: Int?,
                     @SerializedName("end_time")
-                    val endTime: Int,
+                    val endTime: Int?,
                     @SerializedName("height")
-                    val height: Int,
+                    val height: Int?,
                     @SerializedName("id")
-                    val id: Int,
+                    val id: Int?,
                     @SerializedName("interval")
-                    val interval: Int,
+                    val interval: Int?,
                     @SerializedName("start_time")
-                    val startTime: Int,
+                    val startTime: Int?,
                     @SerializedName("url")
-                    val url: String,
+                    val url: String?,
                     @SerializedName("width")
-                    val width: Int
+                    val width: Int?
                 )
             }
 
             data class Subtitle(
                 @SerializedName("lang")
-                val lang: String,
+                val lang: String?,
                 @SerializedName("url")
-                val url: String
+                val url: String?
             )
         }
     }

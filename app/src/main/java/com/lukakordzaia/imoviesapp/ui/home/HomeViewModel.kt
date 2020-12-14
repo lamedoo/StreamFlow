@@ -14,10 +14,12 @@ class HomeViewModel : BaseViewModel() {
     private val repository = MovieRepository()
 
     private val _movieList = MutableLiveData<List<MoviesList.Data>>()
-
     val movieList: LiveData<List<MoviesList.Data>> = _movieList
 
-    fun onSingleMoviePressed(movieId: Int) {
+    private val _tvShowList = MutableLiveData<List<MoviesList.Data>>()
+    val tvShowList: LiveData<List<MoviesList.Data>> = _tvShowList
+
+    fun onSingleTitlePressed(movieId: Int) {
         navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleMovieFragmentNav(movieId))
     }
 
@@ -29,7 +31,21 @@ class HomeViewModel : BaseViewModel() {
                     _movieList.value = data
                 }
                 is Result.Error -> {
-                    Log.d("error", movies.exception)
+                    Log.d("errornewmovies", movies.exception)
+                }
+            }
+        }
+    }
+
+    fun getTvShows() {
+        viewModelScope.launch {
+            when (val tvShows = repository.getTvShows()) {
+                is Result.Success -> {
+                    val data = tvShows.data.data
+                    _tvShowList.value = data
+                }
+                is Result.Error -> {
+                    Log.d("errornewtvshows", tvShows.exception)
                 }
             }
         }

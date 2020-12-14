@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class MovieData(
     @SerializedName("data")
-    val `data`: Data?
+    val `data`: Data
 ) {
     data class Data(
         @SerializedName("adjaraId")
@@ -19,11 +19,11 @@ data class MovieData(
         @SerializedName("canBePlayed")
         val canBePlayed: Boolean?,
         @SerializedName("countries")
-        val countries: Countries?,
+        val countries: Countries,
         @SerializedName("cover")
         val cover: Cover?,
         @SerializedName("covers")
-        val covers: Covers,
+        val covers: Covers?,
         @SerializedName("duration")
         val duration: Int?,
         @SerializedName("genres")
@@ -57,7 +57,7 @@ data class MovieData(
         @SerializedName("primaryName")
         val primaryName: String?,
         @SerializedName("rating")
-        val rating: Rating,
+        val rating: Rating?,
         @SerializedName("regionAllowed")
         val regionAllowed: Boolean?,
         @SerializedName("releaseDate")
@@ -95,9 +95,9 @@ data class MovieData(
     ) {
         data class AkaNames(
             @SerializedName("data")
-            val `data`: List<Data1?>?
+            val `data`: List<DataAkaNames>?
         ) {
-            data class Data1(
+            data class DataAkaNames(
                 @SerializedName("name")
                 val name: String?,
                 @SerializedName("type")
@@ -107,9 +107,9 @@ data class MovieData(
 
         data class Countries(
             @SerializedName("data")
-            val `data`: List<Data2?>?
+            val `data`: List<DataCountries>
         ) {
-            data class Data2(
+            data class DataCountries(
                 @SerializedName("id")
                 val id: Int?,
                 @SerializedName("primaryName")
@@ -130,13 +130,13 @@ data class MovieData(
 
         data class Covers(
             @SerializedName("data")
-            val `data`: Data
+            val `data`: Data?
         ) {
             data class Data(
                 @SerializedName("blurhash")
                 val blurhash: String?,
                 @SerializedName("imageHeight")
-                val imageHeight: Int?,
+                val imageHeight: String?,
                 @SerializedName("position")
                 val position: String?,
                 @SerializedName("positionPercentage")
@@ -156,9 +156,9 @@ data class MovieData(
 
         data class Genres(
             @SerializedName("data")
-            val `data`: List<Data3?>?
+            val `data`: List<DataGenres>?
         ) {
-            data class Data3(
+            data class DataGenres(
                 @SerializedName("backgroundImage")
                 val backgroundImage: String?,
                 @SerializedName("id")
@@ -174,9 +174,9 @@ data class MovieData(
 
         data class Languages(
             @SerializedName("data")
-            val `data`: List<Data4?>?
+            val `data`: List<DataLanguages>?
         ) {
-            data class Data4(
+            data class DataLanguages(
                 @SerializedName("code")
                 val code: String?,
                 @SerializedName("primaryName")
@@ -209,9 +209,9 @@ data class MovieData(
 
         data class Plots(
             @SerializedName("data")
-            val `data`: List<Data5?>?
+            val `data`: List<DataPlots>?
         ) {
-            data class Data5(
+            data class DataPlots(
                 @SerializedName("description")
                 val description: String?,
                 @SerializedName("language")
@@ -233,7 +233,7 @@ data class MovieData(
 
         data class Rating(
             @SerializedName("imdb")
-            val imdb: Imdb,
+            val imdb: Imdb?,
             @SerializedName("imovies")
             val imovies: Imovies?,
             @SerializedName("metacritic")
@@ -272,9 +272,9 @@ data class MovieData(
 
         data class Seasons(
             @SerializedName("data")
-            val `data`: List<Data6?>?
+            val `data`: List<DataSeasons>?
         ) {
-            data class Data6(
+            data class DataSeasons(
                 @SerializedName("episodesCount")
                 val episodesCount: Int?,
                 @SerializedName("movieId")
@@ -288,14 +288,33 @@ data class MovieData(
 
         data class Studios(
             @SerializedName("data")
-            val `data`: List<Any?>?
-        )
+            val `data`: List<DataStudios>?
+        ) {
+            data class DataStudios(
+                @SerializedName("backgroundImage")
+                val backgroundImage: String?,
+                @SerializedName("backgroundImageNarrow")
+                val backgroundImageNarrow: String?,
+                @SerializedName("id")
+                val id: Int?,
+                @SerializedName("isFeatured")
+                val isFeatured: Boolean?,
+                @SerializedName("lightPoster")
+                val lightPoster: String?,
+                @SerializedName("name")
+                val name: String?,
+                @SerializedName("poster")
+                val poster: String?,
+                @SerializedName("rating")
+                val rating: Double?
+            )
+        }
 
         data class Trailers(
             @SerializedName("data")
-            val `data`: List<Data7?>?
+            val `data`: List<DataTrailers>?
         ) {
-            data class Data7(
+            data class DataTrailers(
                 @SerializedName("fileUrl")
                 val fileUrl: String?,
                 @SerializedName("id")

@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="?colorOnPrimary"
+        android:text="@string/default_data"
         android:textAppearance="?android:attr/textAppearanceLarge"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="ფილმის სახელი"/>
@@ -39,6 +40,7 @@
         android:id="@+id/tv_single_movie_imdb_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/default_data"
         android:fontFamily="@font/georgian_uppercase"
         android:textColor="?colorOnPrimary"
         android:textStyle="bold"
@@ -86,6 +88,7 @@
                 android:id="@+id/tv_single_movie_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/default_data"
                 android:padding="5dp"
                 android:background="@color/default_background_color"
                 app:layout_constraintTop_toTopOf="parent"
@@ -111,6 +114,7 @@
                     android:id="@+id/tv_single_movie_year"
                     android:layout_width="wrap_content"
                     android:textStyle="bold"
+                    android:text="@string/default_data"
                     android:fontFamily="@font/georgian_uppercase"
                     android:layout_height="wrap_content"
                     tools:text="1987"/>
@@ -136,6 +140,7 @@
                     android:id="@+id/tv_single_movie_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/default_data"
                     android:textStyle="bold"
                     android:fontFamily="@font/georgian_uppercase"
                     tools:text="99"/>
@@ -161,6 +166,7 @@
                     android:id="@+id/tv_single_movie_country"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/default_data"
                     android:textStyle="bold"
                     android:fontFamily="@font/georgian_uppercase"
                     tools:text="USA"/>

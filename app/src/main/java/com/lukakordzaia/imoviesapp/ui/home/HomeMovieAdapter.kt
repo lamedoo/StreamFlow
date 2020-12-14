@@ -1,11 +1,9 @@
 package com.lukakordzaia.imoviesapp.ui.home
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +13,7 @@ import com.lukakordzaia.imoviesapp.network.models.MoviesList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_movie_item.view.*
 
-class HomeAdapter(private val context: Context, private val onMovieClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeMovieAdapter(private val context: Context, private val onMovieClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeMovieAdapter.ViewHolder>() {
     private var list: List<MoviesList.Data> = ArrayList()
 
     fun setMoviesList(list: List<MoviesList.Data>) {
@@ -48,10 +46,14 @@ class HomeAdapter(private val context: Context, private val onMovieClick: (id: I
 
         if (!listModel.secondaryName.isNullOrEmpty()) {
             holder.movieTitleEngTextView.text = listModel.secondaryName
+        } else {
+            holder.movieTitleEngTextView.text = ""
         }
 
         if (!listModel.primaryName.isNullOrEmpty()) {
-            holder.movieTiTleGeoTextView.text = listModel.primaryName
+            holder.movieTitleGeoTextView.text = listModel.primaryName
+        } else {
+            holder.movieTitleGeoTextView.text = ""
         }
 
     }
@@ -64,7 +66,7 @@ class HomeAdapter(private val context: Context, private val onMovieClick: (id: I
         val movieRoot: ConstraintLayout = view.rv_movie_root
         val moviePosterImageView: ImageView = view.rv_movie_poster
         val movieTitleEngTextView: TextView = view.rv_movie_title_eng
-        val movieTiTleGeoTextView: TextView = view.rv_movie_title_geo
+        val movieTitleGeoTextView: TextView = view.rv_movie_title_geo
     }
 
 }

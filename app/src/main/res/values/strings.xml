@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ImoviesApp</string>
+    <string name="default_data">N/A</string>
 </resources>

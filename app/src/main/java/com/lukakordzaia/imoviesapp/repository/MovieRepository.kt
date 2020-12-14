@@ -11,4 +11,8 @@ class MovieRepository {
     suspend fun getMovies(): Result<MoviesList> {
         return ServiceBuilder.retrofitCall { destinationService.getMovies() }
     }
+
+    suspend fun getTvShows(): Result<MoviesList> {
+        return ServiceBuilder.retrofitCall { destinationService.getTvShows() }
+    }
 }
