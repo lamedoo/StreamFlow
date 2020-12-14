@@ -38,7 +38,11 @@ class HomeAdapter(private val context: Context, private val onMovieClick: (id: I
 
         if (listModel.covers != null) {
             if (listModel.covers.data != null) {
-                Picasso.get().load(listModel.covers.data.x510).into(holder.moviePosterImageView)
+                if (!listModel.covers.data.x510.isNullOrEmpty()) {
+                    Picasso.get().load(listModel.covers.data.x510).into(holder.moviePosterImageView)
+                } else {
+                    Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.moviePosterImageView)
+                }
             }
         }
 

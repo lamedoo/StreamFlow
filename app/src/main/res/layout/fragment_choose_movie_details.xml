@@ -1,57 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minHeight="100dp"
+    android:orientation="vertical"
     android:padding="@dimen/fragment_padding"
     tools:context=".ui.singlemovie.choosemoviedetails.ChooseMovieDetailsFragment">
 
     <TextView
-        android:id="@+id/choose_movie_details_geo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="GEO"
-        android:background="@color/default_background_color"
-        android:padding="10dp"
-        android:textColor="?colorOnPrimary"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/choose_movie_details_eng"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="10dp" />
+        android:id="@+id/movie_file_not_yet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="20dp"
+        android:text="30sp"
+        android:fontFamily="@font/georgian_uppercase"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/choose_movie_details_eng"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/default_background_color"
-        android:padding="10dp"
-        android:text="ENG"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="?colorOnPrimary"
-        app:layout_constraintEnd_toStartOf="@+id/choose_movie_details_rus"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/choose_movie_details_geo"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/movie_files_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/choose_movie_details_rus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/default_background_color"
-        android:padding="10dp"
-        android:text="RUS"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="?colorOnPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/choose_movie_details_eng"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv_language_title"
+            android:layout_width="wrap_content"
+            app:layout_goneMarginTop="30dp"
+            android:text="ენა"
+            android:textColor="?colorOnPrimary"
+            android:layout_marginTop="30dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Spinner
+            android:id="@+id/spinner_language"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:spinnerMode="dialog"
+            app:layout_constraintStart_toEndOf="@id/tv_language_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_season_title"
+            android:layout_width="wrap_content"
+            android:text="სეზონი"
+            android:textColor="?colorOnPrimary"
+            android:layout_marginTop="30dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_language_title"/>
+
+        <Spinner
+            android:id="@+id/spinner_season_numbers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:spinnerMode="dialog"
+            app:layout_constraintStart_toEndOf="@id/tv_season_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_language_title"/>
+
+        <TextView
+            android:id="@+id/tv_episode_title"
+            android:layout_width="wrap_content"
+            android:text="ეპიზოდი"
+            android:textColor="?colorOnPrimary"
+            android:layout_marginTop="30dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_season_title"/>
+
+        <Spinner
+            android:id="@+id/spinner_episode_numbers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:spinnerMode="dialog"
+            app:layout_constraintStart_toEndOf="@id/tv_episode_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinner_season_numbers"/>
+
+        <ImageView
+            android:id="@+id/choose_movie_details_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/play_button"
+            android:layout_marginTop="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_episode_title"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

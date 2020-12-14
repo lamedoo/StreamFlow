@@ -28,6 +28,15 @@
         <action
             android:id="@+id/action_chooseMovieDetailsFragment_to_videoPlayerFragment"
             app:destination="@id/videoPlayerFragment" />
+        <argument
+            android:name="numOfSeasons"
+            app:argType="integer" />
+        <argument
+            android:name="isTvShow"
+            app:argType="boolean" />
+        <argument
+            android:name="languages"
+            app:argType="string[]" />
     </dialog>
     <fragment
         android:id="@+id/videoPlayerFragment"

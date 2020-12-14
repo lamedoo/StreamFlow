@@ -17,6 +17,7 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.network.models.MovieDetails
 import com.lukakordzaia.imoviesapp.ui.MainActivity
 import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
@@ -31,7 +32,6 @@ class SingleMovieFragment : Fragment(R.layout.fragment_single_movie) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(SingleMovieViewModel::class.java)
         viewModel.getSingleMovieFiles(args.movieId)
-        Log.d("singlemovie", args.movieId.toString())
 
         viewModel.singleMovieFiles.observe(viewLifecycleOwner, Observer {
             tv_single_movie_title_geo.text = it.primaryName
@@ -44,16 +44,19 @@ class SingleMovieFragment : Fragment(R.layout.fragment_single_movie) {
             if (!it.covers.data.x1050.isNullOrEmpty()) {
                 Picasso.get().load(it.covers.data.x1050).into(iv_single_movie_play)
             }
-            tv_single_movie_desc.text = "${it.plot?.data?.description?.substring(0, 100)}..."
+            tv_single_movie_desc.text = it.plot?.data?.description
 
             tv_single_movie_year.text = it.year.toString()
             tv_single_movie_duration.text = "${it.duration} წ."
             tv_single_movie_country.text = it.countries?.data?.get(0)?.secondaryName
+
         })
 
-        iv_post_video_icon.setOnClickListener {
-            viewModel.onPlayPressed(args.movieId)
-        }
+        viewModel.movieDetails.observe(viewLifecycleOwner, Observer {
+            iv_post_video_icon.setOnClickListener { _ ->
+                viewModel.onPlayPressed(args.movieId, MovieDetails(it.numOfSeasons, it.isTvShow))
+            }
+        })
 
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)

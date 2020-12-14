@@ -6,12 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.models.MovieFiles
-import com.lukakordzaia.imoviesapp.repository.VideoPlayerRepository
+import com.lukakordzaia.imoviesapp.repository.MovieFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
 class VideoPlayerViewModel : BaseViewModel() {
-    private val repository = VideoPlayerRepository()
+    private val repository = MovieFilesRepository()
 
     private val _singleMovieFiles = MutableLiveData<MovieFiles.Data>()
     val singleMovieFiles: LiveData<MovieFiles.Data> = _singleMovieFiles
