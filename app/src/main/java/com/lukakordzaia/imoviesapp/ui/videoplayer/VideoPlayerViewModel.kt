@@ -1,24 +1,42 @@
 package com.lukakordzaia.imoviesapp.ui.videoplayer
 
-import com.lukakordzaia.imoviesapp.repository.MovieFilesRepository
+import android.content.Context
+import android.net.Uri
+import androidx.lifecycle.MutableLiveData
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 
 class VideoPlayerViewModel : BaseViewModel() {
-    private val repository = MovieFilesRepository()
+    private var playWhenReady = MutableLiveData(true)
+    private var currentWindow = MutableLiveData(0)
+    private var playbackPosition = MutableLiveData<Long>(0)
+    private var player = MutableLiveData<SimpleExoPlayer>()
+    private var mediaLink = MutableLiveData<String>()
 
-//    private val _singleMovieFiles = MutableLiveData<MovieFiles.Data>()
-//    val singleMovieFiles: LiveData<MovieFiles.Data> = _singleMovieFiles
+    fun initPlayer(context: Context, playerView: PlayerView, media: String){
+        mediaLink.value = media
+        val mediaUri = MediaItem.fromUri(Uri.parse(mediaLink.value))
 
-//    fun getSingleMovieFiles(movieId: Int) {
-//        viewModelScope.launch {
-//            when (val files = repository.getSingleMovieFiles(movieId)) {
-//                is Result.Success -> {
-//                    _singleMovieFiles.value = files.data.data[0]
-//                }
-//                is Result.Error -> {
-//                    Log.d("error", files.exception)
-//                }
-//            }
-//        }
-//    }
+        player.value = SimpleExoPlayer.Builder(context).build()
+        playerView.player = player.value
+        player.value?.playWhenReady = playWhenReady.value == true
+        player.value?.setMediaItem(mediaUri)
+        player.value?.seekTo(playbackPosition.value!!)
+        player.value?.prepare()
+        player.value?.play()
+
+    }
+
+    fun releasePlayer() {
+        if (player.value == null) {
+            return
+        }
+        playWhenReady.value = player.value!!.playWhenReady
+        playbackPosition.value = player.value!!.currentPosition
+        currentWindow.value = player.value!!.currentWindowIndex
+        player.value!!.release()
+        player.value = null
+    }
 }
