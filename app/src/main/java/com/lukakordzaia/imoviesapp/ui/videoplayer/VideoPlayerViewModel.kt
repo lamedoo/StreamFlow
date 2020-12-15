@@ -25,8 +25,8 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     private val episodesUri = MutableLiveData<MutableList<MediaItem>>()
 
-    val seasonEpisodes: MutableList<String> = ArrayList()
-    val seasonEpisodesUri: MutableList<MediaItem> = ArrayList()
+    private val seasonEpisodes: MutableList<String> = ArrayList()
+    private val seasonEpisodesUri: MutableList<MediaItem> = ArrayList()
 
     fun initPlayer(context: Context, playerView: PlayerView, media: String, isTvShow: Boolean) {
         mediaLink.value = media
