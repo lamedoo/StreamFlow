@@ -21,19 +21,28 @@ class VideoPlayerViewModel : BaseViewModel() {
     private var player = MutableLiveData<SimpleExoPlayer>()
     private var mediaLink = MutableLiveData<String>()
 
-    private val nextEpisode = MutableLiveData<String>()
+    private val episodes = MutableLiveData<MutableList<MediaItem>>()
 
-    fun initPlayer(context: Context, playerView: PlayerView, media: String){
-        mediaLink.value = media
-        val firsItem = MediaItem.fromUri(Uri.parse(mediaLink.value))
+    fun initPlayer(context: Context, playerView: PlayerView, media: String, isTvShow: Boolean){
+        if (isTvShow) {
+            player.value = SimpleExoPlayer.Builder(context).build()
+            playerView.player = player.value
+            player.value?.playWhenReady = playWhenReady.value == true
+            player.value?.seekTo(playbackPosition.value!!)
+            player.value?.prepare()
+            player.value?.play()
+        } else {
+            mediaLink.value = media
+            val firsItem = MediaItem.fromUri(Uri.parse(mediaLink.value))
 
-        player.value = SimpleExoPlayer.Builder(context).build()
-        playerView.player = player.value
-        player.value?.playWhenReady = playWhenReady.value == true
-        player.value?.setMediaItem(firsItem)
-        player.value?.seekTo(playbackPosition.value!!)
-        player.value?.prepare()
-        player.value?.play()
+            player.value = SimpleExoPlayer.Builder(context).build()
+            playerView.player = player.value
+            player.value?.playWhenReady = playWhenReady.value == true
+            player.value?.setMediaItem(firsItem)
+            player.value?.seekTo(playbackPosition.value!!)
+            player.value?.prepare()
+            player.value?.play()
+        }
 
     }
 
@@ -48,25 +57,32 @@ class VideoPlayerViewModel : BaseViewModel() {
         player.value = null
     }
 
-    fun getNextEpisode(movieId: Int, chosenSeason: Int, chosenEpisode: Int) {
-        if (chosenSeason != 0 && chosenEpisode != 0) {
+    fun getPlaylistFiles(movieId: Int, chosenSeason: Int, chosenEpisode: Int, chosenLanguage: String) {
+        val seasonEpisodes: MutableList<String> = ArrayList()
+        val seasonEpisodesUri: MutableList<MediaItem> = ArrayList()
+        if (chosenSeason != 0) {
             viewModelScope.launch {
                 when (val files = repository.getSingleMovieFiles(movieId, chosenSeason)) {
                     is Result.Success -> {
-                        if (files.data.data.isNotEmpty()) {
-                            val episode = files.data.data[chosenEpisode + 1]
-                            episode.files!!.forEach { singlefiles ->
-                                if (singlefiles.lang == "ENG") {
-                                    singlefiles.files!!.forEach {
+                        val season = files.data.data.subList(chosenEpisode - 1, files.data.data.size)
+                        season.forEach { singleSeason ->
+                            singleSeason.files!!.forEach { singleFiles ->
+                                if (singleFiles.lang == chosenLanguage) {
+                                    singleFiles.files!!.forEach {
                                         if (it.quality == "HIGH") {
-                                            nextEpisode.value = it.src
-                                        } else if (it.quality == "MEDIUM") {
-                                            nextEpisode.value = it.src
+                                            seasonEpisodes.add(it.src!!)
                                         }
                                     }
                                 }
                             }
                         }
+                        seasonEpisodes.forEach {
+                            val items = MediaItem.fromUri(Uri.parse(it))
+                            seasonEpisodesUri.add(items)
+                        }
+                        episodes.value = seasonEpisodesUri
+                        player.value!!.addMediaItems(episodes.value!!)
+                        Log.d("episodes", episodes.value.toString())
                     }
                     is Result.Error -> {
                         Log.d("errornextepisode", files.exception)

@@ -31,13 +31,22 @@ class ChooseMovieDetailsViewModel : BaseViewModel() {
     val chosenSeason: LiveData<Int> = _chosenSeason
 
     private val _chosenEpisode = MutableLiveData<Int>(0)
-    val chosenEpisode: LiveData<Int> = _chosenEpisode
+    private val chosenEpisode: LiveData<Int> = _chosenEpisode
 
     private val _movieFile = MutableLiveData<String>()
     val movieFile: LiveData<String> = _movieFile
 
-    fun onPlayButtonPressed(mediaLink: String, movieId: Int) {
-        navigateToNewFragment(ChooseMovieDetailsFragmentDirections.actionChooseMovieDetailsFragmentToVideoPlayerFragment(mediaLink, chosenSeason.value!!, chosenEpisode.value!!, movieId))
+    fun onPlayButtonPressed(mediaLink: String, movieId: Int, isTvShow: Boolean) {
+        navigateToNewFragment(
+                ChooseMovieDetailsFragmentDirections.actionChooseMovieDetailsFragmentToVideoPlayerFragment(
+                        mediaLink,
+                        chosenSeason.value!!,
+                        chosenEpisode.value!!,
+                        movieId,
+                        isTvShow,
+                        chosenLanguage.value!!
+                ),
+        )
     }
 
     fun getSingleTitleFiles(movieId: Int) {
@@ -78,48 +87,20 @@ class ChooseMovieDetailsViewModel : BaseViewModel() {
     }
 
     fun getSeasonFiles(movieId: Int, season: Int) {
+        _chosenSeason.value = season
         viewModelScope.launch {
             when (val files = repository.getSingleMovieFiles(movieId, season)) {
                 is Result.Success -> {
-                    if (files.data.data.isNotEmpty()) {
-                        _availableEpisodes.value = files.data.data.size
-                    }
+                    _availableEpisodes.value = files.data.data.size
                 }
                 is Result.Error -> {
                     Log.d("errorseasons", files.exception)
                 }
             }
         }
-        _chosenSeason.value = season
     }
 
-    fun getEpisodeFile(language: String, episodeNum: Int, movieId: Int, season: Int) {
+    fun getEpisodeFile(episodeNum: Int) {
         _chosenEpisode.value = episodeNum
-        viewModelScope.launch {
-            when (val files = repository.getSingleMovieFiles(movieId, season)) {
-                is Result.Success -> {
-                    if (files.data.data.isNotEmpty()) {
-                        _singleMovieFiles.value = files.data
-                        val episode = _singleMovieFiles.value!!.data[episodeNum - 1]
-                        if (episode.episode == episodeNum) {
-                            episode.files!!.forEach { singlefiles ->
-                                if (singlefiles.lang == language) {
-                                    singlefiles.files!!.forEach {
-                                        if (it.quality == "HIGH") {
-                                            _movieFile.value = it.src
-                                        } else if (it.quality == "MEDIUM") {
-                                            _movieFile.value = it.src
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                is Result.Error -> {
-                    Log.d("errorepisodes", files.exception)
-                }
-            }
-        }
     }
 }

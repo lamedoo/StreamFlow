@@ -65,7 +65,7 @@ class ChooseMovieDetailsFragment : BottomSheetDialogFragment() {
             spinnerClass.createSpinner(spinner_episode_numbers, numOfEpisodes) { episode ->
                     viewModel.chosenLanguage.observe(viewLifecycleOwner, Observer { language ->
                         viewModel.chosenSeason.observe(viewLifecycleOwner, Observer { season ->
-                            viewModel.getEpisodeFile(language, episode.toInt(), args.movieId, season)
+                            viewModel.getEpisodeFile(episode.toInt())
                         })
                     })
             }
@@ -73,7 +73,7 @@ class ChooseMovieDetailsFragment : BottomSheetDialogFragment() {
 
         viewModel.movieFile.observe(viewLifecycleOwner, Observer {
             choose_movie_details_play.setOnClickListener { _ ->
-                viewModel.onPlayButtonPressed(it, args.movieId)
+                viewModel.onPlayButtonPressed(it, args.movieId, args.isTvShow)
             }
         })
 

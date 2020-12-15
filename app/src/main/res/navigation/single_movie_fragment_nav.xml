@@ -57,5 +57,11 @@
         <argument
             android:name="movieId"
             app:argType="integer" />
+        <argument
+            android:name="isTvShow"
+            app:argType="boolean" />
+        <argument
+            android:name="chosenLanguage"
+            app:argType="string" />
     </fragment>
 </navigation>

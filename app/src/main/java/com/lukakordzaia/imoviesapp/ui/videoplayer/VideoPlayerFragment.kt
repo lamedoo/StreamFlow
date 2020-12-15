@@ -14,11 +14,10 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
     private lateinit var viewModel: VideoPlayerViewModel
     private val args: VideoPlayerFragmentArgs by navArgs()
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
-        viewModel.getNextEpisode(args.movieId, args.chosenSeason, args.chosenEpisode)
+        viewModel.getPlaylistFiles(args.movieId, args.chosenSeason, args.chosenEpisode, args.chosenLanguage)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(false)
@@ -31,14 +30,14 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
     override fun onStart() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
-            viewModel.initPlayer(requireContext(), title_player, args.mediaLink)
+            viewModel.initPlayer(requireContext(), title_player, args.mediaLink, args.isTvShow)
         }
     }
 
     override fun onResume() {
         super.onResume()
         if (Util.SDK_INT < 24) {
-            viewModel.initPlayer(requireContext(), title_player, args.mediaLink)
+            viewModel.initPlayer(requireContext(), title_player, args.mediaLink, args.isTvShow)
         }
     }
 
