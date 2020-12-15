@@ -6,18 +6,25 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.utils.setGone
+import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.fragment_video_player.*
+
 
 class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
     private lateinit var viewModel: VideoPlayerViewModel
     private val args: VideoPlayerFragmentArgs by navArgs()
+    private lateinit var event: Player.EventListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
         viewModel.getPlaylistFiles(args.movieId, args.chosenSeason, args.chosenEpisode, args.chosenLanguage)
+
+        exo_episodes.setGone()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(false)
@@ -52,6 +59,15 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
         super.onStop()
         if (Util.SDK_INT >= 24) {
             viewModel.releasePlayer()
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            requireActivity().window.setDecorFitsSystemWindows(true)
+        } else {
+            requireActivity().window.decorView.systemUiVisibility = View.VISIBLE
         }
     }
 }

@@ -46,13 +46,13 @@ data class MovieFiles(
 
         data class File(
             @SerializedName("files")
-            val files: List<File1>?,
+            val files: List<FileEpisodes>,
             @SerializedName("lang")
             val lang: String?,
             @SerializedName("subtitles")
             val subtitles: List<Subtitle?>?
         ) {
-            data class File1(
+            data class FileEpisodes(
                 @SerializedName("duration")
                 val duration: Int?,
                 @SerializedName("id")
@@ -62,7 +62,7 @@ data class MovieFiles(
                 @SerializedName("src")
                 val src: String?,
                 @SerializedName("thumbnails")
-                val thumbnails: List<Thumbnail?>?
+                val thumbnails: List<Thumbnail>?
             ) {
                 data class Thumbnail(
                     @SerializedName("columns")

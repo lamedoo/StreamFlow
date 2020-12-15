@@ -3,11 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.videoplayer.VideoPlayerFragment">
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/title_player"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:controller_layout_id="@layout/exoplayer_controller_layout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

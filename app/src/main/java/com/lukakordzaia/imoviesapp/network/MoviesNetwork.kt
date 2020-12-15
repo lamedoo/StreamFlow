@@ -18,7 +18,7 @@ interface MoviesNetwork {
     suspend fun getMovies() : Response<MoviesList>
 
     @Headers("User-Agent: imovies")
-    @GET ("movies?page=1&per_page=15&filters%5Btype%5D=series&filters%5Bwith_files%5D=yes&sort=-upload_date")
+    @GET ("movies?page=3&per_page=15&filters%5Btype%5D=series&filters%5Bwith_files%5D=yes&sort=-upload_date")
     suspend fun getTvShows() : Response<MoviesList>
 
     @Headers("User-Agent: imovies")
