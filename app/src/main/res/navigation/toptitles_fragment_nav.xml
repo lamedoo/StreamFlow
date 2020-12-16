@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toptitles_fragment_nav"
+    app:startDestination="@id/topTitlesFragment">
+    <fragment
+        android:id="@+id/topTitlesFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.toptitles.TopTitlesFragment"
+        android:label="fragment_top_titles"
+        tools:layout="@layout/fragment_top_titles" />
+</navigation>

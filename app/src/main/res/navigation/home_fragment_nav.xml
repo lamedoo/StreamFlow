@@ -11,36 +11,12 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_singleMovieFragment"
-            app:destination="@id/singleMovieFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_single_movie_fragment_nav"
-            app:destination="@id/single_movie_fragment_nav">
+            android:id="@+id/action_homeFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav">
             <argument
-                android:name="movieId"
+                android:name="titleId"
                 app:argType="integer" />
         </action>
     </fragment>
-<!--    <fragment-->
-<!--        android:id="@+id/singleMovieFragment"-->
-<!--        android:name="com.lukakordzaia.imoviesapp.ui.singlemovie.SingleMovieFragment"-->
-<!--        android:label="fragment_single_movie"-->
-<!--        tools:layout="@layout/fragment_single_movie" >-->
-<!--        <argument-->
-<!--            android:name="movieId"-->
-<!--            app:argType="integer" />-->
-<!--        <action-->
-<!--            android:id="@+id/action_singleMovieFragment_to_videoPlayerFragment"-->
-<!--            app:destination="@id/videoPlayerFragment" />-->
-<!--    </fragment>-->
-<!--    <fragment-->
-<!--        android:id="@+id/videoPlayerFragment"-->
-<!--        android:name="com.lukakordzaia.imoviesapp.ui.videoplayer.VideoPlayerFragment"-->
-<!--        android:label="fragment_video_player"-->
-<!--        tools:layout="@layout/fragment_video_player" >-->
-<!--        <argument-->
-<!--            android:name="movieId"-->
-<!--            app:argType="integer" />-->
-<!--    </fragment>-->
-    <include app:graph="@navigation/single_movie_fragment_nav" />
+    <include app:graph="@navigation/single_title_fragment_nav" />
 </navigation>

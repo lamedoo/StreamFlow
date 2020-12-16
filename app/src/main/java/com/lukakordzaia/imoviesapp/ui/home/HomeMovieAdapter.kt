@@ -9,21 +9,21 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.models.MoviesList
+import com.lukakordzaia.imoviesapp.network.models.TitleList
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_movie_item.view.*
+import kotlinx.android.synthetic.main.rv_title_item.view.*
 
 class HomeMovieAdapter(private val context: Context, private val onMovieClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeMovieAdapter.ViewHolder>() {
-    private var list: List<MoviesList.Data> = ArrayList()
+    private var list: List<TitleList.Data> = ArrayList()
 
-    fun setMoviesList(list: List<MoviesList.Data>) {
+    fun setMoviesList(list: List<TitleList.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                LayoutInflater.from(context).inflate(R.layout.rv_movie_item, parent, false)
+                LayoutInflater.from(context).inflate(R.layout.rv_title_item, parent, false)
         )
     }
 
@@ -63,10 +63,10 @@ class HomeMovieAdapter(private val context: Context, private val onMovieClick: (
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val movieRoot: ConstraintLayout = view.rv_movie_root
-        val moviePosterImageView: ImageView = view.rv_movie_poster
-        val movieTitleEngTextView: TextView = view.rv_movie_title_eng
-        val movieTitleGeoTextView: TextView = view.rv_movie_title_geo
+        val movieRoot: ConstraintLayout = view.rv_title_root
+        val moviePosterImageView: ImageView = view.rv_title_poster
+        val movieTitleEngTextView: TextView = view.rv_title_name_eng
+        val movieTitleGeoTextView: TextView = view.rv_title_name_geo
     }
 
 }

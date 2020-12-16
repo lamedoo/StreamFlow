@@ -3,7 +3,7 @@ package com.lukakordzaia.imoviesapp.network.models
 
 import com.google.gson.annotations.SerializedName
 
-data class MovieFiles(
+data class TitleFiles(
     @SerializedName("data")
     val `data`: List<Data>
 ) {

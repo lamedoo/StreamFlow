@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.searchmovies.SearchMoviesFragment">
+    tools:context=".ui.toptitles.TopTitlesFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="SearchMovies"/>
+        android:text="TopMovies"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

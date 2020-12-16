@@ -7,7 +7,7 @@
     android:minHeight="100dp"
     android:orientation="vertical"
     android:padding="@dimen/fragment_padding"
-    tools:context=".ui.singlemovie.choosemoviedetails.ChooseMovieDetailsFragment">
+    tools:context=".ui.singletitle.choosetitledetails.ChooseTitleDetailsFragment">
 
     <TextView
         android:id="@+id/movie_file_not_yet"

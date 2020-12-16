@@ -5,22 +5,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.models.MoviesList
-import com.lukakordzaia.imoviesapp.repository.MovieRepository
+import com.lukakordzaia.imoviesapp.network.models.TitleList
+import com.lukakordzaia.imoviesapp.repository.HomeRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
-    private val repository = MovieRepository()
+    private val repository = HomeRepository()
 
-    private val _movieList = MutableLiveData<List<MoviesList.Data>>()
-    val movieList: LiveData<List<MoviesList.Data>> = _movieList
+    private val _movieList = MutableLiveData<List<TitleList.Data>>()
+    val movieList: LiveData<List<TitleList.Data>> = _movieList
 
-    private val _tvShowList = MutableLiveData<List<MoviesList.Data>>()
-    val tvShowList: LiveData<List<MoviesList.Data>> = _tvShowList
+    private val _tvShowList = MutableLiveData<List<TitleList.Data>>()
+    val tvShowList: LiveData<List<TitleList.Data>> = _tvShowList
 
-    fun onSingleTitlePressed(movieId: Int) {
-        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleMovieFragmentNav(movieId))
+    fun onSingleTitlePressed(titleId: Int) {
+        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(titleId))
     }
 
     fun getMovies() {

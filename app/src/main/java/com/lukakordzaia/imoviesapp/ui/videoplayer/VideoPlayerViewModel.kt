@@ -8,14 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.models.MovieFiles
+import com.lukakordzaia.imoviesapp.network.models.TitleFiles
 import com.lukakordzaia.imoviesapp.network.models.VideoPlayerOptions
-import com.lukakordzaia.imoviesapp.repository.MovieFilesRepository
+import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
 class VideoPlayerViewModel : BaseViewModel() {
-    private val repository = MovieFilesRepository()
+    private val repository = TitleFilesRepository()
     private val mediaPlayer = MediaPlayerClass()
 
     private var playWhenReady = MutableLiveData(true)
@@ -60,7 +60,7 @@ class VideoPlayerViewModel : BaseViewModel() {
     fun getPlaylistFiles(movieId: Int, chosenSeason: Int, chosenEpisode: Int, chosenLanguage: String) {
         if (chosenSeason != 0) {
             viewModelScope.launch {
-                when (val files = repository.getSingleMovieFiles(movieId, chosenSeason)) {
+                when (val files = repository.getSingleTitleFiles(movieId, chosenSeason)) {
                     is Result.Success -> {
                         val season = files.data.data
                         val allEpisodes = season.subList(chosenEpisode - 1, season.size)
@@ -85,7 +85,7 @@ class VideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    private fun checkAvailability(singleFiles: MovieFiles.Data.File, chosenLanguage: String) {
+    private fun checkAvailability(singleFiles: TitleFiles.Data.File, chosenLanguage: String) {
         if (singleFiles.lang == chosenLanguage) {
             if (singleFiles.files.size == 1) {
                 if (singleFiles.files[0].quality == "MEDIUM") {

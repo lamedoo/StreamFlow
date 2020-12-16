@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.ui.home
+package com.lukakordzaia.imoviesapp.ui.searchtitles
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,17 +13,17 @@ import com.lukakordzaia.imoviesapp.network.models.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_title_item.view.*
 
-class HomeTvShowAdapter(private val context: Context, private val onTvShowClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeTvShowAdapter.ViewHolder>() {
+class SearchTitlesAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SearchTitlesAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
 
-    fun setTvShowsList(list: List<TitleList.Data>) {
+    fun setSearchTitleList(list: List<TitleList.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                LayoutInflater.from(context).inflate(R.layout.rv_title_item, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.rv_title_item, parent, false)
         )
     }
 
@@ -31,7 +31,7 @@ class HomeTvShowAdapter(private val context: Context, private val onTvShowClick:
         val listModel = list[position]
 
         holder.titleRoot.setOnClickListener {
-            listModel.id?.let { tvShowId -> onTvShowClick(tvShowId) }
+            listModel.id?.let { titleId -> onTitleClick(titleId) }
         }
 
         if (listModel.covers != null) {

@@ -2,31 +2,31 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/single_movie_fragment_nav"
-    app:startDestination="@id/singleMovieFragment">
+    android:id="@+id/single_title_fragment_nav"
+    app:startDestination="@id/singleTitleFragment">
 
     <fragment
-        android:id="@+id/singleMovieFragment"
-        android:name="com.lukakordzaia.imoviesapp.ui.singlemovie.SingleMovieFragment"
-        android:label="fragment_single_movie"
-        tools:layout="@layout/fragment_single_movie" >
+        android:id="@+id/singleTitleFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.singletitle.SingleTitleFragment"
+        android:label="fragment_single_title"
+        tools:layout="@layout/fragment_single_title">
         <action
-            android:id="@+id/action_singleMovieFragment_to_chooseMovieDetailsFragment"
-            app:destination="@id/chooseMovieDetailsFragment" />
+            android:id="@+id/action_singleTitleFragment_to_chooseTitleDetailsFragment"
+            app:destination="@id/chooseTitleDetailsFragment" />
         <argument
-            android:name="movieId"
+            android:name="titleId"
             app:argType="integer" />
     </fragment>
     <dialog
-        android:id="@+id/chooseMovieDetailsFragment"
-        android:name="com.lukakordzaia.imoviesapp.ui.singlemovie.choosemoviedetails.ChooseMovieDetailsFragment"
-        android:label="fragment_choose_movie_details"
-        tools:layout="@layout/fragment_choose_movie_details" >
+        android:id="@+id/chooseTitleDetailsFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.singletitle.choosetitledetails.ChooseTitleDetailsFragment"
+        android:label="fragment_choose_title_details"
+        tools:layout="@layout/fragment_choose_title_details" >
         <argument
-            android:name="movieId"
+            android:name="titleId"
             app:argType="integer" />
         <action
-            android:id="@+id/action_chooseMovieDetailsFragment_to_videoPlayerFragment"
+            android:id="@+id/action_chooseTitleDetailsFragment_to_videoPlayerFragment"
             app:destination="@id/videoPlayerFragment" />
         <argument
             android:name="numOfSeasons"
@@ -55,7 +55,7 @@
             app:argType="integer"
             android:defaultValue="0" />
         <argument
-            android:name="movieId"
+            android:name="titleId"
             app:argType="integer" />
         <argument
             android:name="isTvShow"

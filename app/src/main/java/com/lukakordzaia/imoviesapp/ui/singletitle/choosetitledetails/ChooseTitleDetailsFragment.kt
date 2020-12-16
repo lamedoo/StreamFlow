@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.ui.singlemovie.choosemoviedetails
+package com.lukakordzaia.imoviesapp.ui.singletitle.choosetitledetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,24 +10,24 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.*
-import kotlinx.android.synthetic.main.fragment_choose_movie_details.*
+import kotlinx.android.synthetic.main.fragment_choose_title_details.*
 
-class ChooseMovieDetailsFragment : BottomSheetDialogFragment() {
-    private lateinit var viewModel: ChooseMovieDetailsViewModel
-    private val args: ChooseMovieDetailsFragmentArgs by navArgs()
+class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
+    private lateinit var viewModel: ChooseTitleDetailsViewModel
+    private val args: ChooseTitleDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_choose_movie_details, container, false)
+        return inflater.inflate(R.layout.fragment_choose_title_details, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ChooseMovieDetailsViewModel::class.java)
-        viewModel.getSingleTitleFiles(args.movieId)
+        viewModel = ViewModelProvider(this).get(ChooseTitleDetailsViewModel::class.java)
+        viewModel.getSingleTitleFiles(args.titleId)
         val spinnerClass = SpinnerClass(requireContext())
 
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner, Observer {
@@ -56,7 +56,7 @@ class ChooseMovieDetailsFragment : BottomSheetDialogFragment() {
         } else {
             val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
             spinnerClass.createSpinner(spinner_season_numbers, numOfSeasons) {
-                viewModel.getSeasonFiles(args.movieId, it.toInt())
+                viewModel.getSeasonFiles(args.titleId, it.toInt())
             }
         }
 
@@ -73,7 +73,7 @@ class ChooseMovieDetailsFragment : BottomSheetDialogFragment() {
 
         viewModel.movieFile.observe(viewLifecycleOwner, Observer {
             choose_movie_details_play.setOnClickListener { _ ->
-                viewModel.onPlayButtonPressed(it, args.movieId, args.isTvShow)
+                viewModel.onPlayButtonPressed(it, args.titleId, args.isTvShow)
             }
         })
 
