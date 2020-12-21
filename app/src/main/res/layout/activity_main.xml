@@ -11,17 +11,43 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="0dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:background="?colorPrimary"
         android:fillColor="?attr/colorControlNormal"
         app:titleTextColor="?colorOnPrimary"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible" />
+        android:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/imovies_logo"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/account_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="?colorPrimary"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_main_toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/nav_main_bottom">
@@ -38,7 +64,6 @@
         android:id="@+id/nav_main_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
         android:background="?colorPrimary"
         app:elevation="0dp"
         app:itemBackground="@null"
@@ -48,10 +73,8 @@
         style="@style/Widget.MaterialComponents.BottomNavigationView"
         app:itemIconTint="@color/top_nav_colors"
         app:itemTextColor="@color/top_nav_colors"
-        app:labelVisibilityMode="labeled"
+        app:labelVisibilityMode="unlabeled"
         app:itemIconSize="32dp"
-        app:itemTextAppearanceActive="?android:attr/textAppearanceMedium"
-        app:itemTextAppearanceInactive="?android:attr/textAppearanceMedium"
         app:menu="@menu/top_navigation_menu"/>
 
 

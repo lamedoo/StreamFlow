@@ -13,44 +13,58 @@
     android:padding="@dimen/fragment_padding">
 
         <TextView
-            android:id="@+id/main_new_movies_title"
+            android:id="@+id/main_top_movies_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ახალი ფილმები"
+            android:text="ტოპ ფილმები"
             android:fontFamily="@font/georgian_uppercase"
             android:textSize="18sp"
             android:textColor="?colorOnPrimary"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <View
+            android:layout_width="80dp"
+            android:layout_height="2dp"
+            android:background="@color/green_dark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_top_movies_title"/>
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_main_new_movies"
+            android:id="@+id/rv_main_top_movies"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/main_new_movies_title"
+            app:layout_constraintTop_toBottomOf="@id/main_top_movies_title"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:spanCount="2" />
 
         <TextView
-            android:id="@+id/main_new_tvshows_title"
+            android:id="@+id/main_top_tvshows_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:text="ახალი სერიალები"
+            android:text="ტოპ სერიალები"
             android:fontFamily="@font/georgian_uppercase"
             android:textSize="18sp"
             android:textColor="?colorOnPrimary"
-            app:layout_constraintTop_toBottomOf="@id/rv_main_new_movies"/>
+            app:layout_constraintTop_toBottomOf="@id/rv_main_top_movies"/>
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="2dp"
+            android:background="@color/green_dark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_top_tvshows_title"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_main_new_tvshows"
+            android:id="@+id/rv_main_top_tvshows"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/main_new_tvshows_title"
+            app:layout_constraintTop_toBottomOf="@id/main_top_tvshows_title"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:spanCount="2" />

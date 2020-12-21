@@ -15,12 +15,20 @@ interface TitlesNetwork {
 //    Top Movies - movies/top?type=movie&period=day&page=1&per_page=10
 
     @Headers("User-Agent: imovies")
-    @GET ("movies?page=1&per_page=15&filters%5Btype%5D=movie&filters%5Bwith_files%5D=yes&sort=-upload_date")
+    @GET ("movies/top?page=1&per_page=15&filters%5Btype%5D=movie&filters%5Bwith_files%5D=yes&sort=-upload_date")
     suspend fun getMovies() : Response<TitleList>
 
     @Headers("User-Agent: imovies")
-    @GET ("movies?page=3&per_page=15&filters%5Btype%5D=series&filters%5Bwith_files%5D=yes&sort=-upload_date")
+    @GET ("movies/top?page=3&per_page=15&filters%5Btype%5D=series&filters%5Bwith_files%5D=yes&sort=-upload_date")
     suspend fun getTvShows() : Response<TitleList>
+
+    @Headers("User-Agent: imovies")
+    @GET ("movies/top?type=movie&period=day&page=1&per_page=15")
+    suspend fun getTopMovies() : Response<TitleList>
+
+    @Headers("User-Agent: imovies")
+    @GET ("movies/top?type=series&period=day&page=1&per_page=15")
+    suspend fun getTopTvShows() : Response<TitleList>
 
     @Headers("User-Agent: imovies")
     @GET ("search-advanced?filters%5Btype%5D=movie&page=1&per_page=15")

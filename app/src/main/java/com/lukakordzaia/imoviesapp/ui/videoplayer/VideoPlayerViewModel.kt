@@ -102,12 +102,5 @@ class VideoPlayerViewModel : BaseViewModel() {
                 }
             }
         }
-//        seasonEpisodes.forEach {
-//            val items = MediaItem.fromUri(Uri.parse(it))
-//            seasonEpisodesUri.add(items)
-//        }
-//        episodesUri.value = seasonEpisodesUri
-//        mediaPlayer.addAllEpisodes(episodesUri.value!!)
-//        Log.d("episodes", "${seasonEpisodes}")
     }
 }

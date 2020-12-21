@@ -23,9 +23,9 @@ class HomeViewModel : BaseViewModel() {
         navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(titleId))
     }
 
-    fun getMovies() {
+    fun getTopMovies() {
         viewModelScope.launch {
-            when (val movies = repository.getMovies()) {
+            when (val movies = repository.getTopMovies()) {
                 is Result.Success -> {
                     val data = movies.data.data
                     _movieList.value = data
@@ -37,9 +37,9 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    fun getTvShows() {
+    fun getTopTvShows() {
         viewModelScope.launch {
-            when (val tvShows = repository.getTvShows()) {
+            when (val tvShows = repository.getTopTvShows()) {
                 is Result.Success -> {
                     val data = tvShows.data.data
                     _tvShowList.value = data

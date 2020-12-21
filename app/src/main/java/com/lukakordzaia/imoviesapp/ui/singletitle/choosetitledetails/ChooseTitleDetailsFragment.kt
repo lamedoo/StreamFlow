@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -30,7 +29,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         viewModel.getSingleTitleFiles(args.titleId)
         val spinnerClass = SpinnerClass(requireContext())
 
-        viewModel.movieNotYetAdded.observe(viewLifecycleOwner, Observer {
+        viewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (it) {
                 movie_file_not_yet.setVisible()
                 movie_files_container.setGone()
@@ -39,7 +38,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
             }
         })
 
-        viewModel.availableLanguages.observe(viewLifecycleOwner, Observer {
+        viewModel.availableLanguages.observe(viewLifecycleOwner, {
             val languages = it.reversed()
             spinnerClass.createSpinner(spinner_language, languages) { language ->
                 viewModel.getTitleLanguageFiles(language)
@@ -58,14 +57,14 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
             }
         }
 
-        viewModel.availableEpisodes.observe(viewLifecycleOwner, Observer { it ->
+        viewModel.availableEpisodes.observe(viewLifecycleOwner, { it ->
             val numOfEpisodes = Array(it) { i -> (i * 1) + 1 }.toList()
             spinnerClass.createSpinner(spinner_episode_numbers, numOfEpisodes) { episode ->
                 viewModel.getEpisodeFile(episode.toInt())
             }
         })
 
-        viewModel.movieFile.observe(viewLifecycleOwner, Observer {
+        viewModel.movieFile.observe(viewLifecycleOwner, {
             choose_movie_details_play.setOnClickListener { _ ->
                 viewModel.onPlayButtonPressed(it, args.titleId, args.isTvShow)
             }

@@ -26,10 +26,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeAdapter = HomeMovieAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(it)
         }
-        rv_main_new_movies.adapter =  homeAdapter
-        rv_main_new_movies.layoutManager = movieLayout
+        rv_main_top_movies.adapter =  homeAdapter
+        rv_main_top_movies.layoutManager = movieLayout
 
-        viewModel.getMovies()
+        viewModel.getTopMovies()
 
         viewModel.movieList.observe(viewLifecycleOwner, Observer {
             homeAdapter.setMoviesList(it)
@@ -41,10 +41,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         tvShowAdapter = HomeTvShowAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(it)
         }
-        rv_main_new_tvshows.adapter = tvShowAdapter
-        rv_main_new_tvshows.layoutManager = tvShowLayout
+        rv_main_top_tvshows.adapter = tvShowAdapter
+        rv_main_top_tvshows.layoutManager = tvShowLayout
 
-        viewModel.getTvShows()
+        viewModel.getTopTvShows()
 
         viewModel.tvShowList.observe(viewLifecycleOwner, Observer {
             tvShowAdapter.setTvShowsList(it)
