@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:paddingTop="20dp"
         android:text="ფილმი/სერიალი მალე დაემატება"
-        android:textSize="30sp"
+        android:textSize="25sp"
         android:fontFamily="@font/georgian_uppercase"
         android:textStyle="bold"
         android:layout_gravity="center"
