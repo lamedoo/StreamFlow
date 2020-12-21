@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/search_fragment_nav"
     app:startDestination="@id/searchTitlesFragment">
+
     <fragment
         android:id="@+id/searchTitlesFragment"
         android:name="com.lukakordzaia.imoviesapp.ui.searchtitles.SearchTitlesFragment"

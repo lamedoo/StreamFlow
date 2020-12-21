@@ -1,6 +1,5 @@
 package com.lukakordzaia.imoviesapp.network
 
-import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,7 +7,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object ServiceBuilder {
+object RetrofitBuilder {
     private const val URL ="https://api.imovies.cc/api/v1/"
 
     private val okHttpClient = OkHttpClient()
@@ -28,13 +27,10 @@ object ServiceBuilder {
                 if (response.isSuccessful) {
                     Result.Success (response.body()!!)
                 } else {
-                    if (response.code() == 403) {
-                        Log.i("responsecode", "ავტორიზაცია არ განხორციელდა")
-                    }
-                    Result.Error(response.errorBody()?.string() ?: "Something goes wrong")
+                    Result.Error(response.errorBody().toString())
                 }
             } catch (e: Exception) {
-                Result.Error(e.message ?: "Internet error runs")
+                Result.Internet(false)
             }
     }
 

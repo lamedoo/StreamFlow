@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.network.models
+package com.lukakordzaia.imoviesapp.network.datamodels
 
 
 import com.google.gson.annotations.SerializedName

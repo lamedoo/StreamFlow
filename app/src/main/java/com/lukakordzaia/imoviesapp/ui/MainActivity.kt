@@ -21,16 +21,34 @@ import com.lukakordzaia.imoviesapp.utils.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var currentNavController: LiveData<NavController>
+    private var currentNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (savedInstanceState == null) {
+            setBottomNav()
+        }
+
         val appToolbar: MaterialToolbar = findViewById(R.id.app_main_toolbar)
         setSupportActionBar(appToolbar)
 
+        supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
+                when (f) {
+                    is SingleTitleFragment -> hideBottomNavigation()
+                    is ChooseTitleDetailsFragment -> hideBottomNavigation()
+                    is VideoPlayerFragment -> hideBottomNavigation()
+                    else -> showBottomNavigation()
+                }
+            }
+        }, true)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
         setBottomNav()
     }
 
@@ -55,22 +73,10 @@ class MainActivity : AppCompatActivity() {
             setupActionBarWithNavController(navController, appBarConfiguration)
         })
         currentNavController = controller
-
-
-        supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
-            override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
-                when (f) {
-                    is SingleTitleFragment -> hideBottomNavigation()
-                    is ChooseTitleDetailsFragment -> hideBottomNavigation()
-                    is VideoPlayerFragment -> hideBottomNavigation()
-                    else -> showBottomNavigation()
-                }
-            }
-        }, true)
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return currentNavController.value?.navigateUp() ?: false || super.onSupportNavigateUp()
+        return currentNavController?.value?.navigateUp() ?: false
     }
 
     private fun hideBottomNavigation() {

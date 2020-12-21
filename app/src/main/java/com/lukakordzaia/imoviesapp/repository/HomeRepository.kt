@@ -1,18 +1,18 @@
 package com.lukakordzaia.imoviesapp.repository
 
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.ServiceBuilder
+import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.network.TitlesNetwork
-import com.lukakordzaia.imoviesapp.network.models.TitleList
+import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 
 class HomeRepository {
-    private val destinationService = ServiceBuilder.buildService(TitlesNetwork::class.java)
+    private val destinationService = RetrofitBuilder.buildService(TitlesNetwork::class.java)
 
     suspend fun getMovies(): Result<TitleList> {
-        return ServiceBuilder.retrofitCall { destinationService.getMovies() }
+        return RetrofitBuilder.retrofitCall { destinationService.getMovies() }
     }
 
     suspend fun getTvShows(): Result<TitleList> {
-        return ServiceBuilder.retrofitCall { destinationService.getTvShows() }
+        return RetrofitBuilder.retrofitCall { destinationService.getTvShows() }
     }
 }

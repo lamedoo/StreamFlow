@@ -22,21 +22,18 @@
         android:name="com.lukakordzaia.imoviesapp.ui.singletitle.choosetitledetails.ChooseTitleDetailsFragment"
         android:label="fragment_choose_title_details"
         tools:layout="@layout/fragment_choose_title_details" >
-        <argument
-            android:name="titleId"
-            app:argType="integer" />
         <action
             android:id="@+id/action_chooseTitleDetailsFragment_to_videoPlayerFragment"
             app:destination="@id/videoPlayerFragment" />
+        <argument
+            android:name="titleId"
+            app:argType="integer" />
         <argument
             android:name="numOfSeasons"
             app:argType="integer" />
         <argument
             android:name="isTvShow"
             app:argType="boolean" />
-        <argument
-            android:name="languages"
-            app:argType="string[]" />
     </dialog>
     <fragment
         android:id="@+id/videoPlayerFragment"

@@ -7,8 +7,8 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
-import com.lukakordzaia.imoviesapp.network.models.VideoPlayerOptions
-import com.lukakordzaia.imoviesapp.network.models.VideoPlayerRelease
+import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
+import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerRelease
 
 class MediaPlayerClass {
     private lateinit var player: SimpleExoPlayer

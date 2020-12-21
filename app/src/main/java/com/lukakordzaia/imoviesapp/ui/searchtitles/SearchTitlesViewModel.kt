@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.models.TitleList
+import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.repository.SearchTitleRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch

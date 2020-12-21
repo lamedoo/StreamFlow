@@ -25,23 +25,20 @@ class SearchTitlesFragment : Fragment(R.layout.fragment_search_titles) {
 
         search_title_text.setOnQueryTextListener(object  : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrEmpty()) {
-                    viewModel.getSearchTitles(query)
-                    top_search_container.setGone()
-                } else {
-                    top_search_container.setVisible()
-                }
                 return false
             }
+
 
             override fun onQueryTextChange(query: String?): Boolean {
                 if (!query.isNullOrBlank()) {
                     viewModel.getSearchTitles(query)
+                    rv_search_titles.setVisible()
                     top_search_container.setGone()
                 } else {
+                    rv_search_titles.setGone()
                     top_search_container.setVisible()
                 }
-                return false
+                return true
             }
         })
 

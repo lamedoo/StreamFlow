@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.models.TitleFiles
+import com.lukakordzaia.imoviesapp.network.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
@@ -15,8 +15,8 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
 
     private val _singleMovieFiles = MutableLiveData<TitleFiles>()
 
-    private val _movieNotYetAdded = MutableLiveData<String>()
-    val movieNotYetAdded: LiveData<String> = _movieNotYetAdded
+    private val _movieNotYetAdded = MutableLiveData<Boolean>()
+    val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
 
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
@@ -24,11 +24,9 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
     private val _availableEpisodes = MutableLiveData<Int>()
     val availableEpisodes: LiveData<Int> = _availableEpisodes
 
-    private val _chosenLanguage = MutableLiveData<String>()
-    val chosenLanguage: LiveData<String> = _chosenLanguage
+    private val chosenLanguage = MutableLiveData<String>()
 
-    private val _chosenSeason = MutableLiveData<Int>(0)
-    val chosenSeason: LiveData<Int> = _chosenSeason
+    private val chosenSeason = MutableLiveData<Int>(0)
 
     private val _chosenEpisode = MutableLiveData<Int>(0)
     private val chosenEpisode: LiveData<Int> = _chosenEpisode
@@ -61,7 +59,7 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
                         }
                         _availableLanguages.value = languages
                     } else {
-                        _movieNotYetAdded.value = "ფილმი/სერიალი მალე დაემატება"
+                        _movieNotYetAdded.value = true
                     }
                 }
                 is Result.Error -> {
@@ -83,11 +81,11 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
                 }
             }
         }
-        _chosenLanguage.value = language
+        chosenLanguage.value = language
     }
 
     fun getSeasonFiles(movieId: Int, season: Int) {
-        _chosenSeason.value = season
+        chosenSeason.value = season
         viewModelScope.launch {
             when (val files = repository.getSingleTitleFiles(movieId, season)) {
                 is Result.Success -> {

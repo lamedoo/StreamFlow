@@ -1,14 +1,14 @@
 package com.lukakordzaia.imoviesapp.repository
 
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.ServiceBuilder
+import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.network.TitlesNetwork
-import com.lukakordzaia.imoviesapp.network.models.TitleFiles
+import com.lukakordzaia.imoviesapp.network.datamodels.TitleFiles
 
 class TitleFilesRepository {
-    private val destinationService = ServiceBuilder.buildService(TitlesNetwork::class.java)
+    private val destinationService = RetrofitBuilder.buildService(TitlesNetwork::class.java)
 
     suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<TitleFiles> {
-        return ServiceBuilder.retrofitCall { destinationService.getSingleFiles(titleId, season_number) }
+        return RetrofitBuilder.retrofitCall { destinationService.getSingleFiles(titleId, season_number) }
     }
 }

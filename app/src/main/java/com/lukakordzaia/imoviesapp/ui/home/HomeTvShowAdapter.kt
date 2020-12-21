@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.models.TitleList
+import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_title_item.view.*
 

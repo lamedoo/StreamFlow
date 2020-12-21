@@ -17,9 +17,9 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
     private val args: ChooseTitleDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_choose_title_details, container, false)
     }
@@ -31,19 +31,17 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         val spinnerClass = SpinnerClass(requireContext())
 
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner, Observer {
-            if (!it.isNullOrEmpty()) {
+            if (it) {
                 movie_file_not_yet.setVisible()
-                movie_file_not_yet.text = it
                 movie_files_container.setGone()
             } else {
-                movie_file_not_yet.setGone()
                 movie_files_container.setVisible()
             }
         })
 
         viewModel.availableLanguages.observe(viewLifecycleOwner, Observer {
             val languages = it.reversed()
-            spinnerClass.createSpinner ( spinner_language, languages) { language ->
+            spinnerClass.createSpinner(spinner_language, languages) { language ->
                 viewModel.getTitleLanguageFiles(language)
             }
         })
@@ -51,7 +49,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         if (!args.isTvShow) {
             tv_season_title.setGone()
             spinner_season_numbers.setGone()
-            tv_episode_title.setInvisible()
+            tv_episode_title.setGone()
             spinner_episode_numbers.setGone()
         } else {
             val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
@@ -63,11 +61,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         viewModel.availableEpisodes.observe(viewLifecycleOwner, Observer { it ->
             val numOfEpisodes = Array(it) { i -> (i * 1) + 1 }.toList()
             spinnerClass.createSpinner(spinner_episode_numbers, numOfEpisodes) { episode ->
-                    viewModel.chosenLanguage.observe(viewLifecycleOwner, Observer { language ->
-                        viewModel.chosenSeason.observe(viewLifecycleOwner, Observer { season ->
-                            viewModel.getEpisodeFile(episode.toInt())
-                        })
-                    })
+                viewModel.getEpisodeFile(episode.toInt())
             }
         })
 

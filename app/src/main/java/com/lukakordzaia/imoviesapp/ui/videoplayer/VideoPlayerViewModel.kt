@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.models.TitleFiles
-import com.lukakordzaia.imoviesapp.network.models.VideoPlayerOptions
+import com.lukakordzaia.imoviesapp.network.datamodels.TitleFiles
+import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
 import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
@@ -46,6 +46,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                     mediaLink.value
             )
             mediaPlayer.initPlayer(context, playerView, playBackOptions)
+            Log.d("medialink1", mediaLink.value.toString())
         }
     }
 

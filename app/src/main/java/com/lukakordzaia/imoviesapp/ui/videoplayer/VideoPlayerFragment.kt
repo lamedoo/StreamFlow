@@ -1,5 +1,6 @@
 package com.lukakordzaia.imoviesapp.ui.videoplayer
 
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -19,6 +20,7 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         viewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
         viewModel.getPlaylistFiles(args.titleId, args.chosenSeason, args.chosenEpisode, args.chosenLanguage)
 
@@ -62,6 +64,7 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
 
     override fun onDetach() {
         super.onDetach()
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(true)
         } else {

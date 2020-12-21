@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.models.TitleData
-import com.lukakordzaia.imoviesapp.network.models.TitleDetails
+import com.lukakordzaia.imoviesapp.network.datamodels.TitleData
+import com.lukakordzaia.imoviesapp.network.datamodels.TitleDetails
 import com.lukakordzaia.imoviesapp.repository.SingleTitleRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
@@ -29,8 +29,7 @@ class SingleTitleViewModel : BaseViewModel() {
         navigateToNewFragment(SingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
                 movieId,
                 titleDetails.numOfSeasons,
-                titleDetails.isTvShow,
-                arrayOf("ENG", "RUS")
+                titleDetails.isTvShow
         ))
     }
 
