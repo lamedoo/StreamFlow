@@ -34,18 +34,7 @@ class HomeWatchedAdapter(
         val listModel = list[position]
 
         holder.titleRoot.setOnClickListener {
-            onWatchedTitleClick(WatchedTitleData(
-                null,
-                null,
-                listModel.id,
-                listModel.isTvShow,
-                null,
-                null,
-                listModel.watchedTime,
-                listModel.season,
-                listModel.episode,
-                listModel.movieLink
-            ))
+            onWatchedTitleClick(listModel)
         }
 
         if (listModel.cover != null) {

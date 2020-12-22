@@ -107,25 +107,27 @@ class VideoPlayerViewModel : BaseViewModel() {
     fun getPlaylistFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
         if (chosenSeason != 0) {
             seasonForDb.value = chosenSeason
-            viewModelScope.launch {
-                when (val files = repository.getSingleTitleFiles(titleId, chosenSeason)) {
-                    is Result.Success -> {
-                        val season = files.data.data
-                        season.forEach { singleEpisode ->
-                            singleEpisode.files!!.forEach { singleFiles ->
-                                checkAvailability(singleFiles, chosenLanguage)
+            if (episodesUri.value == null) {
+                viewModelScope.launch {
+                    when (val files = repository.getSingleTitleFiles(titleId, chosenSeason)) {
+                        is Result.Success -> {
+                            val season = files.data.data
+                            season.forEach { singleEpisode ->
+                                singleEpisode.files!!.forEach { singleFiles ->
+                                    checkAvailability(singleFiles, chosenLanguage)
+                                }
                             }
+                            seasonEpisodes.forEach {
+                                val items = MediaItem.fromUri(Uri.parse(it))
+                                seasonEpisodesUri.add(items)
+                            }
+                            episodesUri.value = seasonEpisodesUri
+                            mediaPlayer.addAllEpisodes(episodesUri.value!!)
+                            Log.d("episodes", "${seasonEpisodes}")
                         }
-                        seasonEpisodes.forEach {
-                            val items = MediaItem.fromUri(Uri.parse(it))
-                            seasonEpisodesUri.add(items)
+                        is Result.Error -> {
+                            Log.d("errornextepisode", files.exception)
                         }
-                        episodesUri.value = seasonEpisodesUri
-                        mediaPlayer.addAllEpisodes(episodesUri.value!!)
-                        Log.d("episodes", "${seasonEpisodes}")
-                    }
-                    is Result.Error -> {
-                        Log.d("errornextepisode", files.exception)
                     }
                 }
             }

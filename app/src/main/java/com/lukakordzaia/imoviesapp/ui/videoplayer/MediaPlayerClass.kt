@@ -30,6 +30,7 @@ class MediaPlayerClass {
         } else {
             player.playWhenReady = playBackOptions.playWhenReady == true
             player.seekTo(playBackOptions.currentWindow, position)
+            player.repeatMode = Player.REPEAT_MODE_OFF
             player.prepare()
             player.play()
         }

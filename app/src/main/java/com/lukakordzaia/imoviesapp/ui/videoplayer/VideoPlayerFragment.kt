@@ -1,6 +1,7 @@
 package com.lukakordzaia.imoviesapp.ui.videoplayer
 
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -22,7 +23,9 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         viewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
-        viewModel.getPlaylistFiles(args.titleId, args.chosenSeason, args.chosenLanguage)
+        if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            viewModel.getPlaylistFiles(args.titleId, args.chosenSeason, args.chosenLanguage)
+        }
 
         exo_episodes.setGone()
 
