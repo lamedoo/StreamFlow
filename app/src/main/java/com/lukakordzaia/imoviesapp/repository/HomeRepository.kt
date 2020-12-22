@@ -8,11 +8,11 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 class HomeRepository {
     private val destinationService = RetrofitBuilder.buildService(TitlesNetwork::class.java)
 
-    suspend fun getMovies(): Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { destinationService.getMovies() }
+    suspend fun getTopMovies(): Result<TitleList> {
+        return RetrofitBuilder.retrofitCall { destinationService.getTopMovies() }
     }
 
-    suspend fun getTvShows(): Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { destinationService.getTvShows() }
+    suspend fun getTopTvShows(): Result<TitleList> {
+        return RetrofitBuilder.retrofitCall { destinationService.getTopTvShows() }
     }
 }

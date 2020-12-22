@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/home_fragment_nav"
-        android:title="მთავარი" />
+        android:title="მთავარი"
+        android:icon="@drawable/home_icon"/>
 
-    <item android:id="@+id/toptitles_fragment_nav"
-        android:title="ტოპ სიები" />
+    <item android:id="@+id/categories_fragment_nav"
+        android:title="ტოპ სიები"
+        android:icon="@drawable/top_icon"/>
 
     <item android:id="@+id/search_fragment_nav"
-        android:title="ძიება" />
+        android:title="ძიება"
+        android:icon="@drawable/search_icon"/>
 </menu>

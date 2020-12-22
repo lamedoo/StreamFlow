@@ -17,11 +17,8 @@ class SingleTitleViewModel : BaseViewModel() {
     private val _singleMovieFiles = MutableLiveData<TitleData.Data>()
     val singleTitleFiles: LiveData<TitleData.Data> = _singleMovieFiles
 
-    private val _numOfSeasons = MutableLiveData<Pair<Int, Boolean>>()
-    val numOfSeasons: LiveData<Pair<Int, Boolean>> = _numOfSeasons
-
-    private val _movieDetails = MutableLiveData<TitleDetails>()
-    val titleDetails: LiveData<TitleDetails> = _movieDetails
+    private val _titleDetails = MutableLiveData<TitleDetails>()
+    val titleDetails: LiveData<TitleDetails> = _titleDetails
 
 
 
@@ -50,16 +47,13 @@ class SingleTitleViewModel : BaseViewModel() {
     private fun checkTvShowAndFiles() {
         if (singleTitleFiles.value!!.isTvShow != false) {
             if (!singleTitleFiles.value!!.seasons!!.data.isNullOrEmpty()) {
-                _numOfSeasons.value = singleTitleFiles.value!!.seasons!!.data?.last()?.number!! to true
-                _movieDetails.value = TitleDetails(singleTitleFiles.value!!.seasons!!.data?.last()?.number!!, true)
+                _titleDetails.value = TitleDetails(singleTitleFiles.value!!.seasons!!.data?.last()?.number!!, true)
 
             } else {
-                _numOfSeasons.value = 0 to true
-                _movieDetails.value = TitleDetails(0, true)
+                _titleDetails.value = TitleDetails(0, true)
             }
         } else {
-            _numOfSeasons.value = 0 to false
-            _movieDetails.value = TitleDetails(0, false)
+            _titleDetails.value = TitleDetails(0, false)
         }
     }
 }
