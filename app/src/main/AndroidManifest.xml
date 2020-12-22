@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ImoviesApp"
         android:banner="@mipmap/ic_launcher">
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

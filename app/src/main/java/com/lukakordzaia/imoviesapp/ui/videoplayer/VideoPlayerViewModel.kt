@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.PlayerView
+import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
+import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
@@ -28,8 +30,22 @@ class VideoPlayerViewModel : BaseViewModel() {
     private val seasonEpisodes: MutableList<String> = ArrayList()
     private val seasonEpisodesUri: MutableList<MediaItem> = ArrayList()
 
-    fun initPlayer(context: Context, playerView: PlayerView, media: String, isTvShow: Boolean) {
+    private val seasonForDb = MutableLiveData(1)
+    private val episodeForDb = MutableLiveData<Int>()
+
+    fun initPlayer(
+        context: Context,
+        playerView: PlayerView,
+        media: String,
+        isTvShow: Boolean,
+        watchTime: Long,
+        chosenEpisode: Int
+    ) {
         mediaLink.value = media
+        currentWindow.value = chosenEpisode - 1
+        if (watchTime > 0L) {
+            playbackPosition.value = watchTime
+        }
         if (isTvShow) {
             val playBackOptions = VideoPlayerOptions(
                     playWhenReady.value!!,
@@ -41,7 +57,7 @@ class VideoPlayerViewModel : BaseViewModel() {
         } else {
             val playBackOptions = VideoPlayerOptions(
                     playWhenReady.value!!,
-                    currentWindow.value!!,
+                    0,
                     playbackPosition.value!!,
                     mediaLink.value
             )
@@ -55,17 +71,47 @@ class VideoPlayerViewModel : BaseViewModel() {
             playWhenReady.value = it.playWhenReady
             playbackPosition.value = it.playbackPosition
             currentWindow.value = it.currentWindow
+            episodeForDb.value = it.currentWindow
         }
     }
 
-    fun getPlaylistFiles(movieId: Int, chosenSeason: Int, chosenEpisode: Int, chosenLanguage: String) {
+    fun saveTitleToDb(context: Context, titleId: Int, movieLink: String, isTvShow: Boolean) {
+        val database = ImoviesDatabase.getDatabase(context)?.getDao()
+        viewModelScope.launch {
+            if (playbackPosition.value!! > 0 && !isTvShow) {
+                database?.insertWatchedTitle(
+                    WatchedDetails(
+                        titleId,
+                        playbackPosition.value!!,
+                        false,
+                        movieLink,
+                        0,
+                        0
+                    )
+                )
+            } else if (playbackPosition.value!! > 0 && isTvShow) {
+                database?.insertWatchedTitle(
+                    WatchedDetails(
+                        titleId,
+                        playbackPosition.value!!,
+                        true,
+                        "",
+                        seasonForDb.value!!,
+                        episodeForDb.value!! + 1
+                    )
+                )
+            }
+        }
+    }
+
+    fun getPlaylistFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
         if (chosenSeason != 0) {
+            seasonForDb.value = chosenSeason
             viewModelScope.launch {
-                when (val files = repository.getSingleTitleFiles(movieId, chosenSeason)) {
+                when (val files = repository.getSingleTitleFiles(titleId, chosenSeason)) {
                     is Result.Success -> {
                         val season = files.data.data
-                        val allEpisodes = season.subList(chosenEpisode - 1, season.size)
-                        allEpisodes.forEach { singleEpisode ->
+                        season.forEach { singleEpisode ->
                             singleEpisode.files!!.forEach { singleFiles ->
                                 checkAvailability(singleFiles, chosenLanguage)
                             }

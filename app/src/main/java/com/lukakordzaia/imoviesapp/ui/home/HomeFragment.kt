@@ -14,43 +14,56 @@ import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var viewModel: HomeViewModel
-    private lateinit var homeAdapter: HomeMovieAdapter
-    private lateinit var tvShowAdapter: HomeTvShowAdapter
+    private lateinit var homeWatchedAdapter: HomeWatchedAdapter
+    private lateinit var homeMovieAdapter: HomeMovieAdapter
+    private lateinit var homeTvShowAdapter: HomeTvShowAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
+        //Watched Titles List
+        homeWatchedAdapter = HomeWatchedAdapter(requireContext()) {
+            viewModel.onWatchedTitlePressed(it)
+        }
+        rv_main_watched_titles.adapter = homeWatchedAdapter
+
+        viewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
+            viewModel.getWatchedTitles(it)
+        })
+
+        viewModel.watchedList.observe(viewLifecycleOwner, {
+            homeWatchedAdapter.setWatchedTitlesList(it)
+        })
+
         //New Movies List
         val movieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeAdapter = HomeMovieAdapter(requireContext()) {
+        homeMovieAdapter = HomeMovieAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(it)
         }
-        rv_main_top_movies.adapter =  homeAdapter
+        rv_main_top_movies.adapter =  homeMovieAdapter
         rv_main_top_movies.layoutManager = movieLayout
 
         viewModel.getTopMovies()
 
         viewModel.movieList.observe(viewLifecycleOwner, Observer {
-            homeAdapter.setMoviesList(it)
+            homeMovieAdapter.setMoviesList(it)
         })
 
 
         //New TvShows List
         val tvShowLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        tvShowAdapter = HomeTvShowAdapter(requireContext()) {
+        homeTvShowAdapter = HomeTvShowAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(it)
         }
-        rv_main_top_tvshows.adapter = tvShowAdapter
+        rv_main_top_tvshows.adapter = homeTvShowAdapter
         rv_main_top_tvshows.layoutManager = tvShowLayout
 
-        viewModel.getTopTvShows()
+        viewModel.getTopTvShows(requireContext())
 
         viewModel.tvShowList.observe(viewLifecycleOwner, Observer {
-            tvShowAdapter.setTvShowsList(it)
+            homeTvShowAdapter.setTvShowsList(it)
         })
-
-
 
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)

@@ -10,6 +10,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
 import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerRelease
 
+
 class MediaPlayerClass {
     private lateinit var player: SimpleExoPlayer
 
@@ -35,15 +36,17 @@ class MediaPlayerClass {
     }
 
     fun releasePlayer(onRelease: (playBackOptions: VideoPlayerRelease) -> Unit) {
-        onRelease(VideoPlayerRelease(
+        onRelease(
+            VideoPlayerRelease(
                 player.playWhenReady,
                 player.currentWindowIndex,
                 player.currentPosition
-        ))
+            )
+        )
         player.release()
     }
 
-    fun addAllEpisodes(episodes:  MutableList<MediaItem>) {
+    fun addAllEpisodes(episodes: MutableList<MediaItem>) {
         player.addMediaItems(episodes)
         Log.d("mediaitems", "$episodes")
     }

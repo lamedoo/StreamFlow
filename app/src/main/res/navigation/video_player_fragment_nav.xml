@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/video_player_fragment_nav"
+    app:startDestination="@id/videoPlayerFragment">
+
+    <fragment
+        android:id="@+id/videoPlayerFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.videoplayer.VideoPlayerFragment"
+        android:label="fragment_video_player"
+        tools:layout="@layout/fragment_video_player" >
+        <argument
+            android:name="mediaLink"
+            app:argType="string" />
+        <argument
+            android:name="chosenSeason"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="chosenEpisode"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="titleId"
+            app:argType="integer" />
+        <argument
+            android:name="isTvShow"
+            app:argType="boolean" />
+        <argument
+            android:name="chosenLanguage"
+            app:argType="string" />
+        <argument
+            android:name="watchedTime"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </fragment>
+
+</navigation>
