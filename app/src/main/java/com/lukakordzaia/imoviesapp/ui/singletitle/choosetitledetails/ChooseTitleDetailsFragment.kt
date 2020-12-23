@@ -30,10 +30,8 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         val spinnerClass = SpinnerClass(requireContext())
 
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
-            if (it) {
-                movie_file_not_yet.setVisible()
-                movie_files_container.setGone()
-            } else {
+            if (!it) {
+                movie_file_not_yet.setGone()
                 movie_files_container.setVisible()
             }
         })
@@ -64,11 +62,11 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
             }
         })
 
-        viewModel.movieFile.observe(viewLifecycleOwner, {
+
             choose_movie_details_play.setOnClickListener { _ ->
-                viewModel.onPlayButtonPressed(it, args.titleId, args.isTvShow)
+                viewModel.onPlayButtonPressed(args.titleId, args.isTvShow)
             }
-        })
+
 
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)

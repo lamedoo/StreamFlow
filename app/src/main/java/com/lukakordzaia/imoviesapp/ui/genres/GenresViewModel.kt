@@ -25,6 +25,7 @@ class GenresViewModel : BaseViewModel() {
             when (val genres = repository.getAllGenres()) {
                 is Result.Success -> {
                     _allGenresList.value = genres.data.data
+                    setLoading(false)
                 }
                 is Result.Error -> {
                     Log.d("errorgenres", genres.exception)

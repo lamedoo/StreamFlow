@@ -8,6 +8,8 @@ import androidx.navigation.fragment.navArgs
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
+import com.lukakordzaia.imoviesapp.utils.setGone
+import com.lukakordzaia.imoviesapp.utils.setVisible
 import kotlinx.android.synthetic.main.fragment_single_genre.*
 
 class SingleGenreFragment : Fragment(R.layout.fragment_single_genre) {
@@ -19,6 +21,13 @@ class SingleGenreFragment : Fragment(R.layout.fragment_single_genre) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(SingleGenreViewModel::class.java)
         viewModel.getSingleGenre(args.genreId)
+
+        viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
+            if (!it) {
+                single_genre_progressBar.setGone()
+                rv_single_genre.setVisible()
+            }
+        })
 
         singleGenreAdapter = SingleGenreAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(it)

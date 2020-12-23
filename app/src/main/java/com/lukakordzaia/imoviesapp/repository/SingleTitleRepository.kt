@@ -8,7 +8,7 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleData
 class SingleTitleRepository {
     private val destinationService = RetrofitBuilder.buildService(TitlesNetwork::class.java)
 
-    suspend fun getSingleTitleData(movieId: Int): Result<TitleData> {
-        return RetrofitBuilder.retrofitCall { destinationService.getSingleTitle(movieId) }
+    suspend fun getSingleTitleData(titleId: Int): Result<TitleData> {
+        return RetrofitBuilder.retrofitCall { destinationService.getSingleTitle(titleId) }
     }
 }

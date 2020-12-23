@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
+import com.lukakordzaia.imoviesapp.utils.setGone
+import com.lukakordzaia.imoviesapp.utils.setVisible
 import kotlinx.android.synthetic.main.fragment_genres.*
 
 class GenresFragment : Fragment(R.layout.fragment_genres) {
@@ -17,6 +19,13 @@ class GenresFragment : Fragment(R.layout.fragment_genres) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(GenresViewModel::class.java)
         viewModel.getAllGenres()
+
+        viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
+            if (!it) {
+                genres_progressBar.setGone()
+                rv_genres.setVisible()
+            }
+        })
 
         genresAdapter = GenresAdapter(requireContext()) {
             viewModel.onSingleGenrePressed(it)

@@ -25,6 +25,7 @@ class SingleGenreViewModel : BaseViewModel() {
             when (val singleGenre = repository.getSingleGenre(genreId)) {
                 is Result.Success -> {
                     _singleGenreList.value = singleGenre.data.data
+                    setLoading(false)
                 }
                 is Result.Error -> {
                     Log.d("errorsinglegenre", singleGenre.exception)

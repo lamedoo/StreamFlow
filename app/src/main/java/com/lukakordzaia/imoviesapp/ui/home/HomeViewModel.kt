@@ -68,6 +68,7 @@ class HomeViewModel : BaseViewModel() {
                                 it.language
                         ))
                         _watchedList.value = watchedTitles
+                        setLoading(false)
                     }
                 }
             }
@@ -80,6 +81,7 @@ class HomeViewModel : BaseViewModel() {
                 is Result.Success -> {
                     val data = movies.data.data
                     _movieList.value = data
+                    setLoading(false)
                 }
                 is Result.Error -> {
                     Log.d("errornewmovies", movies.exception)
@@ -94,14 +96,12 @@ class HomeViewModel : BaseViewModel() {
                 is Result.Success -> {
                     val data = tvShows.data.data
                     _tvShowList.value = data
+                    setLoading(false)
                 }
                 is Result.Error -> {
                     Log.d("errornewtvshows", tvShows.exception)
                 }
             }
         }
-//        viewModelScope.launch {
-//            ImoviesDatabase.getDatabase(context)?.getDao()?.deleteDBContent()
-//        }
     }
 }

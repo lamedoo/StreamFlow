@@ -10,6 +10,8 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleDetails
 import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
+import com.lukakordzaia.imoviesapp.utils.setGone
+import com.lukakordzaia.imoviesapp.utils.setVisible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_single_title.*
 
@@ -20,7 +22,14 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(SingleTitleViewModel::class.java)
-        viewModel.getSingleMovieFiles(args.titleId)
+        viewModel.getSingleTitleFiles(args.titleId)
+
+        viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
+            if (!it) {
+                single_title_progressBar.setGone()
+                single_title_main_container.setVisible()
+            }
+        })
 
         viewModel.singleTitleFiles.observe(viewLifecycleOwner, Observer {
             tv_single_title_name_geo.text = it.primaryName

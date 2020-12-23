@@ -10,6 +10,7 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
 import com.lukakordzaia.imoviesapp.utils.setGone
+import com.lukakordzaia.imoviesapp.utils.setVisible
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -22,6 +23,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+
+        viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
+            if (!it) {
+                home_progressBar.setGone()
+                home_main_container.setVisible()
+            }
+        })
 
         //Watched Titles List
         homeWatchedAdapter = HomeWatchedAdapter(requireContext()) {

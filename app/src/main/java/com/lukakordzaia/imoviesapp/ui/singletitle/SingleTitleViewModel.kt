@@ -20,22 +20,21 @@ class SingleTitleViewModel : BaseViewModel() {
     private val _titleDetails = MutableLiveData<TitleDetails>()
     val titleDetails: LiveData<TitleDetails> = _titleDetails
 
-
-
-    fun onPlayPressed(movieId: Int, titleDetails: TitleDetails) {
+    fun onPlayPressed(titleId: Int, titleDetails: TitleDetails) {
         navigateToNewFragment(SingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
-                movieId,
+                titleId,
                 titleDetails.numOfSeasons,
                 titleDetails.isTvShow
         ))
     }
 
-    fun getSingleMovieFiles(movieId: Int) {
+    fun getSingleTitleFiles(titleId: Int) {
         viewModelScope.launch {
-            when (val data = repository.getSingleTitleData(movieId)) {
+            when (val data = repository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
                     _singleMovieFiles.value = data.data.data
                     checkTvShowAndFiles()
+                    setLoading(false)
                 }
                 is Result.Error -> {
                     Log.d("errorsinglemovies", data.exception)

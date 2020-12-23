@@ -7,6 +7,18 @@
     android:padding="@dimen/fragment_padding"
     tools:context=".ui.genres.GenresFragment">
 
+    <ProgressBar
+        android:id="@+id/genres_progressBar"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/green_dark"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_genres"
         android:layout_width="match_parent"
@@ -14,6 +26,8 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
