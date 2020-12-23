@@ -4,7 +4,7 @@
         android:title="მთავარი"
         android:icon="@drawable/home_icon"/>
 
-    <item android:id="@+id/categories_fragment_nav"
+    <item android:id="@+id/genres_fragment_nav"
         android:title="ტოპ სიები"
         android:icon="@drawable/top_icon"/>
 

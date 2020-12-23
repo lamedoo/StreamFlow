@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/genres_fragment_nav"
+    app:startDestination="@id/genresFragment">
+    <fragment
+        android:id="@+id/genresFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.genres.GenresFragment"
+        android:label="fragment_genres_categories"
+        tools:layout="@layout/fragment_genres" >
+        <action
+            android:id="@+id/action_genresFragment_to_singleGenreFragment"
+            app:destination="@id/singleGenreFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/singleGenreFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.genres.singlegenre.SingleGenreFragment"
+        android:label="fragment_single_genre"
+        tools:layout="@layout/fragment_single_genre" >
+        <argument
+            android:name="genreId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_singleGenreFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+    <include app:graph="@navigation/single_title_fragment_nav" />
+</navigation>

@@ -1,0 +1,34 @@
+package com.lukakordzaia.imoviesapp.ui.genres
+
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.utils.EventObserver
+import com.lukakordzaia.imoviesapp.utils.navController
+import kotlinx.android.synthetic.main.fragment_genres.*
+
+class GenresFragment : Fragment(R.layout.fragment_genres) {
+    private lateinit var viewModel: GenresViewModel
+    private lateinit var genresAdapter: GenresAdapter
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(GenresViewModel::class.java)
+        viewModel.getAllGenres()
+
+        genresAdapter = GenresAdapter(requireContext()) {
+            viewModel.onSingleGenrePressed(it)
+        }
+        rv_genres.adapter = genresAdapter
+
+        viewModel.allGenresList.observe(viewLifecycleOwner, {
+            genresAdapter.setGenreList(it)
+        })
+
+        viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+            navController(it)
+        })
+    }
+}

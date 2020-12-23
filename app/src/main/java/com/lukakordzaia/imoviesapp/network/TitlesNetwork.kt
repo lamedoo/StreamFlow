@@ -1,6 +1,7 @@
 package com.lukakordzaia.imoviesapp.network
 
 
+import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
@@ -12,16 +13,6 @@ import retrofit2.http.Query
 
 interface TitlesNetwork {
 
-//    Top Movies - movies/top?type=movie&period=day&page=1&per_page=10
-
-    @Headers("User-Agent: imovies")
-    @GET ("movies/top?page=1&per_page=15&filters%5Btype%5D=movie&filters%5Bwith_files%5D=yes&sort=-upload_date")
-    suspend fun getMovies() : Response<TitleList>
-
-    @Headers("User-Agent: imovies")
-    @GET ("movies/top?page=3&per_page=15&filters%5Btype%5D=series&filters%5Bwith_files%5D=yes&sort=-upload_date")
-    suspend fun getTvShows() : Response<TitleList>
-
     @Headers("User-Agent: imovies")
     @GET ("movies/top?type=movie&period=day&page=1&per_page=15")
     suspend fun getTopMovies() : Response<TitleList>
@@ -29,6 +20,14 @@ interface TitlesNetwork {
     @Headers("User-Agent: imovies")
     @GET ("movies/top?type=series&period=day&page=1&per_page=15")
     suspend fun getTopTvShows() : Response<TitleList>
+
+    @Headers("User-Agent: imovies")
+    @GET ("genres?page=1&per_page=100")
+    suspend fun getAllGenres() : Response<GenreList>
+
+    @Headers("User-Agent: imovies")
+    @GET("movies?page=1&per_page=12&sort=-year")
+    suspend fun getSingleGenre(@Query("filters[genre]") genreId: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
     @GET ("search-advanced?filters%5Btype%5D=movie&page=1&per_page=15")

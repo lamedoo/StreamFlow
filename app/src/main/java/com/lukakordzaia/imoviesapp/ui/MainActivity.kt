@@ -7,11 +7,15 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.ui.genres.singlegenre.SingleGenreFragment
 import com.lukakordzaia.imoviesapp.ui.home.HomeFragmentDirections
 import com.lukakordzaia.imoviesapp.ui.settings.SettingsFragment
 import com.lukakordzaia.imoviesapp.ui.singletitle.SingleTitleFragment
@@ -34,8 +38,8 @@ class MainActivity : AppCompatActivity() {
             setBottomNav()
         }
 
-//        val appToolbar: MaterialToolbar = findViewById(R.id.app_main_toolbar)
-//        setSupportActionBar(appToolbar)
+        val appToolbar: MaterialToolbar = findViewById(R.id.app_main_toolbar)
+        setSupportActionBar(appToolbar)
 
         main_settings.setOnClickListener {
             findNavController(R.id.fr_nav_host).navigate(HomeFragmentDirections.actionHomeFragmentToSettingsFragment())
@@ -51,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                         hideBottomNavigation()
                     }
                     is SettingsFragment -> main_settings.setGone()
+                    is SingleGenreFragment -> hideBottomNavigation()
                     else -> {
                         app_main_toolbar.setVisible()
                         main_settings.setVisible()
@@ -68,11 +73,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setBottomNav() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_main_bottom)
-        val navGraphIds = listOf(R.navigation.home_fragment_nav, R.navigation.categories_fragment_nav, R.navigation.search_fragment_nav)
+        val navGraphIds = listOf(R.navigation.home_fragment_nav, R.navigation.genres_fragment_nav, R.navigation.search_fragment_nav)
         val appBarConfiguration = AppBarConfiguration(
             topLevelDestinationIds = setOf(
                 R.id.homeFragment,
-                R.id.titleCategoriesFragment,
+                R.id.genresFragment,
                 R.id.searchTitlesFragment,
             )
         )
@@ -83,9 +88,9 @@ class MainActivity : AppCompatActivity() {
             containerId = R.id.fr_nav_host,
             intent = intent
         )
-//        controller.observe(this, Observer { navController ->
-//            setupActionBarWithNavController(navController, appBarConfiguration)
-//        })
+        controller.observe(this, Observer { navController ->
+            setupActionBarWithNavController(navController, appBarConfiguration)
+        })
         currentNavController = controller
     }
 
