@@ -37,7 +37,6 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
     fun onPlayButtonPressed(mediaLink: String, titleId: Int, isTvShow: Boolean) {
         navigateToNewFragment(
                 ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
-                        mediaLink,
                         chosenSeason.value!!,
                         chosenEpisode.value!!,
                         titleId,

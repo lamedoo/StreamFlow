@@ -35,9 +35,6 @@
             android:id="@+id/action_chooseTitleDetailsFragment_to_video_player_fragment_nav"
             app:destination="@id/video_player_fragment_nav">
             <argument
-                android:name="mediaLink"
-                app:argType="string" />
-            <argument
                 android:name="chosenSeason"
                 app:argType="integer"
                 android:defaultValue="0" />

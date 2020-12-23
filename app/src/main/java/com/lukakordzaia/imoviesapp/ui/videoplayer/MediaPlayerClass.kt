@@ -1,7 +1,6 @@
 package com.lukakordzaia.imoviesapp.ui.videoplayer
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -20,20 +19,11 @@ class MediaPlayerClass {
         playerView.player = player
         player.addListener(event)
         val position = playBackOptions.playbackPosition
-        if (playBackOptions.mediaLink != null) {
-            val movie = MediaItem.fromUri(Uri.parse(playBackOptions.mediaLink))
-            player.playWhenReady = playBackOptions.playWhenReady == true
-            player.setMediaItem(movie)
-            player.seekTo(playBackOptions.currentWindow, position)
-            player.prepare()
-            player.play()
-        } else {
-            player.playWhenReady = playBackOptions.playWhenReady == true
-            player.seekTo(playBackOptions.currentWindow, position)
-            player.repeatMode = Player.REPEAT_MODE_OFF
-            player.prepare()
-            player.play()
-        }
+        player.playWhenReady = playBackOptions.playWhenReady == true
+        player.seekTo(playBackOptions.currentWindow, position)
+        player.repeatMode = Player.REPEAT_MODE_OFF
+        player.prepare()
+        player.play()
     }
 
     fun releasePlayer(onRelease: (playBackOptions: VideoPlayerRelease) -> Unit) {

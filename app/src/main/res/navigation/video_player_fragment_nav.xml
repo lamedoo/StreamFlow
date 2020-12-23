@@ -11,9 +11,6 @@
         android:label="fragment_video_player"
         tools:layout="@layout/fragment_video_player" >
         <argument
-            android:name="mediaLink"
-            app:argType="string" />
-        <argument
             android:name="chosenSeason"
             app:argType="integer"
             android:defaultValue="0" />

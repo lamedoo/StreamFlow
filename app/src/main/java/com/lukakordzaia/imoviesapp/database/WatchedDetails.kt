@@ -8,12 +8,12 @@ import androidx.room.PrimaryKey
 data class WatchedDetails (
     @PrimaryKey
     var titleId: Int,
+    @ColumnInfo(name = "language")
+    var language: String,
     @ColumnInfo(name = "watchedTime")
     var watchedTime: Long,
     @ColumnInfo(name = "isTvShow")
     var isTvShow: Boolean,
-    @ColumnInfo(name = "movieLink")
-    var movieLink: String,
     @ColumnInfo(name = "season")
     var season: Int,
     @ColumnInfo(name = "episode")

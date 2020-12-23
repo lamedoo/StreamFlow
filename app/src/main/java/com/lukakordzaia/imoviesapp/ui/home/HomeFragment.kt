@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
+import com.lukakordzaia.imoviesapp.utils.setGone
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -29,7 +30,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         rv_main_watched_titles.adapter = homeWatchedAdapter
 
         viewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
-            viewModel.getWatchedTitles(it)
+            if (!it.isNullOrEmpty()) {
+                main_watched_titles_none.setGone()
+                viewModel.getWatchedTitles(it)
+            }
         })
 
         viewModel.watchedList.observe(viewLifecycleOwner, {

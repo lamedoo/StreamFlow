@@ -21,9 +21,6 @@
             android:id="@+id/action_homeFragment_to_video_player_fragment_nav"
             app:destination="@id/video_player_fragment_nav">
             <argument
-                android:name="mediaLink"
-                app:argType="string" />
-            <argument
                 android:name="chosenSeason"
                 app:argType="integer"
                 android:defaultValue="0" />
@@ -45,7 +42,15 @@
                 app:argType="long"
                 android:defaultValue="0L" />
         </action>
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <include app:graph="@navigation/single_title_fragment_nav" />
     <include app:graph="@navigation/video_player_fragment_nav" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

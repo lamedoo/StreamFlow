@@ -40,14 +40,14 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
     override fun onStart() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
-            viewModel.initPlayer(requireContext(), title_player, args.mediaLink, args.isTvShow, args.watchedTime, args.chosenEpisode)
+            viewModel.initPlayer(requireContext(), title_player, args.isTvShow, args.watchedTime, args.chosenEpisode)
         }
     }
 
     override fun onResume() {
         super.onResume()
         if (Util.SDK_INT < 24) {
-            viewModel.initPlayer(requireContext(), title_player, args.mediaLink, args.isTvShow, args.watchedTime, args.chosenEpisode)
+            viewModel.initPlayer(requireContext(), title_player, args.isTvShow, args.watchedTime, args.chosenEpisode)
         }
     }
 
@@ -55,7 +55,7 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
         super.onPause()
         if (Util.SDK_INT < 24) {
             viewModel.releasePlayer()
-            viewModel.saveTitleToDb(requireContext(), args.titleId, args.mediaLink, args.isTvShow)
+            viewModel.saveTitleToDb(requireContext(), args.titleId, args.isTvShow, args.chosenLanguage)
         }
     }
 
@@ -63,7 +63,7 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
         super.onStop()
         if (Util.SDK_INT >= 24) {
             viewModel.releasePlayer()
-            viewModel.saveTitleToDb(requireContext(), args.titleId, args.mediaLink, args.isTvShow)
+            viewModel.saveTitleToDb(requireContext(), args.titleId, args.isTvShow, args.chosenLanguage)
         }
     }
 

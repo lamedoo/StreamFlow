@@ -14,5 +14,5 @@ data class WatchedTitleData(
     val watchedTime: Long,
     val season: Int,
     val episode: Int,
-    val movieLink: String
+    val language: String
 ): Parcelable

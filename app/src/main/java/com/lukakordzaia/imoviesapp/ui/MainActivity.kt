@@ -8,9 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.ui.home.HomeFragmentDirections
+import com.lukakordzaia.imoviesapp.ui.settings.SettingsFragment
 import com.lukakordzaia.imoviesapp.ui.singletitle.SingleTitleFragment
 import com.lukakordzaia.imoviesapp.ui.singletitle.choosetitledetails.ChooseTitleDetailsFragment
 import com.lukakordzaia.imoviesapp.ui.videoplayer.VideoPlayerFragment
@@ -34,6 +37,10 @@ class MainActivity : AppCompatActivity() {
 //        val appToolbar: MaterialToolbar = findViewById(R.id.app_main_toolbar)
 //        setSupportActionBar(appToolbar)
 
+        main_settings.setOnClickListener {
+            findNavController(R.id.fr_nav_host).navigate(HomeFragmentDirections.actionHomeFragmentToSettingsFragment())
+        }
+
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
                 when (f) {
@@ -43,8 +50,10 @@ class MainActivity : AppCompatActivity() {
                         app_main_toolbar.setGone()
                         hideBottomNavigation()
                     }
+                    is SettingsFragment -> main_settings.setGone()
                     else -> {
                         app_main_toolbar.setVisible()
+                        main_settings.setVisible()
                         showBottomNavigation()
                     }
                 }
