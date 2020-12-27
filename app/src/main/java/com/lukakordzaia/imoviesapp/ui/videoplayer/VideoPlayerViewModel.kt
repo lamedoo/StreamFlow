@@ -7,6 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.util.MimeTypes
+import com.google.android.gms.cast.MediaInfo
+import com.google.android.gms.cast.MediaMetadata
+import com.google.android.gms.cast.MediaQueueItem
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.network.Result
@@ -124,5 +128,14 @@ class VideoPlayerViewModel : BaseViewModel() {
                 }
             }
         }
+    }
+
+    fun buildMediaQueueItem(video :String): MediaQueueItem {
+        val movieMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
+        movieMetadata.putString(MediaMetadata.KEY_TITLE, "CBSN News")
+        val mediaInfo = MediaInfo.Builder(Uri.parse(video).toString())
+            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED).setContentType(MimeTypes.APPLICATION_M3U8)
+            .setMetadata(movieMetadata).build()
+        return MediaQueueItem.Builder(mediaInfo).build()
     }
 }

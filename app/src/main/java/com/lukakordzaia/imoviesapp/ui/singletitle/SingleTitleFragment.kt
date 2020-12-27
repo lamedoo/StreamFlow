@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.google.android.gms.cast.framework.CastContext
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleDetails
 import com.lukakordzaia.imoviesapp.utils.EventObserver
@@ -18,6 +19,12 @@ import kotlinx.android.synthetic.main.fragment_single_title.*
 class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
     private lateinit var viewModel: SingleTitleViewModel
     private val args: SingleTitleFragmentArgs by navArgs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+        CastContext.getSharedInstance(requireContext())
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

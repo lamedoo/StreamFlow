@@ -4,11 +4,14 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.exoplayer2.util.Util
+import com.google.android.gms.cast.framework.CastButtonFactory
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.setGone
 import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
@@ -19,10 +22,16 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
     private lateinit var viewModel: VideoPlayerViewModel
     private val args: VideoPlayerFragmentArgs by navArgs()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         viewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
+
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             viewModel.getPlaylistFiles(args.titleId, args.chosenSeason, args.chosenLanguage)
         }
@@ -75,5 +84,12 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
         } else {
             requireActivity().window.decorView.systemUiVisibility = View.VISIBLE
         }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.cast, menu)
+        CastButtonFactory.setUpMediaRouteButton(requireContext(), menu, R.id.media_route_menu_item)
     }
 }

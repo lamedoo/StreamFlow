@@ -11,14 +11,15 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.*
 import kotlinx.android.synthetic.main.fragment_choose_title_details.*
 
+
 class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
     private lateinit var viewModel: ChooseTitleDetailsViewModel
     private val args: ChooseTitleDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_choose_title_details, container, false)
     }

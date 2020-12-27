@@ -71,7 +71,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         rv_main_top_tvshows.adapter = homeTvShowAdapter
         rv_main_top_tvshows.layoutManager = tvShowLayout
 
-        viewModel.getTopTvShows(requireContext())
+        viewModel.getTopTvShows()
 
         viewModel.tvShowList.observe(viewLifecycleOwner, Observer {
             homeTvShowAdapter.setTvShowsList(it)

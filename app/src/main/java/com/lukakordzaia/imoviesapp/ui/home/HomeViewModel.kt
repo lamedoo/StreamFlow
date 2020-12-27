@@ -90,7 +90,7 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    fun getTopTvShows(context: Context) {
+    fun getTopTvShows() {
         viewModelScope.launch {
             when (val tvShows = repository.getTopTvShows()) {
                 is Result.Success -> {

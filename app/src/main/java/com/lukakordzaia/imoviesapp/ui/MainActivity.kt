@@ -48,7 +48,10 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
                 when (f) {
-                    is SingleTitleFragment -> hideBottomNavigation()
+                    is SingleTitleFragment -> {
+                        main_settings.setGone()
+                        hideBottomNavigation()
+                    }
                     is ChooseTitleDetailsFragment -> hideBottomNavigation()
                     is VideoPlayerFragment -> {
                         app_main_toolbar.setGone()

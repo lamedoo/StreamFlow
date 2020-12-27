@@ -33,14 +33,14 @@
         <TextView
             android:id="@+id/tv_language_title"
             android:layout_width="wrap_content"
-            app:layout_goneMarginTop="30dp"
-            android:text="ენა"
-            android:textColor="?colorOnPrimary"
-            android:layout_marginTop="30dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="ენა"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginTop="30dp" />
 
         <Spinner
             android:id="@+id/spinner_language"
@@ -48,20 +48,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
             android:spinnerMode="dialog"
-            app:layout_constraintStart_toEndOf="@id/tv_language_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/tv_language_title"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_season_title"
             android:layout_width="wrap_content"
-            android:text="სეზონი"
-            android:textColor="?colorOnPrimary"
-            android:layout_marginTop="30dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="სეზონი"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_language_title"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_language_title" />
 
         <Spinner
             android:id="@+id/spinner_season_numbers"
@@ -69,20 +69,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
             android:spinnerMode="dialog"
-            app:layout_constraintStart_toEndOf="@id/tv_season_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_language_title"/>
+            app:layout_constraintStart_toEndOf="@id/tv_season_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_language_title" />
 
         <TextView
             android:id="@+id/tv_episode_title"
             android:layout_width="wrap_content"
-            android:text="ეპიზოდი"
-            android:textColor="?colorOnPrimary"
-            android:layout_marginTop="30dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="ეპიზოდი"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_season_title"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_season_title" />
 
         <Spinner
             android:id="@+id/spinner_episode_numbers"
@@ -90,20 +90,31 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
             android:spinnerMode="dialog"
-            app:layout_constraintStart_toEndOf="@id/tv_episode_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_season_title"/>
+            app:layout_constraintStart_toEndOf="@id/tv_episode_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_season_title" />
 
         <ImageView
             android:id="@+id/choose_movie_details_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/play_button"
             android:layout_marginTop="50dp"
+            android:src="@drawable/play_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_episode_title"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_episode_title" />
+
+<!--        <androidx.mediarouter.app.MediaRouteButton-->
+<!--            android:id="@+id/choose_movie_details_cast"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/choose_movie_details_play"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/choose_movie_details_play"-->
+<!--            app:layout_constraintTop_toTopOf="@id/choose_movie_details_play" />-->
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
