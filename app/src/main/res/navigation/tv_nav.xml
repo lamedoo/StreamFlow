@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_nav"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.tv.main.TvMainFragment"
+        android:label="MainFragment">
+        <action
+            android:id="@+id/action_mainFragment_to_tvDetailsFragment"
+            app:destination="@id/tvDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tvDetailsFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsFragment"
+        android:label="tv_details_fragment"
+        tools:layout="@layout/tv_details_fragment" >
+        <argument
+            android:name="titleId"
+            app:argType="integer" />
+    </fragment>
+</navigation>

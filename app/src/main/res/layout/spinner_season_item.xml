@@ -6,6 +6,5 @@
     android:gravity="start"
     android:padding="15dp"
     android:textAlignment="gravity"
-    android:textColor="?colorOnPrimary"
     android:textSize="16sp"
     />

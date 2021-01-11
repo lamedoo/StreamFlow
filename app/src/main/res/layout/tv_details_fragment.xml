@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/fragment_padding"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.tv.details.TvDetailsFragment">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:minWidth="700dp"
+        android:maxWidth="700dp"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/tv_single_poster"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:src="@drawable/movie_image_placeholder"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_single_geo_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                tools:text="ნუ დაემუქრებით სამხრეთ ცენტრალს, მაშინ როდესაც უბანში წვენს მიირთმევ"
+                android:fontFamily="@font/georgian_uppercase"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                app:layout_constraintStart_toEndOf="@id/tv_single_poster"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_single_poster"/>
+
+            <TextView
+                android:id="@+id/tv_single_eng_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                tools:text="English Name"
+                android:fontFamily="@font/georgian_uppercase"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                app:layout_constraintStart_toEndOf="@id/tv_single_poster"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_single_geo_name"/>
+
+            <TextView
+                android:id="@+id/tv_single_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                tools:text="2020"
+                app:layout_constraintTop_toBottomOf="@id/tv_single_eng_name"
+                app:layout_constraintStart_toEndOf="@id/tv_single_poster"/>
+
+            <ImageView
+                android:id="@+id/tv_single_imdb_logo"
+                android:layout_width="45dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/imdb_logo"
+                app:layout_constraintStart_toEndOf="@id/tv_single_year"
+                app:layout_constraintTop_toBottomOf="@id/tv_single_eng_name"/>
+
+            <TextView
+                android:id="@+id/tv_single_imdb_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="7.6"
+                app:layout_constraintTop_toBottomOf="@id/tv_single_eng_name"
+                app:layout_constraintStart_toEndOf="@id/tv_single_imdb_logo"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

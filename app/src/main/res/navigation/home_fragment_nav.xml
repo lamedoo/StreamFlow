@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.lukakordzaia.imoviesapp.ui.home.HomeFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.phone.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -50,7 +50,7 @@
     <include app:graph="@navigation/video_player_fragment_nav" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.lukakordzaia.imoviesapp.ui.settings.SettingsFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.phone.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>

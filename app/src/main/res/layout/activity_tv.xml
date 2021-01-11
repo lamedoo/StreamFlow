@@ -7,8 +7,8 @@
     tools:context=".ui.TvActivity">
 
     <fragment
-        android:name="com.lukakordzaia.imoviesapp.ui.tv.MainFragment"
-        android:id="@+id/main_fragment_lay"
+        android:name="com.lukakordzaia.imoviesapp.ui.tv.main.TvMainFragment"
+        android:id="@+id/tv_main_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/fragment_padding"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.settings.SettingsFragment">
+    tools:context=".ui.phone.settings.SettingsFragment">
 
     <TextView
         android:id="@+id/settings_delete_history"

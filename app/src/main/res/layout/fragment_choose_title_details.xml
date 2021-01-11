@@ -7,7 +7,7 @@
     android:minHeight="100dp"
     android:orientation="vertical"
     android:padding="@dimen/fragment_padding"
-    tools:context=".ui.singletitle.choosetitledetails.ChooseTitleDetailsFragment">
+    tools:context=".ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment">
 
     <TextView
         android:id="@+id/movie_file_not_yet"
@@ -31,7 +31,7 @@
         tools:visibility="visible">
 
         <TextView
-            android:id="@+id/tv_language_title"
+            android:id="@+id/language_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -49,11 +49,11 @@
             android:layout_marginTop="17dp"
             android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_language_title"
+            app:layout_constraintStart_toEndOf="@id/language_title"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_season_title"
+            android:id="@+id/season_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -61,7 +61,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_language_title" />
+            app:layout_constraintTop_toBottomOf="@id/language_title" />
 
         <Spinner
             android:id="@+id/spinner_season_numbers"
@@ -70,11 +70,11 @@
             android:layout_marginTop="17dp"
             android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_season_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_language_title" />
+            app:layout_constraintStart_toEndOf="@id/season_title"
+            app:layout_constraintTop_toBottomOf="@id/language_title" />
 
         <TextView
-            android:id="@+id/tv_episode_title"
+            android:id="@+id/episode_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -82,7 +82,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_season_title" />
+            app:layout_constraintTop_toBottomOf="@id/season_title" />
 
         <Spinner
             android:id="@+id/spinner_episode_numbers"
@@ -91,8 +91,8 @@
             android:layout_marginTop="17dp"
             android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_episode_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_season_title" />
+            app:layout_constraintStart_toEndOf="@id/episode_title"
+            app:layout_constraintTop_toBottomOf="@id/season_title" />
 
         <ImageView
             android:id="@+id/choose_movie_details_play"
@@ -101,19 +101,9 @@
             android:layout_marginTop="50dp"
             android:src="@drawable/play_button"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_episode_title" />
-
-<!--        <androidx.mediarouter.app.MediaRouteButton-->
-<!--            android:id="@+id/choose_movie_details_cast"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintBottom_toBottomOf="@id/choose_movie_details_play"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/choose_movie_details_play"-->
-<!--            app:layout_constraintTop_toTopOf="@id/choose_movie_details_play" />-->
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/episode_title" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

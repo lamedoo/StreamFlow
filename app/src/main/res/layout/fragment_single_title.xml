@@ -6,7 +6,7 @@
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.singletitle.SingleTitleFragment">
+    tools:context=".ui.phone.singletitle.SingleTitleFragment">
 
     <ProgressBar
         android:id="@+id/single_title_progressBar"

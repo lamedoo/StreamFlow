@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/singleTitleFragment"
-        android:name="com.lukakordzaia.imoviesapp.ui.singletitle.SingleTitleFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleFragment"
         android:label="fragment_single_title"
         tools:layout="@layout/fragment_single_title">
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <dialog
         android:id="@+id/chooseTitleDetailsFragment"
-        android:name="com.lukakordzaia.imoviesapp.ui.singletitle.choosetitledetails.ChooseTitleDetailsFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment"
         android:label="fragment_choose_title_details"
         tools:layout="@layout/fragment_choose_title_details" >
         <argument

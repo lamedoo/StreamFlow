@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/fragment_padding"
-    tools:context=".ui.genres.GenresFragment">
+    tools:context=".ui.phone.genres.GenresFragment">
 
     <ProgressBar
         android:id="@+id/genres_progressBar"

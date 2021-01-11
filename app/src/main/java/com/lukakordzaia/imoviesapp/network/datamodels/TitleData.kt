@@ -53,7 +53,7 @@ data class TitleData(
         @SerializedName("poster")
         val poster: String?,
         @SerializedName("posters")
-        val posters: Posters?,
+        val posters: Posters,
         @SerializedName("primaryName")
         val primaryName: String?,
         @SerializedName("rating")
