@@ -56,6 +56,44 @@
                 app:layout_constraintStart_toEndOf="@id/tv_files_language_title"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/tv_files_season_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="სეზონი"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_files_language_title" />
+
+            <Spinner
+                android:id="@+id/tv_files_spinner_season"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:spinnerMode="dialog"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_files_season_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_files_language_title" />
+
+            <TextView
+                android:id="@+id/tv_files_episode_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="ეპიზოდი"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_files_season_title" />
+
+            <Spinner
+                android:id="@+id/tv_files_spinner_episode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:spinnerMode="dialog"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_files_episode_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_files_season_title" />
+
             <ImageView
                 android:id="@+id/tv_play"
                 android:layout_width="wrap_content"
@@ -63,7 +101,7 @@
                 android:layout_marginTop="50dp"
                 android:focusable="true"
                 android:src="@drawable/play_button"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_files_episode_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 

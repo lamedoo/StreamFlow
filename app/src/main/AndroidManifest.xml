@@ -45,6 +45,9 @@
         <activity
             android:name=".ui.tv.tvvideoplayer.TvVideoPlayerActivity"
             android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name=".ui.tv.search.TvSearchActivity"
+            android:theme="@style/Theme.Leanback"/>
     </application>
 
 </manifest>

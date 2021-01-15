@@ -9,6 +9,8 @@
     <color name="black">#1d1d1d</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="trueBlack">#000000</color>
+
     <color name="secondary_text_color">#808080</color>
     <color name="default_background_color">#333</color>
 </resources>

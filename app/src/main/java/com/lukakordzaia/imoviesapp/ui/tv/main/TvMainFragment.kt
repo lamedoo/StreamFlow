@@ -15,6 +15,7 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
+import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
 
 class TvMainFragment : BrowseSupportFragment() {
     private lateinit var viewModel: HomeViewModel
@@ -41,8 +42,6 @@ class TvMainFragment : BrowseSupportFragment() {
                 buildRowsAdapter(movies, tvShows)
             })
         })
-
-
 
         prepareBackgroundManager()
         setupUIElements()
@@ -85,29 +84,29 @@ class TvMainFragment : BrowseSupportFragment() {
         badgeDrawable = resources.getDrawable(R.drawable.imovies_logo)
         // Badge, when set, takes precedent over title
         title = "IMOVIES"
-        headersState = BrowseSupportFragment.HEADERS_ENABLED
+        headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         // set headers background color
         brandColor = ContextCompat.getColor(requireContext(), R.color.green_dark)
 
         // set search icon color
-        searchAffordanceColor = ContextCompat.getColor(requireContext(), R.color.black)
+        searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.black) }!!
     }
 
     private fun setupEventListeners() {
-//        setOnSearchClickedListener(View.OnClickListener {
-//            startActivity(Intent(context, SearchActivity::class.java))
-//        })
+        setOnSearchClickedListener {
+            startActivity(Intent(context, TvSearchActivity::class.java))
+        }
 
         onItemViewClickedListener = ItemViewClickedListener()
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
         override fun onItemClicked(
-            itemViewHolder: Presenter.ViewHolder,
-            item: Any,
-            rowViewHolder: RowPresenter.ViewHolder,
-            row: Row
+                itemViewHolder: Presenter.ViewHolder,
+                item: Any,
+                rowViewHolder: RowPresenter.ViewHolder,
+                row: Row
         ) {
             if (item is TitleList.Data) {
                 val intent = Intent(context, TvDetailsActivity::class.java)

@@ -12,6 +12,7 @@ import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.SpinnerClass
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
+import kotlinx.android.synthetic.main.fragment_choose_title_details.*
 import kotlinx.android.synthetic.main.tv_choose_files_fragment.*
 
 class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
@@ -21,6 +22,7 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
         super.onViewCreated(view, savedInstanceState)
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
+        val numOfSeasons = activity?.intent?.getSerializableExtra("numOfSeasons") as Int
         viewModel = ViewModelProvider(this).get(ChooseTitleDetailsViewModel::class.java)
         viewModel.getSingleTitleFiles(titleId)
         val spinnerClass = SpinnerClass(requireContext())
@@ -39,13 +41,32 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
             }
         })
 
+        if (!isTvShow) {
+            tv_files_season_title.setGone()
+            tv_files_spinner_season.setGone()
+            tv_files_episode_title.setGone()
+            tv_files_spinner_episode.setGone()
+        } else {
+            val seasonCount = Array(numOfSeasons) { i -> (i * 1) + 1 }.toList()
+            spinnerClass.createSpinner(tv_files_spinner_season, seasonCount) {
+                viewModel.getSeasonFiles(titleId, it.toInt())
+            }
+        }
+
+        viewModel.availableEpisodes.observe(viewLifecycleOwner, { it ->
+            val numOfEpisodes = Array(it) { i -> (i * 1) + 1 }.toList()
+            spinnerClass.createSpinner(tv_files_spinner_episode, numOfEpisodes) { episode ->
+                viewModel.getEpisodeFile(episode.toInt())
+            }
+        })
+
         tv_play.setOnClickListener {
             val intent = Intent(context, TvVideoPlayerActivity::class.java)
             intent.putExtra("titleId", titleId)
             intent.putExtra("isTvShow", isTvShow)
             intent.putExtra("chosenLanguage", viewModel.chosenLanguage.value)
-            intent.putExtra("chosenSeason", 0)
-            intent.putExtra("chosenEpisode", 0)
+            intent.putExtra("chosenSeason", viewModel.chosenSeason.value)
+            intent.putExtra("chosenEpisode", viewModel.chosenEpisode.value)
             intent.putExtra("watchedTime", 0L)
             activity?.startActivity(intent)
         }

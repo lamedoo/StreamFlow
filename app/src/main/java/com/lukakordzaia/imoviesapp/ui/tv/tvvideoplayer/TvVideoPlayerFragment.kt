@@ -4,23 +4,17 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.leanback.app.VideoSupportFragment
+import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.navArgs
 import com.google.android.exoplayer2.util.Util
-import com.google.android.gms.cast.framework.CastButtonFactory
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.ui.phone.videoplayer.VideoPlayerFragmentArgs
 import com.lukakordzaia.imoviesapp.ui.phone.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.imoviesapp.utils.setGone
 import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.fragment_tv_video_player.*
-import kotlinx.android.synthetic.main.fragment_video_player.*
-import kotlinx.android.synthetic.main.fragment_video_player.title_player
-import kotlin.properties.Delegates
 
 class TvVideoPlayerFragment : Fragment(R.layout.fragment_tv_video_player) {
     private lateinit var viewModel: VideoPlayerViewModel

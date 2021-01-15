@@ -27,10 +27,11 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
     private val _chosenLanguage = MutableLiveData<String>()
     val chosenLanguage: LiveData<String> = _chosenLanguage
 
-    private val chosenSeason = MutableLiveData<Int>(0)
+    private val _chosenSeason = MutableLiveData<Int>(0)
+    val chosenSeason: LiveData<Int> = _chosenSeason
 
     private val _chosenEpisode = MutableLiveData<Int>(0)
-    private val chosenEpisode: LiveData<Int> = _chosenEpisode
+    val chosenEpisode: LiveData<Int> = _chosenEpisode
 
 //    private val _movieFile = MutableLiveData<String>()
 //    val movieFile: LiveData<String> = _movieFile
@@ -86,7 +87,7 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
     }
 
     fun getSeasonFiles(movieId: Int, season: Int) {
-        chosenSeason.value = season
+        _chosenSeason.value = season
         viewModelScope.launch {
             when (val files = repository.getSingleTitleFiles(movieId, season)) {
                 is Result.Success -> {

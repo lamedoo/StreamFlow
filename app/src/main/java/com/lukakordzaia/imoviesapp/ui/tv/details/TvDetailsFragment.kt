@@ -75,6 +75,7 @@ class TvDetailsFragment : DetailsSupportFragment() {
                         val intent = Intent(context, TvChooseFilesActivity::class.java)
                         intent.putExtra("titleId", details.id)
                         intent.putExtra("isTvShow", details.isTvShow)
+                        intent.putExtra("numOfSeasons", details.seasons?.data?.size)
                         activity?.startActivity(intent)
                     }
                 }
