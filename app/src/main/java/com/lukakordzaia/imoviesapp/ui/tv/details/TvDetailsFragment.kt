@@ -3,16 +3,11 @@ package com.lukakordzaia.imoviesapp.ui.tv.details
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
@@ -20,10 +15,6 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles.TvChooseFilesActivity
-import com.lukakordzaia.imoviesapp.utils.createToast
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_single_title.*
-import kotlinx.android.synthetic.main.tv_details_fragment.*
 
 //class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
 //    private lateinit var viewModel: SingleTitleViewModel
@@ -76,6 +67,8 @@ class TvDetailsFragment : DetailsSupportFragment() {
                         intent.putExtra("titleId", details.id)
                         intent.putExtra("isTvShow", details.isTvShow)
                         intent.putExtra("numOfSeasons", details.seasons?.data?.size)
+                        intent.putExtra("titlePoster", details.posters.data?.x240)
+                        intent.putExtra("titleName", details.secondaryName)
                         activity?.startActivity(intent)
                     }
                 }
