@@ -1,16 +1,12 @@
 package com.lukakordzaia.imoviesapp.ui.tv.main
 
-import android.util.Log
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
-import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
 import com.squareup.picasso.Picasso
 
-class WatchedCardPresenter : Presenter() {
+class TvWatchedCardPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = object : ImageCardView(parent.context) {
             override fun setSelected(selected: Boolean) {

@@ -11,17 +11,19 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
+import com.lukakordzaia.imoviesapp.ui.phone.genres.GenresViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
-import com.lukakordzaia.imoviesapp.utils.setGone
-import kotlinx.android.synthetic.main.fragment_home.*
+import java.util.*
+import kotlin.concurrent.schedule
 
 class TvMainFragment : BrowseSupportFragment() {
-    private lateinit var viewModel: HomeViewModel
-    lateinit var mCategoryRowAdapter: ArrayObjectAdapter
+    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var genresViewModel: GenresViewModel
     private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
     lateinit var defaultBackground: Drawable
     lateinit var metrics: DisplayMetrics
@@ -29,9 +31,18 @@ class TvMainFragment : BrowseSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        viewModel.getTopMovies()
-        viewModel.getTopTvShows()
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        genresViewModel = ViewModelProvider(this).get(GenresViewModel::class.java)
+
+        homeViewModel.getTopMovies()
+
+        Timer("tvShows", false).schedule(1000) {
+            homeViewModel.getTopTvShows()
+        }
+
+        Timer("genres", false).schedule(2000) {
+            genresViewModel.getAllGenres()
+        }
 
         setHeaderPresenterSelector(object : PresenterSelector() {
             override fun getPresenter(item: Any?): Presenter {
@@ -39,22 +50,26 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         })
 
-        viewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
+        homeViewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
-                viewModel.getWatchedTitles(it)
+                homeViewModel.getWatchedTitles(it)
             }
         })
 
-        viewModel.watchedList.observe(viewLifecycleOwner, { watched ->
+        homeViewModel.watchedList.observe(viewLifecycleOwner, { watched ->
             watchedListRowsAdapter(watched)
         })
 
-        viewModel.movieList.observe(viewLifecycleOwner, { movies ->
+        homeViewModel.movieList.observe(viewLifecycleOwner, { movies ->
             topMoviesRowsAdapter(movies)
         })
 
-        viewModel.tvShowList.observe(viewLifecycleOwner, { tvShows ->
+        homeViewModel.tvShowList.observe(viewLifecycleOwner, { tvShows ->
             topTvShowsRowsAdapter(tvShows)
+        })
+
+        genresViewModel.allGenresList.observe(viewLifecycleOwner, { genres ->
+            genresRowsAdapter(genres)
         })
 
         prepareBackgroundManager()
@@ -63,7 +78,7 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun watchedListRowsAdapter(watchedList: List<WatchedTitleData>) {
-        val listRowAdapter = ArrayObjectAdapter(WatchedCardPresenter()).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
             watchedList.forEach {
                 add(it)
             }
@@ -94,6 +109,18 @@ class TvMainFragment : BrowseSupportFragment() {
         }
 
         HeaderItem(2, "ტოპ სერიალები").also { header ->
+            rowsAdapter.add(ListRow(header, listRowAdapter))
+        }
+    }
+
+    private fun genresRowsAdapter(genreList: List<GenreList.Data>) {
+        val listRowAdapter = ArrayObjectAdapter(TvGenresPresenter()).apply {
+            genreList.forEach {
+                add(it)
+            }
+        }
+
+        HeaderItem(3, "ჟანრის მიხედვით").also { header ->
             rowsAdapter.add(ListRow(header, listRowAdapter))
         }
     }
