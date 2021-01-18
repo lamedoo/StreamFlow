@@ -7,9 +7,10 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
 import com.squareup.picasso.Picasso
 
-class TvCardPresenter : Presenter() {
+class WatchedCardPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = object : ImageCardView(parent.context) {
             override fun setSelected(selected: Boolean) {
@@ -24,13 +25,13 @@ class TvCardPresenter : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val movie = item as TitleList.Data
+        val movie = item as WatchedTitleData
         val cardView = viewHolder.view as ImageCardView
 
         cardView.titleText = movie.primaryName
-        cardView.contentText = movie.secondaryName
+        cardView.contentText = movie.originalName
         cardView.setMainImageDimensions(313, 176)
-        Picasso.get().load(movie.covers?.data?.x510).into(cardView.mainImageView)
+        Picasso.get().load(movie.cover).into(cardView.mainImageView)
 
     }
 

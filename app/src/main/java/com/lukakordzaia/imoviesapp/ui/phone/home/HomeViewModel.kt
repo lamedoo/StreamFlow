@@ -67,11 +67,11 @@ class HomeViewModel : BaseViewModel() {
                                 it.episode,
                                 it.language
                         ))
-                        _watchedList.value = watchedTitles
                         setLoading(false)
                     }
                 }
             }
+            _watchedList.value = watchedTitles
         }
     }
 

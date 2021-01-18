@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
@@ -13,17 +12,20 @@ import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
+import com.lukakordzaia.imoviesapp.utils.setGone
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class TvMainFragment : BrowseSupportFragment() {
     private lateinit var viewModel: HomeViewModel
     lateinit var mCategoryRowAdapter: ArrayObjectAdapter
+    private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
     lateinit var defaultBackground: Drawable
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
-    private lateinit var rowsAdapter: ArrayObjectAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,10 +39,22 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         })
 
+        viewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
+            if (!it.isNullOrEmpty()) {
+                viewModel.getWatchedTitles(it)
+            }
+        })
+
+        viewModel.watchedList.observe(viewLifecycleOwner, { watched ->
+            watchedListRowsAdapter(watched)
+        })
+
         viewModel.movieList.observe(viewLifecycleOwner, { movies ->
-            viewModel.tvShowList.observe(viewLifecycleOwner, { tvShows ->
-                buildRowsAdapter(movies, tvShows)
-            })
+            topMoviesRowsAdapter(movies)
+        })
+
+        viewModel.tvShowList.observe(viewLifecycleOwner, { tvShows ->
+            topTvShowsRowsAdapter(tvShows)
         })
 
         prepareBackgroundManager()
@@ -48,27 +62,40 @@ class TvMainFragment : BrowseSupportFragment() {
         setupEventListeners()
     }
 
-    private fun buildRowsAdapter(movies: List<TitleList.Data>, tvShows: List<TitleList.Data>) {
-        rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+    private fun watchedListRowsAdapter(watchedList: List<WatchedTitleData>) {
+        val listRowAdapter = ArrayObjectAdapter(WatchedCardPresenter()).apply {
+            watchedList.forEach {
+                add(it)
+            }
+        }
 
+        HeaderItem(0, "განაგრძეთ ყურება").also { header ->
+            rowsAdapter.add(ListRow(header, listRowAdapter))
+        }
+    }
+
+    private fun topMoviesRowsAdapter(movies: List<TitleList.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
             movies.forEach {
                 add(it)
             }
         }
-        val listRowAdapter1 = ArrayObjectAdapter(TvCardPresenter()).apply {
+
+        HeaderItem(1, "ტოპ ფილმები").also { header ->
+            rowsAdapter.add(ListRow(header, listRowAdapter))
+        }
+    }
+
+    private fun topTvShowsRowsAdapter(tvShows: List<TitleList.Data>) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
             tvShows.forEach {
                 add(it)
             }
         }
-        HeaderItem(0, "ტოპ ფილმები").also { header ->
+
+        HeaderItem(2, "ტოპ სერიალები").also { header ->
             rowsAdapter.add(ListRow(header, listRowAdapter))
         }
-        HeaderItem(1, "ტოპ სერიალები").also { header ->
-            rowsAdapter.add(ListRow(header, listRowAdapter1))
-        }
-
-        adapter = rowsAdapter
     }
 
     private fun prepareBackgroundManager() {
@@ -82,15 +109,12 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun setupUIElements() {
         badgeDrawable = resources.getDrawable(R.drawable.imovies_logo)
-        // Badge, when set, takes precedent over title
         title = "IMOVIES"
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
-        // set headers background color
         brandColor = ContextCompat.getColor(requireContext(), R.color.green_dark)
-
-        // set search icon color
         searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.black) }!!
+        adapter = rowsAdapter
     }
 
     private fun setupEventListeners() {
@@ -109,6 +133,10 @@ class TvMainFragment : BrowseSupportFragment() {
                 row: Row
         ) {
             if (item is TitleList.Data) {
+                val intent = Intent(context, TvDetailsActivity::class.java)
+                intent.putExtra("titleId", item.id)
+                activity?.startActivity(intent)
+            } else if (item is WatchedTitleData) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 activity?.startActivity(intent)
