@@ -31,12 +31,6 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment_new) {
         viewModel.getSingleTitleFiles(titleId)
         val spinnerClass = SpinnerClass(requireContext())
 
-        tvChooseFilesEpisodesAdapter = TvChooseFilesEpisodesAdapter(requireContext()) {
-            requireContext().createToast("$it")
-//            viewModel.getEpisodeFile(episode.toInt())
-        }
-        rv_tv_files_episodes.adapter = tvChooseFilesEpisodesAdapter
-
         Picasso.get().load(titlePoster).into(tv_files_title_poster)
         tv_files_title_name.text = titleName
 
@@ -58,8 +52,6 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment_new) {
             tv_files_season_title1.setGone()
             tv_files_spinner_season1.setGone()
             rv_tv_files_episodes.setGone()
-//            tv_files_episode_title1.setGone()
-//            tv_files_spinner_episode1.setGone()
         } else {
             tv_play_button1.setGone()
             val seasonCount = Array(numOfSeasons) { i -> (i * 1) + 1 }.toList()
@@ -73,15 +65,31 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment_new) {
             tvChooseFilesEpisodesAdapter.setEpisodeList(numOfEpisodes)
         })
 
-        tv_play_button1.setOnClickListener {
-            val intent = Intent(context, TvVideoPlayerActivity::class.java)
-            intent.putExtra("titleId", titleId)
-            intent.putExtra("isTvShow", isTvShow)
-            intent.putExtra("chosenLanguage", viewModel.chosenLanguage.value)
-            intent.putExtra("chosenSeason", viewModel.chosenSeason.value)
-            intent.putExtra("chosenEpisode", viewModel.chosenEpisode.value)
-            intent.putExtra("watchedTime", 0L)
-            activity?.startActivity(intent)
+        tvChooseFilesEpisodesAdapter = TvChooseFilesEpisodesAdapter(requireContext()) {
+            requireContext().createToast("$it")
+            viewModel.getEpisodeFile(it)
         }
+        rv_tv_files_episodes.adapter = tvChooseFilesEpisodesAdapter
+
+        viewModel.chosenEpisode.observe(viewLifecycleOwner, {
+            if (it != 0) {
+                openVideoPlayer(titleId, isTvShow)
+            }
+        })
+
+        tv_play_button1.setOnClickListener {
+            openVideoPlayer(titleId, isTvShow)
+        }
+    }
+
+    fun openVideoPlayer(titleId: Int, isTvShow: Boolean) {
+        val intent = Intent(context, TvVideoPlayerActivity::class.java)
+        intent.putExtra("titleId", titleId)
+        intent.putExtra("isTvShow", isTvShow)
+        intent.putExtra("chosenLanguage", viewModel.chosenLanguage.value)
+        intent.putExtra("chosenSeason", viewModel.chosenSeason.value)
+        intent.putExtra("chosenEpisode", viewModel.chosenEpisode.value)
+        intent.putExtra("watchedTime", 0L)
+        activity?.startActivity(intent)
     }
 }
