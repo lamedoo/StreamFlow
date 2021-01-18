@@ -23,8 +23,6 @@ class HomeViewModel : BaseViewModel() {
     private val _tvShowList = MutableLiveData<List<TitleList.Data>>()
     val tvShowList: LiveData<List<TitleList.Data>> = _tvShowList
 
-    private val watchedTitles: MutableList<WatchedTitleData> = mutableListOf()
-
     private val _watchedList = MutableLiveData<List<WatchedTitleData>>()
     val watchedList: LiveData<List<WatchedTitleData>> = _watchedList
 
@@ -49,7 +47,7 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun getWatchedTitles(watchedDetails: List<WatchedDetails>) {
-        watchedTitles.clear()
+        val watchedTitles: MutableList<WatchedTitleData> = mutableListOf()
         watchedDetails.forEach {
             viewModelScope.launch {
                 when (val watched = repository.getSingleTitleData(it.titleId)) {
@@ -70,8 +68,8 @@ class HomeViewModel : BaseViewModel() {
                         setLoading(false)
                     }
                 }
+                _watchedList.value = watchedTitles
             }
-            _watchedList.value = watchedTitles
         }
     }
 
