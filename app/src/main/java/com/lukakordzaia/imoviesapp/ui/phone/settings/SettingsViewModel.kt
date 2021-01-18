@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
-import com.lukakordzaia.imoviesapp.ui.MainActivity
+import com.lukakordzaia.imoviesapp.ui.phone.MainActivity
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 

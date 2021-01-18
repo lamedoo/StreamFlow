@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.ui
+package com.lukakordzaia.imoviesapp.ui.phone
 
 import android.os.Bundle
 import android.view.View

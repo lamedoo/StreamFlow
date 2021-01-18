@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.ui
+package com.lukakordzaia.imoviesapp.ui.tv
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
