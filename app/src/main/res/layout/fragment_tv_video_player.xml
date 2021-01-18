@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:show_buffering="always"
+        app:rewind_increment="10000"
+        app:fastforward_increment="10000"
         app:surface_type="surface_view"
-        app:controller_layout_id="@layout/exoplayer_controller_layout"/>
+        app:controller_layout_id="@layout/exoplayer_controller_layout_new"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

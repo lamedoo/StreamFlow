@@ -15,6 +15,7 @@ import com.google.android.gms.cast.framework.CastButtonFactory
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.setGone
 import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
+import kotlinx.android.synthetic.main.exoplayer_controller_layout_new.*
 import kotlinx.android.synthetic.main.fragment_video_player.*
 
 
@@ -36,7 +37,9 @@ class VideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
             viewModel.getPlaylistFiles(args.titleId, args.chosenSeason, args.chosenLanguage)
         }
 
-        exo_episodes.setGone()
+        viewModel.episodeName.observe(viewLifecycleOwner, {
+            header_tv.text = it
+        })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(false)

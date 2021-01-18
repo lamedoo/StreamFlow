@@ -3,6 +3,7 @@ package com.lukakordzaia.imoviesapp.ui.phone.videoplayer
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
@@ -36,6 +37,9 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     private val seasonForDb = MutableLiveData(1)
     private val episodeForDb = MutableLiveData<Int>()
+
+    private val _episodeName = MutableLiveData<String>()
+    val episodeName: LiveData<String> = _episodeName
 
     fun initPlayer(
         context: Context,
@@ -93,6 +97,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                     is Result.Success -> {
                         val season = files.data.data
                         season.forEach { singleEpisode ->
+                            _episodeName.value = singleEpisode.title
                             singleEpisode.files!!.forEach { singleFiles ->
                                 checkAvailability(singleFiles, chosenLanguage)
                             }

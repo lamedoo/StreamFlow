@@ -14,6 +14,7 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.phone.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.imoviesapp.utils.setGone
 import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
+import kotlinx.android.synthetic.main.exoplayer_controller_layout_new.*
 import kotlinx.android.synthetic.main.fragment_tv_video_player.*
 
 class TvVideoPlayerFragment : Fragment(R.layout.fragment_tv_video_player) {
@@ -26,15 +27,14 @@ class TvVideoPlayerFragment : Fragment(R.layout.fragment_tv_video_player) {
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val chosenLanguage = activity?.intent?.getSerializableExtra("chosenLanguage") as String
         val chosenSeason = activity?.intent?.getSerializableExtra("chosenSeason") as Int
-        val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
-        val chosenEpisode = activity?.intent?.getSerializableExtra("chosenEpisode") as Int
-        val watchedTime = activity?.intent?.getSerializableExtra("watchedTime") as Long
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             viewModel.getPlaylistFiles(titleId, chosenSeason, chosenLanguage)
         }
 
-        exo_episodes.setGone()
+        viewModel.episodeName.observe(viewLifecycleOwner, {
+            header_tv.text = it
+        })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(false)
