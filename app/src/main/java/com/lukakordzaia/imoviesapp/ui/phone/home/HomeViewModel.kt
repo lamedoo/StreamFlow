@@ -12,6 +12,8 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
 import com.lukakordzaia.imoviesapp.repository.HomeRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
@@ -48,29 +50,56 @@ class HomeViewModel : BaseViewModel() {
 
     fun getWatchedTitles(watchedDetails: List<WatchedDetails>) {
         val watchedTitles: MutableList<WatchedTitleData> = mutableListOf()
-        watchedDetails.forEach {
-            viewModelScope.launch {
-                when (val watched = repository.getSingleTitleData(it.titleId)) {
-                    is Result.Success -> {
-                        val data = watched.data.data
-                        watchedTitles.add(WatchedTitleData(
-                                data.covers!!.data!!.x510,
-                                data.duration,
-                                data.id!!,
-                                data.isTvShow!!,
-                                data.primaryName,
-                                data.originalName,
-                                it.watchedTime,
-                                it.season,
-                                it.episode,
-                                it.language
-                        ))
-                        setLoading(false)
+
+        viewModelScope.launch {
+            watchedDetails.map {
+                async {
+                    when (val watched = repository.getSingleTitleData(it.titleId)) {
+                        is Result.Success -> {
+                            val data = watched.data.data
+                            watchedTitles.add(WatchedTitleData(
+                                    data.covers!!.data!!.x510,
+                                    data.duration,
+                                    data.id!!,
+                                    data.isTvShow!!,
+                                    data.primaryName,
+                                    data.originalName,
+                                    it.watchedTime,
+                                    it.season,
+                                    it.episode,
+                                    it.language
+                            ))
+                            setLoading(false)
+                        }
                     }
+                    _watchedList.value = watchedTitles
                 }
-                _watchedList.value = watchedTitles
-            }
+            }.awaitAll()
         }
+
+//        watchedDetails.forEach {
+//            viewModelScope.launch {
+//                when (val watched = repository.getSingleTitleData(it.titleId)) {
+//                    is Result.Success -> {
+//                        val data = watched.data.data
+//                        watchedTitles.add(WatchedTitleData(
+//                                data.covers!!.data!!.x510,
+//                                data.duration,
+//                                data.id!!,
+//                                data.isTvShow!!,
+//                                data.primaryName,
+//                                data.originalName,
+//                                it.watchedTime,
+//                                it.season,
+//                                it.episode,
+//                                it.language
+//                        ))
+//                        setLoading(false)
+//                    }
+//                }
+//                _watchedList.value = watchedTitles
+//            }
+//        }
     }
 
     fun getTopMovies() {
