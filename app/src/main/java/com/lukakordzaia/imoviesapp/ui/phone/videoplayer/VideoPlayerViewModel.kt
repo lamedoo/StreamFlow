@@ -108,7 +108,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                         }
                         episodesUri.value = seasonEpisodesUri
                         mediaPlayer.addAllEpisodes(episodesUri.value!!)
-                        Log.d("episodes", "${seasonEpisodes}")
+                        Log.d("episodes", "$seasonEpisodes")
                     }
                     is Result.Error -> {
                         Log.d("errornextepisode", files.exception)

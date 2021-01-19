@@ -16,30 +16,6 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles.TvChooseFilesActivity
 
-//class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
-//    private lateinit var viewModel: SingleTitleViewModel
-//
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        viewModel = ViewModelProvider(this).get(SingleTitleViewModel::class.java)
-//        val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
-//        viewModel.getSingleTitleFiles(titleId)
-//
-//        viewModel.singleTitleFiles.observe(viewLifecycleOwner, {
-//            if (it.posters.data != null) {
-//                Picasso.get().load(it.posters.data.x240).into(tv_single_poster)
-//            }
-//            tv_single_geo_name.text = it.primaryName
-//            tv_single_eng_name.text = it.secondaryName
-//            tv_single_year.text = it.year.toString()
-//
-//            if (it.rating?.imdb?.score != null) {
-//                tv_single_imdb_score.text = it.rating.imdb.score.toString()
-//            }
-//        })
-//    }
-//}
-
 class TvDetailsFragment : DetailsSupportFragment() {
     private lateinit var viewModel: SingleTitleViewModel
     private lateinit var rowsAdapter: ArrayObjectAdapter
@@ -48,9 +24,9 @@ class TvDetailsFragment : DetailsSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(SingleTitleViewModel::class.java)
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
-        viewModel.getSingleTitleFiles(titleId)
+        viewModel.getSingleTitleData(titleId)
 
-        viewModel.singleTitleFiles.observe(viewLifecycleOwner, {
+        viewModel.singleTitleData.observe(viewLifecycleOwner, {
             buildDetails(it)
         })
     }

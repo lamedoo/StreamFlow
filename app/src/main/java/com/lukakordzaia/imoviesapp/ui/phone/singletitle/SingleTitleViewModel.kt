@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 class SingleTitleViewModel : BaseViewModel() {
     private val repository = SingleTitleRepository()
 
-    private val _singleTitleFiles = MutableLiveData<TitleData.Data>()
-    val singleTitleFiles: LiveData<TitleData.Data> = _singleTitleFiles
+    private val _singleTitleData = MutableLiveData<TitleData.Data>()
+    val singleTitleData: LiveData<TitleData.Data> = _singleTitleData
 
     private val _titleDetails = MutableLiveData<TitleDetails>()
     val titleDetails: LiveData<TitleDetails> = _titleDetails
@@ -28,11 +28,11 @@ class SingleTitleViewModel : BaseViewModel() {
         ))
     }
 
-    fun getSingleTitleFiles(titleId: Int) {
+    fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
             when (val data = repository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
-                    _singleTitleFiles.value = data.data.data
+                    _singleTitleData.value = data.data.data
                     checkTvShowAndFiles()
                     setLoading(false)
                 }
@@ -44,9 +44,9 @@ class SingleTitleViewModel : BaseViewModel() {
     }
 
     private fun checkTvShowAndFiles() {
-        if (singleTitleFiles.value!!.isTvShow != false) {
-            if (!singleTitleFiles.value!!.seasons!!.data.isNullOrEmpty()) {
-                _titleDetails.value = TitleDetails(singleTitleFiles.value!!.seasons!!.data?.last()?.number!!, true)
+        if (singleTitleData.value!!.isTvShow != false) {
+            if (!singleTitleData.value!!.seasons!!.data.isNullOrEmpty()) {
+                _titleDetails.value = TitleDetails(singleTitleData.value!!.seasons!!.data?.last()?.number!!, true)
 
             } else {
                 _titleDetails.value = TitleDetails(0, true)

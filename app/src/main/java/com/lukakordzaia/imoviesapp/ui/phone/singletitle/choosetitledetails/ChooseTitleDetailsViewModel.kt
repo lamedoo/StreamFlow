@@ -33,8 +33,8 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
     private val _chosenEpisode = MutableLiveData<Int>(0)
     val chosenEpisode: LiveData<Int> = _chosenEpisode
 
-//    private val _movieFile = MutableLiveData<String>()
-//    val movieFile: LiveData<String> = _movieFile
+    private val _numOfSeasons = MutableLiveData<Int>()
+    val numOfSeasons: LiveData<Int> = _numOfSeasons
 
     fun onPlayButtonPressed(titleId: Int, isTvShow: Boolean) {
         navigateToNewFragment(
@@ -72,17 +72,6 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
     }
 
     fun getTitleLanguageFiles(language: String) {
-//        _singleMovieFiles.value!!.data[0].files!!.forEach { files ->
-//            if (files.lang == language) {
-//                files.files.forEach {
-//                    if (it.quality == "HIGH") {
-//                        _movieFile.value = it.src
-//                    } else if (it.quality == "MEDIUM") {
-//                        _movieFile.value = it.src
-//                    }
-//                }
-//            }
-//        }
         _chosenLanguage.value = language
     }
 
@@ -102,5 +91,9 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
 
     fun getEpisodeFile(episodeNum: Int) {
         _chosenEpisode.value = episodeNum
+    }
+
+    fun getNumOfSeasonsForTv(seasons: Int) {
+        _numOfSeasons.value = seasons
     }
 }

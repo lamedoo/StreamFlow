@@ -17,6 +17,7 @@ import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
 import com.lukakordzaia.imoviesapp.ui.phone.genres.GenresViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
+import com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles.TvChooseFilesActivity
 import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
 import java.util.*
 import kotlin.concurrent.schedule
@@ -34,13 +35,15 @@ class TvMainFragment : BrowseSupportFragment() {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         genresViewModel = ViewModelProvider(this).get(GenresViewModel::class.java)
 
-        homeViewModel.getTopMovies()
+        Timer("movies", false).schedule(500) {
+            homeViewModel.getTopMovies()
+        }
 
-        Timer("tvShows", false).schedule(1000) {
+        Timer("tvShows", false).schedule(1500) {
             homeViewModel.getTopTvShows()
         }
 
-        Timer("genres", false).schedule(2000) {
+        Timer("genres", false).schedule(2500) {
             genresViewModel.getAllGenres()
         }
 
@@ -160,12 +163,14 @@ class TvMainFragment : BrowseSupportFragment() {
                 row: Row
         ) {
             if (item is TitleList.Data) {
-                val intent = Intent(context, TvDetailsActivity::class.java)
+                val intent = Intent(context, TvChooseFilesActivity::class.java)
                 intent.putExtra("titleId", item.id)
+                intent.putExtra("isTvShow", item.isTvShow)
                 activity?.startActivity(intent)
             } else if (item is WatchedTitleData) {
-                val intent = Intent(context, TvDetailsActivity::class.java)
+                val intent = Intent(context, TvChooseFilesActivity::class.java)
                 intent.putExtra("titleId", item.id)
+                intent.putExtra("isTvShow", item.isTvShow)
                 activity?.startActivity(intent)
             }
         }

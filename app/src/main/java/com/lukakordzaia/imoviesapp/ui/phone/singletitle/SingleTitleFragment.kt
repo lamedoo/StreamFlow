@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.cast.framework.CastContext
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleDetails
 import com.lukakordzaia.imoviesapp.utils.EventObserver
@@ -28,7 +27,7 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(SingleTitleViewModel::class.java)
-        viewModel.getSingleTitleFiles(args.titleId)
+        viewModel.getSingleTitleData(args.titleId)
 
         viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
             if (!it) {
@@ -37,7 +36,7 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
             }
         })
 
-        viewModel.singleTitleFiles.observe(viewLifecycleOwner, Observer {
+        viewModel.singleTitleData.observe(viewLifecycleOwner, Observer {
             tv_single_title_name_geo.text = it.primaryName
             tv_single_title_name_eng.text = it.secondaryName
             if (it.rating?.imdb?.score != null) {

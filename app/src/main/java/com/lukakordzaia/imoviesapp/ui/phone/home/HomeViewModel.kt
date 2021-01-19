@@ -28,6 +28,8 @@ class HomeViewModel : BaseViewModel() {
     private val _watchedList = MutableLiveData<List<WatchedTitleData>>()
     val watchedList: LiveData<List<WatchedTitleData>> = _watchedList
 
+    private val watchedTitles: MutableList<WatchedTitleData> = mutableListOf()
+
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(titleId))
     }
@@ -49,57 +51,30 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun getWatchedTitles(watchedDetails: List<WatchedDetails>) {
-        val watchedTitles: MutableList<WatchedTitleData> = mutableListOf()
-
         viewModelScope.launch {
-            watchedDetails.map {
-                async {
-                    when (val watched = repository.getSingleTitleData(it.titleId)) {
-                        is Result.Success -> {
-                            val data = watched.data.data
-                            watchedTitles.add(WatchedTitleData(
-                                    data.covers!!.data!!.x510,
-                                    data.duration,
-                                    data.id!!,
-                                    data.isTvShow!!,
-                                    data.primaryName,
-                                    data.originalName,
-                                    it.watchedTime,
-                                    it.season,
-                                    it.episode,
-                                    it.language
-                            ))
-                            setLoading(false)
-                        }
+            watchedDetails.forEach {
+                when (val watched = repository.getSingleTitleData(it.titleId)) {
+                    is Result.Success -> {
+                        val data = watched.data.data
+                        watchedTitles.add(WatchedTitleData(
+                                data.posters.data!!.x240,
+                                data.duration,
+                                data.id!!,
+                                data.isTvShow!!,
+                                data.primaryName,
+                                data.originalName,
+                                it.watchedTime,
+                                it.season,
+                                it.episode,
+                                it.language
+                        ))
+                        setLoading(false)
                     }
-                    _watchedList.value = watchedTitles
                 }
-            }.awaitAll()
+            }
+            Log.d("savedtitles", "$watchedTitles")
+            _watchedList.value = watchedTitles
         }
-
-//        watchedDetails.forEach {
-//            viewModelScope.launch {
-//                when (val watched = repository.getSingleTitleData(it.titleId)) {
-//                    is Result.Success -> {
-//                        val data = watched.data.data
-//                        watchedTitles.add(WatchedTitleData(
-//                                data.covers!!.data!!.x510,
-//                                data.duration,
-//                                data.id!!,
-//                                data.isTvShow!!,
-//                                data.primaryName,
-//                                data.originalName,
-//                                it.watchedTime,
-//                                it.season,
-//                                it.episode,
-//                                it.language
-//                        ))
-//                        setLoading(false)
-//                    }
-//                }
-//                _watchedList.value = watchedTitles
-//            }
-//        }
     }
 
     fun getTopMovies() {

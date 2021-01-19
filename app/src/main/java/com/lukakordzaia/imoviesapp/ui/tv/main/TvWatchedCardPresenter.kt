@@ -5,6 +5,7 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
 import com.squareup.picasso.Picasso
+import java.util.concurrent.TimeUnit
 
 class TvWatchedCardPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
@@ -24,9 +25,22 @@ class TvWatchedCardPresenter : Presenter() {
         val movie = item as WatchedTitleData
         val cardView = viewHolder.view as ImageCardView
 
-        cardView.titleText = movie.primaryName
-        cardView.contentText = movie.originalName
-        cardView.setMainImageDimensions(313, 176)
+        if (movie.isTvShow) {
+            cardView.titleText = "ს${movie.season} ე${movie.episode} / ${String.format("%02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(movie.watchedTime),
+                    TimeUnit.MILLISECONDS.toSeconds(movie.watchedTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(movie.watchedTime))
+            )}"
+        } else {
+            cardView.titleText = String.format("%02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(movie.watchedTime),
+                    TimeUnit.MILLISECONDS.toSeconds(movie.watchedTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(movie.watchedTime))
+            )
+        }
+
+        cardView.contentText = movie.language
+        cardView.setMainImageDimensions(250, 350)
         Picasso.get().load(movie.cover).into(cardView.mainImageView)
 
     }
