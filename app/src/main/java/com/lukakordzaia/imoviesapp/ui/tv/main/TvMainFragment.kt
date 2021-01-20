@@ -19,6 +19,7 @@ import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles.TvChooseFilesActivity
 import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
+import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -168,9 +169,13 @@ class TvMainFragment : BrowseSupportFragment() {
                 intent.putExtra("isTvShow", item.isTvShow)
                 activity?.startActivity(intent)
             } else if (item is WatchedTitleData) {
-                val intent = Intent(context, TvChooseFilesActivity::class.java)
+                val intent = Intent(context, TvVideoPlayerActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
+                intent.putExtra("chosenLanguage", item.language)
+                intent.putExtra("chosenSeason", item.season)
+                intent.putExtra("chosenEpisode", item.episode)
+                intent.putExtra("watchedTime", item.watchedTime)
                 activity?.startActivity(intent)
             }
         }

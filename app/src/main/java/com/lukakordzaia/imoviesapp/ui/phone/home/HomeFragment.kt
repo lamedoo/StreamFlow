@@ -32,10 +32,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         })
 
         //Watched Titles List
+        val watchedLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeWatchedAdapter = HomeWatchedAdapter(requireContext()) {
             viewModel.onWatchedTitlePressed(it)
         }
         rv_main_watched_titles.adapter = homeWatchedAdapter
+        rv_main_watched_titles.layoutManager = watchedLayout
 
         viewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {

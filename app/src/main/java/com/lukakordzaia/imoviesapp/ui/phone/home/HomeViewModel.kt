@@ -51,6 +51,7 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun getWatchedTitles(watchedDetails: List<WatchedDetails>) {
+        watchedTitles.clear()
         viewModelScope.launch {
             watchedDetails.forEach {
                 when (val watched = repository.getSingleTitleData(it.titleId)) {

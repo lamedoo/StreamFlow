@@ -63,17 +63,17 @@ class HomeWatchedAdapter(
                 .into(holder.titleWatchedPosterImageView)
         }
 
-        if (!listModel.originalName.isNullOrEmpty()) {
-            holder.titleWatchedNameEngTextView.text = listModel.primaryName
-        } else {
-            holder.titleWatchedNameEngTextView.text = ""
-        }
-
-        if (!listModel.primaryName.isNullOrEmpty()) {
-            holder.titleWatchedNameGeoTextView.text = listModel.primaryName
-        } else {
-            holder.titleWatchedNameGeoTextView.text = ""
-        }
+//        if (!listModel.originalName.isNullOrEmpty()) {
+//            holder.titleWatchedNameEngTextView.text = listModel.originalName
+//        } else {
+//            holder.titleWatchedNameEngTextView.text = ""
+//        }
+//
+//        if (!listModel.primaryName.isNullOrEmpty()) {
+//            holder.titleWatchedNameGeoTextView.text = listModel.primaryName
+//        } else {
+//            holder.titleWatchedNameGeoTextView.text = ""
+//        }
 
     }
 
@@ -84,8 +84,8 @@ class HomeWatchedAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titleWatchedRoot: ConstraintLayout = view.rv_title_root
         val titleWatchedPosterImageView: ImageView = view.rv_title_poster
-        val titleWatchedNameEngTextView: TextView = view.rv_title_name_eng
-        val titleWatchedNameGeoTextView: TextView = view.rv_title_name_geo
+//        val titleWatchedNameEngTextView: TextView = view.rv_title_name_eng
+//        val titleWatchedNameGeoTextView: TextView = view.rv_title_name_geo
         val titleWatchedSeason: TextView = view.rv_title_watched_season
     }
 }
