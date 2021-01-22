@@ -1,31 +1,29 @@
 package com.lukakordzaia.imoviesapp.ui.tv.main
 
 import android.view.ViewGroup
-import androidx.leanback.widget.ImageCardView
+import android.widget.TextView
 import androidx.leanback.widget.Presenter
+import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
 
 class TvGenresPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val cardView = object : ImageCardView(parent.context) {
-            override fun setSelected(selected: Boolean) {
-                super.setSelected(selected)
-            }
+        val cardView = TextView(parent.context).apply {
+            isFocusable = true
+            isFocusableInTouchMode = true
+            setPadding(10,15,10,15)
+            background = parent.resources.getDrawable(R.drawable.main_background)
         }
-
-        cardView.isFocusable = true
-        cardView.isFocusableInTouchMode = true
 
         return ViewHolder(cardView)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val genre = item as GenreList.Data
-        val cardView = viewHolder.view as ImageCardView
+        val view = viewHolder.view as TextView
 
-        cardView.setMainImageDimensions(313, 100)
-        cardView.titleText = genre.primaryName
-
+        view.text = genre.primaryName
+        view.setPadding(10,15,10,15)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {

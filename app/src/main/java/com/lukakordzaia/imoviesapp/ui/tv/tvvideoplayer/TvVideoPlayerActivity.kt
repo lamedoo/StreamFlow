@@ -20,6 +20,12 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 }
                 return true
             }
+            KeyEvent.KEYCODE_MEDIA_PAUSE -> {
+                if (!tv_title_player.player!!.isPlaying) {
+                    tv_title_player.player!!.pause()
+                }
+                return true
+            }
         }
         return super.onKeyDown(keyCode, event)
     }

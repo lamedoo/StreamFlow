@@ -14,6 +14,7 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
+import com.lukakordzaia.imoviesapp.ui.baseclasses.VideoPlayerData
 import com.lukakordzaia.imoviesapp.ui.phone.genres.GenresViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity

@@ -2,19 +2,25 @@ package com.lukakordzaia.imoviesapp.utils
 
 import android.content.Context
 import android.util.Log
+import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
 import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerRelease
+import com.lukakordzaia.imoviesapp.ui.baseclasses.MediaTransition
+import org.w3c.dom.Text
 
 
 class MediaPlayerClass {
     private lateinit var player: SimpleExoPlayer
-
+    private lateinit var header: TextView
+    private lateinit var episodeNames: List<String>
 
     fun initPlayer(context: Context, playerView: PlayerView, playBackOptions: VideoPlayerOptions) {
+
         player = SimpleExoPlayer.Builder(context).build()
         playerView.player = player
         player.addListener(event)
@@ -37,6 +43,11 @@ class MediaPlayerClass {
         player.release()
     }
 
+    fun addEpisodeNames(header: TextView, episodeNames: List<String>) {
+        this.header = header
+        this.episodeNames = episodeNames
+    }
+
     fun addAllEpisodes(episodes: MutableList<MediaItem>) {
         player.addMediaItems(episodes)
         Log.d("mediaitems", "$episodes")
@@ -52,9 +63,7 @@ class MediaPlayerClass {
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
-            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK) {
-                Log.d("playermessage", "changed to: ${mediaItem!!.mediaId}")
-            }
+            header.text = episodeNames[player.currentWindowIndex]
         }
     }
 }

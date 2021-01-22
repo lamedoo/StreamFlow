@@ -3,15 +3,12 @@ package com.lukakordzaia.imoviesapp.ui.phone.videoplayer
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.util.MimeTypes
-import com.google.android.gms.cast.MediaInfo
-import com.google.android.gms.cast.MediaMetadata
-import com.google.android.gms.cast.MediaQueueItem
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.network.Result
@@ -19,6 +16,7 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
 import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.imoviesapp.ui.baseclasses.MediaTransition
 import com.lukakordzaia.imoviesapp.utils.MediaPlayerClass
 import kotlinx.coroutines.launch
 
@@ -38,15 +36,17 @@ class VideoPlayerViewModel : BaseViewModel() {
     private val seasonForDb = MutableLiveData(1)
     private val episodeForDb = MutableLiveData<Int>()
 
-    private val _episodeName = MutableLiveData<String>()
-    val episodeName: LiveData<String> = _episodeName
+    private val getTitleNameList: MutableList<String> = mutableListOf()
+    private val setTitleNameList = MutableLiveData<List<String>>()
+
+    val setTitleName: LiveData<List<String>> = setTitleNameList
 
     fun initPlayer(
         context: Context,
         playerView: PlayerView,
         isTvShow: Boolean,
         watchTime: Long,
-        chosenEpisode: Int
+        chosenEpisode: Int,
     ) {
         if (watchTime > 0L) {
             playbackPosition.value = watchTime
@@ -70,6 +70,10 @@ class VideoPlayerViewModel : BaseViewModel() {
             currentWindow.value = it.currentWindow
             episodeForDb.value = it.currentWindow
         }
+    }
+
+    fun addEpisodeNames(header: TextView, episodeNames: List<String>) {
+        mediaPlayer.addEpisodeNames(header, episodeNames)
     }
 
     fun saveTitleToDb(context: Context, titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
@@ -97,7 +101,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                     is Result.Success -> {
                         val season = files.data.data
                         season.forEach { singleEpisode ->
-                            _episodeName.value = singleEpisode.title
+                            getTitleNameList.add(singleEpisode.title!!)
                             singleEpisode.files!!.forEach { singleFiles ->
                                 checkAvailability(singleFiles, chosenLanguage)
                             }
@@ -106,9 +110,10 @@ class VideoPlayerViewModel : BaseViewModel() {
                             val items = MediaItem.fromUri(Uri.parse(it))
                             seasonEpisodesUri.add(items)
                         }
+                        setTitleNameList.value = getTitleNameList
                         episodesUri.value = seasonEpisodesUri
                         mediaPlayer.addAllEpisodes(episodesUri.value!!)
-                        Log.d("episodes", "$seasonEpisodes")
+                        Log.d("episodesaaa", "${setTitleNameList.value}")
                     }
                     is Result.Error -> {
                         Log.d("errornextepisode", files.exception)
@@ -134,14 +139,5 @@ class VideoPlayerViewModel : BaseViewModel() {
                 }
             }
         }
-    }
-
-    fun buildMediaQueueItem(video :String): MediaQueueItem {
-        val movieMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
-        movieMetadata.putString(MediaMetadata.KEY_TITLE, "CBSN News")
-        val mediaInfo = MediaInfo.Builder(Uri.parse(video).toString())
-            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED).setContentType(MimeTypes.APPLICATION_M3U8)
-            .setMetadata(movieMetadata).build()
-        return MediaQueueItem.Builder(mediaInfo).build()
     }
 }
