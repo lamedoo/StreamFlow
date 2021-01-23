@@ -16,7 +16,6 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
 import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.imoviesapp.ui.baseclasses.MediaTransition
 import com.lukakordzaia.imoviesapp.utils.MediaPlayerClass
 import kotlinx.coroutines.launch
 

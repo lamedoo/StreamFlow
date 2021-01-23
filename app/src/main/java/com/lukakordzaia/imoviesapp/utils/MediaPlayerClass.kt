@@ -10,7 +10,6 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
 import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerRelease
-import com.lukakordzaia.imoviesapp.ui.baseclasses.MediaTransition
 import org.w3c.dom.Text
 
 

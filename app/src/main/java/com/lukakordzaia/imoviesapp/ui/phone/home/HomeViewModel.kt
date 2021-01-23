@@ -12,8 +12,6 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
 import com.lukakordzaia.imoviesapp.repository.HomeRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {

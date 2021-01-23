@@ -33,6 +33,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
             initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode)
+            Log.d("videoplaying", "started")
         }
     }
 
@@ -47,6 +48,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment() {
         super.onPause()
         if (Util.SDK_INT < 24) {
             releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage)
+            Log.d("videoplaying", "paused")
         }
     }
 
@@ -54,6 +56,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment() {
         super.onStop()
         if (Util.SDK_INT >= 24) {
             releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage)
+            Log.d("videoplaying", "stopped")
         }
     }
 }

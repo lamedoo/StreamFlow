@@ -3,6 +3,8 @@ package com.lukakordzaia.imoviesapp.ui.tv.main
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -37,27 +39,27 @@ class TvMainFragment : BrowseSupportFragment() {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         genresViewModel = ViewModelProvider(this).get(GenresViewModel::class.java)
 
-        Timer("movies", false).schedule(500) {
+        homeViewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
+            if (!it.isNullOrEmpty()) {
+                homeViewModel.getWatchedTitles(it)
+            }
+        })
+
+        Handler(Looper.getMainLooper()).postDelayed({
             homeViewModel.getTopMovies()
-        }
+        }, 1000)
 
-        Timer("tvShows", false).schedule(1500) {
+        Handler(Looper.getMainLooper()).postDelayed({
             homeViewModel.getTopTvShows()
-        }
+        }, 1500)
 
-        Timer("genres", false).schedule(2500) {
+        Handler(Looper.getMainLooper()).postDelayed({
             genresViewModel.getAllGenres()
-        }
+        }, 2500)
 
         setHeaderPresenterSelector(object : PresenterSelector() {
             override fun getPresenter(item: Any?): Presenter {
                 return TvHeaderItemPresenter()
-            }
-        })
-
-        homeViewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) {
-                homeViewModel.getWatchedTitles(it)
             }
         })
 
@@ -90,7 +92,7 @@ class TvMainFragment : BrowseSupportFragment() {
         }
 
         HeaderItem(0, "განაგრძეთ ყურება").also { header ->
-            rowsAdapter.add(ListRow(header, listRowAdapter))
+            rowsAdapter.replace(0, ListRow(header, listRowAdapter))
         }
     }
 
