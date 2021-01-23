@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_title_item.view.*
+import kotlinx.android.synthetic.main.rv_single_genre_item.view.*
 
 class SingleGenreAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SingleGenreAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
@@ -23,7 +23,7 @@ class SingleGenreAdapter(private val context: Context, private val onTitleClick:
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                LayoutInflater.from(context).inflate(R.layout.rv_title_item, parent, false)
+                LayoutInflater.from(context).inflate(R.layout.rv_single_genre_item, parent, false)
         )
     }
 
@@ -34,10 +34,10 @@ class SingleGenreAdapter(private val context: Context, private val onTitleClick:
             listModel.id?.let { titleId -> onTitleClick(titleId) }
         }
 
-        if (listModel.covers != null) {
-            if (listModel.covers.data != null) {
-                if (!listModel.covers.data.x510.isNullOrEmpty()) {
-                    Picasso.get().load(listModel.covers.data.x510).into(holder.titlePosterImageView)
+        if (listModel.posters != null) {
+            if (listModel.posters.data != null) {
+                if (!listModel.posters.data.x240.isNullOrEmpty()) {
+                    Picasso.get().load(listModel.posters.data.x240).into(holder.titlePosterImageView)
                 } else {
                     Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.titlePosterImageView)
                 }
@@ -63,9 +63,9 @@ class SingleGenreAdapter(private val context: Context, private val onTitleClick:
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val titleRoot: ConstraintLayout = view.rv_title_root
-        val titlePosterImageView: ImageView = view.rv_title_poster
-        val titleNameEngTextView: TextView = view.rv_title_name_eng
-        val titleNameGeoTextView: TextView = view.rv_title_name_geo
+        val titleRoot: ConstraintLayout = view.rv_singlegenre_item_root
+        val titlePosterImageView: ImageView = view.rv_singlegenre_item_poster
+        val titleNameEngTextView: TextView = view.rv_singlegenre_item_name_eng
+        val titleNameGeoTextView: TextView = view.rv_singlegenre_item_name_geo
     }
 }

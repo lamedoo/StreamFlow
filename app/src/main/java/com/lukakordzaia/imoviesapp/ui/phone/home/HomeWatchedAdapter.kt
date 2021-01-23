@@ -11,10 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_title_item.view.rv_title_name_eng
-import kotlinx.android.synthetic.main.rv_title_item.view.rv_title_name_geo
-import kotlinx.android.synthetic.main.rv_title_item.view.rv_title_poster
-import kotlinx.android.synthetic.main.rv_title_item.view.rv_title_root
 import kotlinx.android.synthetic.main.rv_watched_title_item.view.*
 import java.util.concurrent.TimeUnit
 
@@ -82,10 +78,10 @@ class HomeWatchedAdapter(
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val titleWatchedRoot: ConstraintLayout = view.rv_title_root
-        val titleWatchedPosterImageView: ImageView = view.rv_title_poster
+        val titleWatchedRoot: ConstraintLayout = view.rv_watchedtitle_item_root
+        val titleWatchedPosterImageView: ImageView = view.rv_watchedtitle_item_poster
 //        val titleWatchedNameEngTextView: TextView = view.rv_title_name_eng
 //        val titleWatchedNameGeoTextView: TextView = view.rv_title_name_geo
-        val titleWatchedSeason: TextView = view.rv_title_watched_season
+        val titleWatchedSeason: TextView = view.rv_watchedtitle_item_season
     }
 }

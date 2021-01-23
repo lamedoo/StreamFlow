@@ -14,10 +14,9 @@ import com.lukakordzaia.imoviesapp.utils.createToast
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_single_title.*
-import kotlinx.android.synthetic.main.tv_choose_files_fragment_new.*
+import kotlinx.android.synthetic.main.tv_choose_files_fragment.*
 
-class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment_new) {
+class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
     private lateinit var chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel
     private lateinit var singleTitleViewModel: SingleTitleViewModel
     private lateinit var tvChooseFilesEpisodesAdapter: TvChooseFilesEpisodesAdapter

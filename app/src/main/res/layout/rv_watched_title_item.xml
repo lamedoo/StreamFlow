@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rv_title_root"
+    android:id="@+id/rv_watchedtitle_item_root"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_marginBottom="30dp"
@@ -11,7 +11,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:id="@+id/rv_title_poster"
+        android:id="@+id/rv_watchedtitle_item_poster"
         android:layout_width="140dp"
         android:layout_height="200dp"
         android:scaleType="fitXY"
@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/rv_title_watched_season"
+        android:id="@+id/rv_watchedtitle_item_season"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
@@ -30,7 +30,7 @@
         android:padding="5dp"
         android:text="ს1 ე24"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/rv_title_poster"
+        app:layout_constraintBottom_toBottomOf="@id/rv_watchedtitle_item_poster"
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible" />
 
