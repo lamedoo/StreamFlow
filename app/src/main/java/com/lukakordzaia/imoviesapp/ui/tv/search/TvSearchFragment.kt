@@ -8,12 +8,8 @@ import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesViewModel
-import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles.TvChooseFilesActivity
 import com.lukakordzaia.imoviesapp.ui.tv.main.TvCardPresenter
-import com.lukakordzaia.imoviesapp.utils.setGone
-import com.lukakordzaia.imoviesapp.utils.setVisible
-import kotlinx.android.synthetic.main.fragment_search_titles.*
 
 class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchResultProvider {
     private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
@@ -29,7 +25,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(SearchTitlesViewModel::class.java)
 
-        viewModel.titleList.observe(viewLifecycleOwner, {
+        viewModel.searchList.observe(viewLifecycleOwner, {
             val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
                 it.forEach {
                     add(it)
@@ -50,7 +46,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
     override fun onQueryTextSubmit(query: String): Boolean {
         rowsAdapter.clear()
         if (!query.isNullOrBlank()) {
-            viewModel.getSearchTitles(query)
+            viewModel.getSearchTitles(query, 1)
         } else {
         }
         return true

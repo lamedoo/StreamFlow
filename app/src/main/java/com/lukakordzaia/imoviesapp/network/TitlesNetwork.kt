@@ -26,12 +26,12 @@ interface TitlesNetwork {
     suspend fun getAllGenres() : Response<GenreList>
 
     @Headers("User-Agent: imovies")
-    @GET("movies?page=1&per_page=12&sort=-year")
-    suspend fun getSingleGenre(@Query("filters[genre]") genreId: Int) : Response<TitleList>
+    @GET("movies?per_page=10&sort=-year")
+    suspend fun getSingleGenre(@Query("filters[genre]") genreId: Int, @Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
-    @GET ("search-advanced?filters%5Btype%5D=movie&page=1&per_page=15")
-    suspend fun getSearchTitles(@Query("keywords") keywords: String) : Response<TitleList>
+    @GET ("search-advanced?filters%5Btype%5D=movie&per_page=10")
+    suspend fun getSearchTitles(@Query("keywords") keywords: String, @Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
     @GET ("movies/{id}/")

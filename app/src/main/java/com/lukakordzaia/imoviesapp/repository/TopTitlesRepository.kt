@@ -8,7 +8,7 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 class TopTitlesRepository {
     private val retrofit = RetrofitBuilder.buildService(TitlesNetwork::class.java)
 
-    suspend fun getTopMovies() : Result<TitleList> {
+    suspend fun getTopMovies(page: Int) : Result<TitleList> {
         return RetrofitBuilder.retrofitCall { retrofit.getTopMovies() }
     }
 }

@@ -7,7 +7,7 @@ data class TitleList(
     @SerializedName("data")
     val `data`: List<Data>?,
     @SerializedName("meta")
-    val meta: Meta?
+    val meta: Meta
 ) {
     data class Data(
         @SerializedName("adjaraId")
@@ -229,7 +229,7 @@ data class TitleList(
 
     data class Meta(
         @SerializedName("pagination")
-        val pagination: Pagination?
+        val pagination: Pagination
     ) {
         data class Pagination(
             @SerializedName("count")

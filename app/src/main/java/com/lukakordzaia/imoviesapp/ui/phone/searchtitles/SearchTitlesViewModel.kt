@@ -13,23 +13,24 @@ import kotlinx.coroutines.launch
 class SearchTitlesViewModel : BaseViewModel() {
     private val repository = SearchTitleRepository()
 
-    private val _titleList = MutableLiveData<List<TitleList.Data>>()
-    val titleList: LiveData<List<TitleList.Data>> = _titleList
+    private val _searchList = MutableLiveData<List<TitleList.Data>>()
+    val searchList: LiveData<List<TitleList.Data>> = _searchList
+
+    private val fetchSearchTitleList: MutableList<TitleList.Data> = ArrayList()
 
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(SearchTitlesFragmentDirections.actionSearchTitlesFragmentToSingleTitleFragmentNav(titleId))
     }
 
-    fun displayToast(message: String) {
-        newToastMessage(message)
-    }
-
-    fun getSearchTitles(keywords: String) {
+    fun getSearchTitles(keywords: String, page: Int) {
         viewModelScope.launch {
-            when (val movies = repository.getSearchTitles(keywords)) {
+            when (val movies = repository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = movies.data.data
-                    _titleList.value = data
+                    data!!.forEach {
+                        fetchSearchTitleList.add(it)
+                    }
+                    _searchList.value = fetchSearchTitleList
                 }
                 is Result.Error -> {
                     Log.d("errornewmovies", movies.exception)

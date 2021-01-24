@@ -13,7 +13,7 @@ class GenresRepository {
         return RetrofitBuilder.retrofitCall { retrofit.getAllGenres() }
     }
 
-    suspend fun getSingleGenre(genreId: Int): Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { retrofit.getSingleGenre(genreId) }
+    suspend fun getSingleGenre(genreId: Int, page: Int): Result<TitleList> {
+        return RetrofitBuilder.retrofitCall { retrofit.getSingleGenre(genreId, page) }
     }
 }

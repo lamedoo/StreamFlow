@@ -13,18 +13,27 @@ import kotlinx.coroutines.launch
 class SingleGenreViewModel : BaseViewModel() {
     private val repository = GenresRepository()
 
-    private val _singleGenreList = MutableLiveData<List<TitleList.Data>>()
-    val singleGenreList: LiveData<List<TitleList.Data>> = _singleGenreList
+    private val _singleGenreList = MutableLiveData<MutableList<TitleList.Data>>()
+    val singleGenreList: LiveData<MutableList<TitleList.Data>> = _singleGenreList
+
+    private val fetchSingleGenreList: MutableList<TitleList.Data> = ArrayList()
+
+    private val _hasMorePage = MutableLiveData(true)
+    val hasMorePage: LiveData<Boolean> = _hasMorePage
 
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(SingleGenreFragmentDirections.actionSingleGenreFragmentToSingleTitleFragmentNav(titleId))
     }
 
-    fun getSingleGenre(genreId: Int) {
+    fun getSingleGenre(genreId: Int, page: Int) {
         viewModelScope.launch {
-            when (val singleGenre = repository.getSingleGenre(genreId)) {
+            when (val singleGenre = repository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
-                    _singleGenreList.value = singleGenre.data.data
+                    singleGenre.data.data!!.forEach {
+                        fetchSingleGenreList.add(it)
+                    }
+                    _singleGenreList.value = fetchSingleGenreList
+                    _hasMorePage.value = singleGenre.data.meta.pagination.totalPages!! > singleGenre.data.meta.pagination.currentPage!!
                     setLoading(false)
                 }
                 is Result.Error -> {

@@ -8,7 +8,7 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 class SearchTitleRepository {
     private val destinationService = RetrofitBuilder.buildService(TitlesNetwork::class.java)
 
-    suspend fun getSearchTitles(keywords: String): Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { destinationService.getSearchTitles(keywords) }
+    suspend fun getSearchTitles(keywords: String, page: Int): Result<TitleList> {
+        return RetrofitBuilder.retrofitCall { destinationService.getSearchTitles(keywords, page) }
     }
 }
