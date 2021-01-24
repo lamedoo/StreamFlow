@@ -34,21 +34,21 @@ class HomeMovieAdapter(private val context: Context, private val onMovieClick: (
             listModel.id?.let { movieId -> onMovieClick(movieId) }
         }
 
-        if (listModel.covers != null) {
-            if (listModel.covers.data != null) {
-                if (!listModel.covers.data.x510.isNullOrEmpty()) {
-                    Picasso.get().load(listModel.covers.data.x510).into(holder.moviePosterImageView)
+        if (listModel.posters != null) {
+            if (listModel.posters.data != null) {
+                if (!listModel.posters.data.x240.isNullOrEmpty()) {
+                    Picasso.get().load(listModel.posters.data.x240).into(holder.moviePosterImageView)
                 } else {
                     Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.moviePosterImageView)
                 }
             }
         }
 
-        if (!listModel.secondaryName.isNullOrEmpty()) {
-            holder.movieTitleEngTextView.text = listModel.secondaryName
-        } else {
-            holder.movieTitleEngTextView.text = ""
-        }
+//        if (!listModel.secondaryName.isNullOrEmpty()) {
+//            holder.movieTitleEngTextView.text = listModel.secondaryName
+//        } else {
+//            holder.movieTitleEngTextView.text = ""
+//        }
 
         if (!listModel.primaryName.isNullOrEmpty()) {
             holder.movieTitleGeoTextView.text = listModel.primaryName
@@ -65,7 +65,7 @@ class HomeMovieAdapter(private val context: Context, private val onMovieClick: (
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val movieRoot: ConstraintLayout = view.rv_home_item_root
         val moviePosterImageView: ImageView = view.rv_home_item_poster
-        val movieTitleEngTextView: TextView = view.rv_home_item_name_eng
+//        val movieTitleEngTextView: TextView = view.rv_home_item_name_eng
         val movieTitleGeoTextView: TextView = view.rv_home_item_name_geo
     }
 

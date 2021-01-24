@@ -34,21 +34,21 @@ class HomeTvShowAdapter(private val context: Context, private val onTvShowClick:
             listModel.id?.let { tvShowId -> onTvShowClick(tvShowId) }
         }
 
-        if (listModel.covers != null) {
-            if (listModel.covers.data != null) {
-                if (!listModel.covers.data.x510.isNullOrEmpty()) {
-                    Picasso.get().load(listModel.covers.data.x510).into(holder.titlePosterImageView)
+        if (listModel.posters != null) {
+            if (listModel.posters.data != null) {
+                if (!listModel.posters.data.x240.isNullOrEmpty()) {
+                    Picasso.get().load(listModel.posters.data.x240).into(holder.titlePosterImageView)
                 } else {
                     Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.titlePosterImageView)
                 }
             }
         }
 
-        if (!listModel.secondaryName.isNullOrEmpty()) {
-            holder.titleNameEngTextView.text = listModel.secondaryName
-        } else {
-            holder.titleNameEngTextView.text = ""
-        }
+//        if (!listModel.secondaryName.isNullOrEmpty()) {
+//            holder.titleNameEngTextView.text = listModel.secondaryName
+//        } else {
+//            holder.titleNameEngTextView.text = ""
+//        }
 
         if (!listModel.primaryName.isNullOrEmpty()) {
             holder.titleNameGeoTextView.text = listModel.primaryName
@@ -65,7 +65,7 @@ class HomeTvShowAdapter(private val context: Context, private val onTvShowClick:
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titleRoot: ConstraintLayout = view.rv_home_item_root
         val titlePosterImageView: ImageView = view.rv_home_item_poster
-        val titleNameEngTextView: TextView = view.rv_home_item_name_eng
+//        val titleNameEngTextView: TextView = view.rv_home_item_name_eng
         val titleNameGeoTextView: TextView = view.rv_home_item_name_geo
     }
 }

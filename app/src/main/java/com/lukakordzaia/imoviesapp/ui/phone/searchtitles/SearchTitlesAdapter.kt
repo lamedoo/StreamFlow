@@ -44,11 +44,11 @@ class SearchTitlesAdapter(private val context: Context, private val onTitleClick
             }
         }
 
-        if (!listModel.secondaryName.isNullOrEmpty()) {
-            holder.titleNameEngTextView.text = listModel.secondaryName
-        } else {
-            holder.titleNameEngTextView.text = ""
-        }
+//        if (!listModel.secondaryName.isNullOrEmpty()) {
+//            holder.titleNameEngTextView.text = listModel.secondaryName
+//        } else {
+//            holder.titleNameEngTextView.text = ""
+//        }
 
         if (!listModel.primaryName.isNullOrEmpty()) {
             holder.titleNameGeoTextView.text = listModel.primaryName
@@ -65,7 +65,7 @@ class SearchTitlesAdapter(private val context: Context, private val onTitleClick
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titleRoot: ConstraintLayout = view.rv_singlegenre_item_root
         val titlePosterImageView: ImageView = view.rv_singlegenre_item_poster
-        val titleNameEngTextView: TextView = view.rv_singlegenre_item_name_eng
+//        val titleNameEngTextView: TextView = view.rv_singlegenre_item_name_eng
         val titleNameGeoTextView: TextView = view.rv_singlegenre_item_name_geo
     }
 }

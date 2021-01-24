@@ -12,12 +12,13 @@
 
     <ImageView
         android:id="@+id/rv_home_item_poster"
-        android:layout_width="200dp"
-        android:layout_height="110dp"
-        tools:src="@drawable/movie_image_placeholder"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        tools:src="@drawable/friends_poster"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -34,24 +35,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:textColor="?colorOnPrimary"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            app:layout_constraintTop_toBottomOf="@id/rv_home_item_poster"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             tools:text="ფილმის სახელი"/>
 
-        <TextView
-            android:id="@+id/rv_home_item_name_eng"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/secondary_text_color"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            app:layout_constraintTop_toBottomOf="@id/rv_home_item_name_geo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Movie Title"/>
+<!--        <TextView-->
+<!--            android:id="@+id/rv_home_item_name_eng"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:textColor="@color/secondary_text_color"-->
+<!--            android:textAppearance="?android:attr/textAppearanceMedium"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/rv_home_item_name_geo"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            tools:text="Movie Title"/>-->
 
     </LinearLayout>
 

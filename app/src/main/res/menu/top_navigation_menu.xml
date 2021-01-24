@@ -6,7 +6,7 @@
 
     <item android:id="@+id/genres_fragment_nav"
         android:title="ტოპ სიები"
-        android:icon="@drawable/top_icon"/>
+        android:icon="@drawable/category_icon"/>
 
     <item android:id="@+id/search_fragment_nav"
         android:title="ძიება"
