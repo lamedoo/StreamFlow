@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -49,4 +50,17 @@ fun View.showKeyboard() {
 fun View.hideKeyboard() {
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+}
+
+fun infiniteScroll(view: NestedScrollView, f: () -> Unit) {
+    view.setOnScrollChangeListener {
+            v: NestedScrollView, _: Int, scrollY: Int, _: Int, oldScrollY: Int ->
+
+        if (scrollY == v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight &&
+            scrollY > oldScrollY) {
+
+            f()
+
+        }
+    }
 }

@@ -3,7 +3,6 @@ package com.lukakordzaia.imoviesapp.ui.phone.searchtitles
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -58,27 +57,18 @@ class SearchTitlesFragment : Fragment(R.layout.fragment_search_titles) {
             navController(it)
         })
 
-        search_nested_scroll.setOnScrollChangeListener {
-                v: NestedScrollView, _: Int, scrollY: Int, _: Int, oldScrollY: Int ->
-
-            if (scrollY == v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight &&
-                scrollY > oldScrollY) {
-
-                val visibleItemCount = layoutManager.childCount;
-                val totalItemCount = layoutManager.itemCount;
-                val pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
-
-                if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                    page++
-                    Log.d("currentpage", page.toString())
-                    viewModel.getSearchTitles(search_title_text.query.toString(), page)
-                }
-            }
+        infiniteScroll(search_nested_scroll) {
+            fetchMoreResults()
         }
 
         viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
+    }
 
+    private fun fetchMoreResults() {
+        page++
+        Log.d("currentpage", page.toString())
+        viewModel.getSearchTitles(search_title_text.query.toString(), page)
     }
 }

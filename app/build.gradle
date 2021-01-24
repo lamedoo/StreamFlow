@@ -20,6 +20,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        debug {
+            storeFile file("external/debug.keystore")
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false

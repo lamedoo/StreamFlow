@@ -3,16 +3,12 @@ package com.lukakordzaia.imoviesapp.ui.phone.genres.singlegenre
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.utils.EventObserver
-import com.lukakordzaia.imoviesapp.utils.navController
-import com.lukakordzaia.imoviesapp.utils.setGone
-import com.lukakordzaia.imoviesapp.utils.setVisible
+import com.lukakordzaia.imoviesapp.utils.*
 import kotlinx.android.synthetic.main.fragment_single_genre.*
 
 class SingleGenreFragment : Fragment(R.layout.fragment_single_genre) {
@@ -46,29 +42,19 @@ class SingleGenreFragment : Fragment(R.layout.fragment_single_genre) {
 
         viewModel.hasMorePage.observe(viewLifecycleOwner, {
             if (it) {
-                singlegenre_nested_scroll.setOnScrollChangeListener {
-                        v: NestedScrollView, _: Int, scrollY: Int, _: Int, oldScrollY: Int ->
-
-                    if (scrollY == v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight &&
-                        scrollY > oldScrollY) {
-
-                        val visibleItemCount = layoutManager.childCount;
-                        val totalItemCount = layoutManager.itemCount;
-                        val pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
-
-                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            single_genre_progressBar.setVisible()
-                            page++
-                            Log.d("currentpage", page.toString())
-                            viewModel.getSingleGenre(args.genreId, page)
-                        }
-                    }
-                }
+                infiniteScroll(singlegenre_nested_scroll) { fetchMoreTitle() }
             }
         })
 
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
+    }
+
+    private fun fetchMoreTitle() {
+        single_genre_progressBar.setVisible()
+        page++
+        Log.d("currentpage", page.toString())
+        viewModel.getSingleGenre(args.genreId, page)
     }
 }
