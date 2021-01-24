@@ -67,14 +67,25 @@
 
             <TextView
                 android:id="@+id/main_top_movies_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:fontFamily="@font/georgian_uppercase"
                 android:text="ტოპ ფილმები"
                 android:textColor="?colorOnPrimary"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/rv_main_watched_titles" />
+                app:layout_constraintTop_toBottomOf="@id/rv_main_watched_titles"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <ImageView
+                android:id="@+id/top_movies_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/ic_arrow_right"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_main_watched_titles"/>
+
 
             <View
                 android:layout_width="80dp"
@@ -96,14 +107,24 @@
 
             <TextView
                 android:id="@+id/main_top_tvshows_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:fontFamily="@font/georgian_uppercase"
                 android:text="ტოპ სერიალები"
                 android:textColor="?colorOnPrimary"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/rv_main_top_movies" />
+                app:layout_constraintTop_toBottomOf="@id/rv_main_top_movies"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <ImageView
+                android:id="@+id/top_tvshows_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/ic_arrow_right"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_main_top_movies"/>
 
             <View
                 android:layout_width="80dp"

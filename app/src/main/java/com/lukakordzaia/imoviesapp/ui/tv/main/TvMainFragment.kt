@@ -16,15 +16,11 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
 import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
-import com.lukakordzaia.imoviesapp.ui.baseclasses.VideoPlayerData
 import com.lukakordzaia.imoviesapp.ui.phone.genres.GenresViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
-import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles.TvChooseFilesActivity
 import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
-import java.util.*
-import kotlin.concurrent.schedule
 
 class TvMainFragment : BrowseSupportFragment() {
     private lateinit var homeViewModel: HomeViewModel
@@ -46,11 +42,11 @@ class TvMainFragment : BrowseSupportFragment() {
         })
 
         Handler(Looper.getMainLooper()).postDelayed({
-            homeViewModel.getTopMovies()
+            homeViewModel.getTopMovies(1)
         }, 1000)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            homeViewModel.getTopTvShows()
+            homeViewModel.getTopTvShows(1)
         }, 1500)
 
         Handler(Looper.getMainLooper()).postDelayed({

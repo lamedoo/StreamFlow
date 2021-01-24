@@ -45,6 +45,12 @@
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_topMoviesFragment"
+            app:destination="@id/topMoviesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_topTvShowsFragment"
+            app:destination="@id/topTvShowsFragment" />
     </fragment>
     <include app:graph="@navigation/single_title_fragment_nav" />
     <include app:graph="@navigation/video_player_fragment_nav" />
@@ -53,4 +59,28 @@
         android:name="com.lukakordzaia.imoviesapp.ui.phone.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/topMoviesFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopMoviesFragment"
+        android:label="TopMoviesFragment" >
+        <action
+            android:id="@+id/action_topMoviesFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/topTvShowsFragment"
+        android:name="com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopTvShowsFragment"
+        android:label="TopTvShowsFragment" >
+        <action
+            android:id="@+id/action_topTvShowsFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
+    </fragment>
 </navigation>

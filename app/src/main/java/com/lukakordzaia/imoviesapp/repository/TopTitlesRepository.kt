@@ -9,6 +9,6 @@ class TopTitlesRepository {
     private val retrofit = RetrofitBuilder.buildService(TitlesNetwork::class.java)
 
     suspend fun getTopMovies(page: Int) : Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { retrofit.getTopMovies() }
+        return RetrofitBuilder.retrofitCall { retrofit.getTopMovies(page) }
     }
 }

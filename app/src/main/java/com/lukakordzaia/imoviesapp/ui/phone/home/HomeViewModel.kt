@@ -12,6 +12,8 @@ import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
 import com.lukakordzaia.imoviesapp.repository.HomeRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopMoviesFragmentDirections
+import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopTvShowsFragmentDirections
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
@@ -28,8 +30,22 @@ class HomeViewModel : BaseViewModel() {
 
     private val watchedTitles: MutableList<WatchedTitleData> = mutableListOf()
 
-    fun onSingleTitlePressed(titleId: Int) {
-        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(titleId))
+    fun onSingleTitlePressed(start: String, titleId: Int) {
+        if (start == "home") {
+            navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(titleId))
+        } else if (start == "topMovies") {
+            navigateToNewFragment(TopMoviesFragmentDirections.actionTopMoviesFragmentToSingleTitleFragmentNav(titleId))
+        } else if (start == "topTvShows") {
+            navigateToNewFragment(TopTvShowsFragmentDirections.actionTopTvShowsFragmentToSingleTitleFragmentNav(titleId))
+        }
+    }
+
+    fun topMoviesMorePressed() {
+        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToTopMoviesFragment())
+    }
+
+    fun topTvShowsMorePressed() {
+        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToTopTvShowsFragment())
     }
 
     fun onWatchedTitlePressed(watchedTitleData: WatchedTitleData) {
@@ -76,9 +92,9 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    fun getTopMovies() {
+    fun getTopMovies(page: Int) {
         viewModelScope.launch {
-            when (val movies = repository.getTopMovies()) {
+            when (val movies = repository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = movies.data.data
                     _movieList.value = data
@@ -91,9 +107,9 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    fun getTopTvShows() {
+    fun getTopTvShows(page: Int) {
         viewModelScope.launch {
-            when (val tvShows = repository.getTopTvShows()) {
+            when (val tvShows = repository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = tvShows.data.data
                     _tvShowList.value = data

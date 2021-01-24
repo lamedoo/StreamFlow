@@ -15,11 +15,11 @@ interface TitlesNetwork {
 
     @Headers("User-Agent: imovies")
     @GET ("movies/top?type=movie&period=day&page=1&per_page=15")
-    suspend fun getTopMovies() : Response<TitleList>
+    suspend fun getTopMovies(@Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
-    @GET ("movies/top?type=series&period=day&page=1&per_page=15")
-    suspend fun getTopTvShows() : Response<TitleList>
+    @GET ("movies/top?type=series&period=day&per_page=15")
+    suspend fun getTopTvShows(@Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
     @GET ("genres?page=1&per_page=100")

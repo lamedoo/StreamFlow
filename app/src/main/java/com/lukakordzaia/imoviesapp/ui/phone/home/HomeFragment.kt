@@ -53,12 +53,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         //New Movies List
         val movieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeMovieAdapter = HomeMovieAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(it)
+            viewModel.onSingleTitlePressed("home", it)
         }
         rv_main_top_movies.adapter =  homeMovieAdapter
         rv_main_top_movies.layoutManager = movieLayout
 
-        viewModel.getTopMovies()
+        viewModel.getTopMovies(1)
 
         viewModel.movieList.observe(viewLifecycleOwner, Observer {
             homeMovieAdapter.setMoviesList(it)
@@ -68,16 +68,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         //New TvShows List
         val tvShowLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeTvShowAdapter = HomeTvShowAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(it)
+            viewModel.onSingleTitlePressed("home", it)
         }
         rv_main_top_tvshows.adapter = homeTvShowAdapter
         rv_main_top_tvshows.layoutManager = tvShowLayout
 
-        viewModel.getTopTvShows()
+        viewModel.getTopTvShows(1)
 
         viewModel.tvShowList.observe(viewLifecycleOwner, Observer {
             homeTvShowAdapter.setTvShowsList(it)
         })
+
+        top_movies_more.setOnClickListener {
+            viewModel.topMoviesMorePressed()
+        }
+
+        top_tvshows_more.setOnClickListener {
+            viewModel.topTvShowsMorePressed()
+        }
 
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
