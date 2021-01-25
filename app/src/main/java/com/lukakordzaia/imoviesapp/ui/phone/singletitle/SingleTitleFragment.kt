@@ -2,6 +2,7 @@ package com.lukakordzaia.imoviesapp.ui.phone.singletitle
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -45,7 +46,16 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
             if (!it.covers?.data?.x1050.isNullOrEmpty()) {
                 Picasso.get().load(it.covers?.data?.x1050).into(iv_single_title_play)
             }
-            tv_single_title_desc.text = it.plot?.data?.description
+
+            if (it.plot.data != null) {
+                if (!it.plot.data.description.isNullOrEmpty()) {
+                    tv_single_title_desc.text = it.plot.data.description
+                } else {
+                    tv_single_title_desc.text = "აღწერა არ მოიძებნა"
+                }
+            } else {
+                tv_single_title_desc.text = "აღწერა არ მოიძებნა"
+            }
 
             tv_single_title_year.text = it.year.toString()
             tv_single_title_duration.text = "${it.duration} წ."
@@ -58,6 +68,26 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
         viewModel.titleDetails.observe(viewLifecycleOwner, Observer {
             iv_post_video_icon.setOnClickListener { _ ->
                 viewModel.onPlayPressed(args.titleId, TitleDetails(it.numOfSeasons, it.isTvShow))
+            }
+        })
+
+        viewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
+            if (it) {
+                single_title_delete.setOnClickListener {
+                    val alertDialog = AlertDialog.Builder(requireContext())
+                    alertDialog.setMessage("ნამდვილად გსურთ ისტორიიდან წაშლა?")
+                            .setCancelable(false)
+                            .setPositiveButton("დიახ") { _, _ ->
+                                viewModel.deleteTitleFromDb(requireContext(), args.titleId)
+                            }
+                            .setNegativeButton("არა") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                    val alert = alertDialog.create()
+                    alert.show()
+                }
+            } else {
+                single_title_delete.setGone()
             }
         })
 

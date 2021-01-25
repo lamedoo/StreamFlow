@@ -1,12 +1,14 @@
 package com.lukakordzaia.imoviesapp.ui.phone.singletitle
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.imoviesapp.network.Result
+import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
+import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.SingleTitleRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
@@ -40,6 +42,18 @@ class SingleTitleViewModel : BaseViewModel() {
                     Log.d("errorsinglemovies", data.exception)
                 }
             }
+        }
+    }
+
+    fun checkTitleInDb(context: Context, titleId: Int): LiveData<Boolean> {
+        val database = ImoviesDatabase.getDatabase(context)?.getDao()
+        return repository.checkTitleInDb(database!!, titleId)
+    }
+
+    fun deleteTitleFromDb(context: Context, titleId: Int) {
+        val database = ImoviesDatabase.getDatabase(context)?.getDao()
+        viewModelScope.launch {
+            repository.deleteTitleFromDb(database!!, titleId)
         }
     }
 

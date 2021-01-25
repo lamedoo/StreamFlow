@@ -88,12 +88,20 @@
 
         </FrameLayout>
 
+        <ImageView
+            android:id="@+id/single_title_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/remove_db"
+            app:layout_constraintTop_toBottomOf="@id/single_title_play_container"/>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
             android:layout_marginTop="15dp"
-            app:layout_constraintTop_toBottomOf="@id/single_title_play_container"
+            android:scrollbars="none"
+            app:layout_constraintTop_toBottomOf="@id/single_title_delete"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -106,87 +114,98 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/default_data"
-                    android:padding="5dp"
-                    android:background="@color/default_background_color"
+                    android:padding="10dp"
+                    android:background="@drawable/single_title_desc_background"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Lorem Ipsum"/>
 
                 <LinearLayout
-                    android:id="@+id/single_title_year_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:layout_marginTop="15dp"
                     android:padding="10dp"
-                    android:background="@color/default_background_color"
+                    android:background="@drawable/single_title_desc_background"
                     app:layout_constraintTop_toBottomOf="@id/tv_single_title_desc">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/single_title_year_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/georgian_uppercase"
-                        android:text="გამოშვების წელი: "/>
 
-                    <TextView
-                        android:id="@+id/tv_single_title_year"
-                        android:layout_width="wrap_content"
-                        android:textStyle="bold"
-                        android:text="@string/default_data"
-                        android:fontFamily="@font/georgian_uppercase"
+                        android:padding="10dp"
+                        android:background="@color/default_background_color"
+                        app:layout_constraintTop_toBottomOf="@id/tv_single_title_desc">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/georgian_uppercase"
+                            android:text="გამოშვების წელი: "/>
+
+                        <TextView
+                            android:id="@+id/tv_single_title_year"
+                            android:layout_width="wrap_content"
+                            android:textStyle="bold"
+                            android:text="@string/default_data"
+                            android:fontFamily="@font/georgian_uppercase"
+                            android:layout_height="wrap_content"
+                            tools:text="1987"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/single_title_duration_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:text="1987"/>
+                        android:padding="10dp"
+                        android:background="@color/default_background_color"
+                        app:layout_constraintTop_toBottomOf="@id/single_title_year_container">
 
-                </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/georgian_uppercase"
+                            android:text="ხანგრძლივობა: "/>
 
-                <LinearLayout
-                    android:id="@+id/single_title_duration_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:background="@color/default_background_color"
-                    app:layout_constraintTop_toBottomOf="@id/single_title_year_container">
+                        <TextView
+                            android:id="@+id/tv_single_title_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_data"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/georgian_uppercase"
+                            tools:text="99"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/single_title_country_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/georgian_uppercase"
-                        android:text="ხანგრძლივობა: "/>
+                        android:padding="10dp"
+                        android:background="@color/default_background_color"
+                        app:layout_constraintTop_toBottomOf="@id/single_title_duration_container">
 
-                    <TextView
-                        android:id="@+id/tv_single_title_duration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/default_data"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/georgian_uppercase"
-                        tools:text="99"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/georgian_uppercase"
+                            android:text="ქვეყანა: "/>
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/tv_single_title_country"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_data"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/georgian_uppercase"
+                            tools:text="USA"/>
 
-                <LinearLayout
-                    android:id="@+id/single_title_country_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:background="@color/default_background_color"
-                    app:layout_constraintTop_toBottomOf="@id/single_title_duration_container">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/georgian_uppercase"
-                        android:text="ქვეყანა: "/>
-
-                    <TextView
-                        android:id="@+id/tv_single_title_country"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/default_data"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/georgian_uppercase"
-                        tools:text="USA"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 

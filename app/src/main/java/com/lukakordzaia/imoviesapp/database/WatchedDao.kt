@@ -15,10 +15,13 @@ interface WatchedDao {
     suspend fun insertWatchedTitle(watchedDetails: WatchedDetails)
 
     @Query("SELECT EXISTS (SELECT 1 FROM watcheddetails WHERE titleId = :titleId)")
-    suspend fun titleExists(titleId: Int): Boolean
+    fun titleExists(titleId: Int): LiveData<Boolean>
 
     @Query("UPDATE watcheddetails SET watchedTime = (:watchedTime) WHERE titleId = (:titleId)")
     suspend fun updateTitleInDb(watchedTime: Long, titleId: Int)
+
+    @Query("DELETE FROM watcheddetails WHERE titleId = (:titleId)")
+    suspend fun deleteSingleTitle(titleId: Int)
 
     @Query("DELETE FROM watcheddetails")
     suspend fun deleteDBContent()

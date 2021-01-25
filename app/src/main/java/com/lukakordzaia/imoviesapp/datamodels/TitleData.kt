@@ -47,7 +47,7 @@ data class TitleData(
         @SerializedName("parentalControlRate")
         val parentalControlRate: String?,
         @SerializedName("plot")
-        val plot: Plot?,
+        val plot: Plot,
         @SerializedName("plots")
         val plots: Plots?,
         @SerializedName("poster")

@@ -3,13 +3,14 @@ package com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
-import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
 import com.lukakordzaia.imoviesapp.utils.createToast
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
@@ -23,6 +24,7 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val spinnerClass = SpinnerClass(requireContext())
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
 
@@ -32,11 +34,19 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
         singleTitleViewModel.getSingleTitleData(titleId)
         chooseTitleDetailsViewModel.getSingleTitleFiles(titleId)
 
-
-        val spinnerClass = SpinnerClass(requireContext())
-
         singleTitleViewModel.singleTitleData.observe(viewLifecycleOwner, {
             Picasso.get().load(it.posters.data?.x240).into(tv_files_title_poster)
+
+            if (it.covers != null) {
+                if (it.covers.data != null) {
+                    if (!it.covers.data.x1050.isNullOrEmpty()) {
+                        Picasso.get().load(it.covers.data.x1050).into(tv_files_title_poster)
+                    } else {
+                        Picasso.get().load(R.drawable.movie_image_placeholder).into(tv_files_title_poster)
+                    }
+                }
+            }
+
             tv_files_title_year.text = it.year.toString()
             if (it.rating?.imdb?.score != null) {
                 tv_files_title_imdb_score.text = it.rating.imdb.score.toString()
@@ -48,8 +58,34 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
             } else {
                 tv_files_title_duration.text = "${it.duration.toString()} წთ."
             }
-            tv_files_title_desc.text = it.plot?.data?.description
+            if (it.plot.data != null) {
+                if (!it.plot.data.description.isNullOrEmpty()) {
+                    tv_files_title_desc.text = it.plot.data.description
+                } else {
+                    tv_files_title_desc.text = "აღწერა არ მოიძებნა"
+                }
+            } else {
+                tv_files_title_desc.text = "აღწერა არ მოიძებნა"
+            }
         })
+
+        singleTitleViewModel.checkTitleInDb(requireContext(), titleId).observe(viewLifecycleOwner, {
+            if (it) {
+                tv_files_title_delete.setOnClickListener {
+                    singleTitleViewModel.deleteTitleFromDb(requireContext(), titleId)
+                }
+                tv_files_title_delete.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+                    if (hasFocus) {
+                        v.background = ResourcesCompat.getDrawable(requireContext().resources, R.drawable.tv_remove_title_from_db_focused, null)
+                    } else {
+                        v.background = ResourcesCompat.getDrawable(requireContext().resources, R.drawable.tv_remove_title_from_db, null)
+                    }
+                }
+            } else {
+                tv_files_title_delete.setGone()
+            }
+        })
+
 
         chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (!it) {

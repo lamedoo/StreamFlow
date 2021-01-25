@@ -128,6 +128,16 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
+    private fun settingsRowsAdapter() {
+        val listRowAdapter = ArrayObjectAdapter(TvGenresPresenter()).apply {
+            add("ნახვების ისტორიის წაშლა")
+        }
+
+        HeaderItem(4, "პარამეტრები").also { header ->
+            rowsAdapter.add(ListRow(header, listRowAdapter))
+        }
+    }
+
     private fun prepareBackgroundManager() {
         backgroundManager = BackgroundManager.getInstance(activity).apply {
             attach(activity?.window)
