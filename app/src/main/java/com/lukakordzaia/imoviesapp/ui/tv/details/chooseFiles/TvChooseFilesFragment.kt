@@ -9,7 +9,7 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
-import com.lukakordzaia.imoviesapp.utils.SpinnerClass
+import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
 import com.lukakordzaia.imoviesapp.utils.createToast
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible

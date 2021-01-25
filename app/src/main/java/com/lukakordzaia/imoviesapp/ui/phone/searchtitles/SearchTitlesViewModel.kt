@@ -22,6 +22,10 @@ class SearchTitlesViewModel : BaseViewModel() {
         navigateToNewFragment(SearchTitlesFragmentDirections.actionSearchTitlesFragmentToSingleTitleFragmentNav(titleId))
     }
 
+    fun clearSearchResults() {
+        fetchSearchTitleList.clear()
+    }
+
     fun getSearchTitles(keywords: String, page: Int) {
         viewModelScope.launch {
             when (val movies = repository.getSearchTitles(keywords, page)) {

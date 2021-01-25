@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
 import com.lukakordzaia.imoviesapp.utils.*
 import kotlinx.android.synthetic.main.fragment_choose_title_details.*
 import kotlinx.android.synthetic.main.fragment_choose_title_details.spinner_language
-import kotlinx.android.synthetic.main.tv_choose_files_fragment.*
 
 
 class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {

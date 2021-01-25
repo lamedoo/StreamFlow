@@ -1,4 +1,5 @@
-package com.lukakordzaia.imoviesapp.ui.phone.searchtitles
+package com.lukakordzaia
+.imoviesapp.ui.phone.searchtitles
 
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +21,7 @@ class SearchTitlesFragment : Fragment(R.layout.fragment_search_titles) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(SearchTitlesViewModel::class.java)
         search_title_text.isIconified = false
+
 
         searchTitlesAdapter = SearchTitlesAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(it)
@@ -48,6 +50,7 @@ class SearchTitlesFragment : Fragment(R.layout.fragment_search_titles) {
                 if (query.isNullOrBlank()) {
                     rv_search_titles.setGone()
                     top_search_container.setVisible()
+                    viewModel.clearSearchResults()
                 }
                 return true
             }

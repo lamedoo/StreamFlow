@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.utils
+package com.lukakordzaia.imoviesapp.helpers
 
 import android.content.Context
 import android.util.Log

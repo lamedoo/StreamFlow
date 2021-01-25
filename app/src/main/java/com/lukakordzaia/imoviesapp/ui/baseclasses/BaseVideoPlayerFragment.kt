@@ -3,14 +3,11 @@ package com.lukakordzaia.imoviesapp.ui.baseclasses
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.phone.videoplayer.VideoPlayerViewModel
-import com.lukakordzaia.imoviesapp.utils.MediaPlayerClass
-import com.lukakordzaia.imoviesapp.utils.setGone
 import kotlinx.android.synthetic.main.exoplayer_controller_layout_new.*
 import kotlinx.android.synthetic.main.fragment_video_player.*
 
