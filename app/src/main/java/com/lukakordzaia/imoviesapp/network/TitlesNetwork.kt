@@ -1,10 +1,10 @@
 package com.lukakordzaia.imoviesapp.network
 
 
-import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleData
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleFiles
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.datamodels.GenreList
+import com.lukakordzaia.imoviesapp.datamodels.TitleData
+import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
+import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers

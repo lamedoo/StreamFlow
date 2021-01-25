@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleDetails
+import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
 import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
 import com.lukakordzaia.imoviesapp.utils.setGone

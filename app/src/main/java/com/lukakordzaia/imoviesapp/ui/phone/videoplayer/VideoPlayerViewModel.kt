@@ -12,8 +12,8 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleFiles
-import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
+import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
+import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerOptions
 import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.imoviesapp.utils.MediaPlayerClass

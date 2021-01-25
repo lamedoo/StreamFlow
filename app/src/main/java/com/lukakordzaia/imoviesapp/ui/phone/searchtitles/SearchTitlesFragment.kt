@@ -45,7 +45,11 @@ class SearchTitlesFragment : Fragment(R.layout.fragment_search_titles) {
 
 
             override fun onQueryTextChange(query: String?): Boolean {
-                return false
+                if (query.isNullOrBlank()) {
+                    rv_search_titles.setGone()
+                    top_search_container.setVisible()
+                }
+                return true
             }
         })
 

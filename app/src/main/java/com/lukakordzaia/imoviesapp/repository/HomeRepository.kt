@@ -6,8 +6,8 @@ import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.network.TitlesNetwork
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleData
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.datamodels.TitleData
+import com.lukakordzaia.imoviesapp.datamodels.TitleList
 
 class HomeRepository {
     private val destinationService = RetrofitBuilder.buildService(TitlesNetwork::class.java)

@@ -1,9 +1,7 @@
 package com.lukakordzaia.imoviesapp.ui.tv.details
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
-import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleData
-import com.squareup.picasso.Picasso
+import com.lukakordzaia.imoviesapp.datamodels.TitleData
 
 class TvDetailsPresenter : AbstractDetailsDescriptionPresenter() {
     override fun onBindDescription(viewHolder: ViewHolder, itemData: Any) {

@@ -3,14 +3,12 @@ package com.lukakordzaia.imoviesapp.utils
 import android.content.Context
 import android.util.Log
 import android.widget.TextView
-import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
-import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerOptions
-import com.lukakordzaia.imoviesapp.network.datamodels.VideoPlayerRelease
-import org.w3c.dom.Text
+import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerOptions
+import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerRelease
 
 
 class MediaPlayerClass {

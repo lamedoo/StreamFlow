@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.network.datamodels
+package com.lukakordzaia.imoviesapp.datamodels
 
 data class VideoPlayerOptions(
         var playWhenReady: Boolean,

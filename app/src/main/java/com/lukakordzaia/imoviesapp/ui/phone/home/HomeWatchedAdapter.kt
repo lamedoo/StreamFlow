@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
+import com.lukakordzaia.imoviesapp.datamodels.WatchedTitleData
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_watched_title_item.view.*
 import java.util.concurrent.TimeUnit

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
+import com.lukakordzaia.imoviesapp.datamodels.GenreList
 import kotlinx.android.synthetic.main.rv_genre_item.view.*
 
 class GenresAdapter(private val context: Context, private val onGenreClick: (genreId: Int) -> Unit) : RecyclerView.Adapter<GenresAdapter.ViewHolder>() {

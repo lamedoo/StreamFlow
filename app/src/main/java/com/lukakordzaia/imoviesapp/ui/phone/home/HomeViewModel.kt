@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
-import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
+import com.lukakordzaia.imoviesapp.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.datamodels.WatchedTitleData
 import com.lukakordzaia.imoviesapp.repository.HomeRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopMoviesFragmentDirections

@@ -3,8 +3,8 @@ package com.lukakordzaia.imoviesapp.repository
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.network.TitlesNetwork
-import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.datamodels.GenreList
+import com.lukakordzaia.imoviesapp.datamodels.TitleList
 
 class GenresRepository {
     private val retrofit = RetrofitBuilder.buildService(TitlesNetwork::class.java)

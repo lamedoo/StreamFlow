@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.ui.baseclasses
+package com.lukakordzaia.imoviesapp.datamodels
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

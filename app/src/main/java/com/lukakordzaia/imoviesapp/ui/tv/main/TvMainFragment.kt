@@ -13,9 +13,9 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
-import com.lukakordzaia.imoviesapp.network.datamodels.WatchedTitleData
+import com.lukakordzaia.imoviesapp.datamodels.GenreList
+import com.lukakordzaia.imoviesapp.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.datamodels.WatchedTitleData
 import com.lukakordzaia.imoviesapp.ui.phone.genres.GenresViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles.TvChooseFilesActivity
@@ -88,7 +88,7 @@ class TvMainFragment : BrowseSupportFragment() {
         }
 
         HeaderItem(0, "განაგრძეთ ყურება").also { header ->
-            rowsAdapter.replace(0, ListRow(header, listRowAdapter))
+            rowsAdapter.add(ListRow(header, listRowAdapter))
         }
     }
 

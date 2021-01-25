@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_home_item.view.*
 
@@ -53,7 +53,7 @@ class HomeMovieAdapter(private val context: Context, private val onMovieClick: (
         if (!listModel.primaryName.isNullOrEmpty()) {
             holder.movieTitleGeoTextView.text = listModel.primaryName
         } else {
-            holder.movieTitleGeoTextView.text = ""
+            holder.movieTitleGeoTextView.text = listModel.secondaryName
         }
 
     }

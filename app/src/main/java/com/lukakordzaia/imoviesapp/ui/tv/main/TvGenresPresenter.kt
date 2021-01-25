@@ -2,9 +2,10 @@ package com.lukakordzaia.imoviesapp.ui.tv.main
 
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.datamodels.GenreList
+import com.lukakordzaia.imoviesapp.datamodels.GenreList
 
 class TvGenresPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
@@ -12,7 +13,7 @@ class TvGenresPresenter : Presenter() {
             isFocusable = true
             isFocusableInTouchMode = true
             setPadding(10,15,10,15)
-            background = parent.resources.getDrawable(R.drawable.main_background)
+            background = ResourcesCompat.getDrawable(parent.resources, R.drawable.tv_genres_background, null)
         }
 
         return ViewHolder(cardView)
@@ -23,7 +24,6 @@ class TvGenresPresenter : Presenter() {
         val view = viewHolder.view as TextView
 
         view.text = genre.primaryName
-        view.setPadding(10,15,10,15)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {

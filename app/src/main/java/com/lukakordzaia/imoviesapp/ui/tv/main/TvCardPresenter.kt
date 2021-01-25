@@ -1,12 +1,11 @@
 package com.lukakordzaia.imoviesapp.ui.tv.main
 
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.network.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.squareup.picasso.Picasso
 
 class TvCardPresenter : Presenter() {
@@ -14,6 +13,14 @@ class TvCardPresenter : Presenter() {
         val cardView = object : ImageCardView(parent.context) {
             override fun setSelected(selected: Boolean) {
                 super.setSelected(selected)
+            }
+        }
+        
+        cardView.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                cardView.findViewById<TextView>(R.id.title_text).maxLines = 3
+            } else {
+                cardView.findViewById<TextView>(R.id.title_text).maxLines = 1
             }
         }
 
@@ -27,10 +34,23 @@ class TvCardPresenter : Presenter() {
         val movie = item as TitleList.Data
         val cardView = viewHolder.view as ImageCardView
 
-        cardView.titleText = movie.primaryName
-        cardView.contentText = movie.secondaryName
-        cardView.setMainImageDimensions(313, 176)
-        Picasso.get().load(movie.covers?.data?.x510).into(cardView.mainImageView)
+        if (!movie.primaryName.isNullOrBlank()) {
+            cardView.titleText = movie.primaryName
+        } else {
+            cardView.titleText = movie.secondaryName
+        }
+        cardView.setMainImageDimensions(250, 330)
+//        Picasso.get().load(movie.posters?.data?.x240).into(cardView.mainImageView)
+
+        if (movie.posters != null) {
+            if (movie.posters.data != null) {
+                if (!movie.posters.data.x240.isNullOrEmpty()) {
+                    Picasso.get().load(movie.posters.data.x240).into(cardView.mainImageView)
+                } else {
+                    Picasso.get().load(R.drawable.movie_image_placeholder).into(cardView.mainImageView)
+                }
+            }
+        }
 
     }
 

@@ -6,8 +6,7 @@ import android.util.Log
 import android.view.View
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseVideoPlayerFragment
-import com.lukakordzaia.imoviesapp.ui.baseclasses.VideoPlayerData
-import kotlinx.android.synthetic.main.fragment_video_player.*
+import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerData
 
 class TvVideoPlayerFragment : BaseVideoPlayerFragment() {
     private lateinit var videoPlayerData: VideoPlayerData
