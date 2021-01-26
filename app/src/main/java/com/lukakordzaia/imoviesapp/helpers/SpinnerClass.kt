@@ -21,7 +21,6 @@ class SpinnerClass(private val context: Context) {
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
-
         }
     }
 }

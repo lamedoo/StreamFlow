@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
+import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
 import com.lukakordzaia.imoviesapp.network.Result
@@ -21,6 +22,9 @@ class SingleTitleViewModel : BaseViewModel() {
 
     private val _titleDetails = MutableLiveData<TitleDetails>()
     val titleDetails: LiveData<TitleDetails> = _titleDetails
+
+    private val _titleIsInDb = MutableLiveData<Boolean>()
+    val titleIsInDb: LiveData<Boolean> = _titleIsInDb
 
     fun onPlayPressed(titleId: Int, titleDetails: TitleDetails) {
         navigateToNewFragment(SingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
@@ -48,6 +52,15 @@ class SingleTitleViewModel : BaseViewModel() {
     fun checkTitleInDb(context: Context, titleId: Int): LiveData<Boolean> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         return repository.checkTitleInDb(database!!, titleId)
+    }
+
+    fun titleIsInDb(exists: Boolean) {
+        _titleIsInDb.value = exists
+    }
+
+    fun getSingleWatchedTitleDetails(context: Context, titleId: Int): LiveData<WatchedDetails> {
+        val database = ImoviesDatabase.getDatabase(context)?.getDao()
+        return repository.getSingleWatchedTitles(database!!, titleId)
     }
 
     fun deleteTitleFromDb(context: Context, titleId: Int) {

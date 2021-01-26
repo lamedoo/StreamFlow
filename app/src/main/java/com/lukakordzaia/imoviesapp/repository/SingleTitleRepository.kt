@@ -2,6 +2,7 @@ package com.lukakordzaia.imoviesapp.repository
 
 import androidx.lifecycle.LiveData
 import com.lukakordzaia.imoviesapp.database.WatchedDao
+import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
@@ -16,6 +17,10 @@ class SingleTitleRepository {
 
     fun checkTitleInDb(watchedDao: WatchedDao, titleId: Int): LiveData<Boolean> {
         return watchedDao.titleExists(titleId)
+    }
+
+    fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): LiveData<WatchedDetails> {
+        return watchedDao.getSingleWatchedTitles(titleId)
     }
 
     suspend fun deleteTitleFromDb(watchedDao: WatchedDao, titleId: Int) {

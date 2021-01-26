@@ -3,6 +3,7 @@ package com.lukakordzaia.imoviesapp.utils
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.widget.NestedScrollView
@@ -35,6 +36,16 @@ fun View.setGone() {
 
 fun View.setInvisible() {
     visibility = View.INVISIBLE
+}
+
+fun View.setMargin(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
+    val params = (layoutParams as? ViewGroup.MarginLayoutParams)
+    params?.setMargins(
+        left ?: params.leftMargin,
+        top ?: params.topMargin,
+        right ?: params.rightMargin,
+        bottom ?: params.bottomMargin)
+    layoutParams = params
 }
 
 fun View.setVisibleOrGone(visibility: Boolean) {

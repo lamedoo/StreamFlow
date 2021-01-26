@@ -11,6 +11,9 @@ interface WatchedDao {
     @Query("SELECT * FROM watcheddetails")
     fun getWatchedTitles(): LiveData<List<WatchedDetails>>
 
+    @Query("SELECT * FROM watcheddetails WHERE titleId = :titleId")
+    fun getSingleWatchedTitles(titleId: Int) : LiveData<WatchedDetails>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWatchedTitle(watchedDetails: WatchedDetails)
 
