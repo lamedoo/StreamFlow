@@ -10,9 +10,9 @@
         android:id="@+id/app_main_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:elevation="0dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        android:layout_marginStart="0dp"
         android:background="?colorPrimary"
         android:fillColor="?attr/colorControlNormal"
         app:titleTextColor="?colorOnPrimary"
@@ -24,21 +24,14 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/main_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:src="@drawable/imovies_logo"/>
-
-            <ImageView
-                android:id="@+id/main_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/settings_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -76,7 +69,7 @@
         app:itemTextColor="@color/top_nav_colors"
         app:labelVisibilityMode="unlabeled"
         app:itemIconSize="32dp"
-        app:menu="@menu/top_navigation_menu"/>
+        app:menu="@menu/bottom_navigation_menu"/>
 
 
 

@@ -1,6 +1,9 @@
 package com.lukakordzaia.imoviesapp.ui.phone.home
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +21,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var homeWatchedAdapter: HomeWatchedAdapter
     private lateinit var homeMovieAdapter: HomeMovieAdapter
     private lateinit var homeTvShowAdapter: HomeTvShowAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -131,5 +139,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.home_fragment_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.settings_button -> {
+                navController(HomeFragmentDirections.actionHomeFragmentToSettingsFragment())
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

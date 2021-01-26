@@ -9,14 +9,15 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.ui.phone.genres.GenresFragment
 import com.lukakordzaia.imoviesapp.ui.phone.genres.singlegenre.SingleGenreFragment
-import com.lukakordzaia.imoviesapp.ui.phone.home.HomeFragmentDirections
+import com.lukakordzaia.imoviesapp.ui.phone.home.HomeFragment
+import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesFragment
 import com.lukakordzaia.imoviesapp.ui.phone.settings.SettingsFragment
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleFragment
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment
@@ -41,27 +42,22 @@ class MainActivity : AppCompatActivity() {
         val appToolbar: MaterialToolbar = findViewById(R.id.app_main_toolbar)
         setSupportActionBar(appToolbar)
 
-        main_settings.setOnClickListener {
-            findNavController(R.id.fr_nav_host).navigate(HomeFragmentDirections.actionHomeFragmentToSettingsFragment())
-        }
-
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
                 when (f) {
-                    is SingleTitleFragment -> {
-                        main_settings.setGone()
-                        hideBottomNavigation()
-                    }
+                    is HomeFragment -> main_logo.setVisible()
+                    is GenresFragment -> main_logo.setVisible()
+                    is SearchTitlesFragment -> main_logo.setVisible()
+                    is SingleTitleFragment -> hideBottomNavigation()
                     is ChooseTitleDetailsFragment -> hideBottomNavigation()
                     is VideoPlayerFragment -> {
                         app_main_toolbar.setGone()
                         hideBottomNavigation()
                     }
-                    is SettingsFragment -> main_settings.setGone()
+                    is SettingsFragment -> hideBottomNavigation()
                     is SingleGenreFragment -> hideBottomNavigation()
                     else -> {
                         app_main_toolbar.setVisible()
-                        main_settings.setVisible()
                         showBottomNavigation()
                     }
                 }
