@@ -21,9 +21,12 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_PAUSE -> {
-                if (!title_player.player!!.isPlaying) {
-                    title_player.player!!.pause()
-                }
+                title_player.showController()
+                title_player.player!!.pause()
+                return true
+            }
+            KeyEvent.KEYCODE_MEDIA_PLAY -> {
+                title_player.player!!.play()
                 return true
             }
         }
