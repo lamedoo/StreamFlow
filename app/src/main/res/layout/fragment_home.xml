@@ -49,8 +49,8 @@
                 android:id="@+id/main_watched_titles_none"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="ჩართეთ ფილმი ან სერიალი, რომ დაემატოს სიაში"
-                app:layout_constraintBottom_toTopOf="@id/main_top_movies_title"
                 app:layout_constraintTop_toBottomOf="@id/main_watched_titles" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -74,7 +74,7 @@
                 android:text="ტოპ ფილმები"
                 android:textColor="?colorOnPrimary"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/rv_main_watched_titles"
+                app:layout_constraintTop_toBottomOf="@id/main_watched_titles_none"
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <ImageView
@@ -84,7 +84,7 @@
                 android:layout_marginTop="40dp"
                 android:src="@drawable/ic_arrow_right"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_main_watched_titles"/>
+                app:layout_constraintTop_toBottomOf="@id/main_watched_titles_none"/>
 
 
             <View

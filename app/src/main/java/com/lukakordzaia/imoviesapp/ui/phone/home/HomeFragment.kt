@@ -2,6 +2,7 @@ package com.lukakordzaia.imoviesapp.ui.phone.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -42,6 +43,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 main_watched_titles_none.setGone()
+                val topMoviesTitleConstraint = main_top_movies_title.layoutParams as ConstraintLayout.LayoutParams
+                topMoviesTitleConstraint.topToBottom = rv_main_watched_titles.id
+                main_top_movies_title.requestLayout()
+
+                val topMoviesMoreConstraint = top_movies_more.layoutParams as ConstraintLayout.LayoutParams
+                topMoviesMoreConstraint.topToBottom = rv_main_watched_titles.id
+                top_movies_more.requestLayout()
+
                 viewModel.getWatchedTitles(it)
             }
         })

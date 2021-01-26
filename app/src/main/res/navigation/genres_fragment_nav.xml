@@ -11,7 +11,9 @@
         tools:layout="@layout/fragment_genres" >
         <action
             android:id="@+id/action_genresFragment_to_singleGenreFragment"
-            app:destination="@id/singleGenreFragment" />
+            app:destination="@id/singleGenreFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
     <fragment
         android:id="@+id/singleGenreFragment"
@@ -23,7 +25,9 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_singleGenreFragment_to_single_title_fragment_nav"
-            app:destination="@id/single_title_fragment_nav">
+            app:destination="@id/single_title_fragment_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="titleId"
                 app:argType="integer" />

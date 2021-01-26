@@ -6,6 +6,8 @@
     <color name="green_light">#009b7b</color>
     <color name="green_dark">#009c7c</color>
 
+    <color name="transparent">@android:color/transparent</color>
+
     <color name="black">#1d1d1d</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">@android:color/holo_red_dark</color>
