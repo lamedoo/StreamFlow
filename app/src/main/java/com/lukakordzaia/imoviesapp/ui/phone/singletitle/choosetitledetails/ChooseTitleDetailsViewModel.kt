@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.imoviesapp.network.Result
+import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
+import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
@@ -46,6 +47,18 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
                         chosenLanguage.value!!
                 ),
         )
+    }
+
+
+    fun onContinueWatchingPressed(watchedDetails: WatchedDetails) {
+        navigateToNewFragment(ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
+                titleId = watchedDetails.titleId,
+                chosenSeason = watchedDetails.season,
+                chosenEpisode = watchedDetails.episode,
+                isTvShow = watchedDetails.isTvShow,
+                watchedTime = watchedDetails.watchedTime,
+                chosenLanguage = watchedDetails.language
+        ))
     }
 
     fun getSingleTitleFiles(movieId: Int) {
