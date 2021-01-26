@@ -46,6 +46,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 viewModel.deleteSingleTitleFromDb(requireContext(), titleId)
                                 return@setOnMenuItemClickListener true
                             }
+                            R.id.watched_check_info -> {
+                                viewModel.onSingleTitlePressed("home", titleId)
+                                return@setOnMenuItemClickListener true
+                            }
                             else -> {
                                 requireContext().createToast("aaaa")
                                 return@setOnMenuItemClickListener true
