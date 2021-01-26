@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit
 
 class HomeWatchedAdapter(
     private val context: Context,
-    private val onWatchedTitleClick: (watchedTitleData: WatchedTitleData) -> Unit
+    private val onWatchedTitleClick: (watchedTitleData: WatchedTitleData) -> Unit,
+    private val onMoreMenuClick: (titleId: Int, view: View) -> Unit
 ) : RecyclerView.Adapter<HomeWatchedAdapter.ViewHolder>() {
     private var list: List<WatchedTitleData> = ArrayList()
 
@@ -59,18 +60,9 @@ class HomeWatchedAdapter(
                 .into(holder.titleWatchedPosterImageView)
         }
 
-//        if (!listModel.originalName.isNullOrEmpty()) {
-//            holder.titleWatchedNameEngTextView.text = listModel.originalName
-//        } else {
-//            holder.titleWatchedNameEngTextView.text = ""
-//        }
-//
-//        if (!listModel.primaryName.isNullOrEmpty()) {
-//            holder.titleWatchedNameGeoTextView.text = listModel.primaryName
-//        } else {
-//            holder.titleWatchedNameGeoTextView.text = ""
-//        }
-
+        holder.titleWatchedMore.setOnClickListener {
+            onMoreMenuClick(listModel.id, holder.titleWatchedMore)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -80,8 +72,7 @@ class HomeWatchedAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titleWatchedRoot: ConstraintLayout = view.rv_watchedtitle_item_root
         val titleWatchedPosterImageView: ImageView = view.rv_watchedtitle_item_poster
-//        val titleWatchedNameEngTextView: TextView = view.rv_title_name_eng
-//        val titleWatchedNameGeoTextView: TextView = view.rv_title_name_geo
         val titleWatchedSeason: TextView = view.rv_watchedtitle_item_season
+        val titleWatchedMore: ImageView = view.rv_watchedtitle_item_more
     }
 }
