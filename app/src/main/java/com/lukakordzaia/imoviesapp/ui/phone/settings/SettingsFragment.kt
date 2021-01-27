@@ -17,12 +17,6 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private lateinit var viewModel: SettingsViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
     private fun setUpCircularAnimation() {
         settings_root.setInvisible()
         settings_root.doOnLayout {
