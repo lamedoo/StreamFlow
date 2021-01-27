@@ -73,7 +73,7 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
 
         viewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
             if (it) {
-                single_title_delete.setOnClickListener {
+                single_title_delete_container.setOnClickListener {
                     val alertDialog = AlertDialog.Builder(requireContext())
                     alertDialog.setMessage("ნამდვილად გსურთ ისტორიიდან წაშლა?")
                             .setCancelable(false)
@@ -87,7 +87,7 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
                     alert.show()
                 }
             } else {
-                single_title_delete.setGone()
+                single_title_delete_container.setGone()
             }
         })
 

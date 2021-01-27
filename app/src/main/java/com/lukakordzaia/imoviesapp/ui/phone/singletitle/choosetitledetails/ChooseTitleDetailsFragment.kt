@@ -1,5 +1,7 @@
 package com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +11,15 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
+import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.imoviesapp.utils.*
 import kotlinx.android.synthetic.main.fragment_choose_title_details.*
-import kotlinx.android.synthetic.main.fragment_choose_title_details.spinner_language
+import java.util.concurrent.TimeUnit
 
 
 class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
-    private lateinit var viewModel: ChooseTitleDetailsViewModel
+    private lateinit var chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel
+    private lateinit var singleTitleViewModel: SingleTitleViewModel
     private val args: ChooseTitleDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -28,21 +32,23 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ChooseTitleDetailsViewModel::class.java)
-        viewModel.getSingleTitleFiles(args.titleId)
+        chooseTitleDetailsViewModel = ViewModelProvider(this).get(ChooseTitleDetailsViewModel::class.java)
+        singleTitleViewModel = ViewModelProvider(this).get(SingleTitleViewModel::class.java)
+
+        chooseTitleDetailsViewModel.getSingleTitleFiles(args.titleId)
         val spinnerClass = SpinnerClass(requireContext())
 
-        viewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
+        chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (!it) {
                 movie_file_not_yet.setGone()
                 movie_files_container.setVisible()
             }
         })
 
-        viewModel.availableLanguages.observe(viewLifecycleOwner, {
+        chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
             val languages = it.reversed()
             spinnerClass.createSpinner(spinner_language, languages) { language ->
-                viewModel.getTitleLanguageFiles(language)
+                chooseTitleDetailsViewModel.getTitleLanguageFiles(language)
             }
         })
 
@@ -54,28 +60,66 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         } else {
             val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
             spinnerClass.createSpinner(spinner_season_numbers, numOfSeasons) {
-                viewModel.getSeasonFiles(args.titleId, it.toInt())
+                chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it.toInt())
             }
         }
 
-        viewModel.availableEpisodes.observe(viewLifecycleOwner, { it ->
+        chooseTitleDetailsViewModel.availableEpisodes.observe(viewLifecycleOwner, { it ->
             val numOfEpisodes = Array(it) { i -> (i * 1) + 1 }.toList()
             spinnerClass.createSpinner(spinner_episode_numbers, numOfEpisodes) { episode ->
-                viewModel.getEpisodeFile(episode.toInt())
+                chooseTitleDetailsViewModel.getEpisodeFile(episode.toInt())
             }
         })
 
 
-            choose_movie_details_play.setOnClickListener { _ ->
-                viewModel.onPlayButtonPressed(args.titleId, args.isTvShow)
+        singleTitleViewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
+            singleTitleViewModel.titleIsInDb(it)
+        })
+
+
+        singleTitleViewModel.titleIsInDb.observe(viewLifecycleOwner, { exists ->
+            if (exists) {
+                singleTitleViewModel.getSingleWatchedTitleDetails(requireContext(), args.titleId).observe(viewLifecycleOwner, {
+                    choose_movie_details_continue.setOnClickListener { _ ->
+                        chooseTitleDetailsViewModel.onContinueWatchingPressed(it)
+                    }
+
+                    if (args.isTvShow) {
+                        choose_movie_details_continue.text = "სეზონი: ${it.season} ეპიზოდი: ${it.episode} / ${String.format("%02d:%02d",
+                                TimeUnit.MILLISECONDS.toMinutes(it.watchedTime),
+                                TimeUnit.MILLISECONDS.toSeconds(it.watchedTime) -
+                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedTime))
+                        )} - ${it.language}"
+                    } else {
+                        choose_movie_details_continue.text = String.format("განაგრძეთ ყურება %02d:%02d - ${it.language}",
+                                TimeUnit.MILLISECONDS.toMinutes(it.watchedTime),
+                                TimeUnit.MILLISECONDS.toSeconds(it.watchedTime) -
+                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedTime))
+                        )
+                    }
+                })
+                choose_movie_details_continue.setVisible()
+                choose_movie_details_continue.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#009c7c"))
+                choose_movie_details_continue.setTextColor(Color.parseColor("#FFFFFF"))
+
+                choose_movie_details_play.text = "თავიდან ყურება"
+                choose_movie_details_play.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
+                choose_movie_details_play.setTextColor(Color.parseColor("#009c7c"))
+
             }
+        })
 
 
-        viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+        choose_movie_details_play.setOnClickListener { _ ->
+            chooseTitleDetailsViewModel.onPlayButtonPressed(args.titleId, args.isTvShow)
+        }
+
+
+        chooseTitleDetailsViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
 
-        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+        chooseTitleDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
     }

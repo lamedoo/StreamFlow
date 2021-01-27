@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
-import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.datamodels.WatchedTitleData
+import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.HomeRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopMoviesFragmentDirections
@@ -62,6 +62,17 @@ class HomeViewModel : BaseViewModel() {
     fun getWatchedFromDb(context: Context): LiveData<List<WatchedDetails>> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         return repository.getWatchedFromDb(database!!)
+    }
+
+    fun deleteSingleTitleFromDb(context: Context, titleId: Int) {
+        val database = ImoviesDatabase.getDatabase(context)?.getDao()
+        viewModelScope.launch {
+            repository.deleteSingleTitleFromDb(database!!, titleId)
+        }
+    }
+
+    fun clearWatchedTitleList() {
+        watchedTitles.clear()
     }
 
     fun getWatchedTitles(watchedDetails: List<WatchedDetails>) {

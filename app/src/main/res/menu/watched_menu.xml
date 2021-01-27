@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/delete_from_db"
+        android:title="სიიდან წაშლა"
+        android:icon="@drawable/remove_title_from_db"/>
+
+    <item android:id="@+id/watched_check_info"
+        android:title="ინფო"/>
+</menu>

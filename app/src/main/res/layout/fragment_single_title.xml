@@ -88,12 +88,30 @@
 
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/single_title_delete"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/single_title_delete_container"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/remove_db"
-            app:layout_constraintTop_toBottomOf="@id/single_title_play_container"/>
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/single_title_play_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/single_title_delete_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/remove_title_from_db" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:text="წაშლა"
+                android:textColor="@color/red"/>
+
+        </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -101,7 +119,7 @@
             android:fillViewport="true"
             android:layout_marginTop="15dp"
             android:scrollbars="none"
-            app:layout_constraintTop_toBottomOf="@id/single_title_delete"
+            app:layout_constraintTop_toBottomOf="@id/single_title_delete_container"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout

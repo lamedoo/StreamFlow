@@ -51,6 +51,10 @@
             <argument
                 android:name="chosenLanguage"
                 app:argType="string" />
+            <argument
+                android:name="watchedTime"
+                app:argType="long"
+                android:defaultValue="0L" />
         </action>
     </dialog>
     <include app:graph="@navigation/video_player_fragment_nav" />
