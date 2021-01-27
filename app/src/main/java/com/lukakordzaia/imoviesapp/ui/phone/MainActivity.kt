@@ -45,9 +45,9 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
                 when (f) {
-                    is HomeFragment -> main_logo.setVisible()
-                    is GenresFragment -> main_logo.setVisible()
-                    is SearchTitlesFragment -> main_logo.setVisible()
+                    is HomeFragment -> showBottomNavigation()
+                    is GenresFragment -> showBottomNavigation()
+                    is SearchTitlesFragment -> showBottomNavigation()
                     is SingleTitleFragment -> hideBottomNavigation()
                     is ChooseTitleDetailsFragment -> hideBottomNavigation()
                     is VideoPlayerFragment -> {

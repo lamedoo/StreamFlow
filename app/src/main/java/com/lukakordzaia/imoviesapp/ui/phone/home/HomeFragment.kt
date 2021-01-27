@@ -1,10 +1,13 @@
 package com.lukakordzaia.imoviesapp.ui.phone.home
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import android.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -47,6 +50,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 { titleId: Int, buttonView: View ->
                     val popUp = PopupMenu(context, buttonView)
                     popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
+
+                    val rotateMoreButton = ObjectAnimator.ofFloat(buttonView, View.ROTATION, -90f)
+                    val moreButtonAnimator = AnimatorSet().apply {
+                        interpolator = AccelerateInterpolator()
+                        play(rotateMoreButton)
+                    }
+                    moreButtonAnimator.start()
 
                     popUp.setOnMenuItemClickListener {
                         when (it.itemId) {

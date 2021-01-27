@@ -18,7 +18,7 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:textColor="@color/white"
-        android:background="@drawable/rv_genres_items"
+        android:background="@drawable/rv_genres_item_pressed"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

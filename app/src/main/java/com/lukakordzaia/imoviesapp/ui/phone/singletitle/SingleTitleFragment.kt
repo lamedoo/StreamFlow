@@ -7,16 +7,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.animations.PlayButtonAnimations
 import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
 import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_single_title.*
+import kotlinx.android.synthetic.main.fragment_single_title_new.*
+import kotlin.math.abs
 
-class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
+class SingleTitleFragment : Fragment(R.layout.fragment_single_title_new) {
     private lateinit var viewModel: SingleTitleViewModel
     private val args: SingleTitleFragmentArgs by navArgs()
 
@@ -49,12 +52,12 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
 
             if (it.plot.data != null) {
                 if (!it.plot.data.description.isNullOrEmpty()) {
-                    tv_single_title_desc.text = it.plot.data.description
+                    single_title_desc.text = it.plot.data.description
                 } else {
-                    tv_single_title_desc.text = "აღწერა არ მოიძებნა"
+                    single_title_desc.text = "აღწერა არ მოიძებნა"
                 }
             } else {
-                tv_single_title_desc.text = "აღწერა არ მოიძებნა"
+                single_title_desc.text = "აღწერა არ მოიძებნა"
             }
 
             tv_single_title_year.text = it.year.toString()
@@ -68,6 +71,13 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
         viewModel.titleDetails.observe(viewLifecycleOwner, Observer {
             iv_post_video_icon.setOnClickListener { _ ->
                 viewModel.onPlayPressed(args.titleId, TitleDetails(it.numOfSeasons, it.isTvShow))
+
+                PlayButtonAnimations().rotatePlayButton(iv_post_video_icon, 1000)
+            }
+            single_title_play_collapsed.setOnClickListener { _ ->
+                viewModel.onPlayPressed(args.titleId, TitleDetails(it.numOfSeasons, it.isTvShow))
+
+                PlayButtonAnimations().rotatePlayButton(single_title_play_collapsed, 1000)
             }
         })
 
@@ -88,6 +98,14 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title) {
                 }
             } else {
                 single_title_delete_container.setGone()
+            }
+        })
+
+        single_title_appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            if (abs(verticalOffset) == single_title_appbar.totalScrollRange) {
+                PlayButtonAnimations().showPlayButton(single_title_play_collapsed, 1000)
+            } else if (abs(verticalOffset) == 0) {
+                PlayButtonAnimations().hidePlayButton(single_title_play_collapsed, 1000)
             }
         })
 

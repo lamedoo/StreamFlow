@@ -20,14 +20,10 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 }
                 return true
             }
-            KeyEvent.KEYCODE_MEDIA_PAUSE -> {
-                title_player.showController()
-                title_player.player!!.pause()
-                return true
-            }
-            KeyEvent.KEYCODE_MEDIA_PLAY -> {
-                title_player.player!!.play()
-                return true
+            KeyEvent.KEYCODE_BACK -> {
+                if (!title_player.isControllerVisible) {
+                    title_player.hideController()
+                }
             }
         }
         return super.onKeyDown(keyCode, event)
