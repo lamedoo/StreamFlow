@@ -147,6 +147,8 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
 
         singleTitleViewModel.titleIsInDb.observe(viewLifecycleOwner, { exists ->
             if (exists) {
+                tv_files_title_delete.setVisible()
+
                 singleTitleViewModel.getSingleWatchedTitleDetails(requireContext(), titleId).observe(viewLifecycleOwner, {
                     tv_continue_play_button.setOnClickListener { _ ->
                         continueTitlePlay(it)
