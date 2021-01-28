@@ -13,7 +13,7 @@ data class TitleFiles(
         @SerializedName("description")
         val description: String?,
         @SerializedName("episode")
-        val episode: Int?,
+        val episode: Int,
         @SerializedName("episodes_include")
         val episodesInclude: String?,
         @SerializedName("files")
@@ -21,7 +21,7 @@ data class TitleFiles(
         @SerializedName("poster")
         val poster: String?,
         @SerializedName("title")
-        val title: String?
+        val title: String
     ) {
         data class Covers(
             @SerializedName("blurhash")

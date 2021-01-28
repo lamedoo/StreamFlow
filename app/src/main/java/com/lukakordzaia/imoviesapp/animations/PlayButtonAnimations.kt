@@ -3,6 +3,7 @@ package com.lukakordzaia.imoviesapp.animations
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import com.lukakordzaia.imoviesapp.utils.setInvisible
@@ -29,9 +30,11 @@ class PlayButtonAnimations {
         setPlayButton.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator?) {
                 view.setVisible()
+                Log.d("animationshow", "started")
             }
 
             override fun onAnimationEnd(animation: Animator?) {
+                Log.d("animationshow", "ended")
             }
 
             override fun onAnimationCancel(animation: Animator?) {
@@ -52,10 +55,12 @@ class PlayButtonAnimations {
         }
         removePlayButton.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator?) {
+                Log.d("animationthide", "started")
             }
 
             override fun onAnimationEnd(animation: Animator?) {
                 view.setInvisible()
+                Log.d("animationhide", "started")
             }
 
             override fun onAnimationCancel(animation: Animator?) {

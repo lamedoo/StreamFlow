@@ -203,9 +203,8 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
             })
             rv_tv_files_episodes.requestFocus()
 
-            chooseTitleDetailsViewModel.availableEpisodes.observe(viewLifecycleOwner, {
-                val numOfEpisodes = Array(it) { i -> (i * 1) + 1 }.toList()
-                tvChooseFilesEpisodesAdapter.setEpisodeList(numOfEpisodes)
+            chooseTitleDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
+                tvChooseFilesEpisodesAdapter.setEpisodeList(it)
             })
         }
 

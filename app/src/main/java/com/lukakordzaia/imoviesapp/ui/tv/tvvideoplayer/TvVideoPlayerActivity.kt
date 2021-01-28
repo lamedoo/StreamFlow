@@ -21,6 +21,8 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 if (!title_player.isControllerVisible) {
                     title_player.showController()
                     title_player.player!!.pause()
+                } else if (!title_player.player!!.isPlaying && !title_player.isControllerVisible) {
+                    title_player.player!!.play()
                 }
                 return true
             }
@@ -29,6 +31,22 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_PLAY -> {
+                title_player.dispatchMediaKeyEvent(event!!)
+                return true
+            }
+            KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
+                title_player.dispatchMediaKeyEvent(event!!)
+                return true
+            }
+            KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD -> {
+                title_player.dispatchMediaKeyEvent(event!!)
+                return true
+            }
+            KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD -> {
+                title_player.dispatchMediaKeyEvent(event!!)
+                return true
+            }
+            KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD -> {
                 title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.datamodels.TitleEpisodes
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
@@ -33,6 +34,9 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
 
     private val _chosenEpisode = MutableLiveData<Int>(0)
     val chosenEpisode: LiveData<Int> = _chosenEpisode
+
+    private val _episodeNames = MutableLiveData<List<TitleEpisodes>>()
+    val episodeNames: LiveData<List<TitleEpisodes>> = _episodeNames
 
     private val _numOfSeasons = MutableLiveData<Int>()
     val numOfSeasons: LiveData<Int> = _numOfSeasons
@@ -67,13 +71,22 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
         viewModelScope.launch {
             when (val files = repository.getSingleTitleFiles(movieId)) {
                 is Result.Success -> {
-                    if (files.data.data.isNotEmpty()) {
+                    val data = files.data.data
+                    if (data.isNotEmpty()) {
                         val languages: MutableList<String> = ArrayList()
                         _singleMovieFiles.value = files.data
-                        files.data.data[0].files!!.forEach {
+                        data[0].files!!.forEach {
                             it.lang?.let { it1 -> languages.add(it1) }
                         }
                         _availableLanguages.value = languages
+
+                        val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
+                        data.forEach {
+                            getEpisodeNames.add(TitleEpisodes(it.episode, it.title))
+                        }
+                        _episodeNames.value = getEpisodeNames
+                        Log.d("episodenames", "${episodeNames.value}")
+
                         _movieNotYetAdded.value = false
                     } else {
                         _movieNotYetAdded.value = true
