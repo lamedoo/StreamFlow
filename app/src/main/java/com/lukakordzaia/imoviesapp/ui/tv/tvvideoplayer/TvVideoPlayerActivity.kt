@@ -21,6 +21,14 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 }
                 return true
             }
+            KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
+                title_player.dispatchMediaKeyEvent(event!!)
+                return true
+            }
+            KeyEvent.KEYCODE_MEDIA_PLAY -> {
+                title_player.dispatchMediaKeyEvent(event!!)
+                return true
+            }
         }
         return super.onKeyDown(keyCode, event)
     }
