@@ -1,5 +1,6 @@
 package com.lukakordzaia.imoviesapp.ui.tv.search
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -23,6 +24,9 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
         setSearchResultProvider(this)
         setOnItemViewClickedListener(ItemViewClickedListener())
         setOnItemViewSelectedListener(ItemViewSelectedListener())
+        setSpeechRecognitionCallback {
+            startActivityForResult(recognizerIntent, 0x00000010)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,6 +41,18 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
             }
             rowsAdapter.add(ListRow(listRowAdapter))
         })
+
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            0x00000010 -> {
+                when (resultCode) {
+                    Activity.RESULT_OK -> setSearchQuery(data, true)
+                }
+            }
+        }
     }
 
     override fun getResultsAdapter(): ObjectAdapter {
