@@ -44,6 +44,9 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
     }
 
     override fun onQueryTextChange(query: String): Boolean {
+        if (query.isNullOrBlank()) {
+            viewModel.clearSearchResults()
+        }
         return true
     }
 
@@ -53,6 +56,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
             searchQuery = query
             viewModel.getSearchTitles(query, page)
         } else {
+            viewModel.clearSearchResults()
         }
         return true
     }
