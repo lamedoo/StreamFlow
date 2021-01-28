@@ -17,6 +17,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
             KeyEvent.KEYCODE_DPAD_CENTER -> {
                 if (!title_player.isControllerVisible) {
                     title_player.showController()
+                    title_player.player!!.pause()
                 }
                 return true
             }
