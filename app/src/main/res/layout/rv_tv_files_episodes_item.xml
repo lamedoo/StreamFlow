@@ -20,7 +20,7 @@
         android:textSize="15dp"
         android:textStyle="bold"
         android:textColor="@color/white"
-        android:background="@color/default_background_color"
+        android:background="@drawable/rv_tv_episodes_focused"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

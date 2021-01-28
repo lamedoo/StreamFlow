@@ -4,7 +4,7 @@ data class VideoPlayerOptions(
         var playWhenReady: Boolean,
         var currentWindow: Int,
         var playbackPosition: Long,
-        var mediaLink: String?
+        var trailerUrl: String?
 )
 
 data class VideoPlayerRelease(

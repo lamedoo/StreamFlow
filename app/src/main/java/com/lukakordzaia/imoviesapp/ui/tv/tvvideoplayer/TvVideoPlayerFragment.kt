@@ -20,8 +20,9 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment() {
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
         val chosenEpisode = activity?.intent?.getSerializableExtra("chosenEpisode") as Int
         val watchedTime = activity?.intent?.getSerializableExtra("watchedTime") as Long
+        val trailerUrl: String? = activity?.intent?.getSerializableExtra("trailerUrl") as String?
 
-        videoPlayerData = VideoPlayerData(titleId, isTvShow, chosenSeason, chosenLanguage, chosenEpisode, watchedTime)
+        videoPlayerData = VideoPlayerData(titleId, isTvShow, chosenSeason, chosenLanguage, chosenEpisode, watchedTime, trailerUrl)
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenLanguage)
@@ -31,7 +32,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment() {
     override fun onStart() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
-            initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode)
+            initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode, videoPlayerData.trailerUrl)
             Log.d("videoplaying", "started")
         }
     }
@@ -39,14 +40,14 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment() {
     override fun onResume() {
         super.onResume()
         if (Util.SDK_INT < 24) {
-            initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode)
+            initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode, videoPlayerData.trailerUrl)
         }
     }
 
     override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
-            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage)
+            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage, videoPlayerData.trailerUrl)
             Log.d("videoplaying", "paused")
         }
     }
@@ -54,7 +55,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment() {
     override fun onStop() {
         super.onStop()
         if (Util.SDK_INT >= 24) {
-            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage)
+            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage, videoPlayerData.trailerUrl)
             Log.d("videoplaying", "stopped")
         }
     }

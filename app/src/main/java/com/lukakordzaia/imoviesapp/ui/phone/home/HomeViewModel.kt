@@ -55,7 +55,8 @@ class HomeViewModel : BaseViewModel() {
             chosenEpisode = watchedTitleData.episode,
             isTvShow = watchedTitleData.isTvShow,
             watchedTime = watchedTitleData.watchedTime,
-            chosenLanguage = watchedTitleData.language
+            chosenLanguage = watchedTitleData.language,
+            trailerUrl = null
         ))
     }
 

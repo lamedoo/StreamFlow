@@ -2,6 +2,7 @@ package com.lukakordzaia.imoviesapp.ui.phone.home
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Dialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.*
+import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -51,17 +53,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     val popUp = PopupMenu(context, buttonView)
                     popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
 
-                    val rotateMoreButton = ObjectAnimator.ofFloat(buttonView, View.ROTATION, -90f)
-                    val moreButtonAnimator = AnimatorSet().apply {
-                        interpolator = AccelerateInterpolator()
-                        play(rotateMoreButton)
-                    }
-                    moreButtonAnimator.start()
-
                     popUp.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.delete_from_db -> {
-                                viewModel.deleteSingleTitleFromDb(requireContext(), titleId)
+                                val clearDbDialog = Dialog(requireContext())
+                                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
+                                clearDbDialog.clear_db_alert_yes.setOnClickListener {
+                                    viewModel.deleteSingleTitleFromDb(requireContext(), titleId)
+                                    clearDbDialog.dismiss()
+                                }
+                                clearDbDialog.clear_db_alert_no.setOnClickListener {
+                                    clearDbDialog.dismiss()
+                                }
+                                clearDbDialog.show()
+
                                 return@setOnMenuItemClickListener true
                             }
                             R.id.watched_check_info -> {

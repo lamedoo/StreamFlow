@@ -36,8 +36,8 @@ class VideoPlayerViewModel : BaseViewModel() {
     private val episodeForDb = MutableLiveData<Int>()
 
     private val getTitleNameList: MutableList<String> = mutableListOf()
-    private val setTitleNameList = MutableLiveData<List<String>>()
 
+    private val setTitleNameList = MutableLiveData<List<String>>()
     val setTitleName: LiveData<List<String>> = setTitleNameList
 
     fun initPlayer(
@@ -46,6 +46,7 @@ class VideoPlayerViewModel : BaseViewModel() {
         isTvShow: Boolean,
         watchTime: Long,
         chosenEpisode: Int,
+        trailerUrl: String?
     ) {
         if (watchTime > 0L) {
             playbackPosition.value = watchTime
@@ -57,7 +58,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                 playWhenReady.value!!,
                 currentWindow.value!!,
                 playbackPosition.value!!,
-                null
+                trailerUrl
         )
         mediaPlayer.initPlayer(context, playerView, playBackOptions)
     }
@@ -71,8 +72,12 @@ class VideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    fun addEpisodeNames(header: TextView, episodeNames: List<String>) {
-        mediaPlayer.addEpisodeNames(header, episodeNames)
+    fun initHeader(header: TextView) {
+        mediaPlayer.initHeader(header)
+    }
+
+    fun addEpisodeNames(episodeNames: List<String>) {
+        mediaPlayer.addEpisodeNames(episodeNames)
     }
 
     fun saveTitleToDb(context: Context, titleId: Int, isTvShow: Boolean, chosenLanguage: String) {

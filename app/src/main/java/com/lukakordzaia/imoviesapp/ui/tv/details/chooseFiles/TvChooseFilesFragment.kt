@@ -28,6 +28,7 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
     private lateinit var chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel
     private lateinit var singleTitleViewModel: SingleTitleViewModel
     private lateinit var tvChooseFilesEpisodesAdapter: TvChooseFilesEpisodesAdapter
+    private var trailerUrl: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,7 +57,16 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
                     if (!it.trailers.data.isNullOrEmpty()) {
                         it.trailers.data.forEach { trailer ->
                             if (trailer.language == "ENG") {
-                                requireContext().createToast("eng trailer")
+                                trailerUrl = trailer.fileUrl
+                                val intent = Intent(context, TvVideoPlayerActivity::class.java)
+                                intent.putExtra("titleId", titleId)
+                                intent.putExtra("isTvShow", isTvShow)
+                                intent.putExtra("chosenLanguage", "ENG")
+                                intent.putExtra("chosenSeason", 0)
+                                intent.putExtra("chosenEpisode", 0)
+                                intent.putExtra("watchedTime", 0L)
+                                intent.putExtra("trailerUrl", trailerUrl)
+                                activity?.startActivity(intent)
                             } else {
                                 requireContext().createToast("other trailer")
                             }
@@ -213,6 +223,7 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
     }
 
     private fun playTitleFromStart(titleId: Int, isTvShow: Boolean) {
+        trailerUrl = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra("titleId", titleId)
         intent.putExtra("isTvShow", isTvShow)
@@ -220,10 +231,12 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
         intent.putExtra("chosenSeason", chooseTitleDetailsViewModel.chosenSeason.value)
         intent.putExtra("chosenEpisode", chooseTitleDetailsViewModel.chosenEpisode.value)
         intent.putExtra("watchedTime", 0L)
+        intent.putExtra("trailerUrl", trailerUrl)
         activity?.startActivity(intent)
     }
 
     private fun continueTitlePlay(item: WatchedDetails) {
+        trailerUrl = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra("titleId", item.titleId)
         intent.putExtra("isTvShow", item.isTvShow)
@@ -231,6 +244,7 @@ class TvChooseFilesFragment : Fragment(R.layout.tv_choose_files_fragment) {
         intent.putExtra("chosenSeason", item.season)
         intent.putExtra("chosenEpisode", item.episode)
         intent.putExtra("watchedTime", item.watchedTime)
+        intent.putExtra("trailerUrl", trailerUrl)
         activity?.startActivity(intent)
     }
 

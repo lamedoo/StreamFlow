@@ -34,6 +34,17 @@ class SingleTitleViewModel : BaseViewModel() {
         ))
     }
 
+    fun onTrailerPressed(titleId: Int, isTvShow: Boolean, trailerURl: String?) {
+        navigateToNewFragment(SingleTitleFragmentDirections.actionSingleTitleFragmentToVideoPlayerFragmentNav(
+                0,
+                0,
+                titleId,
+                isTvShow,
+                "ENG",
+                trailerUrl = trailerURl
+        ))
+    }
+
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
             when (val data = repository.getSingleTitleData(titleId)) {

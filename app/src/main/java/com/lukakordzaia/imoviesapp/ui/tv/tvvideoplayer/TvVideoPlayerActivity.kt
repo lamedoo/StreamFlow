@@ -20,12 +20,15 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 }
                 return true
             }
-            KeyEvent.KEYCODE_BACK -> {
-                if (!title_player.isControllerVisible) {
-                    title_player.hideController()
-                }
-            }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onBackPressed() {
+        if (title_player.isControllerVisible) {
+            title_player.hideController()
+        } else {
+            super.onBackPressed()
+        }
     }
 }

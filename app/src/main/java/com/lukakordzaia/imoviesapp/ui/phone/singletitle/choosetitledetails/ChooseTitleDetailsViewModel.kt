@@ -44,7 +44,8 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
                         chosenEpisode.value!!,
                         titleId,
                         isTvShow,
-                        chosenLanguage.value!!
+                        chosenLanguage.value!!,
+                        trailerUrl = null
                 ),
         )
     }
@@ -57,7 +58,8 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
                 chosenEpisode = watchedDetails.episode,
                 isTvShow = watchedDetails.isTvShow,
                 watchedTime = watchedDetails.watchedTime,
-                chosenLanguage = watchedDetails.language
+                chosenLanguage = watchedDetails.language,
+                trailerUrl = null
         ))
     }
 

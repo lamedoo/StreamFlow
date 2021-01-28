@@ -46,10 +46,15 @@
                 android:name="watchedTime"
                 android:defaultValue="0L"
                 app:argType="long" />
+            <argument
+                android:name="trailerUrl"
+                app:argType="string"
+                app:nullable="true" />
         </action>
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/down_to_top" />
         <action
             android:id="@+id/action_homeFragment_to_topMoviesFragment"
             app:destination="@id/topMoviesFragment"

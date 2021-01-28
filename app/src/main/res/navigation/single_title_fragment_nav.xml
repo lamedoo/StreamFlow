@@ -16,6 +16,35 @@
         <argument
             android:name="titleId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_singleTitleFragment_to_video_player_fragment_nav"
+            app:destination="@id/video_player_fragment_nav">
+            <argument
+                android:name="chosenSeason"
+                app:argType="integer"
+                android:defaultValue="0" />
+            <argument
+                android:name="chosenEpisode"
+                app:argType="integer"
+                android:defaultValue="0" />
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+            <argument
+                android:name="isTvShow"
+                app:argType="boolean" />
+            <argument
+                android:name="chosenLanguage"
+                app:argType="string" />
+            <argument
+                android:name="watchedTime"
+                app:argType="long"
+                android:defaultValue="0L" />
+            <argument
+                android:name="trailerUrl"
+                app:argType="string"
+                app:nullable="true"/>
+        </action>
     </fragment>
     <dialog
         android:id="@+id/chooseTitleDetailsFragment"
@@ -55,6 +84,10 @@
                 android:name="watchedTime"
                 app:argType="long"
                 android:defaultValue="0L" />
+            <argument
+                android:name="trailerUrl"
+                app:argType="string"
+                app:nullable="true" />
         </action>
     </dialog>
     <include app:graph="@navigation/video_player_fragment_nav" />

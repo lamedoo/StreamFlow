@@ -178,6 +178,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 intent.putExtra("isTvShow", item.isTvShow)
                 activity?.startActivity(intent)
             } else if (item is WatchedTitleData) {
+                val trailerUrl: String? = null
                 val intent = Intent(context, TvVideoPlayerActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
@@ -185,6 +186,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 intent.putExtra("chosenSeason", item.season)
                 intent.putExtra("chosenEpisode", item.episode)
                 intent.putExtra("watchedTime", item.watchedTime)
+                intent.putExtra("trailerUrl", trailerUrl)
                 activity?.startActivity(intent)
             }
         }

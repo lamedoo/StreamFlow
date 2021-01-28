@@ -1,5 +1,7 @@
 package com.lukakordzaia.imoviesapp.ui.phone.singletitle
 
+import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -11,11 +13,10 @@ import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.animations.PlayButtonAnimations
 import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
-import com.lukakordzaia.imoviesapp.utils.EventObserver
-import com.lukakordzaia.imoviesapp.utils.navController
-import com.lukakordzaia.imoviesapp.utils.setGone
-import com.lukakordzaia.imoviesapp.utils.setVisible
+import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
+import com.lukakordzaia.imoviesapp.utils.*
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.fragment_single_title_new.*
 import kotlin.math.abs
 
@@ -66,6 +67,24 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title_new) {
                 tv_single_title_country.text = it.countries.data[0].secondaryName
             }
 
+            single_title_trailer_container.setOnClickListener { _ ->
+                if (it.trailers != null) {
+                    if (!it.trailers.data.isNullOrEmpty()) {
+                        it.trailers.data.forEach { trailer ->
+                            if (trailer.language == "ENG") {
+                                viewModel.onTrailerPressed(args.titleId, it.isTvShow!!, trailer.fileUrl)
+                            } else {
+                                requireContext().createToast("other trailer")
+                            }
+                        }
+                    } else {
+                        requireContext().createToast("ტრეილერი არ არის")
+                    }
+                } else {
+                    requireContext().createToast("ტრეილერი არ არის")
+                }
+            }
+
         })
 
         viewModel.titleDetails.observe(viewLifecycleOwner, Observer {
@@ -84,17 +103,16 @@ class SingleTitleFragment : Fragment(R.layout.fragment_single_title_new) {
         viewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
             if (it) {
                 single_title_delete_container.setOnClickListener {
-                    val alertDialog = AlertDialog.Builder(requireContext())
-                    alertDialog.setMessage("ნამდვილად გსურთ ისტორიიდან წაშლა?")
-                            .setCancelable(false)
-                            .setPositiveButton("დიახ") { _, _ ->
-                                viewModel.deleteTitleFromDb(requireContext(), args.titleId)
-                            }
-                            .setNegativeButton("არა") { dialog, _ ->
-                                dialog.dismiss()
-                            }
-                    val alert = alertDialog.create()
-                    alert.show()
+                    val clearDbDialog = Dialog(requireContext())
+                    clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
+                    clearDbDialog.clear_db_alert_yes.setOnClickListener {
+                        viewModel.deleteTitleFromDb(requireContext(), args.titleId)
+                        clearDbDialog.dismiss()
+                    }
+                    clearDbDialog.clear_db_alert_no.setOnClickListener {
+                        clearDbDialog.dismiss()
+                    }
+                    clearDbDialog.show()
                 }
             } else {
                 single_title_delete_container.setGone()

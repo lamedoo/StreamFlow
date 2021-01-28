@@ -35,15 +35,6 @@ class TvChooseFilesEpisodesAdapter(
             onEpisodeClick(episodeModel)
         }
 
-        holder.episodeNameTextView.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                holder.episodeNameTextView.setBackgroundColor(ContextCompat.getColor(context, R.color.green_dark))
-            } else {
-                holder.episodeNameTextView.setBackgroundColor(ContextCompat.getColor(context, R.color.black))
-            }
-        }
-
-        holder.episodeNameTextView.setBackgroundColor(ContextCompat.getColor(context, R.color.black))
         holder.episodeNameTextView.text = "ეპიზოდი ${episodeModel}"
     }
 

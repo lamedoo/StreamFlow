@@ -3,6 +3,7 @@ package com.lukakordzaia.imoviesapp.ui.baseclasses
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -19,14 +20,10 @@ open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         viewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            requireActivity().window.setDecorFitsSystemWindows(false)
-        } else {
-            requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
+        viewModel.initHeader(header_tv)
 
         viewModel.setTitleName.observe(viewLifecycleOwner, { name ->
-            viewModel.addEpisodeNames(header_tv, name)
+            viewModel.addEpisodeNames(name)
         })
     }
 
@@ -44,12 +41,14 @@ open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
         viewModel.getPlaylistFiles(titleId, chosenSeason, chosenLanguage)
     }
 
-    fun initPlayer(isTvShow: Boolean, watchedTime: Long, chosenEpisode: Int) {
-        viewModel.initPlayer(requireContext(), title_player, isTvShow, watchedTime, chosenEpisode)
+    fun initPlayer(isTvShow: Boolean, watchedTime: Long, chosenEpisode: Int, trailerUrl: String?) {
+        viewModel.initPlayer(requireContext(), title_player, isTvShow, watchedTime, chosenEpisode, trailerUrl)
     }
 
-    fun releasePlayer(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
+    fun releasePlayer(titleId: Int, isTvShow: Boolean, chosenLanguage: String, trailerUrl: String?) {
         viewModel.releasePlayer()
-        viewModel.saveTitleToDb(requireContext(), titleId, isTvShow, chosenLanguage)
+        if (trailerUrl == null) {
+            viewModel.saveTitleToDb(requireContext(), titleId, isTvShow, chosenLanguage)
+        }
     }
 }

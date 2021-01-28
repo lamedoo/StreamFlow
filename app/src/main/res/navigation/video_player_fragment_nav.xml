@@ -31,6 +31,10 @@
             android:name="watchedTime"
             app:argType="long"
             android:defaultValue="0L" />
+        <argument
+            android:name="trailerUrl"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 
 </navigation>
