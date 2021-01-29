@@ -96,7 +96,7 @@
                 android:id="@+id/tv_files_imdb_logo"
                 android:layout_width="20dp"
                 android:layout_height="15dp"
-                android:src="@drawable/imdb_logo"
+                android:src="@drawable/tv_imdb_logo"
                 app:layout_constraintBottom_toTopOf="@id/tv_files_title_name_eng"
                 app:layout_constraintEnd_toStartOf="@id/tv_files_title_imdb_score" />
 
