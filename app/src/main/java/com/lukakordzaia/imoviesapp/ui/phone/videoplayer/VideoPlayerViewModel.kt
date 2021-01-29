@@ -99,7 +99,7 @@ class VideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    fun getMoreSeasons() {
+    fun getNextSeasonEpisodes() {
         seasonEpisodes.clear()
         if (!seasonEpisodesUri.isNullOrEmpty()) {
             seasonEpisodesUri.clear()
@@ -118,7 +118,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                             seasonEpisodesUri.add(item)
                         }
                         episodesUri.value = seasonEpisodesUri
-                        mediaPlayer.addNewEpisodes(episodesUri.value!!)
+                        mediaPlayer.addAllEpisodes(episodesUri.value!!)
                     }
                 }
             }
@@ -135,7 +135,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                     is Result.Success -> {
                         val season = files.data.data
                         season.forEach { singleEpisode ->
-                            getTitleNameList.add(singleEpisode.title!!)
+                            getTitleNameList.add(singleEpisode.title)
                             singleEpisode.files!!.forEach { singleFiles ->
                                 checkAvailability(singleFiles, chosenLanguage)
                             }
@@ -147,8 +147,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                         setTitleNameList.value = getTitleNameList
                         episodesUri.value = seasonEpisodesUri
                         mediaPlayer.addAllEpisodes(episodesUri.value!!)
-//                        getMoreSeasons()
-                        Log.d("episodesaaa", "${setTitleNameList.value}")
+                        Log.d("episodesaaa", "${seasonEpisodes}")
                     }
                     is Result.Error -> {
                         Log.d("errornextepisode", files.exception)

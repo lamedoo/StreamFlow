@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.Animation
 import com.lukakordzaia.imoviesapp.utils.setInvisible
 import com.lukakordzaia.imoviesapp.utils.setVisible
 

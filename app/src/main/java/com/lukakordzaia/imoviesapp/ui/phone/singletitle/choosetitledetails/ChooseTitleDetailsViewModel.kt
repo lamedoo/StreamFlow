@@ -23,9 +23,6 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
-    private val _availableEpisodes = MutableLiveData<Int>()
-    val availableEpisodes: LiveData<Int> = _availableEpisodes
-
     private val _chosenLanguage = MutableLiveData<String>()
     val chosenLanguage: LiveData<String> = _chosenLanguage
 
@@ -80,17 +77,11 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
                         }
                         _availableLanguages.value = languages
 
-                        val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
-                        data.forEach {
-                            getEpisodeNames.add(TitleEpisodes(it.episode, it.title))
-                        }
-                        _episodeNames.value = getEpisodeNames
-                        Log.d("episodenames", "${episodeNames.value}")
-
                         _movieNotYetAdded.value = false
                     } else {
                         _movieNotYetAdded.value = true
                     }
+                    setLoading(false)
                 }
                 is Result.Error -> {
                     Log.d("errorfiles", files.exception)
@@ -108,7 +99,16 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
         viewModelScope.launch {
             when (val files = repository.getSingleTitleFiles(movieId, season)) {
                 is Result.Success -> {
-                    _availableEpisodes.value = files.data.data.size
+                    val data = files.data.data
+
+                    val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
+                    data.forEach {
+                        getEpisodeNames.add(TitleEpisodes(it.episode, it.title))
+                    }
+                    _episodeNames.value = getEpisodeNames
+                    Log.d("episodenames", "${episodeNames.value}")
+
+                    setLoading(false)
                 }
                 is Result.Error -> {
                     Log.d("errorseasons", files.exception)

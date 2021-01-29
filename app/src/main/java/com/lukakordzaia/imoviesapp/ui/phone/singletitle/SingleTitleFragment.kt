@@ -17,10 +17,10 @@ import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.fragment_single_title_new.*
+import kotlinx.android.synthetic.main.phone_single_title_fragment.*
 import kotlin.math.abs
 
-class SingleTitleFragment : Fragment(R.layout.fragment_single_title_new) {
+class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
     private lateinit var viewModel: SingleTitleViewModel
     private val args: SingleTitleFragmentArgs by navArgs()
 

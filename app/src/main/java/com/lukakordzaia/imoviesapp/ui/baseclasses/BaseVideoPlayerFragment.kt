@@ -3,16 +3,17 @@ package com.lukakordzaia.imoviesapp.ui.baseclasses
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.helpers.LastMediaPlaying
+import com.lukakordzaia.imoviesapp.helpers.MediaPlayerClass
 import com.lukakordzaia.imoviesapp.ui.phone.videoplayer.VideoPlayerViewModel
-import kotlinx.android.synthetic.main.exoplayer_controller_layout_new.*
+import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.fragment_video_player.*
 
-open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player), LastMediaPlaying {
+open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
     private lateinit var viewModel: VideoPlayerViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,12 +50,6 @@ open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player), L
         viewModel.releasePlayer()
         if (trailerUrl == null) {
             viewModel.saveTitleToDb(requireContext(), titleId, isTvShow, chosenLanguage)
-        }
-    }
-
-    override fun isLastMedia(last: Boolean) {
-        if (last) {
-            viewModel.getMoreSeasons()
         }
     }
 }

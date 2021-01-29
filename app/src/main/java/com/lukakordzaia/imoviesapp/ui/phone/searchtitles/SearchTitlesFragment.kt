@@ -9,10 +9,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesAdapter
+import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.imoviesapp.utils.*
-import kotlinx.android.synthetic.main.fragment_search_titles.*
+import kotlinx.android.synthetic.main.phone_search_titles_framgent.*
 
-class SearchTitlesFragment : Fragment(R.layout.fragment_search_titles) {
+class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent) {
     private lateinit var viewModel: SearchTitlesViewModel
     private lateinit var searchTitlesAdapter: SearchTitlesAdapter
     private var page = 1

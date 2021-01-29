@@ -9,9 +9,9 @@ import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
-import kotlinx.android.synthetic.main.fragment_genres.*
+import kotlinx.android.synthetic.main.phone_genres_framgent.*
 
-class GenresFragment : Fragment(R.layout.fragment_genres) {
+class GenresFragment : Fragment(R.layout.phone_genres_framgent) {
     private lateinit var viewModel: GenresViewModel
     private lateinit var genresAdapter: GenresAdapter
 

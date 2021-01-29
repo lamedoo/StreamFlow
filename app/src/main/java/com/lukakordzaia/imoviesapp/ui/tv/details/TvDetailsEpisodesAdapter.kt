@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles
+package com.lukakordzaia.imoviesapp.ui.tv.details
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,17 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.datamodels.TitleEpisodes
-import kotlinx.android.synthetic.main.rv_tv_files_episodes_item.view.*
+import kotlinx.android.synthetic.main.tv_details_episodes_item.view.*
 
-class TvChooseFilesEpisodesAdapter(
+class TvDetailsEpisodesAdapter(
         private val context: Context,
         private val onEpisodeClick: (episodeId: Int) -> Unit,
-) : RecyclerView.Adapter<TvChooseFilesEpisodesAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<TvDetailsEpisodesAdapter.ViewHolder>() {
     private var list: List<TitleEpisodes> = ArrayList()
 
     fun setEpisodeList(list: List<TitleEpisodes>) {
@@ -26,7 +24,7 @@ class TvChooseFilesEpisodesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.rv_tv_files_episodes_item, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.tv_details_episodes_item, parent, false)
         )
     }
 

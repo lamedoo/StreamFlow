@@ -44,9 +44,6 @@
             android:name=".ui.tv.details.TvDetailsActivity"
             android:theme="@style/Theme.Leanback"/>
         <activity
-            android:name=".ui.tv.details.chooseFiles.TvChooseFilesActivity"
-            android:theme="@style/Theme.Leanback"/>
-        <activity
             android:name=".ui.tv.tvvideoplayer.TvVideoPlayerActivity"
             android:theme="@style/Theme.Leanback"/>
         <activity

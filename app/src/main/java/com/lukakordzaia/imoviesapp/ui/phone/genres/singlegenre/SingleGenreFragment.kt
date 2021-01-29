@@ -9,9 +9,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.*
-import kotlinx.android.synthetic.main.fragment_single_genre.*
+import kotlinx.android.synthetic.main.phone_single_genre_fragment.*
 
-class SingleGenreFragment : Fragment(R.layout.fragment_single_genre) {
+class SingleGenreFragment : Fragment(R.layout.phone_single_genre_fragment) {
     private lateinit var viewModel: SingleGenreViewModel
     private lateinit var singleGenreAdapter: SingleGenreAdapter
     private val args: SingleGenreFragmentArgs by navArgs()

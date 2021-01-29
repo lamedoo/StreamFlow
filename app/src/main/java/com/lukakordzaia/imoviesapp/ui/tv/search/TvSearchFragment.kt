@@ -9,7 +9,7 @@ import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesViewModel
-import com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles.TvChooseFilesActivity
+import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.main.TvCardPresenter
 
 
@@ -85,7 +85,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
                 row: Row
         ) {
             if (item is TitleList.Data) {
-                val intent = Intent(context, TvChooseFilesActivity::class.java)
+                val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
                 activity?.startActivity(intent)

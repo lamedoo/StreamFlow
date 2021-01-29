@@ -16,7 +16,6 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseVideoPlayerFragment
 import com.lukakordzaia.imoviesapp.utils.setGone
 import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
-import kotlinx.android.synthetic.main.exoplayer_controller_layout_new.*
 import kotlinx.android.synthetic.main.fragment_video_player.*
 
 

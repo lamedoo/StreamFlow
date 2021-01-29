@@ -8,7 +8,7 @@
         android:id="@+id/genresFragment"
         android:name="com.lukakordzaia.imoviesapp.ui.phone.genres.GenresFragment"
         android:label="fragment_genres_categories"
-        tools:layout="@layout/fragment_genres" >
+        tools:layout="@layout/phone_genres_framgent" >
         <action
             android:id="@+id/action_genresFragment_to_singleGenreFragment"
             app:destination="@id/singleGenreFragment"
@@ -19,7 +19,7 @@
         android:id="@+id/singleGenreFragment"
         android:name="com.lukakordzaia.imoviesapp.ui.phone.genres.singlegenre.SingleGenreFragment"
         android:label="fragment_single_genre"
-        tools:layout="@layout/fragment_single_genre" >
+        tools:layout="@layout/phone_single_genre_fragment" >
         <argument
             android:name="genreId"
             app:argType="integer" />

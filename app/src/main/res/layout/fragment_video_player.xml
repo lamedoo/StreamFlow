@@ -15,6 +15,6 @@
         app:rewind_increment="10000"
         app:fastforward_increment="10000"
         app:surface_type="surface_view"
-        app:controller_layout_id="@layout/exoplayer_controller_layout_new"/>
+        app:controller_layout_id="@layout/exoplayer_controller_layout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

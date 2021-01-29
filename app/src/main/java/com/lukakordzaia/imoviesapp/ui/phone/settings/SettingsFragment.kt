@@ -3,14 +3,13 @@ package com.lukakordzaia.imoviesapp.ui.phone.settings
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.phone_settings_framgent.*
 
-class SettingsFragment : Fragment(R.layout.fragment_settings) {
+class SettingsFragment : Fragment(R.layout.phone_settings_framgent) {
     private lateinit var viewModel: SettingsViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

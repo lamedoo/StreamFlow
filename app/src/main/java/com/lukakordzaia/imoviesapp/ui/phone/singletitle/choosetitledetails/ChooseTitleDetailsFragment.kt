@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit
 class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
     private lateinit var chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel
     private lateinit var singleTitleViewModel: SingleTitleViewModel
+    private lateinit var chooseTitleDetailsEpisodesAdapter: ChooseTitleDetailsEpisodesAdapter
     private val args: ChooseTitleDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -38,9 +40,18 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         chooseTitleDetailsViewModel.getSingleTitleFiles(args.titleId)
         val spinnerClass = SpinnerClass(requireContext())
 
-        chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
+        chooseTitleDetailsViewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
             if (!it) {
-                movie_file_not_yet.setGone()
+                details_progressBar.setGone()
+            }
+        })
+
+        chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
+            if (it) {
+                movie_file_not_yet.setVisible()
+                season_spinner_container.setGone()
+                rv_episodes.setGone()
+            } else {
                 movie_files_container.setVisible()
             }
         })
@@ -52,30 +63,35 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
             }
         })
 
-        if (!args.isTvShow) {
-            season_title.setGone()
-            spinner_season_numbers.setGone()
-            episode_title.setGone()
-            spinner_episode_numbers.setGone()
-        } else {
-            val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
-            spinnerClass.createSpinner(spinner_season_numbers, numOfSeasons) {
-                chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it.toInt())
-            }
+        if (args.isTvShow) {
+            season_spinner_container.setVisible()
+            rv_episodes.setVisible()
+            choose_movie_details_play.setGone()
         }
 
-        chooseTitleDetailsViewModel.availableEpisodes.observe(viewLifecycleOwner, { it ->
-            val numOfEpisodes = Array(it) { i -> (i * 1) + 1 }.toList()
-            spinnerClass.createSpinner(spinner_episode_numbers, numOfEpisodes) { episode ->
-                chooseTitleDetailsViewModel.getEpisodeFile(episode.toInt())
-            }
+        val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
+        spinnerClass.createSpinner(spinner_season_numbers, numOfSeasons) {
+            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it.toInt())
+        }
+
+        chooseTitleDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
+            chooseTitleDetailsEpisodesAdapter.setEpisodeList(it)
         })
 
+        chooseTitleDetailsEpisodesAdapter = ChooseTitleDetailsEpisodesAdapter(requireContext()) {
+            chooseTitleDetailsViewModel.getEpisodeFile(it)
+        }
+        rv_episodes.adapter = chooseTitleDetailsEpisodesAdapter
+
+        chooseTitleDetailsViewModel.chosenEpisode.observe(viewLifecycleOwner, {
+            if (it != 0) {
+                chooseTitleDetailsViewModel.onPlayButtonPressed(args.titleId, args.isTvShow)
+            }
+        })
 
         singleTitleViewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
             singleTitleViewModel.titleIsInDb(it)
         })
-
 
         singleTitleViewModel.titleIsInDb.observe(viewLifecycleOwner, { exists ->
             if (exists) {
@@ -98,6 +114,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
                         )
                     }
                 })
+
                 choose_movie_details_continue.setVisible()
                 choose_movie_details_continue.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#009c7c"))
                 choose_movie_details_continue.setTextColor(Color.parseColor("#FFFFFF"))

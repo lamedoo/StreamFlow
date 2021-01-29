@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.ui.tv.details.chooseFiles.TvChooseFilesActivity
+import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import kotlinx.android.synthetic.main.fragment_video_player.*
 
 class TvVideoPlayerActivity : FragmentActivity() {
@@ -60,7 +60,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
         if (title_player.isControllerVisible) {
             title_player.hideController()
         } else {
-            val intent = Intent(this, TvChooseFilesActivity::class.java)
+            val intent = Intent(this, TvDetailsActivity::class.java)
             intent.putExtra("titleId", titleId)
             intent.putExtra("isTvShow", isTvShow)
             startActivity(intent)

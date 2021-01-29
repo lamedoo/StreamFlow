@@ -9,6 +9,15 @@
     android:padding="@dimen/fragment_padding"
     tools:context=".ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment">
 
+    <ProgressBar
+        android:id="@+id/details_progressBar"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/green_dark"
+        android:visibility="visible"/>
+
     <TextView
         android:id="@+id/movie_file_not_yet"
         android:layout_width="match_parent"
@@ -20,89 +29,14 @@
         android:textStyle="bold"
         android:layout_gravity="center"
         android:gravity="center"
-        android:visibility="visible"
-        tools:visibility="gone"/>
+        android:visibility="gone" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/movie_files_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone"
         tools:visibility="visible">
-
-        <TextView
-            android:id="@+id/language_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="ენა"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?colorOnPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_goneMarginTop="30dp" />
-
-        <Spinner
-            android:id="@+id/spinner_language"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:spinnerMode="dialog"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/language_title"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/season_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="სეზონი"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?colorOnPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/language_title" />
-
-        <Spinner
-            android:id="@+id/spinner_season_numbers"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:spinnerMode="dialog"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/season_title"
-            app:layout_constraintTop_toBottomOf="@id/language_title" />
-
-        <TextView
-            android:id="@+id/episode_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="ეპიზოდი"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?colorOnPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/season_title" />
-
-        <Spinner
-            android:id="@+id/spinner_episode_numbers"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:spinnerMode="dialog"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/episode_title"
-            app:layout_constraintTop_toBottomOf="@id/season_title" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/choose_movie_details_play"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="ყურება"
-            android:letterSpacing="0"
-            android:backgroundTint="@color/green_dark"
-            app:layout_constraintTop_toBottomOf="@id/episode_title" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/choose_movie_details_continue"
@@ -113,11 +47,83 @@
             android:letterSpacing="0"
             android:textColor="@color/green_dark"
             android:backgroundTint="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/choose_movie_details_play"
+            app:layout_constraintTop_toTopOf="parent"
             android:visibility="gone"
             tools:visibility="visible"/>
 
+        <TextView
+            android:id="@+id/language_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="ენა"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?colorOnPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/choose_movie_details_continue"
+            app:layout_goneMarginTop="30dp" />
+
+        <Spinner
+            android:id="@+id/spinner_language"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:spinnerMode="dialog"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/language_title"
+            app:layout_constraintTop_toBottomOf="@id/choose_movie_details_continue" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/choose_movie_details_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="ყურება"
+            android:letterSpacing="0"
+            android:backgroundTint="@color/green_dark"
+            app:layout_constraintTop_toBottomOf="@id/language_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/season_spinner_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/season_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:text="სეზონი"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?colorOnPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/language_title" />
+
+        <Spinner
+            android:id="@+id/spinner_season_numbers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:spinnerMode="dialog"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/season_title"
+            app:layout_constraintTop_toBottomOf="@id/language_title" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_episodes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="20dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </LinearLayout>

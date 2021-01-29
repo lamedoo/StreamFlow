@@ -11,7 +11,7 @@ import com.lukakordzaia.imoviesapp.R
 class SpinnerClass(private val context: Context) {
 
     fun createSpinner(view: Spinner, list: List<*>, onItemChosen: (language: String) -> Unit) {
-        val adapter = ArrayAdapter(context, R.layout.spinner_season_item, list)
+        val adapter = ArrayAdapter(context, R.layout.spinner_item, list)
 
         view.adapter = adapter
         view.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

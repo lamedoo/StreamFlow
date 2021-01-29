@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.lukakordzaia.imoviesapp.ui.phone.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/phone_home_framgent" >
         <action
             android:id="@+id/action_homeFragment_to_single_title_fragment_nav"
             app:destination="@id/single_title_fragment_nav"
@@ -72,7 +72,7 @@
         android:id="@+id/settingsFragment"
         android:name="com.lukakordzaia.imoviesapp.ui.phone.settings.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/phone_settings_framgent" />
     <fragment
         android:id="@+id/topMoviesFragment"
         android:name="com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopMoviesFragment"

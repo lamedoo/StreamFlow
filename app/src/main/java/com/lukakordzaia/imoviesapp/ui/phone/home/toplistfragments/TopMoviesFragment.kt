@@ -10,9 +10,9 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.phone.genres.singlegenre.SingleGenreAdapter
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.utils.*
-import kotlinx.android.synthetic.main.fragment_single_genre.*
+import kotlinx.android.synthetic.main.phone_single_genre_fragment.*
 
-class TopMoviesFragment : Fragment(R.layout.fragment_single_genre) {
+class TopMoviesFragment : Fragment(R.layout.phone_single_genre_fragment) {
     private lateinit var viewModel: HomeViewModel
     private lateinit var singleGenreAdapter: SingleGenreAdapter
     private var page = 1

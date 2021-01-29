@@ -1,14 +1,11 @@
 package com.lukakordzaia.imoviesapp.ui.phone.home
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.AccelerateInterpolator
 import android.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -18,10 +15,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.*
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.phone_home_framgent.*
 
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.phone_home_framgent) {
     private lateinit var viewModel: HomeViewModel
     private lateinit var homeWatchedAdapter: HomeWatchedAdapter
     private lateinit var homeMovieAdapter: HomeMovieAdapter
