@@ -11,12 +11,12 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
-import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerOptions
+import com.lukakordzaia.imoviesapp.helpers.MediaPlayerClass
+import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.imoviesapp.helpers.MediaPlayerClass
 import kotlinx.coroutines.launch
 
 class VideoPlayerViewModel : BaseViewModel() {
@@ -34,6 +34,8 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     private val seasonForDb = MutableLiveData(1)
     private val episodeForDb = MutableLiveData<Int>()
+    private val titleIdForDb = MutableLiveData<Int>()
+    private val languageForDb = MutableLiveData<String>()
 
     private val getTitleNameList: MutableList<String> = mutableListOf()
 
@@ -97,8 +99,36 @@ class VideoPlayerViewModel : BaseViewModel() {
         }
     }
 
+    fun getMoreSeasons() {
+        seasonEpisodes.clear()
+        if (!seasonEpisodesUri.isNullOrEmpty()) {
+            seasonEpisodesUri.clear()
+            viewModelScope.launch {
+                when (val files = repository.getSingleTitleFiles(titleIdForDb.value!!, seasonForDb.value!! + 1))  {
+                    is Result.Success -> {
+                        seasonForDb.value = seasonForDb.value!! + 1
+                        val season = files.data.data
+                        season.forEach { singleEpisode ->
+                            singleEpisode.files!!.forEach { singleFiles ->
+                                checkAvailability(singleFiles, languageForDb.value!!)
+                            }
+                        }
+                        seasonEpisodes.forEach {
+                            val item = MediaItem.fromUri(Uri.parse(it))
+                            seasonEpisodesUri.add(item)
+                        }
+                        episodesUri.value = seasonEpisodesUri
+                        mediaPlayer.addNewEpisodes(episodesUri.value!!)
+                    }
+                }
+            }
+        }
+    }
+
     fun getPlaylistFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
         seasonForDb.value = chosenSeason
+        titleIdForDb.value = titleId
+        languageForDb.value = chosenLanguage
         if (episodesUri.value == null) {
             viewModelScope.launch {
                 when (val files = repository.getSingleTitleFiles(titleId, chosenSeason)) {
@@ -117,6 +147,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                         setTitleNameList.value = getTitleNameList
                         episodesUri.value = seasonEpisodesUri
                         mediaPlayer.addAllEpisodes(episodesUri.value!!)
+//                        getMoreSeasons()
                         Log.d("episodesaaa", "${setTitleNameList.value}")
                     }
                     is Result.Error -> {
