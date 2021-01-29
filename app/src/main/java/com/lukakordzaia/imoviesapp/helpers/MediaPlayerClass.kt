@@ -16,6 +16,7 @@ class MediaPlayerClass {
     private lateinit var player: SimpleExoPlayer
     private lateinit var header: TextView
     private var episodeNames: List<String> = listOf("Trailer")
+    private val lastMediaListener: LastMediaPlaying? = null
 
     fun initPlayer(context: Context, playerView: PlayerView, playBackOptions: VideoPlayerOptions) {
         player = SimpleExoPlayer.Builder(context).build()
@@ -57,16 +58,19 @@ class MediaPlayerClass {
         Log.d("mediaitems", "$episodes")
     }
 
-    fun addTrailer(trailer: MediaItem) {
-        player.addMediaItem(trailer)
-        Log.d("mediaitems", "$trailer")
+    fun addNewEpisodes(episodes: MutableList<MediaItem>) {
+        player.addMediaItems(episodes)
+        Log.d("mediaitemsnew", "$episodes")
     }
 
     private val event = object : Player.EventListener {
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
-            if (state == Player.STATE_ENDED) {
-                Log.d("playermessage", "done")
+            if ((player.currentWindowIndex + 1) == player.mediaItemCount) {
+                if (state == Player.STATE_READY) {
+                    lastMediaListener?.isLastMedia(true)
+                    Log.d("playermessage", "${player.currentWindowIndex}")
+                }
             }
         }
 
@@ -75,4 +79,8 @@ class MediaPlayerClass {
             header.text = episodeNames[player.currentWindowIndex]
         }
     }
+}
+
+interface LastMediaPlaying {
+    fun isLastMedia(last: Boolean)
 }
