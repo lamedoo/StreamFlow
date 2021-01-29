@@ -25,7 +25,7 @@ import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 class TvMainFragment : BrowseSupportFragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var genresViewModel: GenresViewModel
-    private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+    private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var defaultBackground: Drawable
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
@@ -34,6 +34,12 @@ class TvMainFragment : BrowseSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         genresViewModel = ViewModelProvider(this).get(GenresViewModel::class.java)
+
+        val listRowPresenter = ListRowPresenter().apply {
+            shadowEnabled = false
+            selectEffectEnabled = false
+        }
+        rowsAdapter = ArrayObjectAdapter(listRowPresenter)
 
         homeViewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
@@ -51,7 +57,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             genresViewModel.getAllGenres()
-        }, 2500)
+        }, 2000)
 
         setHeaderPresenterSelector(object : PresenterSelector() {
             override fun getPresenter(item: Any?): Presenter {
@@ -87,9 +93,14 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         }
 
-        HeaderItem(0, "განაგრძეთ ყურება").also { header ->
-            rowsAdapter.add(ListRow(header, listRowAdapter))
+        val watchedHeaderItem = HeaderItem(0, "განაგრძეთ ყურება")
+
+        if (rowsAdapter.size() > 2) {
+            rowsAdapter.replace(0, ListRow(watchedHeaderItem, listRowAdapter))
+        } else {
+            rowsAdapter.add(ListRow(watchedHeaderItem, listRowAdapter))
         }
+
     }
 
     private fun topMoviesRowsAdapter(movies: List<TitleList.Data>) {
