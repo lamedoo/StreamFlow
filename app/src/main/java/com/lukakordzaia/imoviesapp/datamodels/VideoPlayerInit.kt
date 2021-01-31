@@ -1,10 +1,9 @@
 package com.lukakordzaia.imoviesapp.datamodels
 
-data class VideoPlayerOptions(
+data class VideoPlayerInit(
         var playWhenReady: Boolean,
         var currentWindow: Int,
         var playbackPosition: Long,
-        var trailerUrl: String?
 )
 
 data class VideoPlayerRelease(

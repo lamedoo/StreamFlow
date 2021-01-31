@@ -38,15 +38,15 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }
-            KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD -> {
+            KeyEvent.KEYCODE_MEDIA_NEXT -> {
                 title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }
-            KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD -> {
+            KeyEvent.KEYCODE_MEDIA_REWIND -> {
                 title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }
-            KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD -> {
+            KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
                 title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }

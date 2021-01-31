@@ -3,17 +3,15 @@ package com.lukakordzaia.imoviesapp.ui.phone.videoplayer
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
-import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerOptions
-import com.lukakordzaia.imoviesapp.helpers.MediaPlayerClass
+import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerInit
+import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerRelease
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
@@ -21,65 +19,47 @@ import kotlinx.coroutines.launch
 
 class VideoPlayerViewModel : BaseViewModel() {
     private val repository = TitleFilesRepository()
-    private val mediaPlayer = MediaPlayerClass()
+
+    val isTvShow = MutableLiveData<Boolean>()
 
     private var playWhenReady = MutableLiveData(true)
     private var currentWindow = MutableLiveData<Int>(0)
-    private var playbackPosition = MutableLiveData<Long>(0)
+    private var playbackPosition = MutableLiveData<Long>(0L)
 
-    private val episodesUri = MutableLiveData<MutableList<MediaItem>>()
+    val episodesUri = MutableLiveData<MutableList<MediaItem>>()
+    val playBackOptions = MutableLiveData<VideoPlayerInit>()
 
     private val seasonEpisodes: MutableList<String> = ArrayList()
     private val seasonEpisodesUri: MutableList<MediaItem> = ArrayList()
 
-    private val seasonForDb = MutableLiveData(1)
+    val seasonForDb = MutableLiveData(1)
     private val episodeForDb = MutableLiveData<Int>()
-    private val titleIdForDb = MutableLiveData<Int>()
-    private val languageForDb = MutableLiveData<String>()
+    val titleIdForDb = MutableLiveData<Int>()
+    val languageForDb = MutableLiveData<String>()
 
     private val getTitleNameList: MutableList<String> = mutableListOf()
 
     private val setTitleNameList = MutableLiveData<List<String>>()
     val setTitleName: LiveData<List<String>> = setTitleNameList
 
-    fun initPlayer(
-        context: Context,
-        playerView: PlayerView,
-        isTvShow: Boolean,
-        watchTime: Long,
-        chosenEpisode: Int,
-        trailerUrl: String?
-    ) {
-        if (watchTime > 0L) {
-            playbackPosition.value = watchTime
-        }
+
+    fun initPlayer(isTvShow: Boolean, watchTime: Long, chosenEpisode: Int) {
         if (isTvShow) {
+            this.isTvShow.value = isTvShow
             currentWindow.value = chosenEpisode - 1
         }
-        val playBackOptions = VideoPlayerOptions(
+        playBackOptions.value = VideoPlayerInit(
                 playWhenReady.value!!,
                 currentWindow.value!!,
-                playbackPosition.value!!,
-                trailerUrl
+                watchTime
         )
-        mediaPlayer.initPlayer(context, playerView, playBackOptions)
     }
 
-    fun releasePlayer() {
-        mediaPlayer.releasePlayer {
-            playWhenReady.value = it.playWhenReady
-            playbackPosition.value = it.playbackPosition
-            currentWindow.value = it.currentWindow
-            episodeForDb.value = it.currentWindow
-        }
-    }
-
-    fun initHeader(header: TextView) {
-        mediaPlayer.initHeader(header)
-    }
-
-    fun addEpisodeNames(episodeNames: List<String>) {
-        mediaPlayer.addEpisodeNames(episodeNames)
+    fun releasePlayer(videoPlayerRelease: VideoPlayerRelease) {
+            playWhenReady.value = videoPlayerRelease.playWhenReady
+            playbackPosition.value = videoPlayerRelease.playbackPosition
+            currentWindow.value = videoPlayerRelease.currentWindow
+            episodeForDb.value = videoPlayerRelease.currentWindow
     }
 
     fun saveTitleToDb(context: Context, titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
@@ -99,37 +79,17 @@ class VideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    fun getNextSeasonEpisodes() {
+    fun clearPlayerForNextSeason() {
         seasonEpisodes.clear()
-        if (!seasonEpisodesUri.isNullOrEmpty()) {
-            seasonEpisodesUri.clear()
-            viewModelScope.launch {
-                when (val files = repository.getSingleTitleFiles(titleIdForDb.value!!, seasonForDb.value!! + 1))  {
-                    is Result.Success -> {
-                        seasonForDb.value = seasonForDb.value!! + 1
-                        val season = files.data.data
-                        season.forEach { singleEpisode ->
-                            singleEpisode.files!!.forEach { singleFiles ->
-                                checkAvailability(singleFiles, languageForDb.value!!)
-                            }
-                        }
-                        seasonEpisodes.forEach {
-                            val item = MediaItem.fromUri(Uri.parse(it))
-                            seasonEpisodesUri.add(item)
-                        }
-                        episodesUri.value = seasonEpisodesUri
-                        mediaPlayer.addAllEpisodes(episodesUri.value!!)
-                    }
-                }
-            }
-        }
+        seasonEpisodesUri.clear()
+        getTitleNameList.clear()
     }
 
     fun getPlaylistFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
         seasonForDb.value = chosenSeason
         titleIdForDb.value = titleId
         languageForDb.value = chosenLanguage
-        if (episodesUri.value == null) {
+        clearPlayerForNextSeason()
             viewModelScope.launch {
                 when (val files = repository.getSingleTitleFiles(titleId, chosenSeason)) {
                     is Result.Success -> {
@@ -146,7 +106,6 @@ class VideoPlayerViewModel : BaseViewModel() {
                         }
                         setTitleNameList.value = getTitleNameList
                         episodesUri.value = seasonEpisodesUri
-                        mediaPlayer.addAllEpisodes(episodesUri.value!!)
                         Log.d("episodesaaa", "${seasonEpisodes}")
                     }
                     is Result.Error -> {
@@ -154,7 +113,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                     }
                 }
             }
-        }
+
     }
 
     private fun checkAvailability(singleFiles: TitleFiles.Data.File, chosenLanguage: String) {
