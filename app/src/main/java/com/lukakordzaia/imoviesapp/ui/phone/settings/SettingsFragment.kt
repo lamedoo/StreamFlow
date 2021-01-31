@@ -21,7 +21,7 @@ class SettingsFragment : Fragment(R.layout.phone_settings_framgent) {
             clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
             clearDbDialog.clear_db_alert_yes.setOnClickListener {
                         viewModel.deleteWatchedHistory(requireContext())
-                        viewModel.onDeletePressed(requireContext())
+                        viewModel.onDeletePressedPhone(requireContext())
                     }
             clearDbDialog.clear_db_alert_no.setOnClickListener {
                 clearDbDialog.dismiss()
