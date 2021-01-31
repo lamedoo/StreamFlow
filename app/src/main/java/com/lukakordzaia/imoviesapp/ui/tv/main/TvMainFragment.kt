@@ -34,12 +34,22 @@ class TvMainFragment : BrowseSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         genresViewModel = ViewModelProvider(this).get(GenresViewModel::class.java)
+        prepareBackgroundManager()
+        setupUIElements()
+        setupEventListeners()
 
         val listRowPresenter = ListRowPresenter().apply {
             shadowEnabled = false
             selectEffectEnabled = false
         }
         rowsAdapter = ArrayObjectAdapter(listRowPresenter)
+
+        val firstHeaderItem = ListRow(HeaderItem(0, "განაგრძეთ ყურება"), ArrayObjectAdapter())
+        val secondHeaderItem = ListRow(HeaderItem(1, "ტოპ ფილები"), ArrayObjectAdapter())
+        val thirdHeaderItem = ListRow(HeaderItem(2, "ტოპ სერიალები"), ArrayObjectAdapter())
+        val fourthHeaderItem = ListRow(HeaderItem(3, "ჟანრები"), ArrayObjectAdapter())
+        val initListRows = listOf<ListRow>(firstHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem)
+        rowsAdapter.add(initListRows)
 
         homeViewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
@@ -80,10 +90,6 @@ class TvMainFragment : BrowseSupportFragment() {
         genresViewModel.allGenresList.observe(viewLifecycleOwner, { genres ->
             genresRowsAdapter(genres)
         })
-
-        prepareBackgroundManager()
-        setupUIElements()
-        setupEventListeners()
     }
 
     private fun watchedListRowsAdapter(watchedList: List<WatchedTitleData>) {

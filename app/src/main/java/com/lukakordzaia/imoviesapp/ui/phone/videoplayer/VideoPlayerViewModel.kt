@@ -79,7 +79,7 @@ class VideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    fun clearPlayerForNextSeason() {
+    private fun clearPlayerForNextSeason() {
         seasonEpisodes.clear()
         seasonEpisodesUri.clear()
         getTitleNameList.clear()
