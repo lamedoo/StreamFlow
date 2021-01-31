@@ -36,6 +36,7 @@ open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
                 super.onPlaybackStateChanged(state)
                 if ((player.currentWindowIndex + 1) == player.mediaItemCount) {
                     if (state == Player.STATE_READY) {
+                        title_player.keepScreenOn = true
                         viewModel.isTvShow.observe(viewLifecycleOwner, {
                             if (it) {
                                 val nextSeasonNum = viewModel.seasonForDb.value
@@ -48,7 +49,7 @@ open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
                                 }
                             }
                         })
-                    }
+                    } else title_player.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
                 } else {
                     next_season_button.setGone()
                 }
