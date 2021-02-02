@@ -6,6 +6,7 @@ import android.view.KeyEvent
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
+import kotlinx.android.synthetic.main.exoplayer_controller_layout.view.*
 import kotlinx.android.synthetic.main.fragment_video_player.*
 
 class TvVideoPlayerActivity : FragmentActivity() {
@@ -25,6 +26,18 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     title_player.player!!.play()
                 }
                 return true
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                if (!title_player.isControllerVisible) {
+                    title_player.showController()
+                    title_player.exo_progress.requestFocus()
+                }
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                title_player.exo_rew.callOnClick()
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                title_player.exo_ffwd.callOnClick()
             }
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
                 title_player.dispatchMediaKeyEvent(event!!)
