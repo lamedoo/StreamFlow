@@ -31,12 +31,12 @@ class TopMoviesFragment : Fragment(R.layout.phone_single_genre_fragment) {
         })
 
         singleGenreAdapter = SingleGenreAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed("topMovies", it)
+            viewModel.onSingleTitlePressed(AppConstants.NAV_TOP_MOVIES_TO_SINGLE, it)
         }
         rv_single_genre.adapter = singleGenreAdapter
         rv_single_genre.layoutManager = layoutManager
 
-        viewModel.movieList.observe(viewLifecycleOwner, {
+        viewModel.topMovieList.observe(viewLifecycleOwner, {
             singleGenreAdapter.setGenreTitleList(it)
         })
 

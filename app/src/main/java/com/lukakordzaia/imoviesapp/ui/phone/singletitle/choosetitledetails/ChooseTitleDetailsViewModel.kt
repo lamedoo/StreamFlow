@@ -52,7 +52,7 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
     }
 
 
-    fun onContinueWatchingPressed(watchedDetails: WatchedDetails) {
+    fun onContinueWatchingPressed(watchedDetails: WatchedDetails,) {
         navigateToNewFragment(ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
                 titleId = watchedDetails.titleId,
                 chosenSeason = watchedDetails.season,
@@ -103,7 +103,7 @@ class ChooseTitleDetailsViewModel : BaseViewModel() {
 
                     val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
                     data.forEach {
-                        getEpisodeNames.add(TitleEpisodes(it.episode, it.title))
+                        getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.poster))
                     }
                     _episodeNames.value = getEpisodeNames
                     Log.d("episodenames", "${episodeNames.value}")

@@ -31,7 +31,7 @@ class SearchTitlesViewModel : BaseViewModel() {
             when (val movies = repository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = movies.data.data
-                    data!!.forEach {
+                    data.forEach {
                         fetchSearchTitleList.add(it)
                     }
                     _searchList.value = fetchSearchTitleList

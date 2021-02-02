@@ -12,6 +12,10 @@ import com.lukakordzaia.imoviesapp.network.TitlesNetwork
 class HomeRepository {
     private val destinationService = RetrofitBuilder.buildService(TitlesNetwork::class.java)
 
+    suspend fun getNewMovies(page: Int): Result<TitleList> {
+        return RetrofitBuilder.retrofitCall { destinationService.getNewMovies(page) }
+    }
+
     suspend fun getTopMovies(page: Int): Result<TitleList> {
         return RetrofitBuilder.retrofitCall { destinationService.getTopMovies(page) }
     }

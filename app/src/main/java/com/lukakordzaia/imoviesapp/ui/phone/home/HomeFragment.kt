@@ -21,7 +21,8 @@ import kotlinx.android.synthetic.main.phone_home_framgent.*
 class HomeFragment : Fragment(R.layout.phone_home_framgent) {
     private lateinit var viewModel: HomeViewModel
     private lateinit var homeWatchedAdapter: HomeWatchedAdapter
-    private lateinit var homeMovieAdapter: HomeMovieAdapter
+    private lateinit var homeNewMovieAdapter: HomeNewMovieAdapter
+    private lateinit var homeTopMovieAdapter: HomeTopMovieAdapter
     private lateinit var homeTvShowAdapter: HomeTvShowAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,11 +68,11 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
                                 return@setOnMenuItemClickListener true
                             }
                             R.id.watched_check_info -> {
-                                viewModel.onSingleTitlePressed("home", titleId)
+                                viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, titleId)
                                 return@setOnMenuItemClickListener true
                             }
                             else -> {
-                                requireContext().createToast("aaaa")
+                                requireContext().createToast("nothing else")
                                 return@setOnMenuItemClickListener true
                             }
                         }
@@ -84,26 +85,26 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
         viewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 main_watched_titles_none.setGone()
-                val topMoviesTitleConstraint = main_top_movies_title.layoutParams as ConstraintLayout.LayoutParams
-                topMoviesTitleConstraint.topToBottom = rv_main_watched_titles.id
-                main_top_movies_title.requestLayout()
+                val newMoviesTitleConstraint = main_new_movies_title.layoutParams as ConstraintLayout.LayoutParams
+                newMoviesTitleConstraint.topToBottom = rv_main_watched_titles.id
+                main_new_movies_title.requestLayout()
 
-                val topMoviesMoreConstraint = top_movies_more.layoutParams as ConstraintLayout.LayoutParams
-                topMoviesMoreConstraint.topToBottom = rv_main_watched_titles.id
-                top_movies_more.requestLayout()
+                val newMoviesMoreConstraint = new_movies_more.layoutParams as ConstraintLayout.LayoutParams
+                newMoviesMoreConstraint.topToBottom = rv_main_watched_titles.id
+                new_movies_more.requestLayout()
 
                 viewModel.getWatchedTitles(it)
             } else {
                 main_watched_titles_none.setVisible()
                 viewModel.clearWatchedTitleList()
 
-                val topMoviesTitleConstraint = main_top_movies_title.layoutParams as ConstraintLayout.LayoutParams
-                topMoviesTitleConstraint.topToBottom = main_watched_titles_none.id
-                main_top_movies_title.requestLayout()
+                val newMoviesTitleConstraint = main_new_movies_title.layoutParams as ConstraintLayout.LayoutParams
+                newMoviesTitleConstraint.topToBottom = main_watched_titles_none.id
+                main_new_movies_title.requestLayout()
 
-                val topMoviesMoreConstraint = top_movies_more.layoutParams as ConstraintLayout.LayoutParams
-                topMoviesMoreConstraint.topToBottom = main_watched_titles_none.id
-                top_movies_more.requestLayout()
+                val newMoviesMoreConstraint = new_movies_more.layoutParams as ConstraintLayout.LayoutParams
+                newMoviesMoreConstraint.topToBottom = main_watched_titles_none.id
+                new_movies_more.requestLayout()
             }
         })
 
@@ -112,24 +113,37 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
         })
 
         //New Movies List
-        val movieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeMovieAdapter = HomeMovieAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed("home", it)
+        val newMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        homeNewMovieAdapter = HomeNewMovieAdapter(requireContext()) {
+            viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
-        rv_main_top_movies.adapter =  homeMovieAdapter
-        rv_main_top_movies.layoutManager = movieLayout
+        rv_main_new_movies.adapter = homeNewMovieAdapter
+        rv_main_new_movies.layoutManager = newMovieLayout
+
+        viewModel.getNewMovies(1)
+        viewModel.newMovieList.observe(viewLifecycleOwner, {
+            homeNewMovieAdapter.setMoviesList(it)
+        })
+
+        //Top Movies List
+        val topMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        homeTopMovieAdapter = HomeTopMovieAdapter(requireContext()) {
+            viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
+        }
+        rv_main_top_movies.adapter = homeTopMovieAdapter
+        rv_main_top_movies.layoutManager = topMovieLayout
 
         viewModel.getTopMovies(1)
 
-        viewModel.movieList.observe(viewLifecycleOwner, Observer {
-            homeMovieAdapter.setMoviesList(it)
+        viewModel.topMovieList.observe(viewLifecycleOwner, Observer {
+            homeTopMovieAdapter.setMoviesList(it)
         })
 
 
-        //New TvShows List
+        //Top TvShows List
         val tvShowLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeTvShowAdapter = HomeTvShowAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed("home", it)
+            viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         rv_main_top_tvshows.adapter = homeTvShowAdapter
         rv_main_top_tvshows.layoutManager = tvShowLayout

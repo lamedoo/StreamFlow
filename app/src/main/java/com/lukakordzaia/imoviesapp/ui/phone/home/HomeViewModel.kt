@@ -14,29 +14,37 @@ import com.lukakordzaia.imoviesapp.repository.HomeRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopMoviesFragmentDirections
 import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopTvShowsFragmentDirections
+import com.lukakordzaia.imoviesapp.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
     private val repository = HomeRepository()
 
-    private val _movieList = MutableLiveData<List<TitleList.Data>>()
-    val movieList: LiveData<List<TitleList.Data>> = _movieList
+    private val _newMovieList = MutableLiveData<List<TitleList.Data>>()
+    val newMovieList: LiveData<List<TitleList.Data>> = _newMovieList
+
+    private val fetchNewMoviesList: MutableList<TitleList.Data> = ArrayList()
+
+    private val _topMovieList = MutableLiveData<List<TitleList.Data>>()
+    val topMovieList: LiveData<List<TitleList.Data>> = _topMovieList
+
+    private val fetchTopMoviesList: MutableList<TitleList.Data> = ArrayList()
 
     private val _tvShowList = MutableLiveData<List<TitleList.Data>>()
     val tvShowList: LiveData<List<TitleList.Data>> = _tvShowList
+
+    private val fetchTopTvShowsList: MutableList<TitleList.Data> = ArrayList()
 
     private val _watchedList = MutableLiveData<List<WatchedTitleData>>()
     val watchedList: LiveData<List<WatchedTitleData>> = _watchedList
 
     private val watchedTitles: MutableList<WatchedTitleData> = mutableListOf()
 
-    fun onSingleTitlePressed(start: String, titleId: Int) {
-        if (start == "home") {
-            navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(titleId))
-        } else if (start == "topMovies") {
-            navigateToNewFragment(TopMoviesFragmentDirections.actionTopMoviesFragmentToSingleTitleFragmentNav(titleId))
-        } else if (start == "topTvShows") {
-            navigateToNewFragment(TopTvShowsFragmentDirections.actionTopTvShowsFragmentToSingleTitleFragmentNav(titleId))
+    fun onSingleTitlePressed(start: Int, titleId: Int) {
+        when (start) {
+            AppConstants.NAV_HOME_TO_SINGLE -> navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(titleId))
+            AppConstants.NAV_TOP_MOVIES_TO_SINGLE -> navigateToNewFragment(TopMoviesFragmentDirections.actionTopMoviesFragmentToSingleTitleFragmentNav(titleId))
+            AppConstants.NAV_TOP_TV_SHOWS_TO_SINGLE -> navigateToNewFragment(TopTvShowsFragmentDirections.actionTopTvShowsFragmentToSingleTitleFragmentNav(titleId))
         }
     }
 
@@ -104,12 +112,33 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
+    fun getNewMovies(page: Int) {
+        viewModelScope.launch {
+            when (val movies = repository.getNewMovies(page)) {
+                is Result.Success -> {
+                    val data = movies.data.data
+                    data.forEach {
+                        fetchNewMoviesList.add(it)
+                    }
+                    _newMovieList.value = fetchNewMoviesList
+                    setLoading(false)
+                }
+                is Result.Error -> {
+                    Log.d("errornewmovies", movies.exception)
+                }
+            }
+        }
+    }
+
     fun getTopMovies(page: Int) {
         viewModelScope.launch {
             when (val movies = repository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = movies.data.data
-                    _movieList.value = data
+                    data.forEach {
+                        fetchTopMoviesList.add(it)
+                    }
+                    _topMovieList.value = fetchTopMoviesList
                     setLoading(false)
                 }
                 is Result.Error -> {
@@ -124,7 +153,10 @@ class HomeViewModel : BaseViewModel() {
             when (val tvShows = repository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = tvShows.data.data
-                    _tvShowList.value = data
+                    data.forEach {
+                        fetchTopTvShowsList.add(it)
+                    }
+                    _tvShowList.value = fetchTopTvShowsList
                     setLoading(false)
                 }
                 is Result.Error -> {

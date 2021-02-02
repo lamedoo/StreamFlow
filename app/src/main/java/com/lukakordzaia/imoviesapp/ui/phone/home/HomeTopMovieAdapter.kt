@@ -13,7 +13,7 @@ import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_home_item.view.*
 
-class HomeMovieAdapter(private val context: Context, private val onMovieClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeMovieAdapter.ViewHolder>() {
+class HomeTopMovieAdapter(private val context: Context, private val onMovieClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeTopMovieAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
 
     fun setMoviesList(list: List<TitleList.Data>) {

@@ -31,7 +31,7 @@ class TopTvShowsFragment : Fragment(R.layout.phone_single_genre_fragment) {
         })
 
         singleGenreAdapter = SingleGenreAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed("topTvShows", it)
+            viewModel.onSingleTitlePressed(AppConstants.NAV_TOP_TV_SHOWS_TO_SINGLE, it)
         }
         rv_single_genre.adapter = singleGenreAdapter
         rv_single_genre.layoutManager = layoutManager

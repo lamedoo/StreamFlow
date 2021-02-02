@@ -11,14 +11,12 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.datamodels.GenreList
-import com.lukakordzaia.imoviesapp.datamodels.TitleList
-import com.lukakordzaia.imoviesapp.datamodels.TvSettingsList
-import com.lukakordzaia.imoviesapp.datamodels.WatchedTitleData
+import com.lukakordzaia.imoviesapp.datamodels.*
 import com.lukakordzaia.imoviesapp.ui.phone.genres.GenresViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.settings.SettingsViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
+import com.lukakordzaia.imoviesapp.ui.tv.genres.TvSingleGenreActivity
 import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.AppConstants
@@ -52,6 +50,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
         homeViewModel.getTopMovies(1)
         homeViewModel.getTopTvShows(1)
+        homeViewModel.getNewMovies(1)
         genresViewModel.getAllGenres()
 
 
@@ -63,12 +62,16 @@ class TvMainFragment : BrowseSupportFragment() {
 
         initRowsAdapter()
 
-        homeViewModel.watchedList.observe(viewLifecycleOwner, { watched ->
-                watchedListRowsAdapter(watched)
+        homeViewModel.watchedList.observe(viewLifecycleOwner, {
+                watchedListRowsAdapter(it)
         })
 
-        homeViewModel.movieList.observe(viewLifecycleOwner, { movies ->
+        homeViewModel.topMovieList.observe(viewLifecycleOwner, { movies ->
             topMoviesRowsAdapter(movies)
+        })
+
+        homeViewModel.newMovieList.observe(viewLifecycleOwner, {
+            newMoviesRowsAdapter(it)
         })
 
         homeViewModel.tvShowList.observe(viewLifecycleOwner, { tvShows ->
@@ -87,12 +90,13 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun initRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.TVCONTINUEWATCHING), ArrayObjectAdapter(TvCardPresenter()))
-        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TVTOPMOVIES), ArrayObjectAdapter(TvCardPresenter()))
-        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TVTOPTVSHOWS), ArrayObjectAdapter(TvCardPresenter()))
-        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TVGENRES), ArrayObjectAdapter(TvCardPresenter()))
-        val fifthHeaderItem = ListRow(HeaderItem(4, AppConstants.TVSETTINGS), ArrayObjectAdapter(TvCardPresenter()))
-        val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem, fifthHeaderItem)
+        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING), ArrayObjectAdapter(TvCardPresenter()))
+        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TV_TOP_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
+        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TV_TOP_TV_SHOWS), ArrayObjectAdapter(TvCardPresenter()))
+        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvCardPresenter()))
+        val fifthHeaderItem = ListRow(HeaderItem(4, AppConstants.TV_SETTINGS), ArrayObjectAdapter(TvCardPresenter()))
+        val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
+        val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, sixthHeaderItem, thirdHeaderItem, fourthHeaderItem, fifthHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }
 
@@ -103,11 +107,9 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         }
 
-        HeaderItem(0, AppConstants.TVCONTINUEWATCHING). also {
+        HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING). also {
             rowsAdapter.replace(0, ListRow(it, listRowAdapter))
         }
-
-
     }
 
     private fun topMoviesRowsAdapter(movies: List<TitleList.Data>) {
@@ -117,8 +119,20 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         }
 
-        HeaderItem(1, AppConstants.TVTOPMOVIES).also { header ->
+        HeaderItem(1, AppConstants.TV_TOP_MOVIES).also { header ->
             rowsAdapter.replace(1, ListRow(header, listRowAdapter))
+        }
+    }
+
+    private fun newMoviesRowsAdapter(newMovies: List<TitleList.Data>) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+            newMovies.forEach {
+                add(it)
+            }
+        }
+
+        HeaderItem(2, AppConstants.TV_NEW_MOVIES).also { header ->
+            rowsAdapter.replace(2, ListRow(header, listRowAdapter))
         }
     }
 
@@ -129,20 +143,21 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         }
 
-        HeaderItem(2, AppConstants.TVTOPTVSHOWS).also { header ->
-            rowsAdapter.replace(2, ListRow(header, listRowAdapter))
+        HeaderItem(3, AppConstants.TV_TOP_TV_SHOWS).also { header ->
+            rowsAdapter.replace(3, ListRow(header, listRowAdapter))
         }
     }
 
     private fun genresRowsAdapter(genreList: List<GenreList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvGenresPresenter()).apply {
-            genreList.forEach {
-                add(it)
-            }
+        val listRowAdapter = ArrayObjectAdapter(TvCategoriesPresenter()).apply {
+            add(TvCategoriesList(0, "ჟანრის მიხედვით", R.drawable.tv_genre_icon))
+            add(TvCategoriesList(1, "ახალი ფილები", R.drawable.tv_new_movies_icon))
+            add(TvCategoriesList(2, "ტოპ ფილები", R.drawable.tv_top_titles_icon))
+            add(TvCategoriesList(3, "ტოპ სერიალები", R.drawable.tv_top_titles_icon))
         }
 
-        HeaderItem(3, AppConstants.TVGENRES).also { header ->
-            rowsAdapter.replace(3, ListRow(header, listRowAdapter))
+        HeaderItem(4, AppConstants.TV_GENRES).also { header ->
+            rowsAdapter.replace(4, ListRow(header, listRowAdapter))
         }
     }
 
@@ -151,8 +166,8 @@ class TvMainFragment : BrowseSupportFragment() {
             add(TvSettingsList(0, "ნახვების ისტორიის წაშლა"))
         }
 
-        HeaderItem(4, AppConstants.TVSETTINGS).also { header ->
-            rowsAdapter.replace(4, ListRow(header, listRowAdapter))
+        HeaderItem(5, AppConstants.TV_SETTINGS).also { header ->
+            rowsAdapter.replace(5, ListRow(header, listRowAdapter))
         }
     }
 
@@ -212,6 +227,9 @@ class TvMainFragment : BrowseSupportFragment() {
                     settingsViewModel.deleteWatchedHistory(requireContext())
                     settingsViewModel.onDeletePressedTv(requireContext())
                 }
+            } else if (item is TvCategoriesList) {
+                val intent = Intent(context, TvSingleGenreActivity::class.java)
+                activity?.startActivity(intent)
             }
         }
     }

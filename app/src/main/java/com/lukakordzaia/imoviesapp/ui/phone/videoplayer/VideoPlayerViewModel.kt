@@ -21,6 +21,7 @@ class VideoPlayerViewModel : BaseViewModel() {
     private val repository = TitleFilesRepository()
 
     val isTvShow = MutableLiveData<Boolean>()
+    val numOfSeasons = MutableLiveData<Int>()
 
     private var playWhenReady = MutableLiveData(true)
     private var currentWindow = MutableLiveData<Int>(0)
@@ -42,6 +43,9 @@ class VideoPlayerViewModel : BaseViewModel() {
     private val setTitleNameList = MutableLiveData<List<String>>()
     val setTitleName: LiveData<List<String>> = setTitleNameList
 
+    fun getNumOfSeasons(numOfSeasons: Int) {
+        this.numOfSeasons.value = numOfSeasons
+    }
 
     fun initPlayer(isTvShow: Boolean, watchTime: Long, chosenEpisode: Int) {
         if (isTvShow) {
