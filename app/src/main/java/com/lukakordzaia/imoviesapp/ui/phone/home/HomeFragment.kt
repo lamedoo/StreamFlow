@@ -16,10 +16,12 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.*
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_home_framgent.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class HomeFragment : Fragment(R.layout.phone_home_framgent) {
-    private lateinit var viewModel: HomeViewModel
+    private val viewModel by viewModel<HomeViewModel>()
+
     private lateinit var homeWatchedAdapter: HomeWatchedAdapter
     private lateinit var homeNewMovieAdapter: HomeNewMovieAdapter
     private lateinit var homeTopMovieAdapter: HomeTopMovieAdapter
@@ -32,7 +34,6 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
             if (!it) {

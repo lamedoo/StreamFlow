@@ -6,27 +6,26 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesAdapter
 import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.imoviesapp.utils.*
 import kotlinx.android.synthetic.main.phone_search_titles_framgent.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent) {
-    private lateinit var viewModel: SearchTitlesViewModel
+    private val searchTitlesViewModel by viewModel<SearchTitlesViewModel>()
     private lateinit var searchTitlesAdapter: SearchTitlesAdapter
     private var page = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SearchTitlesViewModel::class.java)
         search_title_text.isIconified = false
 
 
         searchTitlesAdapter = SearchTitlesAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(it)
+            searchTitlesViewModel.onSingleTitlePressed(it)
         }
 
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
@@ -37,7 +36,7 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent) {
         search_title_text.setOnQueryTextListener(object  : androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrBlank()) {
-                    viewModel.getSearchTitles(query, page)
+                    searchTitlesViewModel.getSearchTitles(query, page)
                     rv_search_titles.setVisible()
                     top_search_container.setGone()
                 } else {
@@ -52,17 +51,17 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent) {
                 if (query.isNullOrBlank()) {
                     rv_search_titles.setGone()
                     top_search_container.setVisible()
-                    viewModel.clearSearchResults()
+                    searchTitlesViewModel.clearSearchResults()
                 }
                 return true
             }
         })
 
-        viewModel.searchList.observe(viewLifecycleOwner, Observer {
+        searchTitlesViewModel.searchList.observe(viewLifecycleOwner, Observer {
             searchTitlesAdapter.setSearchTitleList(it)
         })
 
-        viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+        searchTitlesViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
 
@@ -70,7 +69,7 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent) {
             fetchMoreResults()
         }
 
-        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+        searchTitlesViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
     }
@@ -78,6 +77,6 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent) {
     private fun fetchMoreResults() {
         page++
         Log.d("currentpage", page.toString())
-        viewModel.getSearchTitles(search_title_text.query.toString(), page)
+        searchTitlesViewModel.getSearchTitles(search_title_text.query.toString(), page)
     }
 }

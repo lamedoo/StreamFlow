@@ -2,18 +2,18 @@ package com.lukakordzaia.imoviesapp.repository
 
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
-import com.lukakordzaia.imoviesapp.network.TitlesNetwork
 import com.lukakordzaia.imoviesapp.datamodels.GenreList
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.network.RetrofitCall
 
-class GenresRepository {
-    private val retrofit = RetrofitBuilder.buildService(TitlesNetwork::class.java)
+class GenresRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
+    private val service = retrofitBuilder.buildService()
 
     suspend fun getAllGenres(): Result<GenreList> {
-        return RetrofitBuilder.retrofitCall { retrofit.getAllGenres() }
+        return retrofitCall { service.getAllGenres() }
     }
 
     suspend fun getSingleGenre(genreId: Int, page: Int): Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { retrofit.getSingleGenre(genreId, page) }
+        return retrofitCall { service.getSingleGenre(genreId, page) }
     }
 }

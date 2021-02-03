@@ -10,9 +10,7 @@ import com.lukakordzaia.imoviesapp.repository.SearchTitleRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
-class SearchTitlesViewModel : BaseViewModel() {
-    private val repository = SearchTitleRepository()
-
+class SearchTitlesViewModel(private val repository: SearchTitleRepository) : BaseViewModel() {
     private val _searchList = MutableLiveData<List<TitleList.Data>>()
     val searchList: LiveData<List<TitleList.Data>> = _searchList
 

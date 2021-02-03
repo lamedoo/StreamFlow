@@ -3,24 +3,23 @@ package com.lukakordzaia.imoviesapp.ui.phone.genres
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.utils.EventObserver
 import com.lukakordzaia.imoviesapp.utils.navController
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
 import kotlinx.android.synthetic.main.phone_genres_framgent.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GenresFragment : Fragment(R.layout.phone_genres_framgent) {
-    private lateinit var viewModel: GenresViewModel
+    private val genresViewModel by viewModel<GenresViewModel>()
     private lateinit var genresAdapter: GenresAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(GenresViewModel::class.java)
-        viewModel.getAllGenres()
+        genresViewModel.getAllGenres()
 
-        viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
+        genresViewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
             if (!it) {
                 genres_progressBar.setGone()
                 rv_genres.setVisible()
@@ -28,15 +27,15 @@ class GenresFragment : Fragment(R.layout.phone_genres_framgent) {
         })
 
         genresAdapter = GenresAdapter(requireContext()) {
-            viewModel.onSingleGenrePressed(it)
+            genresViewModel.onSingleGenrePressed(it)
         }
         rv_genres.adapter = genresAdapter
 
-        viewModel.allGenresList.observe(viewLifecycleOwner, {
+        genresViewModel.allGenresList.observe(viewLifecycleOwner, {
             genresAdapter.setGenreList(it)
         })
 
-        viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+        genresViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
     }

@@ -9,16 +9,16 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerInit
 import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerRelease
 import com.lukakordzaia.imoviesapp.network.Result
-import com.lukakordzaia.imoviesapp.repository.TitleFilesRepository
+import com.lukakordzaia.imoviesapp.repository.SingleTitleRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
-class VideoPlayerViewModel : BaseViewModel() {
-    private val repository = TitleFilesRepository()
+class VideoPlayerViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
 
     val isTvShow = MutableLiveData<Boolean>()
     val numOfSeasons = MutableLiveData<Int>()
@@ -42,6 +42,9 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     private val setTitleNameList = MutableLiveData<List<String>>()
     val setTitleName: LiveData<List<String>> = setTitleNameList
+
+    private val _singleTitleData = MutableLiveData<TitleData.Data>()
+    val singleTitleData: LiveData<TitleData.Data> = _singleTitleData
 
     fun getNumOfSeasons(numOfSeasons: Int) {
         this.numOfSeasons.value = numOfSeasons
@@ -133,6 +136,19 @@ class VideoPlayerViewModel : BaseViewModel() {
                     if (it.quality == "HIGH" && it.src != null) {
                         seasonEpisodes.add(it.src)
                     }
+                }
+            }
+        }
+    }
+
+    fun getSingleTitleData(titleId: Int) {
+        viewModelScope.launch {
+            when (val data = repository.getSingleTitleData(titleId)) {
+                is Result.Success -> {
+                    _singleTitleData.value = data.data.data
+                }
+                is Result.Error -> {
+                    Log.d("errorsinglemovies", data.exception)
                 }
             }
         }

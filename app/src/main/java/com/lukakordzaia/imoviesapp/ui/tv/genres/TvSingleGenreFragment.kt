@@ -16,10 +16,11 @@ import com.lukakordzaia.imoviesapp.ui.phone.genres.singlegenre.SingleGenreViewMo
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.main.*
 import com.lukakordzaia.imoviesapp.utils.AppConstants
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvSingleGenreFragment : BrowseSupportFragment() {
-    private lateinit var singleGenreViewModel: SingleGenreViewModel
+    private val singleGenreViewModel by viewModel<SingleGenreViewModel>()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var defaultBackground: Drawable
     lateinit var metrics: DisplayMetrics
@@ -32,7 +33,6 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        singleGenreViewModel = ViewModelProvider(this).get(SingleGenreViewModel::class.java)
 
         val listRowPresenter = ListRowPresenter().apply {
             shadowEnabled = false

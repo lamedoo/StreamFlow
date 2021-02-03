@@ -63,7 +63,7 @@ data class TitleData(
         @SerializedName("releaseDate")
         val releaseDate: String?,
         @SerializedName("seasons")
-        val seasons: Seasons?,
+        val seasons: Seasons,
         @SerializedName("secondaryName")
         val secondaryName: String?,
         @SerializedName("studios")
@@ -272,7 +272,7 @@ data class TitleData(
 
         data class Seasons(
             @SerializedName("data")
-            val `data`: List<DataSeasons>?
+            val `data`: List<DataSeasons>
         ) {
             data class DataSeasons(
                 @SerializedName("episodesCount")
@@ -282,7 +282,7 @@ data class TitleData(
                 @SerializedName("name")
                 val name: String?,
                 @SerializedName("number")
-                val number: Int?
+                val number: Int
             )
         }
 

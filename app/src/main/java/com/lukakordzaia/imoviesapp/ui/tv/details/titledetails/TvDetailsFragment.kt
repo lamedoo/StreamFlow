@@ -7,15 +7,16 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
+import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.createToast
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_details_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
-    private lateinit var singleTitleViewModel: SingleTitleViewModel
+    private val tvDetailsViewModel by viewModel<TvDetailsViewModel>()
     private var trailerUrl: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -23,12 +24,10 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
 
-        singleTitleViewModel = ViewModelProvider(this).get(SingleTitleViewModel::class.java)
-
-        singleTitleViewModel.getSingleTitleData(titleId)
+        tvDetailsViewModel.getSingleTitleData(titleId)
 
         // LEFT SIDE
-        singleTitleViewModel.singleTitleData.observe(viewLifecycleOwner, {
+        tvDetailsViewModel.singleTitleData.observe(viewLifecycleOwner, {
             tv_files_trailer.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
                     v.background = ResourcesCompat.getDrawable(requireContext().resources, R.drawable.tv_remove_title_from_db_focused, null)
@@ -95,11 +94,11 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
         })
 
-        singleTitleViewModel.checkTitleInDb(requireContext(), titleId).observe(viewLifecycleOwner, {
-            singleTitleViewModel.titleIsInDb(it)
+        tvDetailsViewModel.checkTitleInDb(requireContext(), titleId).observe(viewLifecycleOwner, {
+            tvDetailsViewModel.titleIsInDb(it)
             if (it) {
                 tv_files_title_delete.setOnClickListener {
-                    singleTitleViewModel.deleteTitleFromDb(requireContext(), titleId)
+                    tvDetailsViewModel.deleteTitleFromDb(requireContext(), titleId)
                 }
                 tv_files_title_delete.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
                     if (hasFocus) {

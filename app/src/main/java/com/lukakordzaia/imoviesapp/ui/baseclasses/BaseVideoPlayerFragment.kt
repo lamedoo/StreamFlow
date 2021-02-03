@@ -1,10 +1,10 @@
 package com.lukakordzaia.imoviesapp.ui.baseclasses
 
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -19,10 +19,11 @@ import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
 import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.fragment_video_player.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
-    private lateinit var videoPlayerViewModel: VideoPlayerViewModel
-    private lateinit var singleTitleViewModel: SingleTitleViewModel
+    private val videoPlayerViewModel by viewModel<VideoPlayerViewModel>()
+
     private lateinit var mediaPlayer: MediaPlayerClass
     private lateinit var player: SimpleExoPlayer
 
@@ -30,13 +31,12 @@ open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        videoPlayerViewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
-        singleTitleViewModel = ViewModelProvider(this).get(SingleTitleViewModel::class.java)
         player = SimpleExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
 
-        singleTitleViewModel.singleTitleData.observe(viewLifecycleOwner, {
-            videoPlayerViewModel.getNumOfSeasons(it.seasons?.data!!.size)
+
+        videoPlayerViewModel.singleTitleData.observe(viewLifecycleOwner, {
+            videoPlayerViewModel.getNumOfSeasons(it.seasons.data.size)
         })
 
         mediaPlayer.setPlayerListener(object : Player.EventListener {
@@ -54,7 +54,11 @@ open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
                                         next_season_button.text = "სეზონი: ${nextSeasonNum!!}"
                                         next_season_button.setOnClickListener { _ ->
                                             player.clearMediaItems()
-                                            videoPlayerViewModel.getPlaylistFiles(videoPlayerViewModel.titleIdForDb.value!!, nextSeasonNum, videoPlayerViewModel.languageForDb.value!!)
+                                            videoPlayerViewModel.getPlaylistFiles(
+                                                videoPlayerViewModel.titleIdForDb.value!!,
+                                                nextSeasonNum,
+                                                videoPlayerViewModel.languageForDb.value!!
+                                            )
                                             videoPlayerViewModel.initPlayer(it, 0L, 1)
                                         }
                                     } else {
@@ -102,7 +106,7 @@ open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
 
     fun getPlayListFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
         videoPlayerViewModel.getPlaylistFiles(titleId, chosenSeason, chosenLanguage)
-        singleTitleViewModel.getSingleTitleData(titleId)
+        videoPlayerViewModel.getSingleTitleData(titleId)
     }
 
     fun initPlayer(isTvShow: Boolean, watchedTime: Long, chosenEpisode: Int, trailerUrl: String?) {

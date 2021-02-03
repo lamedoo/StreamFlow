@@ -10,8 +10,7 @@ import com.lukakordzaia.imoviesapp.repository.GenresRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
-class GenresViewModel : BaseViewModel() {
-    private val repository = GenresRepository()
+class GenresViewModel(private val repository: GenresRepository) : BaseViewModel() {
 
     private val _allGenresList = MutableLiveData<List<GenreList.Data>>()
     val allGenresList: LiveData<List<GenreList.Data>> = _allGenresList

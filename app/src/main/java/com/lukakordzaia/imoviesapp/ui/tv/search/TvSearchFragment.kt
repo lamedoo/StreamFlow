@@ -6,16 +6,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.main.TvCardPresenter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchResultProvider {
     private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-    lateinit var viewModel: SearchTitlesViewModel
+    private val searchTitlesViewModel by viewModel<SearchTitlesViewModel>()
     private var page = 1
     private var searchQuery = ""
 
@@ -31,9 +31,8 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SearchTitlesViewModel::class.java)
 
-        viewModel.searchList.observe(viewLifecycleOwner, {
+        searchTitlesViewModel.searchList.observe(viewLifecycleOwner, {
             val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
                 it.forEach {
                     add(it)
@@ -61,7 +60,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
 
     override fun onQueryTextChange(query: String): Boolean {
         if (query.isNullOrBlank()) {
-            viewModel.clearSearchResults()
+            searchTitlesViewModel.clearSearchResults()
         }
         return true
     }
@@ -70,9 +69,9 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
         rowsAdapter.clear()
         if (!query.isNullOrBlank()) {
             searchQuery = query
-            viewModel.getSearchTitles(query, page)
+            searchTitlesViewModel.getSearchTitles(query, page)
         } else {
-            viewModel.clearSearchResults()
+            searchTitlesViewModel.clearSearchResults()
         }
         return true
     }
@@ -101,7 +100,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
             val selectedIndex = currentRowAdapter.indexOf(item)
             if (selectedIndex != -1 && currentRowAdapter.size() - 1 == selectedIndex) {
                 page++
-                viewModel.getSearchTitles(searchQuery, page)
+                searchTitlesViewModel.getSearchTitles(searchQuery, page)
             }
         }
 

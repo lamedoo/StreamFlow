@@ -11,15 +11,15 @@ import com.lukakordzaia.imoviesapp.ui.phone.genres.singlegenre.SingleGenreAdapte
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.utils.*
 import kotlinx.android.synthetic.main.phone_single_genre_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TopTvShowsFragment : Fragment(R.layout.phone_single_genre_fragment) {
-    private lateinit var viewModel: HomeViewModel
+    private val viewModel by viewModel<HomeViewModel>()
     private lateinit var singleGenreAdapter: SingleGenreAdapter
     private var page = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         viewModel.getTopTvShows(page)
 
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)

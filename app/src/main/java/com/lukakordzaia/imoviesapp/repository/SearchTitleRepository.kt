@@ -4,11 +4,12 @@ import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.network.TitlesNetwork
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.network.RetrofitCall
 
-class SearchTitleRepository {
-    private val destinationService = RetrofitBuilder.buildService(TitlesNetwork::class.java)
+class SearchTitleRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
+    private val service = retrofitBuilder.buildService()
 
     suspend fun getSearchTitles(keywords: String, page: Int): Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { destinationService.getSearchTitles(keywords, page) }
+        return retrofitCall { service.getSearchTitles(keywords, page) }
     }
 }

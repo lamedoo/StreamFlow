@@ -1,27 +1,24 @@
 package com.lukakordzaia.imoviesapp.ui.phone.singletitle
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.animations.PlayButtonAnimations
 import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
-import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_single_title_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
 class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
-    private lateinit var viewModel: SingleTitleViewModel
+    private val viewModel by viewModel<SingleTitleViewModel>()
     private val args: SingleTitleFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +28,6 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SingleTitleViewModel::class.java)
         viewModel.getSingleTitleData(args.titleId)
 
         viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {

@@ -2,6 +2,8 @@ package com.lukakordzaia.imoviesapp.utils
 
 class AppConstants {
     companion object {
+        const val BASE_URL ="https://api.imovies.cc/api/v1/"
+
         const val TV_CONTINUE_WATCHING = "განაგრძეთ ყურება"
         const val TV_TOP_MOVIES = "ტოპ ფილები"
         const val TV_NEW_MOVIES = "ახალი დამატებული"

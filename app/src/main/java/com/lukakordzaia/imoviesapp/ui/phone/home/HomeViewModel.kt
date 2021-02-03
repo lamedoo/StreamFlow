@@ -17,8 +17,7 @@ import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopTvShowsFrag
 import com.lukakordzaia.imoviesapp.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class HomeViewModel : BaseViewModel() {
-    private val repository = HomeRepository()
+class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
     private val _newMovieList = MutableLiveData<List<TitleList.Data>>()
     val newMovieList: LiveData<List<TitleList.Data>> = _newMovieList

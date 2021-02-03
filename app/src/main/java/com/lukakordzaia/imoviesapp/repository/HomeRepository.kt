@@ -7,25 +7,25 @@ import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
-import com.lukakordzaia.imoviesapp.network.TitlesNetwork
+import com.lukakordzaia.imoviesapp.network.RetrofitCall
 
-class HomeRepository {
-    private val destinationService = RetrofitBuilder.buildService(TitlesNetwork::class.java)
+class HomeRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
+    private val service = retrofitBuilder.buildService()
 
     suspend fun getNewMovies(page: Int): Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { destinationService.getNewMovies(page) }
+        return retrofitCall { service.getNewMovies(page) }
     }
 
     suspend fun getTopMovies(page: Int): Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { destinationService.getTopMovies(page) }
+        return retrofitCall { service.getTopMovies(page) }
     }
 
     suspend fun getTopTvShows(page: Int): Result<TitleList> {
-        return RetrofitBuilder.retrofitCall { destinationService.getTopTvShows(page) }
+        return retrofitCall { service.getTopTvShows(page) }
     }
 
     suspend fun getSingleTitleData(movieId: Int): Result<TitleData> {
-        return RetrofitBuilder.retrofitCall { destinationService.getSingleTitle(movieId) }
+        return retrofitCall { service.getSingleTitle(movieId) }
     }
 
     fun getWatchedFromDb(watchedDao: WatchedDao): LiveData<List<WatchedDetails>> {

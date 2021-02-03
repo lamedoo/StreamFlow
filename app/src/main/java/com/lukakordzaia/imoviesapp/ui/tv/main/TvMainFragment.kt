@@ -20,10 +20,11 @@ import com.lukakordzaia.imoviesapp.ui.tv.genres.TvSingleGenreActivity
 import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.AppConstants
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvMainFragment : BrowseSupportFragment() {
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var genresViewModel: GenresViewModel
+    private val homeViewModel by viewModel<HomeViewModel>()
+    private val genresViewModel by viewModel<GenresViewModel>()
     private lateinit var settingsViewModel: SettingsViewModel
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var defaultBackground: Drawable
@@ -32,8 +33,6 @@ class TvMainFragment : BrowseSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        genresViewModel = ViewModelProvider(this).get(GenresViewModel::class.java)
         settingsViewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 
         val listRowPresenter = ListRowPresenter().apply {

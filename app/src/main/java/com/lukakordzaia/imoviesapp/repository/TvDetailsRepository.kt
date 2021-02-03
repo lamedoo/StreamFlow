@@ -8,9 +8,8 @@ import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.network.RetrofitCall
-import com.lukakordzaia.imoviesapp.network.TitlesNetwork
 
-class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
+class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
     private val service = retrofitBuilder.buildService()
 
     suspend fun getSingleTitleData(titleId: Int): Result<TitleData> {

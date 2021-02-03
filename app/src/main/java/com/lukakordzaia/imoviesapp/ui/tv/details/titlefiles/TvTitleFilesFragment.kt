@@ -13,18 +13,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.database.WatchedDetails
 import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
-import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
-import com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsViewModel
+import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setMargin
 import com.lukakordzaia.imoviesapp.utils.setVisible
 import kotlinx.android.synthetic.main.tv_title_files_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment) {
-    private lateinit var chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel
-    private lateinit var singleTitleViewModel: SingleTitleViewModel
+    private val tvDetailsViewModel by viewModel<TvDetailsViewModel>()
     private lateinit var tvTitleFilesEpisodesAdapter: TvTitleFilesEpisodesAdapter
     private var trailerUrl: String? = null
 
@@ -34,40 +33,31 @@ class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment) {
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
 
-        chooseTitleDetailsViewModel = ViewModelProvider(this).get(ChooseTitleDetailsViewModel::class.java)
-        singleTitleViewModel = ViewModelProvider(this).get(SingleTitleViewModel::class.java)
+        tvDetailsViewModel.getSingleTitleData(titleId)
+        tvDetailsViewModel.getSingleTitleFiles(titleId)
 
-        singleTitleViewModel.getSingleTitleData(titleId)
-        chooseTitleDetailsViewModel.getSingleTitleFiles(titleId)
-
-        singleTitleViewModel.checkTitleInDb(requireContext(), titleId).observe(viewLifecycleOwner, {
-            singleTitleViewModel.titleIsInDb(it)
+        tvDetailsViewModel.checkTitleInDb(requireContext(), titleId).observe(viewLifecycleOwner, {
+            tvDetailsViewModel.titleIsInDb(it)
         })
 
         // RIGHT SIDE
-        chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
+        tvDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (!it) {
                 tv_no_files.setGone()
                 tv_right_container_files.setVisible()
             }
         })
 
-        chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
+        tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
             val languages = it.reversed()
             spinnerClass.createSpinner(tv_files_spinner_language1, languages) { language ->
-                chooseTitleDetailsViewModel.getTitleLanguageFiles(language)
+                tvDetailsViewModel.getTitleLanguageFiles(language)
             }
         })
 
-        singleTitleViewModel.singleTitleData.observe(viewLifecycleOwner, {
-            if (isTvShow) {
-                chooseTitleDetailsViewModel.getNumOfSeasonsForTv(it.seasons!!.data!!.size)
-            }
-        })
-
-        singleTitleViewModel.titleIsInDb.observe(viewLifecycleOwner, { exists ->
+        tvDetailsViewModel.titleIsInDb.observe(viewLifecycleOwner, { exists ->
             if (exists) {
-                singleTitleViewModel.getSingleWatchedTitleDetails(requireContext(), titleId).observe(viewLifecycleOwner, {
+                tvDetailsViewModel.getSingleWatchedTitleDetails(requireContext(), titleId).observe(viewLifecycleOwner, {
                     tv_continue_play_button.setOnClickListener { _ ->
                         continueTitlePlay(it)
                     }
@@ -114,15 +104,15 @@ class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment) {
             }
         } else {
             tv_play_button.setGone()
-            chooseTitleDetailsViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+            tvDetailsViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
                 val seasonCount = Array(numOfSeasons!!) { i -> (i * 1) + 1 }.toList()
                 spinnerClass.createSpinner(tv_files_spinner_season1, seasonCount) {
-                    chooseTitleDetailsViewModel.getSeasonFiles(titleId, it.toInt())
+                    this.tvDetailsViewModel.getSeasonFiles(titleId, it.toInt())
                 }
             })
             rv_tv_files_episodes.requestFocus()
 
-            chooseTitleDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
+            tvDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
                 Log.d("episodes", it.toString())
                 tvTitleFilesEpisodesAdapter.setEpisodeList(it)
             })
@@ -131,11 +121,11 @@ class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment) {
         tv_play_button.onFocusChangeListener = OnPlayButtonFocus(tv_play_button)
 
         tvTitleFilesEpisodesAdapter = TvTitleFilesEpisodesAdapter(requireContext()) {
-            chooseTitleDetailsViewModel.getEpisodeFile(it)
+            tvDetailsViewModel.getEpisodeFile(it)
         }
         rv_tv_files_episodes.adapter = tvTitleFilesEpisodesAdapter
 
-        chooseTitleDetailsViewModel.chosenEpisode.observe(viewLifecycleOwner, {
+        tvDetailsViewModel.chosenEpisode.observe(viewLifecycleOwner, {
             if (it != 0) {
                 playTitleFromStart(titleId, isTvShow)
             }
@@ -147,9 +137,9 @@ class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra("titleId", titleId)
         intent.putExtra("isTvShow", isTvShow)
-        intent.putExtra("chosenLanguage", chooseTitleDetailsViewModel.chosenLanguage.value)
-        intent.putExtra("chosenSeason", chooseTitleDetailsViewModel.chosenSeason.value)
-        intent.putExtra("chosenEpisode", chooseTitleDetailsViewModel.chosenEpisode.value)
+        intent.putExtra("chosenLanguage", this.tvDetailsViewModel.chosenLanguage.value)
+        intent.putExtra("chosenSeason", this.tvDetailsViewModel.chosenSeason.value)
+        intent.putExtra("chosenEpisode", this.tvDetailsViewModel.chosenEpisode.value)
         intent.putExtra("watchedTime", 0L)
         intent.putExtra("trailerUrl", trailerUrl)
         activity?.startActivity(intent)
