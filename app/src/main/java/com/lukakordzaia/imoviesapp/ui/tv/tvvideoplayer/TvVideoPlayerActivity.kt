@@ -2,12 +2,18 @@ package com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
+import com.lukakordzaia.imoviesapp.utils.setInvisible
+import com.lukakordzaia.imoviesapp.utils.setVisible
 import kotlinx.android.synthetic.main.exoplayer_controller_layout.view.*
 import kotlinx.android.synthetic.main.fragment_video_player.*
+import java.util.concurrent.TimeUnit
 
 class TvVideoPlayerActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +40,16 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 }
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                title_player.exo_rew.callOnClick()
+                if (!title_player.isControllerVisible) {
+                    title_player.exo_rew.callOnClick()
+                    displayCurrentPosition()
+                }
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                title_player.exo_ffwd.callOnClick()
+                if (!title_player.isControllerVisible) {
+                    title_player.exo_ffwd.callOnClick()
+                    displayCurrentPosition()
+                }
             }
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
                 title_player.dispatchMediaKeyEvent(event!!)
@@ -49,6 +61,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
             }
             KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
                 title_player.dispatchMediaKeyEvent(event!!)
+                displayCurrentPosition()
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_NEXT -> {
@@ -57,6 +70,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
             }
             KeyEvent.KEYCODE_MEDIA_REWIND -> {
                 title_player.dispatchMediaKeyEvent(event!!)
+                displayCurrentPosition()
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
@@ -79,5 +93,31 @@ class TvVideoPlayerActivity : FragmentActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    private fun displayCurrentPosition() {
+        position_on_skip.setVisible()
+        current_position.text = String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(title_player.player!!.currentPosition),
+                TimeUnit.MILLISECONDS.toMinutes(title_player.player!!.currentPosition) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(title_player.player!!.currentPosition)),
+                TimeUnit.MILLISECONDS.toSeconds(title_player.player!!.currentPosition) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(title_player.player!!.currentPosition))
+        )
+
+        media_duration.text = String.format(" - %02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(title_player.player!!.duration),
+                TimeUnit.MILLISECONDS.toMinutes(title_player.player!!.duration) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(title_player.player!!.duration)),
+                TimeUnit.MILLISECONDS.toSeconds(title_player.player!!.duration) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(title_player.player!!.duration))
+        )
+        hidePosition()
+    }
+
+    private fun hidePosition() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            position_on_skip.setInvisible()
+        }, 2000)
     }
 }
