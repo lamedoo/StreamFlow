@@ -1,5 +1,6 @@
 package com.lukakordzaia.imoviesapp.di
 
+import com.lukakordzaia.imoviesapp.network.NetworkConnectionInterceptor
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.repository.*
 import com.lukakordzaia.imoviesapp.ui.phone.genres.GenresViewModel
@@ -31,5 +32,6 @@ val repositoryModule = module {
 }
 
 val generalModule = module {
-    single { RetrofitBuilder() }
+    single { RetrofitBuilder(get()) }
+    single { NetworkConnectionInterceptor(get()) }
 }

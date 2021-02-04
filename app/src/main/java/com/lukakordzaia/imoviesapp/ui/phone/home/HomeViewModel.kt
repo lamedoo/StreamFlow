@@ -6,18 +6,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
-import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.datamodels.WatchedTitleData
+import com.lukakordzaia.imoviesapp.network.LoadingState
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.HomeRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopMoviesFragmentDirections
 import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopTvShowsFragmentDirections
 import com.lukakordzaia.imoviesapp.utils.AppConstants
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
+
+    val newMovieLoader = MutableLiveData<LoadingState>()
+    val topMovieLoader = MutableLiveData<LoadingState>()
+    val topTvShowsLoader = MutableLiveData<LoadingState>()
 
     private val _newMovieList = MutableLiveData<List<TitleList.Data>>()
     val newMovieList: LiveData<List<TitleList.Data>> = _newMovieList
@@ -67,9 +73,9 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         ))
     }
 
-    fun getWatchedFromDb(context: Context): LiveData<List<WatchedDetails>> {
+    fun getDbTitles(context: Context): LiveData<List<DbDetails>> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
-        return repository.getWatchedFromDb(database!!)
+        return repository.getDbTitles(database!!)
     }
 
     fun deleteSingleTitleFromDb(context: Context, titleId: Int) {
@@ -83,13 +89,13 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         watchedTitles.clear()
     }
 
-    fun getWatchedTitles(watchedDetails: List<WatchedDetails>) {
+    fun getDbTitlesFromApi(dbDetails: List<DbDetails>) {
         watchedTitles.clear()
         viewModelScope.launch {
-            watchedDetails.forEach {
-                when (val watched = repository.getSingleTitleData(it.titleId)) {
+            dbDetails.forEach {
+                when (val dbTitles = repository.getSingleTitleData(it.titleId)) {
                     is Result.Success -> {
-                        val data = watched.data.data
+                        val data = dbTitles.data.data
                         watchedTitles.add(WatchedTitleData(
                                 data.posters.data!!.x240,
                                 data.duration,
@@ -102,7 +108,13 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                                 it.episode,
                                 it.language
                         ))
-                        setLoading(false)
+                    }
+                    is Result.Error -> {
+                        newToastMessage(dbTitles.exception)
+                        Log.d("errordbtitles", dbTitles.exception)
+                    }
+                    is Result.Internet -> {
+                        newToastMessage(dbTitles.exception)
                     }
                 }
             }
@@ -113,6 +125,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
     fun getNewMovies(page: Int) {
         viewModelScope.launch {
+            newMovieLoader.value = LoadingState.LOADING
             when (val movies = repository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = movies.data.data
@@ -120,10 +133,15 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                         fetchNewMoviesList.add(it)
                     }
                     _newMovieList.value = fetchNewMoviesList
-                    setLoading(false)
+                    newMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
+                    newToastMessage(movies.exception)
                     Log.d("errornewmovies", movies.exception)
+                }
+                is Result.Internet -> {
+                    newToastMessage("შეამოწმეთ ინტერნეტთან კავშირი")
+                    getNewMovies(page)
                 }
             }
         }
@@ -131,17 +149,22 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
     fun getTopMovies(page: Int) {
         viewModelScope.launch {
-            when (val movies = repository.getTopMovies(page)) {
+            topMovieLoader.value = LoadingState.LOADING
+            when (val topMovies = repository.getTopMovies(page)) {
                 is Result.Success -> {
-                    val data = movies.data.data
+                    val data = topMovies.data.data
                     data.forEach {
                         fetchTopMoviesList.add(it)
                     }
                     _topMovieList.value = fetchTopMoviesList
-                    setLoading(false)
+                    topMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    Log.d("errornewmovies", movies.exception)
+                    newToastMessage(topMovies.exception)
+                    Log.d("errornewmovies", topMovies.exception)
+                }
+                is Result.Internet -> {
+                    getTopMovies(page)
                 }
             }
         }
@@ -149,6 +172,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
     fun getTopTvShows(page: Int) {
         viewModelScope.launch {
+            topTvShowsLoader.value = LoadingState.LOADING
             when (val tvShows = repository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = tvShows.data.data
@@ -156,10 +180,14 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                         fetchTopTvShowsList.add(it)
                     }
                     _tvShowList.value = fetchTopTvShowsList
-                    setLoading(false)
+                    topTvShowsLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
+                    newToastMessage(tvShows.exception)
                     Log.d("errornewtvshows", tvShows.exception)
+                }
+                is Result.Internet -> {
+                    getTopTvShows(page)
                 }
             }
         }

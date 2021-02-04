@@ -9,9 +9,8 @@ import android.view.View
 import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
-import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
@@ -145,7 +144,7 @@ class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment) {
         activity?.startActivity(intent)
     }
 
-    private fun continueTitlePlay(item: WatchedDetails) {
+    private fun continueTitlePlay(item: DbDetails) {
         trailerUrl = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra("titleId", item.titleId)

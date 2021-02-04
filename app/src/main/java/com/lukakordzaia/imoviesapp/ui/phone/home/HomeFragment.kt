@@ -7,12 +7,13 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.network.LoadingState
 import com.lukakordzaia.imoviesapp.utils.*
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_home_framgent.*
@@ -35,12 +36,6 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
-            if (!it) {
-                home_progressBar.setGone()
-                home_main_container.setVisible()
-            }
-        })
 
         //Watched Titles List
         val watchedLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
@@ -83,7 +78,7 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
         rv_main_watched_titles.adapter = homeWatchedAdapter
         rv_main_watched_titles.layoutManager = watchedLayout
 
-        viewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
+        viewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 main_watched_titles_none.setGone()
                 val newMoviesTitleConstraint = main_new_movies_title.layoutParams as ConstraintLayout.LayoutParams
@@ -94,7 +89,7 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
                 newMoviesMoreConstraint.topToBottom = rv_main_watched_titles.id
                 new_movies_more.requestLayout()
 
-                viewModel.getWatchedTitles(it)
+                viewModel.getDbTitlesFromApi(it)
             } else {
                 main_watched_titles_none.setVisible()
                 viewModel.clearWatchedTitleList()
@@ -114,6 +109,14 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
         })
 
         //New Movies List
+        viewModel.newMovieLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> newMovie_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> newMovie_progressBar.setGone()
+            }
+        })
+
+
         val newMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeNewMovieAdapter = HomeNewMovieAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
@@ -127,6 +130,13 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
         })
 
         //Top Movies List
+        viewModel.topMovieLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> topMovie_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> topMovie_progressBar.setGone()
+            }
+        })
+
         val topMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeTopMovieAdapter = HomeTopMovieAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
@@ -142,6 +152,13 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
 
 
         //Top TvShows List
+        viewModel.topTvShowsLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> topTvShow_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> topTvShow_progressBar.setGone()
+            }
+        })
+
         val tvShowLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeTvShowAdapter = HomeTvShowAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
@@ -165,6 +182,10 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
 
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
+        })
+
+        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
         })
     }
 

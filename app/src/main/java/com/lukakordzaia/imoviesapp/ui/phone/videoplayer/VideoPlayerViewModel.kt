@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
-import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerInit
@@ -73,7 +73,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         viewModelScope.launch {
             if (playbackPosition.value!! > 0) {
-                database?.insertWatchedTitle(WatchedDetails(
+                database?.insertWatchedTitle(DbDetails(
                         titleId,
                         chosenLanguage,
                         playbackPosition.value!!,

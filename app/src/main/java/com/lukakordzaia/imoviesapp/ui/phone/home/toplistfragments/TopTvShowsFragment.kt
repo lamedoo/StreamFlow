@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
+import com.lukakordzaia.imoviesapp.network.LoadingState
 import com.lukakordzaia.imoviesapp.ui.phone.genres.singlegenre.SingleGenreAdapter
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.utils.*
@@ -24,9 +25,10 @@ class TopTvShowsFragment : Fragment(R.layout.phone_single_genre_fragment) {
 
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
 
-        viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
-            if (!it) {
-                single_genre_progressBar.setGone()
+        viewModel.topTvShowsLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> single_genre_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> single_genre_progressBar.setGone()
             }
         })
 

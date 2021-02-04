@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class WatchedDetails (
+data class DbDetails (
     @PrimaryKey
     var titleId: Int,
     @ColumnInfo(name = "language")

@@ -2,7 +2,7 @@ package com.lukakordzaia.imoviesapp.repository
 
 import androidx.lifecycle.LiveData
 import com.lukakordzaia.imoviesapp.database.WatchedDao
-import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.network.Result
@@ -20,7 +20,7 @@ class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): Retrofi
         return watchedDao.titleExists(titleId)
     }
 
-    fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): LiveData<WatchedDetails> {
+    fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): LiveData<DbDetails> {
         return watchedDao.getSingleWatchedTitles(titleId)
     }
 

@@ -2,7 +2,7 @@ package com.lukakordzaia.imoviesapp.repository
 
 import androidx.lifecycle.LiveData
 import com.lukakordzaia.imoviesapp.database.WatchedDao
-import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.Result
@@ -28,8 +28,8 @@ class HomeRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall
         return retrofitCall { service.getSingleTitle(movieId) }
     }
 
-    fun getWatchedFromDb(watchedDao: WatchedDao): LiveData<List<WatchedDetails>> {
-        return watchedDao.getWatchedTitles()
+    fun getDbTitles(watchedDao: WatchedDao): LiveData<List<DbDetails>> {
+        return watchedDao.getDbTitles()
     }
 
     suspend fun deleteSingleTitleFromDb(watchedDao: WatchedDao, titleId: Int) {

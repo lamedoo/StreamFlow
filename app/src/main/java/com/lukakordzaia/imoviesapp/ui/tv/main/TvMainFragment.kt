@@ -8,6 +8,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.app.ProgressBarManager
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
@@ -41,9 +42,9 @@ class TvMainFragment : BrowseSupportFragment() {
         }
         rowsAdapter = ArrayObjectAdapter(listRowPresenter)
 
-        homeViewModel.getWatchedFromDb(requireContext()).observe(viewLifecycleOwner, {
+        homeViewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
-                homeViewModel.getWatchedTitles(it)
+                homeViewModel.getDbTitlesFromApi(it)
             }
         })
 

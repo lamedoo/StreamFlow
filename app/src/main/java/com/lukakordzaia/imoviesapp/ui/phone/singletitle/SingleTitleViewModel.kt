@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
-import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleEpisodes
@@ -90,7 +90,7 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
         _titleIsInDb.value = exists
     }
 
-    fun getSingleWatchedTitleDetails(context: Context, titleId: Int): LiveData<WatchedDetails> {
+    fun getSingleWatchedTitleDetails(context: Context, titleId: Int): LiveData<DbDetails> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         return repository.getSingleWatchedTitles(database!!, titleId)
     }
@@ -120,15 +120,15 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
     }
 
 
-    fun onContinueWatchingPressed(watchedDetails: WatchedDetails,) {
+    fun onContinueWatchingPressed(dbDetails: DbDetails,) {
         navigateToNewFragment(
             ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
-            titleId = watchedDetails.titleId,
-            chosenSeason = watchedDetails.season,
-            chosenEpisode = watchedDetails.episode,
-            isTvShow = watchedDetails.isTvShow,
-            watchedTime = watchedDetails.watchedTime,
-            chosenLanguage = watchedDetails.language,
+            titleId = dbDetails.titleId,
+            chosenSeason = dbDetails.season,
+            chosenEpisode = dbDetails.episode,
+            isTvShow = dbDetails.isTvShow,
+            watchedTime = dbDetails.watchedTime,
+            chosenLanguage = dbDetails.language,
             trailerUrl = null
         ))
     }

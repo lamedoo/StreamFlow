@@ -8,24 +8,24 @@ import androidx.room.Query
 
 @Dao
 interface WatchedDao {
-    @Query("SELECT * FROM watcheddetails")
-    fun getWatchedTitles(): LiveData<List<WatchedDetails>>
+    @Query("SELECT * FROM dbdetails")
+    fun getDbTitles(): LiveData<List<DbDetails>>
 
-    @Query("SELECT * FROM watcheddetails WHERE titleId = :titleId")
-    fun getSingleWatchedTitles(titleId: Int) : LiveData<WatchedDetails>
+    @Query("SELECT * FROM dbdetails WHERE titleId = :titleId")
+    fun getSingleWatchedTitles(titleId: Int) : LiveData<DbDetails>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWatchedTitle(watchedDetails: WatchedDetails)
+    suspend fun insertWatchedTitle(dbDetails: DbDetails)
 
-    @Query("SELECT EXISTS (SELECT 1 FROM watcheddetails WHERE titleId = :titleId)")
+    @Query("SELECT EXISTS (SELECT 1 FROM dbdetails WHERE titleId = :titleId)")
     fun titleExists(titleId: Int): LiveData<Boolean>
 
-    @Query("UPDATE watcheddetails SET watchedTime = (:watchedTime) WHERE titleId = (:titleId)")
+    @Query("UPDATE dbdetails SET watchedTime = (:watchedTime) WHERE titleId = (:titleId)")
     suspend fun updateTitleInDb(watchedTime: Long, titleId: Int)
 
-    @Query("DELETE FROM watcheddetails WHERE titleId = (:titleId)")
+    @Query("DELETE FROM dbdetails WHERE titleId = (:titleId)")
     suspend fun deleteSingleTitle(titleId: Int)
 
-    @Query("DELETE FROM watcheddetails")
+    @Query("DELETE FROM dbdetails")
     suspend fun deleteDBContent()
 }

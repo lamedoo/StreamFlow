@@ -6,16 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
-import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
-import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleEpisodes
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.TvDetailsRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleFragmentDirections
-import com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragmentDirections
 import kotlinx.coroutines.launch
 
 class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseViewModel() {
@@ -72,7 +69,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         _titleIsInDb.value = exists
     }
 
-    fun getSingleWatchedTitleDetails(context: Context, titleId: Int): LiveData<WatchedDetails> {
+    fun getSingleWatchedTitleDetails(context: Context, titleId: Int): LiveData<DbDetails> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         return repository.getSingleWatchedTitles(database!!, titleId)
     }

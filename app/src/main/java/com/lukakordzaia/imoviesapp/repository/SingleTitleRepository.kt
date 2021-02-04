@@ -2,13 +2,12 @@ package com.lukakordzaia.imoviesapp.repository
 
 import androidx.lifecycle.LiveData
 import com.lukakordzaia.imoviesapp.database.WatchedDao
-import com.lukakordzaia.imoviesapp.database.WatchedDetails
+import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.network.RetrofitCall
-import com.lukakordzaia.imoviesapp.network.TitlesNetwork
 
 class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
     private val service = retrofitBuilder.buildService()
@@ -21,7 +20,7 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Retro
         return watchedDao.titleExists(titleId)
     }
 
-    fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): LiveData<WatchedDetails> {
+    fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): LiveData<DbDetails> {
         return watchedDao.getSingleWatchedTitles(titleId)
     }
 
