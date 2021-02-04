@@ -10,6 +10,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.animations.PlayButtonAnimations
 import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
+import com.lukakordzaia.imoviesapp.ui.phone.singletitle.tabs.TabsPagerAdapter
 import com.lukakordzaia.imoviesapp.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
@@ -37,30 +38,11 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
             }
         })
 
-        viewModel.singleTitleData.observe(viewLifecycleOwner, Observer {
+        viewModel.singleTitleData.observe(viewLifecycleOwner, {
             tv_single_title_name_geo.text = it.primaryName
             tv_single_title_name_eng.text = it.secondaryName
-            if (it.rating?.imdb?.score != null) {
-                tv_single_movie_imdb_score.text = it.rating.imdb.score.toString()
-            }
             if (!it.covers?.data?.x1050.isNullOrEmpty()) {
                 Picasso.get().load(it.covers?.data?.x1050).into(iv_single_title_play)
-            }
-
-            if (it.plot.data != null) {
-                if (!it.plot.data.description.isNullOrEmpty()) {
-                    single_title_desc.text = it.plot.data.description
-                } else {
-                    single_title_desc.text = "აღწერა არ მოიძებნა"
-                }
-            } else {
-                single_title_desc.text = "აღწერა არ მოიძებნა"
-            }
-
-            tv_single_title_year.text = it.year.toString()
-            tv_single_title_duration.text = "${it.duration} წ."
-            if (!it.countries.data.isNullOrEmpty()) {
-                tv_single_title_country.text = it.countries.data[0].secondaryName
             }
 
             single_title_trailer_container.setOnClickListener { _ ->
@@ -122,6 +104,38 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
                 PlayButtonAnimations().hidePlayButton(single_title_play_collapsed, 1000)
             }
         })
+
+
+//        // Tabs Customization
+//        tab_layout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(), R.color.green_dark))
+//        tab_layout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
+//        tab_layout.tabTextColors = ContextCompat.getColorStateList(requireContext(), R.color.secondary_text_color)
+//        val numberOfTabs = 2
+//
+//        tab_layout.tabMode = TabLayout.MODE_FIXED
+//        tab_layout.isInlineLabel = true
+
+//        val adapter = TabsPagerAdapter(requireActivity().supportFragmentManager, lifecycle, numberOfTabs, args.titleId)
+//        tabs_viewpager.adapter = adapter
+//        tabs_viewpager.isUserInputEnabled = false
+
+        val adapter = TabsPagerAdapter(requireActivity())
+        tabs_viewpager.adapter = adapter
+
+
+
+//        TabLayoutMediator(tab_layout, tabs_viewpager) { tab, position ->
+//            when (position) {
+//                0 -> {
+//                    tab.text = "ინფო"
+//                }
+//                1 -> {
+//                    tab.text = "მსგავსი"
+//
+//                }
+//            }
+//        }.attach()
+
 
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)

@@ -45,7 +45,7 @@
         
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="5dp"
             app:layout_constraintTop_toBottomOf="@id/tv_single_title_name_eng">
             
@@ -107,7 +107,7 @@
                         android:alpha="0"
                         android:visibility="invisible"
                         app:layout_constraintTop_toTopOf="@id/single_title_trailer_container"
-                        app:layout_constraintBottom_toBottomOf="@id/single_title_trailer_container"
+                        app:layout_constraintBottom_toTopOf="@id/tab_layout"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <LinearLayout
@@ -160,6 +160,15 @@
 
                     </LinearLayout>
 
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tab_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/black"
+                        app:tabMaxWidth="0dp"
+                        app:tabTextAppearance="?android:attr/textAppearanceMedium"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.appbar.AppBarLayout>
@@ -169,161 +178,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:fillViewport="true"
                 android:layout_marginTop="15dp"
-                android:scrollbars="none">
+                android:scrollbarThumbHorizontal="@null"
+                android:scrollbarThumbVertical="@null">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+<!--                    <androidx.viewpager2.widget.ViewPager2-->
+<!--                        android:id="@+id/tabs_viewpager"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent" />-->
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/tabs_viewpager"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:id="@+id/single_title_desc_container"
+                        android:id="@+id/page_one"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:background="@drawable/single_title_desc_background"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:orientation="vertical">
-
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" >
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="10dp"
-                            android:text="ინფო"
-                            android:fontFamily="@font/georgian_uppercase"
-                            android:textSize="20sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:id="@+id/single_title_desc"
+                            android:text="PAGE ONE IN"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/default_data"
-                            tools:text="Lorem Ipsum"/>
-
+                            android:layout_height="match_parent"
+                            android:textColor="#fff"
+                            android:textSize="24dp"/>
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/page_two"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginTop="15dp"
-                        android:padding="10dp"
-                        android:background="@drawable/single_title_desc_background"
-                        app:layout_constraintTop_toBottomOf="@id/single_title_desc_container">
-
-                        <LinearLayout
-                            android:id="@+id/single_title_score_container"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" >
+                        <TextView
+                            android:text="PAGE TWO IN"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:background="@color/default_background_color">
-
-                            <ImageView
-                                android:id="@+id/single_title_imdb_logo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="10dp"
-                                android:src="@drawable/phone_imdb_logo"/>
-
-                            <TextView
-                                android:id="@+id/tv_single_movie_imdb_score"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/default_data"
-                                android:layout_gravity="center"
-                                android:fontFamily="@font/georgian_uppercase"
-                                android:textColor="?colorOnPrimary"
-                                android:textStyle="bold"
-                                tools:text="9.0"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/single_title_year_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:background="@color/default_background_color"
-                            app:layout_constraintTop_toBottomOf="@id/single_title_desc">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:fontFamily="@font/georgian_uppercase"
-                                android:text="გამოშვების წელი: "/>
-
-                            <TextView
-                                android:id="@+id/tv_single_title_year"
-                                android:layout_width="wrap_content"
-                                android:textStyle="bold"
-                                android:text="@string/default_data"
-                                android:fontFamily="@font/georgian_uppercase"
-                                android:layout_height="wrap_content"
-                                tools:text="1987"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/single_title_duration_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:background="@color/default_background_color"
-                            app:layout_constraintTop_toBottomOf="@id/single_title_year_container">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:fontFamily="@font/georgian_uppercase"
-                                android:text="ხანგრძლივობა: "/>
-
-                            <TextView
-                                android:id="@+id/tv_single_title_duration"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/default_data"
-                                android:textStyle="bold"
-                                android:fontFamily="@font/georgian_uppercase"
-                                tools:text="99"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/single_title_country_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:background="@color/default_background_color"
-                            app:layout_constraintTop_toBottomOf="@id/single_title_duration_container">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:fontFamily="@font/georgian_uppercase"
-                                android:text="ქვეყანა: "/>
-
-                            <TextView
-                                android:id="@+id/tv_single_title_country"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/default_data"
-                                android:textStyle="bold"
-                                android:fontFamily="@font/georgian_uppercase"
-                                tools:text="USA"/>
-
-                        </LinearLayout>
-
+                            android:layout_height="match_parent"
+                            android:textColor="#fff"
+                            android:textSize="24dp"/>
                     </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.viewpager.widget.ViewPager>
 
             </androidx.core.widget.NestedScrollView>
 
