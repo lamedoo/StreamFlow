@@ -21,5 +21,9 @@ class AppConstants {
         const val GENRE_HORROR = "საშინელებათა"
         const val GENRE_ADVENTURE = "სათავგადასავლო"
         const val GENRE_ACTION = "მძაფრ-სიუჟეტიანი"
+
+        const val TV_CATEGORY_NEW_MOVIES = 0
+        const val TV_CATEGORY_TOP_MOVIES = 1
+        const val TV_CATEGORY_TOP_TV_SHOWS = 2
     }
 }

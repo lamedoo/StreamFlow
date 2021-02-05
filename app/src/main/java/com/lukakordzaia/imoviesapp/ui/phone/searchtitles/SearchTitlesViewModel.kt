@@ -40,4 +40,18 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
             }
         }
     }
+
+    fun getSearchTitlesTv(keywords: String, page: Int) {
+        viewModelScope.launch {
+            when (val movies = repository.getSearchTitles(keywords, page)) {
+                is Result.Success -> {
+                    val data = movies.data.data
+                    _searchList.value = data
+                }
+                is Result.Error -> {
+                    Log.d("errornewmovies", movies.exception)
+                }
+            }
+        }
+    }
 }

@@ -9,7 +9,7 @@ data class TitleFiles(
 ) {
     data class Data(
         @SerializedName("covers")
-        val covers: Covers?,
+        val covers: Covers,
         @SerializedName("description")
         val description: String?,
         @SerializedName("episode")

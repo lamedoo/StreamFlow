@@ -53,6 +53,9 @@
         <activity
             android:name=".ui.tv.genres.TvSingleGenreActivity"
             android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name=".ui.tv.categories.TvNewMoviesActivity"
+            android:theme="@style/Theme.Leanback"/>
     </application>
 
 </manifest>

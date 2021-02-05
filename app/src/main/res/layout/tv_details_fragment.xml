@@ -65,51 +65,133 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:background="#AA000000"/>
 
-            <TextView
-                android:id="@+id/tv_files_title_year"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tv_files_info_details"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:layout_marginStart="10dp"
-                tools:text="2013"
-                android:textColor="@color/green_dark"
-                android:textStyle="bold"
-                android:textSize="10sp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp"
                 app:layout_constraintBottom_toTopOf="@id/tv_files_title_name_eng"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/tv_files_title_duration"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:focusable="false"
-                tools:text="120:40"
-                android:textColor="@color/green_dark"
-                android:textStyle="bold"
-                android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@id/tv_files_title_year"
-                app:layout_constraintBottom_toTopOf="@id/tv_files_title_name_eng" />
+                <LinearLayout
+                    android:id="@+id/tv_files_score_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_files_year_container"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_files_year_container"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_files_year_container">
 
-            <ImageView
-                android:id="@+id/tv_files_imdb_logo"
-                android:layout_width="20dp"
-                android:layout_height="15dp"
-                android:src="@drawable/tv_imdb_logo"
-                app:layout_constraintBottom_toTopOf="@id/tv_files_title_name_eng"
-                app:layout_constraintEnd_toStartOf="@id/tv_files_title_imdb_score" />
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/phone_imdb_logo" />
 
-            <TextView
-                android:id="@+id/tv_files_title_imdb_score"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:focusable="false"
-                tools:text="8.7"
-                android:textStyle="bold"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tv_files_title_name_eng" />
+                    <TextView
+                        android:id="@+id/tv_files_title_imdb_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_data"
+                        android:textStyle="bold"
+                        tools:text="9.0" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tv_files_year_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_files_duration_container"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_files_duration_container"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_files_score_container"
+                    app:layout_constraintTop_toTopOf="@+id/tv_files_duration_container">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/info_calendar_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_files_title_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_data"
+                        android:textStyle="bold"
+                        tools:text="1987" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tv_files_duration_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_files_country_container"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_files_country_container"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_files_year_container"
+                    app:layout_constraintTop_toTopOf="@+id/tv_files_country_container">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/info_duration_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_files_title_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_data"
+                        android:textStyle="bold"
+                        tools:text="99" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tv_files_country_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_files_duration_container"
+                    app:layout_constraintTop_toBottomOf="@id/tv_files_duration_container"
+                    app:layout_constraintTop_toTopOf="@+id/tv_files_duration_container">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/info_country_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_files_title_country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_data"
+                        android:textStyle="bold"
+                        tools:text="USA" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_files_title_name_eng"

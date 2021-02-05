@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
 import kotlinx.android.synthetic.main.phone_single_title_info.*
+import kotlinx.android.synthetic.main.tv_details_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SingleTitleFragmentInfo : Fragment(R.layout.phone_single_title_info) {
@@ -43,7 +44,9 @@ class SingleTitleFragmentInfo : Fragment(R.layout.phone_single_title_info) {
 
             tv_single_title_year.text = it.year.toString()
             tv_single_title_duration.text = "${it.duration} წ."
-            if (!it.countries.data.isNullOrEmpty()) {
+            if (it.countries.data.isEmpty()) {
+                tv_single_title_country.text = "N/A"
+            } else {
                 tv_single_title_country.text = it.countries.data[0].secondaryName
             }
 

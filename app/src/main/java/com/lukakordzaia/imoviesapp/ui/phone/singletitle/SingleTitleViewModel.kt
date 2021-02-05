@@ -172,7 +172,7 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
 
                     val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
                     data.forEach {
-                        getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.poster))
+                        getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
                     }
                     _episodeNames.value = getEpisodeNames
                     Log.d("episodenames", "${episodeNames.value}")

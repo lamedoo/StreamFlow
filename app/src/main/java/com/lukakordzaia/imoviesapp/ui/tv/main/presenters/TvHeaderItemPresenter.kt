@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.ui.tv.main
+package com.lukakordzaia.imoviesapp.ui.tv.main.presenters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

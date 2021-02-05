@@ -74,12 +74,18 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
 
             tv_files_title_year.text = it.year.toString()
-            if (it.rating?.imdb?.score != null) {
+            if (it.rating.imdb?.score != null) {
                 tv_files_title_imdb_score.text = it.rating.imdb.score.toString()
+            }
+            if (it.countries.data.isEmpty()) {
+                tv_files_title_country.text = "N/A"
+            } else {
+                tv_files_title_country.text = it.countries.data[0].secondaryName
             }
             tv_files_title_name_eng.text = it.secondaryName
             tv_files_title_name_geo.text = it.primaryName
             if (it.isTvShow == true) {
+                tv_files_title_duration.text = "${it.seasons.data.size} სეზონი"
             } else {
                 tv_files_title_duration.text = "${it.duration.toString()} წთ."
             }

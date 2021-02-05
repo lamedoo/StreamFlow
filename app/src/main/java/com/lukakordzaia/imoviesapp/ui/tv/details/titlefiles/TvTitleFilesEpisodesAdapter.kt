@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.datamodels.TitleEpisodes
 import com.squareup.picasso.Picasso
@@ -37,9 +38,7 @@ class TvTitleFilesEpisodesAdapter(
             onEpisodeClick(episodeModel.episodeNum)
         }
 
-        if (episodeModel.episodePoster != null) {
-            Picasso.get().load(episodeModel.episodePoster).into(holder.episodePosterImageView)
-        }
+        Glide.with(context).load(episodeModel.episodePoster).error(R.drawable.movie_image_placeholder_landscape).into(holder.episodePosterImageView)
 
         holder.episodeNumberTextView.text = "ეპიზოდი ${episodeModel.episodeNum}"
         holder.episodeNameTextView.text = episodeModel.episodeName

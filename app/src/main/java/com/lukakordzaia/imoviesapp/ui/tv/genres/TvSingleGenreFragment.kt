@@ -9,12 +9,12 @@ import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.datamodels.*
 import com.lukakordzaia.imoviesapp.ui.phone.genres.singlegenre.SingleGenreViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.imoviesapp.ui.tv.main.*
+import com.lukakordzaia.imoviesapp.ui.tv.main.presenters.TvCardPresenter
+import com.lukakordzaia.imoviesapp.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.imoviesapp.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

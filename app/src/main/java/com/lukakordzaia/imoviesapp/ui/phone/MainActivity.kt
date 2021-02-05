@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     else -> {
                         app_main_toolbar.setVisible()
-                        hideBottomNavigation()
+//                        hideBottomNavigation()
                     }
                 }
             }

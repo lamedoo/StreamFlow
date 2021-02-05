@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.ui.tv.main
+package com.lukakordzaia.imoviesapp.ui.tv.main.presenters
 
 import android.view.ViewGroup
 import android.widget.TextView
@@ -12,13 +12,13 @@ class TvCardPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = ImageCardView(parent.context)
         
-        cardView.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                cardView.findViewById<TextView>(R.id.title_text).maxLines = 3
-            } else {
-                cardView.findViewById<TextView>(R.id.title_text).maxLines = 1
-            }
-        }
+//        cardView.setOnFocusChangeListener { _, hasFocus ->
+//            if (hasFocus) {
+//                cardView.findViewById<TextView>(R.id.title_text).maxLines = 3
+//            } else {
+//                cardView.findViewById<TextView>(R.id.title_text).maxLines = 1
+//            }
+//        }
 
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true

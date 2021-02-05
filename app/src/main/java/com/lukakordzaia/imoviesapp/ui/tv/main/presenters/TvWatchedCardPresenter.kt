@@ -1,4 +1,4 @@
-package com.lukakordzaia.imoviesapp.ui.tv.main
+package com.lukakordzaia.imoviesapp.ui.tv.main.presenters
 
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
@@ -22,18 +22,18 @@ class TvWatchedCardPresenter : Presenter() {
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val movie = item as WatchedTitleData
         val cardView = viewHolder.view as TvWatchedCardView
-        cardView.tv_watched_card_season.text = "ს${movie.season} ე${movie.episode} / ${String.format("%02d:%02d",
+        cardView.tv_watched_card_season.text = String.format("ს${movie.season} ე${movie.episode} / %02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(movie.watchedTime),
                 TimeUnit.MILLISECONDS.toSeconds(movie.watchedTime) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(movie.watchedTime))
-        )}"
+        )
 
         if (movie.isTvShow) {
-            cardView.tv_watched_card_season.text = "ს${movie.season} ე${movie.episode} / ${String.format("%02d:%02d",
+            cardView.tv_watched_card_season.text = String.format("ს${movie.season} ე${movie.episode} / %02d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(movie.watchedTime),
                     TimeUnit.MILLISECONDS.toSeconds(movie.watchedTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(movie.watchedTime))
-            )}"
+            )
         } else {
             cardView.tv_watched_card_season.text = String.format("%02d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(movie.watchedTime),

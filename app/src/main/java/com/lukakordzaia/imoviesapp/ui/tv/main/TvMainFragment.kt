@@ -3,12 +3,13 @@ package com.lukakordzaia.imoviesapp.ui.tv.main
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
-import androidx.leanback.app.ProgressBarManager
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
@@ -18,6 +19,8 @@ import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.settings.SettingsViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.genres.TvSingleGenreActivity
+import com.lukakordzaia.imoviesapp.ui.tv.main.presenters.*
+import com.lukakordzaia.imoviesapp.ui.tv.categories.TvNewMoviesActivity
 import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.AppConstants
@@ -31,6 +34,16 @@ class TvMainFragment : BrowseSupportFragment() {
     lateinit var defaultBackground: Drawable
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
+    private val TEST_ENTRANCE_TRANSITION = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (TEST_ENTRANCE_TRANSITION) {
+            if (savedInstanceState == null) {
+                prepareEntranceTransition()
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,10 +61,14 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         })
 
-        homeViewModel.getTopMovies(1)
-        homeViewModel.getTopTvShows(1)
-        homeViewModel.getNewMovies(1)
-        genresViewModel.getAllGenres()
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            homeViewModel.getTopMovies(1)
+            homeViewModel.getTopTvShows(1)
+            homeViewModel.getNewMovies(1)
+            genresViewModel.getAllGenres()
+            startEntranceTransition()
+        }, 2000)
+
 
 
         setHeaderPresenterSelector(object : PresenterSelector() {
@@ -228,8 +245,27 @@ class TvMainFragment : BrowseSupportFragment() {
                     settingsViewModel.onDeletePressedTv(requireContext())
                 }
             } else if (item is TvCategoriesList) {
-                val intent = Intent(context, TvSingleGenreActivity::class.java)
-                activity?.startActivity(intent)
+                when (item.categoriesId) {
+                    0 -> {
+                        val intent = Intent(context, TvSingleGenreActivity::class.java)
+                        activity?.startActivity(intent)
+                    }
+                    1 -> {
+                        val intent = Intent(context, TvNewMoviesActivity::class.java)
+                        intent.putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
+                        activity?.startActivity(intent)
+                    }
+                    2 -> {
+                        val intent = Intent(context, TvNewMoviesActivity::class.java)
+                        intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_MOVIES)
+                        activity?.startActivity(intent)
+                    }
+                    3 -> {
+                        val intent = Intent(context, TvNewMoviesActivity::class.java)
+                        intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_TV_SHOWS)
+                        activity?.startActivity(intent)
+                    }
+                }
             }
         }
     }

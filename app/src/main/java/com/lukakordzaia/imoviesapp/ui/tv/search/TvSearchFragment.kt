@@ -9,7 +9,7 @@ import androidx.leanback.widget.*
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.imoviesapp.ui.tv.main.TvCardPresenter
+import com.lukakordzaia.imoviesapp.ui.tv.main.presenters.TvCardPresenter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -69,7 +69,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
         rowsAdapter.clear()
         if (!query.isNullOrBlank()) {
             searchQuery = query
-            searchTitlesViewModel.getSearchTitles(query, page)
+            searchTitlesViewModel.getSearchTitlesTv(query, page)
         } else {
             searchTitlesViewModel.clearSearchResults()
         }
@@ -100,9 +100,8 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
             val selectedIndex = currentRowAdapter.indexOf(item)
             if (selectedIndex != -1 && currentRowAdapter.size() - 1 == selectedIndex) {
                 page++
-                searchTitlesViewModel.getSearchTitles(searchQuery, page)
+                searchTitlesViewModel.getSearchTitlesTv(searchQuery, page)
             }
         }
-
     }
 }

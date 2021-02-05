@@ -14,15 +14,15 @@ import retrofit2.http.Query
 interface TitlesNetwork {
 
     @Headers("User-Agent: imovies")
-    @GET("movies?filters%5Bwith_files%5D=yes&filters%5Btype%5D=movie&sort=-upload_date&per_page=15")
+    @GET("movies?filters%5Bwith_files%5D=yes&filters%5Btype%5D=movie&sort=-upload_date&per_page=55")
     suspend fun getNewMovies(@Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
-    @GET ("movies/top?type=movie&period=day&page=1&per_page=15")
+    @GET ("movies/top?type=movie&period=day&page=1&per_page=55")
     suspend fun getTopMovies(@Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
-    @GET ("movies/top?type=series&period=day&per_page=15")
+    @GET ("movies/top?type=series&period=day&per_page=55")
     suspend fun getTopTvShows(@Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
@@ -30,11 +30,11 @@ interface TitlesNetwork {
     suspend fun getAllGenres() : Response<GenreList>
 
     @Headers("User-Agent: imovies")
-    @GET("movies?filters%5Bwith_files%5D=yes&per_page=15&sort=-year")
+    @GET("movies?filters%5Bwith_files%5D=yes&per_page=55&sort=-year")
     suspend fun getSingleGenre(@Query("filters[genre]") genreId: Int, @Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
-    @GET ("search-advanced?filters%5Btype%5D=movie&per_page=15")
+    @GET ("search-advanced?filters%5Btype%5D=movie&per_page=25")
     suspend fun getSearchTitles(@Query("keywords") keywords: String, @Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")

@@ -9,6 +9,7 @@ import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.videoplayer.VideoPlayerViewModel
+import com.lukakordzaia.imoviesapp.ui.tv.categories.TvCategoriesViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -21,6 +22,7 @@ val viewModelModule = module {
     viewModel { SingleGenreViewModel(get()) }
     viewModel { SearchTitlesViewModel(get()) }
     viewModel { TvDetailsViewModel(get()) }
+    viewModel { TvCategoriesViewModel(get()) }
 }
 
 val repositoryModule = module {
