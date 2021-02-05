@@ -3,10 +3,13 @@ package com.lukakordzaia.imoviesapp.ui.phone.singletitle
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.animations.PlayButtonAnimations
 import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
@@ -39,7 +42,9 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
         })
 
         viewModel.singleTitleData.observe(viewLifecycleOwner, {
-            tv_single_title_name_geo.text = it.primaryName
+            if (it.primaryName.isNotBlank()) {
+                tv_single_title_name_geo.text = it.primaryName
+            }
             tv_single_title_name_eng.text = it.secondaryName
             if (!it.covers?.data?.x1050.isNullOrEmpty()) {
                 Picasso.get().load(it.covers?.data?.x1050).into(iv_single_title_play)
@@ -106,35 +111,30 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
         })
 
 
-//        // Tabs Customization
-//        tab_layout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(), R.color.green_dark))
-//        tab_layout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
-//        tab_layout.tabTextColors = ContextCompat.getColorStateList(requireContext(), R.color.secondary_text_color)
-//        val numberOfTabs = 2
-//
-//        tab_layout.tabMode = TabLayout.MODE_FIXED
-//        tab_layout.isInlineLabel = true
+        // Tabs Customization
+        tab_layout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(), R.color.green_dark))
+        tab_layout.tabTextColors = ContextCompat.getColorStateList(requireContext(), R.color.secondary_text_color)
+        val numberOfTabs = 2
 
-//        val adapter = TabsPagerAdapter(requireActivity().supportFragmentManager, lifecycle, numberOfTabs, args.titleId)
-//        tabs_viewpager.adapter = adapter
-//        tabs_viewpager.isUserInputEnabled = false
+        tab_layout.tabMode = TabLayout.MODE_FIXED
+        tab_layout.isInlineLabel = true
 
-        val adapter = TabsPagerAdapter(requireActivity())
+        val adapter = TabsPagerAdapter(childFragmentManager, lifecycle, numberOfTabs, args.titleId)
         tabs_viewpager.adapter = adapter
+        tabs_viewpager.isUserInputEnabled = false
 
 
 
-//        TabLayoutMediator(tab_layout, tabs_viewpager) { tab, position ->
-//            when (position) {
-//                0 -> {
-//                    tab.text = "ინფო"
-//                }
-//                1 -> {
-//                    tab.text = "მსგავსი"
-//
-//                }
-//            }
-//        }.attach()
+        TabLayoutMediator(tab_layout, tabs_viewpager) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = "ინფო"
+                }
+                1 -> {
+                    tab.text = "მსგავსი"
+                }
+            }
+        }.attach()
 
 
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {

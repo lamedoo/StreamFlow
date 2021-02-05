@@ -22,6 +22,7 @@ import com.lukakordzaia.imoviesapp.ui.phone.settings.SettingsFragment
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleFragment
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.tabs.SingleTitleFragmentInfo
+import com.lukakordzaia.imoviesapp.ui.phone.singletitle.tabs.SingleTitleFragmentSimilar
 import com.lukakordzaia.imoviesapp.ui.phone.videoplayer.VideoPlayerFragment
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
@@ -46,21 +47,19 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
                 when (f) {
-                    is HomeFragment -> showBottomNavigation()
-                    is GenresFragment -> showBottomNavigation()
-                    is SearchTitlesFragment -> showBottomNavigation()
-                    is SingleTitleFragment -> hideBottomNavigation()
-                    is SingleTitleFragmentInfo -> hideBottomNavigation()
-                    is ChooseTitleDetailsFragment -> hideBottomNavigation()
+                    is HomeFragment, is GenresFragment, is SearchTitlesFragment -> {
+                        showBottomNavigation()
+                    }
+                    is SingleTitleFragment, is SingleTitleFragmentInfo, is SingleTitleFragmentSimilar, is ChooseTitleDetailsFragment, is SettingsFragment, is SingleGenreFragment -> {
+                        hideBottomNavigation()
+                    }
                     is VideoPlayerFragment -> {
                         app_main_toolbar.setGone()
                         hideBottomNavigation()
                     }
-                    is SettingsFragment -> hideBottomNavigation()
-                    is SingleGenreFragment -> hideBottomNavigation()
                     else -> {
                         app_main_toolbar.setVisible()
-                        showBottomNavigation()
+                        hideBottomNavigation()
                     }
                 }
             }

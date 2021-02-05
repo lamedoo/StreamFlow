@@ -37,6 +37,10 @@ class SingleTitleFragmentInfo : Fragment(R.layout.phone_single_title_info) {
                 single_title_desc.text = "აღწერა არ მოიძებნა"
             }
 
+            if (it.rating.imdb != null) {
+                tv_single_movie_imdb_score.text = it.rating.imdb.score.toString()
+            }
+
             tv_single_title_year.text = it.year.toString()
             tv_single_title_duration.text = "${it.duration} წ."
             if (!it.countries.data.isNullOrEmpty()) {

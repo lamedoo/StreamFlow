@@ -25,29 +25,31 @@
         tools:visibility="visible">
 
         <TextView
-            android:id="@+id/tv_single_title_name_geo"
+            android:id="@+id/tv_single_title_name_eng"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?colorOnPrimary"
             android:text="@string/default_data"
             android:textAppearance="?android:attr/textAppearanceLarge"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="ფილმის სახელი"/>
+            tools:text="Movie Title"/>
 
         <TextView
-            android:id="@+id/tv_single_title_name_eng"
+            android:id="@+id/tv_single_title_name_geo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/default_data"
             android:textColor="@color/secondary_text_color"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            app:layout_constraintTop_toBottomOf="@id/tv_single_title_name_geo"
-            tools:text="Movie Title"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_single_title_name_eng"
+            tools:text="ფილმის სახელი"/>
         
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_marginTop="5dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_single_title_name_eng">
+            app:layout_constraintTop_toBottomOf="@id/tv_single_title_name_geo"
+            app:layout_constraintBottom_toBottomOf="parent">
             
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/single_title_appbar"
@@ -101,13 +103,15 @@
 
                     <ImageView
                         android:id="@+id/single_title_play_collapsed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:src="@drawable/play_button"
                         android:alpha="0"
+                        tools:alpha="1"
                         android:visibility="invisible"
+                        tools:visibility="visible"
                         app:layout_constraintTop_toTopOf="@id/single_title_trailer_container"
-                        app:layout_constraintBottom_toTopOf="@id/tab_layout"
+                        app:layout_constraintBottom_toBottomOf="@id/single_title_trailer_container"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <LinearLayout
@@ -164,10 +168,11 @@
                         android:id="@+id/tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/black"
+                        android:background="@drawable/single_title_tabs_background"
                         app:tabMaxWidth="0dp"
+                        android:layout_marginTop="10dp"
                         app:tabTextAppearance="?android:attr/textAppearanceMedium"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
+                        app:layout_constraintTop_toBottomOf="@id/single_title_trailer_container"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -177,48 +182,15 @@
                 android:id="@+id/single_title_details_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/single_title_info_background"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:layout_marginTop="15dp"
                 android:scrollbarThumbHorizontal="@null"
                 android:scrollbarThumbVertical="@null">
 
-<!--                    <androidx.viewpager2.widget.ViewPager2-->
-<!--                        android:id="@+id/tabs_viewpager"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent" />-->
-
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/tabs_viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:id="@+id/page_one"
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/tabs_viewpager"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
-                        <TextView
-                            android:text="PAGE ONE IN"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:textColor="#fff"
-                            android:textSize="24dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/page_two"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
-                        <TextView
-                            android:text="PAGE TWO IN"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:textColor="#fff"
-                            android:textSize="24dp"/>
-                    </LinearLayout>
-
-                </androidx.viewpager.widget.ViewPager>
+                        android:layout_height="match_parent" />
 
             </androidx.core.widget.NestedScrollView>
 
