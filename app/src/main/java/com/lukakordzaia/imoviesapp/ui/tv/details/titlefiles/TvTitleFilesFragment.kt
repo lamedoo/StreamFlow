@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.tv_title_files_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment) {
+class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment_new) {
     private val tvDetailsViewModel by viewModel<TvDetailsViewModel>()
     private lateinit var tvTitleFilesEpisodesAdapter: TvTitleFilesEpisodesAdapter
     private var trailerUrl: String? = null

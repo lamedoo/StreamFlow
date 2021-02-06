@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
@@ -15,7 +14,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_details_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
+class TvDetailsFragment : Fragment(R.layout.tv_details_fragment_new) {
     private val tvDetailsViewModel by viewModel<TvDetailsViewModel>()
     private var trailerUrl: String? = null
 

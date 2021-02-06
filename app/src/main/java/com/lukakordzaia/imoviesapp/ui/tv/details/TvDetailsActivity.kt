@@ -7,6 +7,6 @@ import com.lukakordzaia.imoviesapp.R
 class TvDetailsActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tv_details)
+        setContentView(R.layout.activity_tv_details_new)
     }
 }
