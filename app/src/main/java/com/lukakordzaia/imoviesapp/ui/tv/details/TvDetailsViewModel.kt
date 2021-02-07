@@ -10,6 +10,7 @@ import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleEpisodes
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
+import com.lukakordzaia.imoviesapp.network.LoadingState
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.TvDetailsRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
@@ -19,13 +20,13 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     private val _singleTitleData = MutableLiveData<TitleData.Data>()
     val singleTitleData: LiveData<TitleData.Data> = _singleTitleData
 
-    private val _titleIsInDb = MutableLiveData<Boolean>()
-    val titleIsInDb: LiveData<Boolean> = _titleIsInDb
-
     private val _singleMovieFiles = MutableLiveData<TitleFiles>()
 
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
+
+    private val _loader = MutableLiveData<LoadingState>()
+    val loader: LiveData<LoadingState> = _loader
 
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
@@ -50,7 +51,9 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
             when (val data = repository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
                     _singleTitleData.value = data.data.data
-                    _numOfSeasons.value = data.data.data.seasons.data.size
+                    if (data.data.data.seasons != null) {
+                        _numOfSeasons.value = data.data.data.seasons.data.size
+                    }
                     setLoading(false)
                 }
                 is Result.Error -> {
@@ -63,10 +66,6 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     fun checkTitleInDb(context: Context, titleId: Int): LiveData<Boolean> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         return repository.checkTitleInDb(database!!, titleId)
-    }
-
-    fun titleIsInDb(exists: Boolean) {
-        _titleIsInDb.value = exists
     }
 
     fun getSingleWatchedTitleDetails(context: Context, titleId: Int): LiveData<DbDetails> {
@@ -83,6 +82,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
 
     fun getSingleTitleFiles(movieId: Int) {
         viewModelScope.launch {
+            _loader.value = LoadingState.LOADING
             when (val files = repository.getSingleTitleFiles(movieId)) {
                 is Result.Success -> {
                     val data = files.data.data
@@ -98,7 +98,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
                     } else {
                         _movieNotYetAdded.value = true
                     }
-                    setLoading(false)
+                    _loader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
                     Log.d("errorfiles", files.exception)

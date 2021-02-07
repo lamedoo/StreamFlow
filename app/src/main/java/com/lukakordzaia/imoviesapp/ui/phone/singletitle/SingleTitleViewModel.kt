@@ -103,7 +103,11 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
     }
 
     private fun checkTvShowAndFiles() {
-        _titleDetails.value = TitleDetails(singleTitleData.value!!.seasons.data.last().number, singleTitleData.value!!.isTvShow!!)
+        if (singleTitleData.value!!.seasons != null) {
+            _titleDetails.value = TitleDetails(singleTitleData.value!!.seasons!!.data.last().number, singleTitleData.value!!.isTvShow!!)
+        } else {
+            _titleDetails.value = TitleDetails(0, singleTitleData.value!!.isTvShow!!)
+        }
     }
 
     fun onPlayButtonPressed(titleId: Int, isTvShow: Boolean) {

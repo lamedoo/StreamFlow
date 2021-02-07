@@ -1,5 +1,6 @@
 package com.lukakordzaia.imoviesapp.di
 
+import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
 import com.lukakordzaia.imoviesapp.network.NetworkConnectionInterceptor
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.repository.*
@@ -36,4 +37,5 @@ val repositoryModule = module {
 val generalModule = module {
     single { RetrofitBuilder(get()) }
     single { NetworkConnectionInterceptor(get()) }
+    single { SpinnerClass(get()) }
 }

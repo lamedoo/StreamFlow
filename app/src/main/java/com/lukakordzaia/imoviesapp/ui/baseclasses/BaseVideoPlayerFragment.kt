@@ -36,7 +36,11 @@ open class BaseVideoPlayerFragment : Fragment(R.layout.fragment_video_player) {
 
 
         videoPlayerViewModel.singleTitleData.observe(viewLifecycleOwner, {
-            videoPlayerViewModel.getNumOfSeasons(it.seasons.data.size)
+            if (it.seasons != null) {
+                videoPlayerViewModel.getNumOfSeasons(it.seasons.data.size)
+            } else {
+                videoPlayerViewModel.getNumOfSeasons(0)
+            }
         })
 
         mediaPlayer.setPlayerListener(object : Player.EventListener {

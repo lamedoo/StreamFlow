@@ -17,12 +17,21 @@ import kotlinx.android.synthetic.main.tv_details_episodes_item.view.*
 class TvTitleFilesEpisodesAdapter(
         private val context: Context,
         private val onEpisodeClick: (episodeId: Int) -> Unit,
+        private val rvHasFocus: (hasFocus: Boolean) -> Unit
 ) : RecyclerView.Adapter<TvTitleFilesEpisodesAdapter.ViewHolder>() {
     private var list: List<TitleEpisodes> = ArrayList()
 
     fun setEpisodeList(list: List<TitleEpisodes>) {
         this.list = list
         notifyDataSetChanged()
+    }
+
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+
+        if (holder.adapterPosition == 0) {
+            holder.episodeContainer.requestFocus()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,6 +51,11 @@ class TvTitleFilesEpisodesAdapter(
 
         holder.episodeNumberTextView.text = "ეპიზოდი ${episodeModel.episodeNum}"
         holder.episodeNameTextView.text = episodeModel.episodeName
+
+        holder.episodeContainer.setOnFocusChangeListener { v, hasFocus ->
+            rvHasFocus(hasFocus)
+        }
+
     }
 
     override fun getItemCount(): Int {
