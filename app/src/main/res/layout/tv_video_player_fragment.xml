@@ -15,7 +15,7 @@
         app:rewind_increment="10000"
         app:fastforward_increment="10000"
         app:surface_type="surface_view"
-        app:controller_layout_id="@layout/exoplayer_controller_layout"/>
+        app:controller_layout_id="@layout/tv_exoplayer_controller_layout"/>
 
     <LinearLayout
         android:id="@+id/position_on_skip"
