@@ -4,12 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.widget.Toast
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
-import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.imoviesapp.utils.AppConstants
@@ -20,7 +18,7 @@ class TvNewMoviesFragment : VerticalGridSupportFragment() {
     private val gridAdapter = ArrayObjectAdapter(TvCardPresenter())
     private val tvCategoriesViewModel: TvCategoriesViewModel by viewModel()
     private val TEST_ENTRANCE_TRANSITION = true
-    private var page = 0
+    private var page = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,8 +76,10 @@ class TvNewMoviesFragment : VerticalGridSupportFragment() {
     }
 
     private fun setupFragment() {
-        val gridPresenter = VerticalGridPresenter()
-        gridPresenter.numberOfColumns = 6
+        val gridPresenter = VerticalGridPresenter().apply {
+            keepChildForeground
+            numberOfColumns = 6
+        }
         setGridPresenter(gridPresenter)
         adapter = gridAdapter
 

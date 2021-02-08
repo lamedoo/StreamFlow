@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rv_home_item_root"
+    android:id="@+id/tv_default_card_root"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_marginBottom="30dp"
     android:layout_marginTop="5dp"
+    tools:background="@drawable/rv_tv_default_card_view_background"
     android:layout_marginStart="5dp"
     android:layout_marginEnd="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:id="@+id/rv_home_item_poster"
+        android:id="@+id/tv_default_card_poster"
         android:layout_width="150dp"
         android:layout_height="200dp"
         android:scaleType="fitXY"
@@ -20,27 +21,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_default_card_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@drawable/rv_phone_default_card_view_background"
-        app:layout_constraintTop_toBottomOf="@id/rv_home_item_poster"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:minLines="2"
+        android:maxLines="2"
+        android:text="სახელი"
+        android:fontFamily="@font/georgian_uppercase"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical">
+        app:layout_constraintTop_toBottomOf="@id/tv_default_card_poster"/>
 
-        <TextView
-            android:id="@+id/rv_home_item_name_geo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:maxLines="2"
-            android:textColor="?colorOnPrimary"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="ფილმის სახელი"/>
 
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

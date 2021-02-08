@@ -96,7 +96,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     }
 
     private fun firstCategoryAdapter(category: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -108,7 +108,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     }
 
     private fun secondCategoryAdapter(category: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -120,7 +120,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     }
 
     private fun thirdCategoryAdapter(category: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -132,7 +132,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     }
 
     private fun fourthCategoryAdapter(category: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -144,7 +144,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     }
 
     private fun fifthCategoryAdapter(category: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -156,7 +156,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     }
 
     private fun sixthCategoryAdapter(category: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }

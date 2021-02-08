@@ -2,13 +2,17 @@ package com.lukakordzaia.imoviesapp.ui.tv.details.titledetails
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.database.DbDetails
 import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
-import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
+import com.lukakordzaia.imoviesapp.network.LoadingState
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsViewModel
+import com.lukakordzaia.imoviesapp.ui.tv.details.titlefiles.TvTitleFilesFragment
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.createToast
 import com.lukakordzaia.imoviesapp.utils.setGone
@@ -19,7 +23,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class TvDetailsFragment : Fragment(R.layout.tv_details_fragment), TvDetailsActivity.MyKeyEventListener {
+class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
     private val tvDetailsViewModel by viewModel<TvDetailsViewModel>()
     private val spinnerClass: SpinnerClass by inject()
     private var trailerUrl: String? = null
@@ -31,6 +35,16 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment), TvDetailsActiv
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
 
         tvDetailsViewModel.getSingleTitleData(titleId)
+
+        tvDetailsViewModel.loader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> tv_details_progressBar.setVisible()
+                LoadingState.LOADED -> {
+                    tv_details_progressBar.setGone()
+                    tv_details_top.setVisible()
+                }
+        }
+        })
 
         tvDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (!it) {
@@ -47,19 +61,19 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment), TvDetailsActiv
                 if (it.trailers != null) {
                     if (!it.trailers.data.isNullOrEmpty()) {
                         it.trailers.data.forEach { trailer ->
-                            if (trailer.language == "ENG") {
-                                trailerUrl = trailer.fileUrl
-                                val intent = Intent(context, TvVideoPlayerActivity::class.java)
-                                intent.putExtra("titleId", titleId)
-                                intent.putExtra("isTvShow", isTvShow)
-                                intent.putExtra("chosenLanguage", "ENG")
-                                intent.putExtra("chosenSeason", 0)
-                                intent.putExtra("chosenEpisode", 0)
-                                intent.putExtra("watchedTime", 0L)
-                                intent.putExtra("trailerUrl", trailerUrl)
-                                activity?.startActivity(intent)
-                            } else {
-                                requireContext().createToast("other trailer")
+                            when (tvDetailsViewModel.chosenLanguage.value) {
+                                "ENG" -> {
+                                    if (trailer.language == tvDetailsViewModel.chosenLanguage.value) {
+                                        trailerUrl = trailer.fileUrl
+                                        playTitleTrailer(titleId, isTvShow, trailerUrl!!)
+                                    }
+                                }
+                                else -> {
+                                    if (trailer.language == "RUS") {
+                                        trailerUrl = trailer.fileUrl
+                                        playTitleTrailer(titleId, isTvShow, trailerUrl!!)
+                                    }
+                                }
                             }
                         }
                     } else {
@@ -106,8 +120,8 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment), TvDetailsActiv
             }
         })
 
-        tvDetailsViewModel.checkTitleInDb(requireContext(), titleId).observe(viewLifecycleOwner, {
-            if (it) {
+        tvDetailsViewModel.checkTitleInDb(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
+            if (exists) {
                 tv_files_title_delete.setOnClickListener {
                     tvDetailsViewModel.deleteTitleFromDb(requireContext(), titleId)
                 }
@@ -146,12 +160,18 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment), TvDetailsActiv
         }
 
         if (isTvShow) {
-            tv_details_spinner_language.setOnFocusChangeListener { v, hasFocus ->
+            tv_details_go_bottom.setVisible()
+            tv_details_go_bottom.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    parentFragmentManager.beginTransaction()
+                            .replace(R.id.tv_details_fr_nav_host, TvTitleFilesFragment())
+                            .show(TvTitleFilesFragment())
+                            .commit()
+                }
                 this.hasFocus = hasFocus
             }
         } else {
             //            tv_details_go_bottom_title.text = "მსგავსი ფილმები"
-            tv_details_go_bottom.setGone()
         }
 
         tvDetailsViewModel.getSingleTitleFiles(titleId)
@@ -164,12 +184,24 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment), TvDetailsActiv
         })
     }
 
+    private fun playTitleTrailer(titleId: Int, isTvShow: Boolean, trailerUrl: String) {
+        val intent = Intent(context, TvVideoPlayerActivity::class.java)
+        intent.putExtra("titleId", titleId)
+        intent.putExtra("isTvShow", isTvShow)
+        intent.putExtra("chosenLanguage", "ENG")
+        intent.putExtra("chosenSeason", 0)
+        intent.putExtra("chosenEpisode", 0)
+        intent.putExtra("watchedTime", 0L)
+        intent.putExtra("trailerUrl", trailerUrl)
+        activity?.startActivity(intent)
+    }
+
     private fun playTitleFromStart(titleId: Int, isTvShow: Boolean) {
         trailerUrl = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra("titleId", titleId)
         intent.putExtra("isTvShow", isTvShow)
-        intent.putExtra("chosenLanguage", this.tvDetailsViewModel.chosenLanguage.value)
+        intent.putExtra("chosenLanguage", tvDetailsViewModel.chosenLanguage.value)
         intent.putExtra("chosenSeason", if (isTvShow) 1 else 0)
         intent.putExtra("chosenEpisode", if (isTvShow) 1 else 0)
         intent.putExtra("watchedTime", 0L)
@@ -188,9 +220,5 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment), TvDetailsActiv
         intent.putExtra("watchedTime", item.watchedTime)
         intent.putExtra("trailerUrl", trailerUrl)
         activity?.startActivity(intent)
-    }
-
-    override fun onKeyDown(): Boolean {
-        return hasFocus
     }
 }

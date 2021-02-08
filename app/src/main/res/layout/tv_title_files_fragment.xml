@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/fragment_padding"
-    android:background="@color/default_background_color"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -13,6 +13,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp"
@@ -33,52 +34,12 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_tv_files_episodes"
+        <fragment
+            android:id="@+id/files_layout"
+            android:name="com.lukakordzaia.imoviesapp.ui.tv.details.titlefiles.TvTitleFilesBrowse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_details_go_top" />
-
-        <TextView
-            android:id="@+id/tv_files_season_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="სეზონი"
-            android:fontFamily="@font/georgian_uppercase"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_tv_files_episodes" />
-
-        <Spinner
-            android:id="@+id/tv_files_spinner_season"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
-            android:spinnerMode="dialog"
-            app:layout_constraintStart_toEndOf="@id/tv_files_season_title"
-            app:layout_constraintTop_toBottomOf="@id/rv_tv_files_episodes" />
-
-        <TextView
-            android:id="@+id/tv_files_language_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:fontFamily="@font/georgian_uppercase"
-            android:text="ენა"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_files_season_title" />
-
-        <Spinner
-            android:id="@+id/tv_files_spinner_language"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:focusedByDefault="true"
-            android:spinnerMode="dialog"
-            app:layout_constraintStart_toEndOf="@id/tv_files_language_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_files_season_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_details_go_top"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

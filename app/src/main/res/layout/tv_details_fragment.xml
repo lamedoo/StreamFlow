@@ -4,13 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/default_background_color"
     android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/tv_details_progressBar"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/green_dark"
+        android:visibility="visible"
+        tools:visibility="gone"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tv_details_top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:background="@color/default_background_color">
+        tools:background="@color/default_background_color"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/tv_files_title_poster"
@@ -18,6 +30,8 @@
             android:layout_height="match_parent"
             android:focusable="false"
             android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/friends_cover" />
 
@@ -205,7 +219,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc"
@@ -217,8 +230,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/rv_tv_episodes_focused"
+                android:background="@drawable/tv_details_button_background"
                 android:focusable="true"
+                android:layout_marginStart="10dp"
                 android:fontFamily="@font/georgian_uppercase"
                 android:letterSpacing="0"
                 android:padding="15dp"
@@ -234,12 +248,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/rv_tv_episodes_focused"
+                android:background="@drawable/tv_details_button_background"
                 android:focusable="true"
                 android:fontFamily="@font/georgian_uppercase"
                 android:letterSpacing="0"
                 android:padding="15dp"
                 android:text="ყურება"
+                android:nextFocusDown="@id/tv_details_spinner_language"
                 app:layout_constraintStart_toEndOf="@id/tv_continue_play_button"
                 app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc" />
 
@@ -249,11 +264,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/rv_tv_episodes_focused"
+                android:background="@drawable/tv_details_button_background"
                 android:drawableStart="@drawable/play_trailer"
                 android:fontFamily="@font/georgian_uppercase"
-                android:padding="13dp"
+                android:padding="14dp"
                 android:text="ტრეილერი"
+                android:nextFocusDown="@id/tv_details_spinner_language"
                 app:layout_constraintStart_toEndOf="@id/tv_play_button"
                 app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc" />
 
@@ -263,11 +279,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/rv_tv_episodes_focused"
+                android:background="@drawable/tv_details_button_background"
                 android:drawableStart="@drawable/remove_title_from_db"
                 android:fontFamily="@font/georgian_uppercase"
-                android:padding="13dp"
+                android:padding="14dp"
                 android:text="წაშლა"
+                android:nextFocusDown="@id/tv_details_spinner_language"
                 android:textColor="@android:color/holo_red_dark"
                 app:layout_constraintStart_toEndOf="@id/tv_files_trailer"
                 app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc" />
@@ -284,7 +301,8 @@
             android:text="ენა"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_details_buttons_row"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <Spinner
             android:id="@+id/tv_details_spinner_language"
@@ -293,7 +311,8 @@
             android:spinnerMode="dialog"
             app:layout_constraintStart_toEndOf="@id/tv_details_language_title"
             app:layout_constraintTop_toBottomOf="@id/tv_details_buttons_row"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/tv_details_go_bottom"
@@ -306,7 +325,9 @@
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 android:id="@+id/tv_details_go_bottom_title"

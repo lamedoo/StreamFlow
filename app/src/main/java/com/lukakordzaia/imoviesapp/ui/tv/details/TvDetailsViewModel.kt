@@ -31,7 +31,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
-    private val _chosenLanguage = MutableLiveData<String>()
+    private val _chosenLanguage = MutableLiveData<String>("ENG")
     val chosenLanguage: LiveData<String> = _chosenLanguage
 
     private val _chosenSeason = MutableLiveData<Int>(0)
