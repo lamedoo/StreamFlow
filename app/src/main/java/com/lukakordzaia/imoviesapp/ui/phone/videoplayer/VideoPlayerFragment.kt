@@ -1,29 +1,23 @@
 package com.lukakordzaia.imoviesapp.ui.phone.videoplayer
 
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.exoplayer2.util.Util
-import com.google.android.gms.cast.framework.CastButtonFactory
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseVideoPlayerFragment
-import com.lukakordzaia.imoviesapp.utils.setGone
-import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
-import kotlinx.android.synthetic.main.fragment_video_player.*
+import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 
 
-open class VideoPlayerFragment : BaseVideoPlayerFragment() {
+open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment_video_player) {
     private val args: VideoPlayerFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setExoPlayer(phone_title_player)
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getPlayListFiles(args.titleId, args.chosenSeason, args.chosenLanguage)

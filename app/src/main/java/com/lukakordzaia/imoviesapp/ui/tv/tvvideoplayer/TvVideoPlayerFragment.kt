@@ -5,14 +5,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.google.android.exoplayer2.util.Util
-import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseVideoPlayerFragment
+import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.datamodels.VideoPlayerData
+import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseVideoPlayerFragment
+import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 
-class TvVideoPlayerFragment : BaseVideoPlayerFragment() {
+class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_player_fragment) {
     private lateinit var videoPlayerData: VideoPlayerData
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setExoPlayer(tv_title_player)
 
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val chosenLanguage = activity?.intent?.getSerializableExtra("chosenLanguage") as String
