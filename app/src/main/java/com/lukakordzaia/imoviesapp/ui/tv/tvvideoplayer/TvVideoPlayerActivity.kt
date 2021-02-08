@@ -10,7 +10,7 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.utils.setInvisible
 import com.lukakordzaia.imoviesapp.utils.setVisible
-import kotlinx.android.synthetic.main.exoplayer_controller_layout.view.*
+import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.view.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 import java.util.concurrent.TimeUnit
 

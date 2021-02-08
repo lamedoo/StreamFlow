@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/header_tv"
+            android:id="@+id/tv_header_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -114,7 +114,7 @@
         app:layout_constraintTop_toTopOf="@id/exo_play"/>
 
     <Button
-        android:id="@+id/next_season_button"
+        android:id="@+id/tv_next_season_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

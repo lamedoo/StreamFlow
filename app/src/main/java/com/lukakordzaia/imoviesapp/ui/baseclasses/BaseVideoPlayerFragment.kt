@@ -14,7 +14,10 @@ import com.lukakordzaia.imoviesapp.helpers.MediaPlayerClass
 import com.lukakordzaia.imoviesapp.ui.phone.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
-import kotlinx.android.synthetic.main.exoplayer_controller_layout.*
+import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
+import kotlinx.android.synthetic.main.phone_fragment_video_player.*
+import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
+import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
@@ -51,26 +54,16 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                                 val nextSeasonNum = videoPlayerViewModel.seasonForDb.value!! + 1
                                 videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
                                     if (nextSeasonNum <= numOfSeasons) {
-                                        next_season_button.setVisible()
-                                        next_season_button.text = "სეზონი: ${nextSeasonNum!!}"
-                                        next_season_button.setOnClickListener { _ ->
-                                            player.clearMediaItems()
-                                            videoPlayerViewModel.getPlaylistFiles(
-                                                videoPlayerViewModel.titleIdForDb.value!!,
-                                                nextSeasonNum,
-                                                videoPlayerViewModel.languageForDb.value!!
-                                            )
-                                            videoPlayerViewModel.initPlayer(it, 0L, 1)
-                                        }
+                                        nextSeasonButtonShow(nextSeasonNum, it)
                                     } else {
-                                        next_season_button.setGone()
+                                        nextSeasonButtonGone()
                                     }
                                 })
                             }
                         })
                     } else playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
                 } else {
-                    next_season_button.setGone()
+                    nextSeasonButtonGone()
                 }
             }
 
@@ -78,9 +71,9 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 super.onMediaItemTransition(mediaItem, reason)
                 videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
                     if (videoPlayerViewModel.isTvShow.value == true) {
-                        header_tv.text = "ს${videoPlayerViewModel.seasonForDb.value}. ე${player.currentWindowIndex + 1}. ${name[player.currentWindowIndex]}"
+                        setEpisodeName(name)
                     } else {
-                        header_tv.text = name[player.currentWindowIndex]
+                        setMovieName(name[player.currentWindowIndex])
                     }
                 })
             }
@@ -102,6 +95,70 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             requireActivity().window.setDecorFitsSystemWindows(true)
         } else {
             requireActivity().window.decorView.systemUiVisibility = View.VISIBLE
+        }
+    }
+
+    private fun nextSeasonButtonShow(nextSeasonNum: Int, isTvShow: Boolean) {
+        when (playerView) {
+            phone_title_player -> {
+                next_season_button.setVisible()
+                next_season_button.text = "სეზონი: ${nextSeasonNum!!}"
+                next_season_button.setOnClickListener { _ ->
+                    player.clearMediaItems()
+                    videoPlayerViewModel.getPlaylistFiles(
+                            videoPlayerViewModel.titleIdForDb.value!!,
+                            nextSeasonNum,
+                            videoPlayerViewModel.languageForDb.value!!
+                    )
+                    videoPlayerViewModel.initPlayer(isTvShow, 0L, 1)
+                }
+            }
+            tv_title_player -> {
+                tv_next_season_button.setVisible()
+                tv_next_season_button.text = "სეზონი: ${nextSeasonNum!!}"
+                tv_next_season_button.setOnClickListener { _ ->
+                    player.clearMediaItems()
+                    videoPlayerViewModel.getPlaylistFiles(
+                            videoPlayerViewModel.titleIdForDb.value!!,
+                            nextSeasonNum,
+                            videoPlayerViewModel.languageForDb.value!!
+                    )
+                    videoPlayerViewModel.initPlayer(isTvShow, 0L, 1)
+                }
+            }
+        }
+    }
+
+    private fun nextSeasonButtonGone() {
+        when (playerView) {
+            phone_title_player -> {
+                next_season_button.setGone()
+            }
+            tv_title_player -> {
+                tv_next_season_button.setGone()
+            }
+        }
+    }
+
+    private fun setEpisodeName(names: List<String>) {
+        when (playerView) {
+            phone_title_player -> {
+                header_tv.text = "ს${videoPlayerViewModel.seasonForDb.value}. ე${player.currentWindowIndex + 1}. ${names[player.currentWindowIndex]}"
+            }
+            tv_title_player -> {
+                tv_header_tv.text = "ს${videoPlayerViewModel.seasonForDb.value}. ე${player.currentWindowIndex + 1}. ${names[player.currentWindowIndex]}"
+            }
+        }
+    }
+
+    private fun setMovieName(name: String) {
+        when (playerView) {
+            phone_title_player -> {
+                header_tv.text = name
+            }
+            tv_title_player -> {
+                tv_header_tv.text = name
+            }
         }
     }
 
