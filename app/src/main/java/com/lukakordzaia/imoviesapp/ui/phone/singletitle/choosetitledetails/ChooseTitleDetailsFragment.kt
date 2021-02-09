@@ -97,11 +97,11 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
                     }
 
                     if (args.isTvShow) {
-                        choose_movie_details_continue.text = "სეზონი: ${it.season} ეპიზოდი: ${it.episode} / ${String.format("%02d:%02d",
+                        choose_movie_details_continue.text = String.format("სეზონი: ${it.season} ეპიზოდი: ${it.episode} / %02d:%02d  - ${it.language}",
                                 TimeUnit.MILLISECONDS.toMinutes(it.watchedTime),
                                 TimeUnit.MILLISECONDS.toSeconds(it.watchedTime) -
                                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedTime))
-                        )} - ${it.language}"
+                        )
                     } else {
                         choose_movie_details_continue.text = String.format("განაგრძეთ ყურება %02d:%02d - ${it.language}",
                                 TimeUnit.MILLISECONDS.toMinutes(it.watchedTime),
@@ -112,12 +112,12 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
                 })
 
                 choose_movie_details_continue.setVisible()
-                choose_movie_details_continue.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#009c7c"))
+                choose_movie_details_continue.backgroundTintList = ColorStateList.valueOf(requireContext().resources.getColor(R.color.accent_color))
                 choose_movie_details_continue.setTextColor(Color.parseColor("#FFFFFF"))
 
                 choose_movie_details_play.text = "თავიდან ყურება"
                 choose_movie_details_play.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
-                choose_movie_details_play.setTextColor(Color.parseColor("#009c7c"))
+                choose_movie_details_play.setTextColor(requireContext().resources.getColor(R.color.accent_color))
 
             }
         })

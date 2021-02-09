@@ -32,7 +32,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:indeterminateTint="@color/green_dark"
+                android:indeterminateTint="@color/accent_color"
                 android:visibility="visible" />
 
         </LinearLayout>

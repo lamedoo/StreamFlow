@@ -15,7 +15,7 @@
         app:rewind_increment="10000"
         app:fastforward_increment="10000"
         app:surface_type="surface_view"
-        app:buffered_color="@color/green_dark"
+        app:buffered_color="@color/accent_color"
         app:controller_layout_id="@layout/tv_exoplayer_controller_layout"/>
 
     <LinearLayout

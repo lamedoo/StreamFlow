@@ -49,8 +49,13 @@ class MainActivity : AppCompatActivity() {
                 when (f) {
                     is HomeFragment, is GenresFragment, is SearchTitlesFragment -> {
                         showBottomNavigation()
+                        app_main_toolbar.setVisible()
                     }
-                    is SingleTitleFragment, is SingleTitleFragmentInfo, is SingleTitleFragmentSimilar, is ChooseTitleDetailsFragment, is SettingsFragment, is SingleGenreFragment -> {
+                    is SingleTitleFragmentInfo, is SingleTitleFragmentSimilar, is ChooseTitleDetailsFragment, is SettingsFragment, is SingleGenreFragment -> {
+                        hideBottomNavigation()
+                    }
+                    is SingleTitleFragment -> {
+                        app_main_toolbar.setGone()
                         hideBottomNavigation()
                     }
                     is VideoPlayerFragment -> {

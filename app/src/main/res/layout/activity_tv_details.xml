@@ -2,9 +2,8 @@
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/main_background"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/primaryColor"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <fragment
         android:id="@+id/tv_details_fr_nav_host"

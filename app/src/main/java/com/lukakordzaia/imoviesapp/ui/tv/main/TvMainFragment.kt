@@ -202,7 +202,7 @@ class TvMainFragment : BrowseSupportFragment() {
         title = "IMOVIES"
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
-        brandColor = ContextCompat.getColor(requireContext(), R.color.green_dark)
+        brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
         searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.default_background_color) }!!
         adapter = rowsAdapter
 

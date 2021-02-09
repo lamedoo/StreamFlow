@@ -6,14 +6,21 @@
     <color name="green_light">#009b7b</color>
     <color name="green_dark">#009c7c</color>
 
+    <color name="primaryColor">#282A38</color>
+    <color name="secondary_color">#3C3F4D</color>
+    <color name="general_text_color">#cdcdd1</color>
+    <color name="secondary_text_color">#FFFFFF</color>
+    <color name="accent_color">#FFB700</color>
+
     <color name="transparent">@android:color/transparent</color>
 
-    <color name="black">#111822</color>
+    <color name="black">#1d1d1d</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">@android:color/holo_red_dark</color>
 
     <color name="trueBlack">#000000</color>
 
-    <color name="secondary_text_color">#808080</color>
     <color name="default_background_color">#333</color>
+
+    <color name="fragment_background">@color/primaryColor</color>
 </resources>

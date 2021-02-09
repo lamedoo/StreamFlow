@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:indeterminateTint="@color/green_dark"
+        android:indeterminateTint="@color/accent_color"
         android:visibility="visible"/>
 
     <TextView
@@ -45,7 +45,7 @@
             android:layout_marginTop="10dp"
             android:text="გაგრძელება"
             android:letterSpacing="0"
-            android:textColor="@color/green_dark"
+            android:textColor="@color/accent_color"
             android:backgroundTint="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             android:visibility="gone"
@@ -80,7 +80,7 @@
             android:layout_marginTop="50dp"
             android:text="ყურება"
             android:letterSpacing="0"
-            android:backgroundTint="@color/green_dark"
+            android:backgroundTint="@color/accent_color"
             app:layout_constraintTop_toBottomOf="@id/language_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

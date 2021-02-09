@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/fragment_background"
     android:layout_height="match_parent"
     tools:context=".ui.phone.MainActivity">
 
@@ -13,7 +14,7 @@
         app:contentInsetStart="0dp"
         app:contentInsetStartWithNavigation="0dp"
         android:layout_marginStart="0dp"
-        android:background="?colorPrimary"
+        android:background="@color/transparent"
         android:fillColor="?attr/colorControlNormal"
         app:titleTextColor="?colorOnPrimary"
         app:layout_constraintTop_toTopOf="parent"
@@ -40,7 +41,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="?colorPrimary"
+        android:background="@color/fragment_background"
         app:layout_constraintTop_toBottomOf="@id/app_main_toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +59,7 @@
         android:id="@+id/nav_main_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorPrimary"
+        android:background="@color/secondary_color"
         app:elevation="0dp"
         app:itemBackground="@null"
         app:itemRippleColor="@null"

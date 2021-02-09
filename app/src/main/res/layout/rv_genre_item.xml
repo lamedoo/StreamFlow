@@ -17,7 +17,7 @@
         android:fontFamily="@font/georgian_uppercase"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/general_text_color"
         android:background="@drawable/rv_genres_item_pressed"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
