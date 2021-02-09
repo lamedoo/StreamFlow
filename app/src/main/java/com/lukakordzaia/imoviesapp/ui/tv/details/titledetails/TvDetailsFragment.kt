@@ -2,9 +2,6 @@ package com.lukakordzaia.imoviesapp.ui.tv.details.titledetails
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.lukakordzaia.imoviesapp.R
@@ -164,6 +161,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             tv_details_go_bottom.setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
                     parentFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
                             .replace(R.id.tv_details_fr_nav_host, TvTitleFilesFragment())
                             .show(TvTitleFilesFragment())
                             .commit()

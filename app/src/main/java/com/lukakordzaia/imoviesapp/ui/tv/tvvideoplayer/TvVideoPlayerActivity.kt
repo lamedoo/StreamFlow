@@ -35,20 +35,20 @@ class TvVideoPlayerActivity : FragmentActivity() {
             KeyEvent.KEYCODE_DPAD_DOWN -> {
                 if (!tv_title_player.isControllerVisible) {
                     tv_title_player.showController()
-                    tv_title_player.exo_progress.requestFocus()
+                    tv_title_player.exo_pause.requestFocus()
                 }
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (!tv_title_player.isControllerVisible) {
-                    tv_title_player.exo_rew.callOnClick()
-                    displayCurrentPosition()
+                    tv_title_player.showController()
                 }
+                tv_title_player.exo_rew.callOnClick()
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (!tv_title_player.isControllerVisible) {
-                    tv_title_player.exo_ffwd.callOnClick()
-                    displayCurrentPosition()
+                    tv_title_player.showController()
                 }
+                tv_title_player.exo_ffwd.callOnClick()
             }
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
                 tv_title_player.dispatchMediaKeyEvent(event!!)

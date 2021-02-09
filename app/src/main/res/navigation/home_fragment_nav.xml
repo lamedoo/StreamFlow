@@ -54,7 +54,7 @@
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/down_to_top" />
+            app:enterAnim="@anim/slide_from_down" />
         <action
             android:id="@+id/action_homeFragment_to_topMoviesFragment"
             app:destination="@id/topMoviesFragment"

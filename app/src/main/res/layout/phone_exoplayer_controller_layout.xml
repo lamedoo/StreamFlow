@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#99000000"
+    android:background="@drawable/video_player_background"
     android:visibility="visible"
     android:paddingTop="12dp"
     android:paddingBottom="12dp"
@@ -32,7 +32,12 @@
             android:maxLines="2"
             android:paddingStart="20dp"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="20sp"
+            android:shadowColor="@color/trueBlack"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="3"
+            android:fontFamily="@font/georgian_uppercase"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_max="wrap"
@@ -40,21 +45,6 @@
             tools:text="Funny Anim Videos" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/cross_im"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:background="?attr/selectableItemBackgroundBorderless"-->
-<!--        android:paddingLeft="20dp"-->
-<!--        android:paddingTop="25dp"-->
-<!--        android:paddingRight="20dp"-->
-<!--        android:paddingBottom="20dp"-->
-<!--        android:src="@drawable/ic_cross_white"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier_left"
