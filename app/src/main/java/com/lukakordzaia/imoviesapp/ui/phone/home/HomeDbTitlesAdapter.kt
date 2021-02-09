@@ -14,12 +14,12 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_watched_title_item.view.*
 import java.util.concurrent.TimeUnit
 
-class HomeWatchedAdapter(
+class HomeDbTitlesAdapter(
     private val context: Context,
     private val onWatchedTitleClick: (watchedTitleData: WatchedTitleData) -> Unit,
     private val onInfoClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int, view: View) -> Unit
-) : RecyclerView.Adapter<HomeWatchedAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<HomeDbTitlesAdapter.ViewHolder>() {
     private var list: List<WatchedTitleData> = ArrayList()
 
     fun setWatchedTitlesList(list: List<WatchedTitleData>) {

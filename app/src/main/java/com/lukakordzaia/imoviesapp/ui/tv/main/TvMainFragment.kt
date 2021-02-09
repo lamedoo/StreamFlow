@@ -17,10 +17,10 @@ import com.lukakordzaia.imoviesapp.datamodels.*
 import com.lukakordzaia.imoviesapp.ui.phone.genres.GenresViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.HomeViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.settings.SettingsViewModel
+import com.lukakordzaia.imoviesapp.ui.tv.categories.TvNewMoviesActivity
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.imoviesapp.ui.tv.genres.TvSingleGenreActivity
 import com.lukakordzaia.imoviesapp.ui.tv.main.presenters.*
-import com.lukakordzaia.imoviesapp.ui.tv.categories.TvNewMoviesActivity
 import com.lukakordzaia.imoviesapp.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.imoviesapp.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.imoviesapp.utils.AppConstants
@@ -79,7 +79,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
         initRowsAdapter()
 
-        homeViewModel.watchedList.observe(viewLifecycleOwner, {
+        homeViewModel.dbList.observe(viewLifecycleOwner, {
                 watchedListRowsAdapter(it)
         })
 
@@ -91,7 +91,7 @@ class TvMainFragment : BrowseSupportFragment() {
             newMoviesRowsAdapter(it)
         })
 
-        homeViewModel.tvShowList.observe(viewLifecycleOwner, { tvShows ->
+        homeViewModel.topTvShowList.observe(viewLifecycleOwner, { tvShows ->
             topTvShowsRowsAdapter(tvShows)
         })
 

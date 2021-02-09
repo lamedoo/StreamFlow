@@ -22,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HomeFragment : Fragment(R.layout.phone_home_framgent) {
     private val viewModel by viewModel<HomeViewModel>()
 
-    private lateinit var homeWatchedAdapter: HomeWatchedAdapter
+    private lateinit var homeDbTitlesAdapter: HomeDbTitlesAdapter
     private lateinit var homeNewMovieAdapter: HomeNewMovieAdapter
     private lateinit var homeTopMovieAdapter: HomeTopMovieAdapter
     private lateinit var homeTvShowAdapter: HomeTvShowAdapter
@@ -37,10 +37,10 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
 
 
         //Watched Titles List
-        val watchedLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeWatchedAdapter = HomeWatchedAdapter(requireContext(),
+        val dbLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        homeDbTitlesAdapter = HomeDbTitlesAdapter(requireContext(),
                 {
-                    viewModel.onWatchedTitlePressed(it)
+                    viewModel.onDbTitlePressed(it)
                 },
                 {
                     viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
@@ -76,8 +76,8 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
                     }
                     popUp.show()
                 })
-        rv_main_watched_titles.adapter = homeWatchedAdapter
-        rv_main_watched_titles.layoutManager = watchedLayout
+        rv_main_watched_titles.adapter = homeDbTitlesAdapter
+        rv_main_watched_titles.layoutManager = dbLayout
 
         viewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
@@ -105,8 +105,8 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
             }
         })
 
-        viewModel.watchedList.observe(viewLifecycleOwner, {
-            homeWatchedAdapter.setWatchedTitlesList(it)
+        viewModel.dbList.observe(viewLifecycleOwner, {
+            homeDbTitlesAdapter.setWatchedTitlesList(it)
         })
 
         //New Movies List
@@ -169,7 +169,7 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
 
         viewModel.getTopTvShows(1)
 
-        viewModel.tvShowList.observe(viewLifecycleOwner, Observer {
+        viewModel.topTvShowList.observe(viewLifecycleOwner, Observer {
             homeTvShowAdapter.setTvShowsList(it)
         })
 

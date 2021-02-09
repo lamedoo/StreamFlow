@@ -1,10 +1,7 @@
 package com.lukakordzaia.imoviesapp.network
 
 
-import com.lukakordzaia.imoviesapp.datamodels.GenreList
-import com.lukakordzaia.imoviesapp.datamodels.TitleData
-import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
-import com.lukakordzaia.imoviesapp.datamodels.TitleList
+import com.lukakordzaia.imoviesapp.datamodels.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -40,6 +37,10 @@ interface TitlesNetwork {
     @Headers("User-Agent: imovies")
     @GET ("movies/{id}/")
     suspend fun getSingleTitle(@Path("id") id: Int) : Response<TitleData>
+
+    @Headers("User-Agent: imovies")
+    @GET ("movies/{id}/persons?filters%5Brole%5D=cast")
+    suspend fun getSingleTitleCast(@Path("id") id: Int) : Response<TitleCast>
 
     @Headers("User-Agent: imovies")
     @GET ("movies/{id}/season-files/{season_number}")

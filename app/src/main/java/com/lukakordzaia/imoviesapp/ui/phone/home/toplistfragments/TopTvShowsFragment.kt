@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.network.LoadingState
@@ -38,7 +37,7 @@ class TopTvShowsFragment : Fragment(R.layout.phone_single_genre_fragment) {
         rv_single_genre.adapter = singleGenreAdapter
         rv_single_genre.layoutManager = layoutManager
 
-        viewModel.tvShowList.observe(viewLifecycleOwner, {
+        viewModel.topTvShowList.observe(viewLifecycleOwner, {
             singleGenreAdapter.setGenreTitleList(it)
         })
 

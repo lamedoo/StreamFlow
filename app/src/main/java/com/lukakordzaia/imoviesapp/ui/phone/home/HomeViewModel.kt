@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.DbDetails
+import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.datamodels.WatchedTitleData
 import com.lukakordzaia.imoviesapp.network.LoadingState
@@ -16,7 +16,6 @@ import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopMoviesFragmentDirections
 import com.lukakordzaia.imoviesapp.ui.phone.home.toplistfragments.TopTvShowsFragmentDirections
 import com.lukakordzaia.imoviesapp.utils.AppConstants
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
@@ -35,15 +34,15 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
     private val fetchTopMoviesList: MutableList<TitleList.Data> = ArrayList()
 
-    private val _tvShowList = MutableLiveData<List<TitleList.Data>>()
-    val tvShowList: LiveData<List<TitleList.Data>> = _tvShowList
+    private val _topTvShowList = MutableLiveData<List<TitleList.Data>>()
+    val topTvShowList: LiveData<List<TitleList.Data>> = _topTvShowList
 
     private val fetchTopTvShowsList: MutableList<TitleList.Data> = ArrayList()
 
-    private val _watchedList = MutableLiveData<List<WatchedTitleData>>()
-    val watchedList: LiveData<List<WatchedTitleData>> = _watchedList
+    private val _dbList = MutableLiveData<List<WatchedTitleData>>()
+    val dbList: LiveData<List<WatchedTitleData>> = _dbList
 
-    private val watchedTitles: MutableList<WatchedTitleData> = mutableListOf()
+    private val dbTitles: MutableList<WatchedTitleData> = mutableListOf()
 
     fun onSingleTitlePressed(start: Int, titleId: Int) {
         when (start) {
@@ -61,7 +60,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToTopTvShowsFragment())
     }
 
-    fun onWatchedTitlePressed(watchedTitleData: WatchedTitleData) {
+    fun onDbTitlePressed(watchedTitleData: WatchedTitleData) {
         navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToVideoPlayerFragmentNav(
             titleId = watchedTitleData.id,
             chosenSeason = watchedTitleData.season,
@@ -86,17 +85,17 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     }
 
     fun clearWatchedTitleList() {
-        watchedTitles.clear()
+        dbTitles.clear()
     }
 
     fun getDbTitlesFromApi(dbDetails: List<DbDetails>) {
-        watchedTitles.clear()
+        dbTitles.clear()
         viewModelScope.launch {
             dbDetails.forEach {
                 when (val dbTitles = repository.getSingleTitleData(it.titleId)) {
                     is Result.Success -> {
                         val data = dbTitles.data.data
-                        watchedTitles.add(WatchedTitleData(
+                        this@HomeViewModel.dbTitles.add(WatchedTitleData(
                                 data.posters.data!!.x240,
                                 data.duration,
                                 data.id!!,
@@ -118,8 +117,8 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     }
                 }
             }
-            Log.d("savedtitles", "$watchedTitles")
-            _watchedList.value = watchedTitles
+            Log.d("savedtitles", "$dbTitles")
+            _dbList.value = dbTitles
         }
     }
 
@@ -179,7 +178,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     data.forEach {
                         fetchTopTvShowsList.add(it)
                     }
-                    _tvShowList.value = fetchTopTvShowsList
+                    _topTvShowList.value = fetchTopTvShowsList
                     topTvShowsLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
