@@ -17,11 +17,10 @@ import com.lukakordzaia.imoviesapp.ui.phone.singletitle.tabs.TabsPagerAdapter
 import com.lukakordzaia.imoviesapp.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.phone_single_title_fragment.*
+import kotlinx.android.synthetic.main.phone_single_title_fragment_new.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.math.abs
 
-class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
+class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment_new) {
     private val viewModel by viewModel<SingleTitleViewModel>()
     private val args: SingleTitleFragmentArgs by navArgs()
 
@@ -33,6 +32,10 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getSingleTitleData(args.titleId)
+
+        single_title_back_button.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         viewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
             if (!it) {
@@ -68,6 +71,28 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
                 }
             }
 
+            if (it.plot.data != null) {
+                if (!it.plot.data.description.isNullOrEmpty()) {
+                    single_title_desc.text = it.plot.data.description
+                } else {
+                    single_title_desc.text = "აღწერა არ მოიძებნა"
+                }
+            } else {
+                single_title_desc.text = "აღწერა არ მოიძებნა"
+            }
+
+            if (it.rating.imdb != null) {
+                tv_single_movie_imdb_score.text = it.rating.imdb.score.toString()
+            }
+
+            tv_single_title_year.text = it.year.toString()
+            tv_single_title_duration.text = "${it.duration} წ."
+            if (it.countries.data.isEmpty()) {
+                tv_single_title_country.text = "N/A"
+            } else {
+                tv_single_title_country.text = it.countries.data[0].secondaryName
+            }
+
         })
 
         viewModel.titleDetails.observe(viewLifecycleOwner, Observer {
@@ -76,11 +101,11 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
 
                 PlayButtonAnimations().rotatePlayButton(iv_post_video_icon, 1000)
             }
-            single_title_play_collapsed.setOnClickListener { _ ->
-                viewModel.onPlayPressed(args.titleId, TitleDetails(it.numOfSeasons, it.isTvShow))
-
-                PlayButtonAnimations().rotatePlayButton(single_title_play_collapsed, 1000)
-            }
+//            single_title_play_collapsed.setOnClickListener { _ ->
+//                viewModel.onPlayPressed(args.titleId, TitleDetails(it.numOfSeasons, it.isTvShow))
+//
+//                PlayButtonAnimations().rotatePlayButton(single_title_play_collapsed, 1000)
+//            }
         })
 
         viewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
@@ -103,17 +128,17 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
         })
 
         single_title_appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            if (abs(verticalOffset) == single_title_appbar.totalScrollRange) {
-                PlayButtonAnimations().showPlayButton(single_title_play_collapsed, 1000)
-            } else if (abs(verticalOffset) == 0) {
-                PlayButtonAnimations().hidePlayButton(single_title_play_collapsed, 1000)
-            }
+//            if (abs(verticalOffset) == single_title_appbar.totalScrollRange) {
+//                PlayButtonAnimations().showPlayButton(single_title_play_collapsed, 1000)
+//            } else if (abs(verticalOffset) == 0) {
+//                PlayButtonAnimations().hidePlayButton(single_title_play_collapsed, 1000)
+//            }
         })
 
 
         // Tabs Customization
-        tab_layout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(), R.color.green_dark))
-        tab_layout.tabTextColors = ContextCompat.getColorStateList(requireContext(), R.color.secondary_text_color)
+        tab_layout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(), R.color.accent_color))
+        tab_layout.tabTextColors = ContextCompat.getColorStateList(requireContext(), R.color.general_text_color)
         val numberOfTabs = 2
 
         tab_layout.tabMode = TabLayout.MODE_FIXED

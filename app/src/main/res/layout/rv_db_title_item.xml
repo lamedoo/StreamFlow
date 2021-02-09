@@ -25,11 +25,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
-        android:background="@color/green_dark"
+        android:background="@color/accent_color"
         android:fontFamily="@font/georgian_uppercase"
         android:padding="5dp"
         android:text="ს1 ე24"
         android:textStyle="bold"
+        android:textColor="@color/secondary_text_color"
         app:layout_constraintBottom_toBottomOf="@id/rv_watchedtitle_item_poster"
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible" />

@@ -14,7 +14,7 @@
         android:id="@+id/tv_categories_card_poster"
         android:layout_width="250dp"
         android:layout_height="100dp"
-        android:background="@color/green_dark"
+        android:background="@color/accent_color"
         tools:src="@drawable/tv_delete_forever_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +23,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/default_background_color"
+        android:background="@color/secondary_color"
         android:padding="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

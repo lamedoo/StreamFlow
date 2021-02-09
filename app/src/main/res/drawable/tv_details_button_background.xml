@@ -2,13 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true" >
         <shape>
-            <solid android:color="@color/green_dark"/>
+            <solid android:color="@color/accent_color"/>
             <corners android:radius="10dp"/>
         </shape>
     </item>
     <item android:state_focused="false">
         <shape>
-            <solid android:color="@color/default_background_color"/>
+            <solid android:color="@color/secondary_color"/>
             <corners android:radius="10dp"/>
         </shape>
     </item>

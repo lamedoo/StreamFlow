@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/home_fragment_nav"
         android:title="მთავარი"
-        android:icon="@drawable/home_icon"/>
+        android:icon="@drawable/home_icon_bottom"/>
 
     <item android:id="@+id/genres_fragment_nav"
         android:title="ტოპ სიები"
-        android:icon="@drawable/category_icon"/>
+        android:icon="@drawable/genres_icon_bottom"/>
 
     <item android:id="@+id/search_fragment_nav"
         android:title="ძიება"
-        android:icon="@drawable/search_icon"/>
+        android:icon="@drawable/search_icon_bottom"/>
 </menu>

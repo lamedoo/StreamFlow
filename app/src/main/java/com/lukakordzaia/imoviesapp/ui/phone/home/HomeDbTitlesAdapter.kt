@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.datamodels.WatchedTitleData
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_watched_title_item.view.*
+import kotlinx.android.synthetic.main.rv_db_title_item.view.*
 import java.util.concurrent.TimeUnit
 
 class HomeDbTitlesAdapter(
@@ -29,7 +29,7 @@ class HomeDbTitlesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.rv_watched_title_item, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.rv_db_title_item, parent, false)
         )
     }
 
