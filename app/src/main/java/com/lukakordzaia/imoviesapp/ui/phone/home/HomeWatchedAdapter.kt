@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit
 class HomeWatchedAdapter(
     private val context: Context,
     private val onWatchedTitleClick: (watchedTitleData: WatchedTitleData) -> Unit,
+    private val onInfoClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int, view: View) -> Unit
 ) : RecyclerView.Adapter<HomeWatchedAdapter.ViewHolder>() {
     private var list: List<WatchedTitleData> = ArrayList()
@@ -40,11 +41,11 @@ class HomeWatchedAdapter(
         }
 
         if (listModel.isTvShow) {
-            holder.titleWatchedSeason.text = "ს${listModel.season} ე${listModel.episode} / ${String.format("%02d:%02d",
+            holder.titleWatchedSeason.text = String.format("ს${listModel.season} ე${listModel.episode} / %02d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(listModel.watchedTime),
                     TimeUnit.MILLISECONDS.toSeconds(listModel.watchedTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(listModel.watchedTime))
-            )}"
+            )
         } else {
             holder.titleWatchedSeason.text = String.format("%02d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(listModel.watchedTime),
@@ -58,6 +59,10 @@ class HomeWatchedAdapter(
         } else {
             Picasso.get().load(R.drawable.movie_image_placeholder)
                 .into(holder.titleWatchedPosterImageView)
+        }
+
+        holder.titleWatchedInfo.setOnClickListener {
+            onInfoClick(listModel.id)
         }
 
         holder.titleWatchedMore.setOnClickListener {
@@ -74,5 +79,6 @@ class HomeWatchedAdapter(
         val titleWatchedPosterImageView: ImageView = view.rv_watchedtitle_item_poster
         val titleWatchedSeason: TextView = view.rv_watchedtitle_item_season
         val titleWatchedMore: ImageView = view.rv_watchedtitle_item_more
+        val titleWatchedInfo: ImageView = view.rv_watchedtitle_item_info
     }
 }

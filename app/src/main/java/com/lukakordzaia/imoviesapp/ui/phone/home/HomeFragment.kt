@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -43,6 +42,9 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
                 {
                     viewModel.onWatchedTitlePressed(it)
                 },
+                {
+                    viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
+                },
                 { titleId: Int, buttonView: View ->
                     val popUp = PopupMenu(context, buttonView)
                     popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
@@ -60,7 +62,6 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
                                     clearDbDialog.dismiss()
                                 }
                                 clearDbDialog.show()
-
                                 return@setOnMenuItemClickListener true
                             }
                             R.id.watched_check_info -> {

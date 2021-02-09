@@ -34,15 +34,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@drawable/rv_phone_default_card_view_background"
+        android:orientation="horizontal"
         android:padding="5dp"
-        app:layout_constraintTop_toBottomOf="@id/rv_watchedtitle_item_poster"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_watchedtitle_item_poster">
+
+        <ImageView
+            android:id="@+id/rv_watchedtitle_item_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/info_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rv_watchedtitle_item_more"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="5dp" />
+
 
         <ImageView
             android:id="@+id/rv_watchedtitle_item_more"
@@ -50,8 +65,12 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:src="@drawable/more_icon"
-            android:layout_gravity="right"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/rv_watchedtitle_item_info"
+            tools:layout_editor_absoluteY="5dp" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rv_tv_files_episode_container"
+    android:id="@+id/rv_episodes_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
+    android:layout_marginBottom="15dp"
     android:background="@drawable/rv_choose_details_episodes_pressed"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ImageView
+        android:id="@+id/rv_episodes_poster"
+        android:layout_width="140dp"
+        android:layout_height="90dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/movie_image_placeholder_landscape"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <TextView
-        android:id="@+id/rv_tv_files_episode_number"
+        android:id="@+id/rv_episodes_number"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:paddingTop="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_marginTop="5dp"
@@ -23,11 +31,11 @@
         android:textStyle="bold"
         android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/rv_episodes_poster"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/rv_tv_files_episode_name"
+        android:id="@+id/rv_episodes_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:focusable="true"
@@ -40,9 +48,9 @@
         android:fontFamily="@font/georgian_uppercase"
         android:textSize="15dp"
         android:textStyle="bold"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/rv_tv_files_episode_number"
-        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@id/rv_episodes_number"
+        app:layout_constraintStart_toEndOf="@id/rv_episodes_poster"
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

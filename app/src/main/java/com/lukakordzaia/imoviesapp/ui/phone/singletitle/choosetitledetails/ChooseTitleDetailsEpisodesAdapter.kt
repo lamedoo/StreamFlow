@@ -4,14 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.datamodels.TitleEpisodes
-import kotlinx.android.synthetic.main.tv_details_episodes_item.view.*
+import kotlinx.android.synthetic.main.rv_choose_details_episodes_item.view.*
 
 class ChooseTitleDetailsEpisodesAdapter(
         private val context: Context,
@@ -39,6 +39,8 @@ class ChooseTitleDetailsEpisodesAdapter(
 
         holder.episodeNumberTextView.text = "ეპიზოდი ${episodeModel.episodeNum}"
         holder.episodeNameTextView.text = episodeModel.episodeName
+
+        Glide.with(context).load(episodeModel.episodePoster).error(R.drawable.movie_image_placeholder_landscape).into(holder.episodePosterImageView)
     }
 
     override fun getItemCount(): Int {
@@ -46,8 +48,9 @@ class ChooseTitleDetailsEpisodesAdapter(
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val episodeContainer: ConstraintLayout = view.rv_tv_files_episode_container
-        val episodeNumberTextView: TextView = view.rv_tv_files_episode_number
-        val episodeNameTextView: TextView = view.rv_tv_files_episode_name
+        val episodeContainer: ConstraintLayout = view.rv_episodes_container
+        val episodeNumberTextView: TextView = view.rv_episodes_number
+        val episodeNameTextView: TextView = view.rv_episodes_name
+        val episodePosterImageView: ImageView = view.rv_episodes_poster
     }
 }
