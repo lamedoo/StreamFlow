@@ -18,6 +18,7 @@ import androidx.leanback.widget.BrowseFrameLayout.OnFocusSearchListener
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.datamodels.*
 import com.lukakordzaia.imoviesapp.ui.tv.details.TvDetailsViewModel
+import com.lukakordzaia.imoviesapp.ui.tv.details.titlefiles.presenters.TvCastPresenter
 import com.lukakordzaia.imoviesapp.ui.tv.details.titlefiles.presenters.TvEpisodesPresenter
 import com.lukakordzaia.imoviesapp.ui.tv.details.titlefiles.presenters.TvLanguagesPresenter
 import com.lukakordzaia.imoviesapp.ui.tv.details.titlefiles.presenters.TvSeasonsPresenter
@@ -75,24 +76,36 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
             }
         })
 
-        initRowsAdapter()
+        initRowsAdapter(isTvShow)
 
-        tvDetailsViewModel.getSingleTitleData(titleId)
-        tvDetailsViewModel.getSingleTitleFiles(titleId)
+        if (isTvShow) {
+            tvDetailsViewModel.getSingleTitleData(titleId)
+            tvDetailsViewModel.getSingleTitleFiles(titleId)
+
+            tvDetailsViewModel.numOfSeasons.observe(viewLifecycleOwner, {
+                val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
+                seasonsRowsAdapter(seasonCount)
+            })
+
+            tvDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
+                episodesRowsAdapter(it)
+            })
+
+            tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
+                val languages = it.reversed()
+                languageRowsAdapter(languages)
+            })
+        }
+        tvDetailsViewModel.getSingleTitleCast(titleId)
+        tvDetailsViewModel.getSingleTitleRelated(titleId)
 
 
-        tvDetailsViewModel.numOfSeasons.observe(viewLifecycleOwner, {
-            val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
-            seasonsRowsAdapter(seasonCount)
+        tvDetailsViewModel.castData.observe(viewLifecycleOwner, {
+            castRowsAdapter(it, isTvShow)
         })
 
-        tvDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
-            episodesRowsAdapter(it)
-        })
-
-        tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
-            val languages = it.reversed()
-            languageRowsAdapter(languages)
+        tvDetailsViewModel.singleTitleRelated.observe(viewLifecycleOwner, {
+            relatedRowsAdapter(it, isTvShow)
         })
 
         prepareBackgroundManager()
@@ -101,12 +114,21 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         onItemViewSelectedListener = ItemViewSelectedListener()
     }
 
-    private fun initRowsAdapter() {
-        val secondHeaderItem = ListRow(HeaderItem(0, ""), ArrayObjectAdapter(TvCardPresenter()))
-        val firstHeaderItem = ListRow(HeaderItem(1, "ეპიზოდები"), ArrayObjectAdapter(TvCardPresenter()))
-        val thirdIdem = ListRow(HeaderItem(2, "ენა"), ArrayObjectAdapter(TvCardPresenter()))
-        val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, thirdIdem)
-        rowsAdapter.addAll(0, initListRows)
+    private fun initRowsAdapter(isTvShow: Boolean) {
+        if (isTvShow) {
+            val secondHeaderItem = ListRow(HeaderItem(0, ""), ArrayObjectAdapter(TvCardPresenter()))
+            val firstHeaderItem = ListRow(HeaderItem(1, "ეპიზოდები"), ArrayObjectAdapter(TvCardPresenter()))
+            val thirdItem = ListRow(HeaderItem(2, ""), ArrayObjectAdapter(TvCardPresenter()))
+            val fourthItem = ListRow(HeaderItem(3, "მსახიობები"), ArrayObjectAdapter(TvCardPresenter()))
+            val fifthItem = ListRow(HeaderItem(4, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter()))
+            val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, thirdItem, fourthItem, fifthItem)
+            rowsAdapter.addAll(0, initListRows)
+        } else {
+            val fourthItem = ListRow(HeaderItem(0, "მსახიობები"), ArrayObjectAdapter(TvCardPresenter()))
+            val fifthItem = ListRow(HeaderItem(0, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter()))
+            val initListRows = mutableListOf(fourthItem, fifthItem)
+            rowsAdapter.addAll(0, initListRows)
+        }
     }
 
     private fun seasonsRowsAdapter(seasonList: List<Int>) {
@@ -137,8 +159,30 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                 add(it)
             }
         }
-        HeaderItem(2, "ენა"). also {
+        HeaderItem(2, ""). also {
             rowsAdapter.replace(2, ListRow(it, listRowAdapter))
+        }
+    }
+
+    private fun castRowsAdapter(castList: List<TitleCast.Data>, isTvShow: Boolean) {
+        val listRowAdapter = ArrayObjectAdapter(TvCastPresenter(requireContext())).apply {
+            castList.forEach {
+                add(it)
+            }
+        }
+        HeaderItem(if (isTvShow) 3 else 0, "მსახიობები"). also {
+            rowsAdapter.replace(if (isTvShow) 3 else 0, ListRow(it, listRowAdapter))
+        }
+    }
+
+    private fun relatedRowsAdapter(relatedList: List<TitleList.Data>, isTvShow: Boolean) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+            relatedList.forEach {
+                add(it)
+            }
+        }
+        HeaderItem(if (isTvShow) 4 else 1, "მსგავსი"). also {
+            rowsAdapter.replace(if (isTvShow) 4 else 1, ListRow(it, listRowAdapter))
         }
     }
 

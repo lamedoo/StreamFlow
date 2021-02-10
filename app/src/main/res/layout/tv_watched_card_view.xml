@@ -27,7 +27,7 @@
         android:layout_gravity="right|bottom"
         android:background="@color/accent_color"
         android:fontFamily="@font/georgian_uppercase"
-        android:textColor="@color/secondary_text_color"
+        android:textColor="@color/text_on_accent_color"
         android:padding="5dp"
         android:text="ს1 ე24"
         android:textStyle="bold"

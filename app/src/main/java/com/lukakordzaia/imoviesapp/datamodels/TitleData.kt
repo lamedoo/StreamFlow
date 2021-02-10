@@ -27,7 +27,7 @@ data class TitleData(
         @SerializedName("duration")
         val duration: Int?,
         @SerializedName("genres")
-        val genres: Genres?,
+        val genres: Genres,
         @SerializedName("hasSubtitles")
         val hasSubtitles: Boolean?,
         @SerializedName("id")
@@ -156,7 +156,7 @@ data class TitleData(
 
         data class Genres(
             @SerializedName("data")
-            val `data`: List<DataGenres>?
+            val `data`: List<DataGenres>
         ) {
             data class DataGenres(
                 @SerializedName("backgroundImage")

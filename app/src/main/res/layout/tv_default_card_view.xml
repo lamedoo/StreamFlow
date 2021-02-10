@@ -37,7 +37,7 @@
         android:fontFamily="@font/georgian_uppercase"
         android:textSize="12dp"
         android:textStyle="bold"
-        android:textColor="@color/secondary_text_color"
+        android:textColor="@color/text_on_accent_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_default_card_poster"/>

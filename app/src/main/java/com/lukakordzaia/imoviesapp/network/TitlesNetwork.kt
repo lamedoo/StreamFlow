@@ -39,8 +39,12 @@ interface TitlesNetwork {
     suspend fun getSingleTitle(@Path("id") id: Int) : Response<TitleData>
 
     @Headers("User-Agent: imovies")
-    @GET ("movies/{id}/persons?filters%5Brole%5D=cast")
-    suspend fun getSingleTitleCast(@Path("id") id: Int) : Response<TitleCast>
+    @GET ("movies/{id}/persons")
+    suspend fun getSingleTitleCast(@Path("id") id: Int, @Query("filters[role]") role: String) : Response<TitleCast>
+
+    @Headers("User-Agent: imovies")
+    @GET ("movies/{id}/related?page=1&per_page=10")
+    suspend fun getSingleTitleRelated(@Path("id") id: Int): Response<TitleList>
 
     @Headers("User-Agent: imovies")
     @GET ("movies/{id}/season-files/{season_number}")

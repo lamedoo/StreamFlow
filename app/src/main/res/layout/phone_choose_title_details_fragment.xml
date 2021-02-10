@@ -38,18 +38,41 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
             android:id="@+id/choose_movie_details_continue"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="გაგრძელება"
             android:letterSpacing="0"
-            android:textColor="@color/accent_color"
-            android:backgroundTint="@color/white"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/georgian_uppercase"
+            android:textColor="@color/text_on_accent_color"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.45"
             android:visibility="gone"
             tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/choose_movie_details_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:text="უყურეთ"
+            android:textAlignment="center"
+            android:fontFamily="@font/georgian_uppercase"
+            android:letterSpacing="0"
+            android:background="@drawable/button_background"
+            android:textColor="@color/text_on_accent_color"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.45"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/language_title"
@@ -60,7 +83,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/choose_movie_details_continue"
+            app:layout_constraintTop_toBottomOf="@id/choose_movie_details_play"
             app:layout_goneMarginTop="30dp" />
 
         <Spinner
@@ -71,17 +94,7 @@
             android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/language_title"
-            app:layout_constraintTop_toBottomOf="@id/choose_movie_details_continue" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/choose_movie_details_play"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="ყურება"
-            android:letterSpacing="0"
-            android:backgroundTint="@color/accent_color"
-            app:layout_constraintTop_toBottomOf="@id/language_title" />
+            app:layout_constraintTop_toBottomOf="@id/choose_movie_details_play" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

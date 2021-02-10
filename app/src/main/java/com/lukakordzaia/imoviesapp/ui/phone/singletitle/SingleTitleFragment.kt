@@ -2,26 +2,30 @@ package com.lukakordzaia.imoviesapp.ui.phone.singletitle
 
 import android.app.Dialog
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.animations.PlayButtonAnimations
 import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
-import com.lukakordzaia.imoviesapp.ui.phone.singletitle.tabs.TabsPagerAdapter
 import com.lukakordzaia.imoviesapp.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.phone_single_title_fragment_new.*
+import kotlinx.android.synthetic.main.phone_single_title_details.*
+import kotlinx.android.synthetic.main.phone_single_title_fragment.*
+import kotlinx.android.synthetic.main.phone_single_title_info.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment_new) {
+class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
     private val viewModel by viewModel<SingleTitleViewModel>()
+    private lateinit var singleTitleCastAdapter: SingleTitleCastAdapter
+    private lateinit var singleTitleRelatedAdapter: SingleTitleRelatedAdapter
     private val args: SingleTitleFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +36,8 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment_new) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getSingleTitleData(args.titleId)
+        viewModel.getSingleTitleCast(args.titleId)
+        viewModel.getSingleTitleRelated(args.titleId)
 
         single_title_back_button.setOnClickListener {
             requireActivity().onBackPressed()
@@ -95,17 +101,16 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment_new) {
 
         })
 
+        viewModel.titleGenres.observe(viewLifecycleOwner, {
+            single_title_genre_names.text = TextUtils.join(", ", it)
+        })
+
         viewModel.titleDetails.observe(viewLifecycleOwner, Observer {
             iv_post_video_icon.setOnClickListener { _ ->
                 viewModel.onPlayPressed(args.titleId, TitleDetails(it.numOfSeasons, it.isTvShow))
 
                 PlayButtonAnimations().rotatePlayButton(iv_post_video_icon, 1000)
             }
-//            single_title_play_collapsed.setOnClickListener { _ ->
-//                viewModel.onPlayPressed(args.titleId, TitleDetails(it.numOfSeasons, it.isTvShow))
-//
-//                PlayButtonAnimations().rotatePlayButton(single_title_play_collapsed, 1000)
-//            }
         })
 
         viewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
@@ -128,42 +133,45 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment_new) {
         })
 
         single_title_appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-//            if (abs(verticalOffset) == single_title_appbar.totalScrollRange) {
-//                PlayButtonAnimations().showPlayButton(single_title_play_collapsed, 1000)
-//            } else if (abs(verticalOffset) == 0) {
-//                PlayButtonAnimations().hidePlayButton(single_title_play_collapsed, 1000)
-//            }
+            if (kotlin.math.abs(verticalOffset) == single_title_appbar.totalScrollRange) {
+                single_title_details_scroll.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primaryColor))
+            } else {
+                single_title_details_scroll.background = ResourcesCompat.getDrawable(requireContext().resources, R.drawable.single_title_tabs_background, null)
+            }
+        })
+
+        viewModel.titleDirector.observe(viewLifecycleOwner, {
+            single_title_director_name.text = it.originalName
         })
 
 
-        // Tabs Customization
-        tab_layout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(), R.color.accent_color))
-        tab_layout.tabTextColors = ContextCompat.getColorStateList(requireContext(), R.color.general_text_color)
-        val numberOfTabs = 2
+        // Cast
+        val castLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        singleTitleCastAdapter = SingleTitleCastAdapter(requireContext()) {
+            requireContext().createToast(it)
+        }
+        rv_single_title_cast.layoutManager = castLayout
+        rv_single_title_cast.adapter = singleTitleCastAdapter
 
-        tab_layout.tabMode = TabLayout.MODE_FIXED
-        tab_layout.isInlineLabel = true
-
-        val adapter = TabsPagerAdapter(childFragmentManager, lifecycle, numberOfTabs, args.titleId)
-        tabs_viewpager.adapter = adapter
-        tabs_viewpager.isUserInputEnabled = false
-
-
-
-        TabLayoutMediator(tab_layout, tabs_viewpager) { tab, position ->
-            when (position) {
-                0 -> {
-                    tab.text = "ინფო"
-                }
-                1 -> {
-                    tab.text = "მსგავსი"
-                }
-            }
-        }.attach()
+        viewModel.castData.observe(viewLifecycleOwner, {
+            singleTitleCastAdapter.setCastList(it)
+        })
 
 
         viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
+        })
+
+        //Related
+        val relatedLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        singleTitleRelatedAdapter = SingleTitleRelatedAdapter(requireContext()) {
+            viewModel.onRelatedTitlePressed(it)
+        }
+        rv_single_title_related.layoutManager = relatedLayout
+        rv_single_title_related.adapter = singleTitleRelatedAdapter
+
+        viewModel.singleTitleRelated.observe(viewLifecycleOwner, {
+            singleTitleRelatedAdapter.setRelatedList(it)
         })
 
     }

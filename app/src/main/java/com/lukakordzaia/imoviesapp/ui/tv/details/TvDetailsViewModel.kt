@@ -5,11 +5,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.DbDetails
-import com.lukakordzaia.imoviesapp.datamodels.TitleData
-import com.lukakordzaia.imoviesapp.datamodels.TitleEpisodes
-import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
+import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
+import com.lukakordzaia.imoviesapp.datamodels.*
 import com.lukakordzaia.imoviesapp.network.LoadingState
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.TvDetailsRepository
@@ -45,6 +43,12 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
 
     private val _numOfSeasons = MutableLiveData<Int>()
     val numOfSeasons: LiveData<Int> = _numOfSeasons
+
+    private val _castData = MutableLiveData<List<TitleCast.Data>>()
+    val castData: LiveData<List<TitleCast.Data>> = _castData
+
+    private val _singleTitleRelated = MutableLiveData<List<TitleList.Data>>()
+    val singleTitleRelated: LiveData<List<TitleList.Data>> = _singleTitleRelated
 
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
@@ -136,5 +140,31 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
 
     fun getEpisodeFile(episodeNum: Int) {
         _chosenEpisode.value = episodeNum
+    }
+
+    fun getSingleTitleCast(titleId: Int) {
+        viewModelScope.launch {
+            when (val cast = repository.getSingleTitleCast(titleId, "cast")) {
+                is Result.Success -> {
+                    val data = cast.data.data
+
+                    _castData.value = data
+                }
+                is Result.Error -> {
+                    Log.d("errorcast", cast.exception)
+                }
+            }
+        }
+    }
+
+    fun getSingleTitleRelated(titleId: Int) {
+        viewModelScope.launch {
+            when (val related = repository.getSingleTitleRelated(titleId)) {
+                is Result.Success -> {
+                    val data = related.data.data
+                    _singleTitleRelated.value = data
+                }
+            }
+        }
     }
 }

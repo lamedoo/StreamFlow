@@ -25,7 +25,7 @@ data class TitleCast(
         @SerializedName("originalName")
         val originalName: String,
         @SerializedName("personRole")
-        val personRole: PersonRole?,
+        val personRole: PersonRole,
         @SerializedName("poster")
         val poster: String,
         @SerializedName("primaryName")
@@ -43,13 +43,13 @@ data class TitleCast(
     ) {
         data class PersonRole(
             @SerializedName("data")
-            val `data`: Data?
+            val `data`: Data
         ) {
             data class Data(
                 @SerializedName("character")
                 val character: String?,
                 @SerializedName("role")
-                val role: String?
+                val role: String
             )
         }
 

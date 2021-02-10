@@ -1,52 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rv_singlegenre_item_root"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:id="@+id/rv_cast_item_root"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginBottom="30dp"
     android:layout_marginTop="5dp"
-    android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/rv_singlegenre_item_poster"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitXY"
-        app:shapeAppearanceOverlay="@style/roundedCornersImageView"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/rv_cast_item_poster"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         tools:src="@drawable/friends_poster"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <TextView
-        android:id="@+id/rv_single_genre_istvshow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/accent_color"
-        android:textColor="@color/text_on_accent_color"
-        tools:text="სერიალი"
-        android:padding="5dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
-        app:layout_constraintTop_toBottomOf="@id/rv_singlegenre_item_poster"
+        app:layout_constraintTop_toBottomOf="@id/rv_cast_item_poster"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/rv_singlegenre_item_name_geo"
+            android:id="@+id/rv_cast_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="2"
             android:textColor="@color/general_text_color"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
             tools:text="ფილმის სახელი"/>
 
     </LinearLayout>

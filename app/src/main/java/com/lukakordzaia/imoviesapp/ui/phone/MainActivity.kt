@@ -21,8 +21,6 @@ import com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesFragment
 import com.lukakordzaia.imoviesapp.ui.phone.settings.SettingsFragment
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleFragment
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment
-import com.lukakordzaia.imoviesapp.ui.phone.singletitle.tabs.SingleTitleFragmentInfo
-import com.lukakordzaia.imoviesapp.ui.phone.singletitle.tabs.SingleTitleFragmentSimilar
 import com.lukakordzaia.imoviesapp.ui.phone.videoplayer.VideoPlayerFragment
 import com.lukakordzaia.imoviesapp.utils.setGone
 import com.lukakordzaia.imoviesapp.utils.setVisible
@@ -51,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                         showBottomNavigation()
                         app_main_toolbar.setVisible()
                     }
-                    is SingleTitleFragmentInfo, is SingleTitleFragmentSimilar, is ChooseTitleDetailsFragment, is SettingsFragment, is SingleGenreFragment -> {
+                    is ChooseTitleDetailsFragment, is SettingsFragment, is SingleGenreFragment -> {
                         hideBottomNavigation()
                     }
                     is SingleTitleFragment -> {

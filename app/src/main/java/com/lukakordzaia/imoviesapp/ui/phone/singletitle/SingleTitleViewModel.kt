@@ -5,16 +5,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
 import com.lukakordzaia.imoviesapp.database.DbDetails
-import com.lukakordzaia.imoviesapp.datamodels.TitleData
-import com.lukakordzaia.imoviesapp.datamodels.TitleDetails
-import com.lukakordzaia.imoviesapp.datamodels.TitleEpisodes
-import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
+import com.lukakordzaia.imoviesapp.database.ImoviesDatabase
+import com.lukakordzaia.imoviesapp.datamodels.*
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.repository.SingleTitleRepository
 import com.lukakordzaia.imoviesapp.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragmentDirections
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class SingleTitleViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
@@ -47,6 +45,19 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
     private val _episodeNames = MutableLiveData<List<TitleEpisodes>>()
     val episodeNames: LiveData<List<TitleEpisodes>> = _episodeNames
 
+    private val _castData = MutableLiveData<List<TitleCast.Data>>()
+    val castData: LiveData<List<TitleCast.Data>> = _castData
+
+    private val _titleGenres = MutableLiveData<List<String>>()
+    val titleGenres: LiveData<List<String>> = _titleGenres
+    private val fetchTitleGenres: MutableList<String> = ArrayList()
+
+    private val _titleDirector = MutableLiveData<TitleCast.Data>()
+    val titleDirector: LiveData<TitleCast.Data> = _titleDirector
+
+    private val _singleTitleRelated = MutableLiveData<List<TitleList.Data>>()
+    val singleTitleRelated: LiveData<List<TitleList.Data>> = _singleTitleRelated
+
     fun onPlayPressed(titleId: Int, titleDetails: TitleDetails) {
         navigateToNewFragment(SingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
                 titleId,
@@ -66,12 +77,22 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
         ))
     }
 
+    fun onRelatedTitlePressed(titleId: Int) {
+        navigateToNewFragment(SingleTitleFragmentDirections.actionSingleTitleFragmentSelf(titleId))
+    }
+
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
             when (val data = repository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
                     _singleTitleData.value = data.data.data
                     checkTvShowAndFiles()
+
+                    data.data.data.genres.data.forEach {
+                        fetchTitleGenres.add(it.primaryName!!)
+                    }
+                    _titleGenres.value = fetchTitleGenres
+
                     setLoading(false)
                 }
                 is Result.Error -> {
@@ -113,8 +134,8 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
     fun onPlayButtonPressed(titleId: Int, isTvShow: Boolean) {
         navigateToNewFragment(
             ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
-                chosenSeason.value!!,
-                chosenEpisode.value!!,
+                    if (isTvShow) 1 else chosenSeason.value!!,
+                    if (isTvShow) 1 else chosenEpisode.value!!,
                 titleId,
                 isTvShow,
                 chosenLanguage.value!!,
@@ -124,7 +145,7 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
     }
 
 
-    fun onContinueWatchingPressed(dbDetails: DbDetails,) {
+    fun onContinueWatchingPressed(dbDetails: DbDetails) {
         navigateToNewFragment(
             ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
             titleId = dbDetails.titleId,
@@ -137,9 +158,9 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
         ))
     }
 
-    fun getSingleTitleFiles(movieId: Int) {
+    fun getSingleTitleFiles(titleId: Int) {
         viewModelScope.launch {
-            when (val files = repository.getSingleTitleFiles(movieId)) {
+            when (val files = repository.getSingleTitleFiles(titleId)) {
                 is Result.Success -> {
                     val data = files.data.data
                     if (data.isNotEmpty()) {
@@ -167,10 +188,10 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
         _chosenLanguage.value = language
     }
 
-    fun getSeasonFiles(movieId: Int, season: Int) {
+    fun getSeasonFiles(titleId: Int, season: Int) {
         _chosenSeason.value = season
         viewModelScope.launch {
-            when (val files = repository.getSingleTitleFiles(movieId, season)) {
+            when (val files = repository.getSingleTitleFiles(titleId, season)) {
                 is Result.Success -> {
                     val data = files.data.data
 
@@ -192,5 +213,49 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
 
     fun getEpisodeFile(episodeNum: Int) {
         _chosenEpisode.value = episodeNum
+    }
+
+    fun getSingleTitleCast(titleId: Int) {
+        viewModelScope.launch {
+            coroutineScope {
+                launch {
+                    when (val cast = repository.getSingleTitleCast(titleId, "cast")) {
+                        is Result.Success -> {
+                            val data = cast.data.data
+
+                            _castData.value = data
+                        }
+                        is Result.Error -> {
+                            Log.d("errorcast", cast.exception)
+                        }
+                    }
+                }
+                launch {
+                    when (val cast = repository.getSingleTitleCast(titleId, "director")) {
+                        is Result.Success -> {
+                            val data = cast.data.data
+
+                            if (!data.isNullOrEmpty()) {
+                                _titleDirector.value = data[0]
+                            }
+                        }
+                        is Result.Error -> {
+                            Log.d("errorcast", cast.exception)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun getSingleTitleRelated(titleId: Int) {
+        viewModelScope.launch {
+            when (val related = repository.getSingleTitleRelated(titleId)) {
+                is Result.Success -> {
+                    val data = related.data.data
+                    _singleTitleRelated.value = data
+                }
+            }
+        }
     }
 }

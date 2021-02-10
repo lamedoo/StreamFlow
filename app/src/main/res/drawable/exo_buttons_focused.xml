@@ -6,6 +6,12 @@
             <corners android:radius="100dp"/>
         </shape>
     </item>
+    <item android:state_pressed="true" >
+        <shape>
+            <solid android:color="@color/accent_color"/>
+            <corners android:radius="100dp"/>
+        </shape>
+    </item>
 <!--    <item android:state_focused="false">-->
 <!--        <shape>-->
 <!--            <solid android:color="#551d1d1d"/>-->

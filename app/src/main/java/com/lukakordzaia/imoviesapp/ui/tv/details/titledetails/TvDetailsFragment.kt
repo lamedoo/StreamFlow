@@ -157,19 +157,19 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
         }
 
         if (isTvShow) {
-            tv_details_go_bottom.setVisible()
-            tv_details_go_bottom.setOnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) {
-                    parentFragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
-                            .replace(R.id.tv_details_fr_nav_host, TvTitleFilesFragment())
-                            .show(TvTitleFilesFragment())
-                            .commit()
-                }
-                this.hasFocus = hasFocus
-            }
+            tv_details_go_bottom_title.text = "ეპიზოდები და მეტი"
         } else {
-            //            tv_details_go_bottom_title.text = "მსგავსი ფილმები"
+            tv_details_go_bottom_title.text = "მსხახიობები და მეტი"
+        }
+        tv_details_go_bottom.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                parentFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
+                        .replace(R.id.tv_details_fr_nav_host, TvTitleFilesFragment())
+                        .show(TvTitleFilesFragment())
+                        .commit()
+            }
+            this.hasFocus = hasFocus
         }
 
         tvDetailsViewModel.getSingleTitleFiles(titleId)

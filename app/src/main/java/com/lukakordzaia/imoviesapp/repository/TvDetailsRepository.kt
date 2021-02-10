@@ -1,10 +1,12 @@
 package com.lukakordzaia.imoviesapp.repository
 
 import androidx.lifecycle.LiveData
-import com.lukakordzaia.imoviesapp.database.WatchedDao
 import com.lukakordzaia.imoviesapp.database.DbDetails
+import com.lukakordzaia.imoviesapp.database.WatchedDao
+import com.lukakordzaia.imoviesapp.datamodels.TitleCast
 import com.lukakordzaia.imoviesapp.datamodels.TitleData
 import com.lukakordzaia.imoviesapp.datamodels.TitleFiles
+import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.lukakordzaia.imoviesapp.network.Result
 import com.lukakordzaia.imoviesapp.network.RetrofitBuilder
 import com.lukakordzaia.imoviesapp.network.RetrofitCall
@@ -26,6 +28,14 @@ class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): Retrofi
 
     suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<TitleFiles> {
         return retrofitCall { service.getSingleFiles(titleId, season_number) }
+    }
+
+    suspend fun getSingleTitleCast(titleId: Int, role: String) : Result<TitleCast> {
+        return retrofitCall { service.getSingleTitleCast(titleId, role) }
+    }
+
+    suspend fun getSingleTitleRelated(titleId: Int): Result<TitleList> {
+        return retrofitCall { service.getSingleTitleRelated(titleId) }
     }
 
     suspend fun deleteTitleFromDb(watchedDao: WatchedDao, titleId: Int) {

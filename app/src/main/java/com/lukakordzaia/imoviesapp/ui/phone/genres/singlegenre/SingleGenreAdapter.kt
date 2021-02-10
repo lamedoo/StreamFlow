@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.datamodels.TitleList
 import com.squareup.picasso.Picasso
@@ -54,9 +53,9 @@ class SingleGenreAdapter(private val context: Context, private val onTitleClick:
         }
 
         if (listModel.isTvShow == true) {
-            Glide.with(context).load(R.drawable.tvshow_icon).into(holder.isTvShowTextView)
+            holder.isTvShowTextView.text = "სერიალი"
         } else {
-            Glide.with(context).load(R.drawable.movie_icon).into(holder.isTvShowTextView)
+            holder.isTvShowTextView.text = "ფილმი"
         }
 
     }
@@ -69,6 +68,6 @@ class SingleGenreAdapter(private val context: Context, private val onTitleClick:
         val titleRoot: ConstraintLayout = view.rv_singlegenre_item_root
         val titlePosterImageView: ImageView = view.rv_singlegenre_item_poster
         val titleNameGeoTextView: TextView = view.rv_singlegenre_item_name_geo
-        val isTvShowTextView: ImageView = view.rv_single_genre_istvshow
+        val isTvShowTextView: TextView = view.rv_single_genre_istvshow
     }
 }

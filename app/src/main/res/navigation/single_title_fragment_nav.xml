@@ -45,12 +45,15 @@
                 app:argType="string"
                 app:nullable="true"/>
         </action>
+        <action
+            android:id="@+id/action_singleTitleFragment_self"
+            app:destination="@id/singleTitleFragment" />
     </fragment>
     <dialog
         android:id="@+id/chooseTitleDetailsFragment"
         android:name="com.lukakordzaia.imoviesapp.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment"
         android:label="fragment_choose_title_details"
-        tools:layout="@layout/fragment_choose_title_details" >
+        tools:layout="@layout/phone_choose_title_details_fragment" >
         <argument
             android:name="titleId"
             app:argType="integer" />

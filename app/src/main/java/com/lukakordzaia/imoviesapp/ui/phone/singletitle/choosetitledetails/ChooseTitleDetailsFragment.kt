@@ -12,7 +12,7 @@ import com.lukakordzaia.imoviesapp.R
 import com.lukakordzaia.imoviesapp.helpers.SpinnerClass
 import com.lukakordzaia.imoviesapp.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.imoviesapp.utils.*
-import kotlinx.android.synthetic.main.fragment_choose_title_details.*
+import kotlinx.android.synthetic.main.phone_choose_title_details_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -27,7 +27,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_choose_title_details, container, false)
+        return inflater.inflate(R.layout.phone_choose_title_details_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,7 +62,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         if (args.isTvShow) {
             season_spinner_container.setVisible()
             rv_episodes.setVisible()
-            choose_movie_details_play.setGone()
+//            choose_movie_details_play.setGone()
         }
 
         val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
@@ -97,13 +97,13 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
                     }
 
                     if (args.isTvShow) {
-                        choose_movie_details_continue.text = String.format("სეზონი: ${it.season} ეპიზოდი: ${it.episode} / %02d:%02d  - ${it.language}",
+                        choose_movie_details_continue.text = String.format("გააგრძელეთ: \nს:${it.season} ე:${it.episode} / %02d:%02d",
                                 TimeUnit.MILLISECONDS.toMinutes(it.watchedTime),
                                 TimeUnit.MILLISECONDS.toSeconds(it.watchedTime) -
                                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedTime))
                         )
                     } else {
-                        choose_movie_details_continue.text = String.format("განაგრძეთ ყურება %02d:%02d - ${it.language}",
+                        choose_movie_details_continue.text = String.format("გააგრძელეთ: \n%02d:%02d",
                                 TimeUnit.MILLISECONDS.toMinutes(it.watchedTime),
                                 TimeUnit.MILLISECONDS.toSeconds(it.watchedTime) -
                                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedTime))
