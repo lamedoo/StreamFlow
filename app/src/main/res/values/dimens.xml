@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="fragment_padding">10dp</dimen>
+    <dimen name="dots_height">10dp</dimen>
+    <dimen name="radius">2dp</dimen>
 </resources>

@@ -25,4 +25,8 @@ class CategoriesRepository(private val retrofitBuilder: RetrofitBuilder): Retrof
     suspend fun getSingleStudio(studioId: Int, page: Int): Result<TitleList> {
         return retrofitCall { service.getSingleStudio(studioId, page) }
     }
+
+    suspend fun getTopTrailers(): Result<TitleList> {
+        return retrofitCall { service.getTopTrailers() }
+    }
 }

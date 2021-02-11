@@ -11,7 +11,7 @@ import com.lukakordzaia.streamflow.datamodels.StudioList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_studio_item.view.*
 
-class StudiosAdapter(private val context: Context, private val onGenreClick: (genreId: Int) -> Unit) : RecyclerView.Adapter<StudiosAdapter.ViewHolder>() {
+class StudiosAdapter(private val context: Context, private val onStudiosClick: (genreId: Int) -> Unit) : RecyclerView.Adapter<StudiosAdapter.ViewHolder>() {
     private var list: List<StudioList.Data> = ArrayList()
 
     fun setStudioList(list: List<StudioList.Data>) {
@@ -28,7 +28,7 @@ class StudiosAdapter(private val context: Context, private val onGenreClick: (ge
 
         Picasso.get().load(studioModel.poster).into(holder.studioPosterImageView)
         holder.studioPosterImageView.setOnClickListener {
-            onGenreClick(studioModel.id)
+            onStudiosClick(studioModel.id)
         }
     }
 

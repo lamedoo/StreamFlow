@@ -27,7 +27,7 @@ data class TitleList(
         @SerializedName("hasSubtitles")
         val hasSubtitles: Boolean?,
         @SerializedName("id")
-        val id: Int?,
+        val id: Int,
         @SerializedName("imdbUrl")
         val imdbUrl: String?,
         @SerializedName("income")
@@ -167,8 +167,19 @@ data class TitleList(
 
         data class Trailers(
             @SerializedName("data")
-            val `data`: List<Any?>?
-        )
+            val `data`: List<TrailerData?>?
+        ) {
+            data class TrailerData(
+                @SerializedName("id")
+                val id: Int,
+                @SerializedName("name")
+                val name: String,
+                @SerializedName("fileUrl")
+                val fileUrl: String,
+                @SerializedName("language")
+                val language: String
+            )
+        }
 
         data class UserFollows(
             @SerializedName("data")

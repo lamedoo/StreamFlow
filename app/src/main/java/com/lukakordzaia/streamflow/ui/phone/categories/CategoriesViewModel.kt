@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.GenreList
 import com.lukakordzaia.streamflow.datamodels.StudioList
+import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.CategoriesRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -19,12 +20,26 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
     private val _topStudioList = MutableLiveData<List<StudioList.Data>>()
     val topStudioList: LiveData<List<StudioList.Data>> = _topStudioList
 
+    private val _topTrailerList = MutableLiveData<List<TitleList.Data>>()
+    val topTrailerList: LiveData<List<TitleList.Data>> = _topTrailerList
+
     fun onSingleGenrePressed(genreId: Int) {
         navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleGenreFragment(genreId))
     }
 
     fun onSingleStudioPressed(studioId: Int) {
         navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleStudioFragment(studioId))
+    }
+
+    fun onSingleTrailerPressed(titleId: Int, trailerUrl: String) {
+        navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToVideoPlayerFragmentNav(
+            titleId = titleId,
+            chosenSeason = 0,
+            chosenEpisode = 0,
+            isTvShow = false,
+            chosenLanguage = "ENG",
+            trailerUrl = trailerUrl
+        ))
     }
 
     fun getAllGenres() {
@@ -50,6 +65,20 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
                 }
                 is Result.Error -> {
                     Log.d("errorgenres", studios.exception)
+                }
+            }
+        }
+    }
+
+    fun getTopTrailers() {
+        viewModelScope.launch {
+            when (val trailers = repository.getTopTrailers()) {
+                is Result.Success -> {
+                    _topTrailerList.value = trailers.data.data
+                    setLoading(false)
+                }
+                is Result.Error -> {
+                    Log.d("errortrailers", trailers.exception)
                 }
             }
         }

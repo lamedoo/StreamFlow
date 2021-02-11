@@ -73,7 +73,11 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     if (videoPlayerViewModel.isTvShow.value == true) {
                         setEpisodeName(name)
                     } else {
-                        setMovieName(name[player.currentWindowIndex])
+                        if (name.isNullOrEmpty()) {
+                            setMovieName("ტრეილერი")
+                        } else {
+                            setMovieName(name[player.currentWindowIndex])
+                        }
                     }
                 })
             }

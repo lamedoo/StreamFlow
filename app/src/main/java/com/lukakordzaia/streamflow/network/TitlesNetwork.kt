@@ -35,6 +35,10 @@ interface TitlesNetwork {
     suspend fun getTopStudios() : Response<StudioList>
 
     @Headers("User-Agent: imovies")
+    @GET ("trailers/trailer-day?page=1&per_page=5")
+    suspend fun getTopTrailers() : Response<TitleList>
+
+    @Headers("User-Agent: imovies")
     @GET("movies?filters%5Bwith_files%5D=yes&per_page=55&sort=-year")
     suspend fun getSingleStudio(@Query("filters[studio]") genreId: Int, @Query("page") page: Int) : Response<TitleList>
 
