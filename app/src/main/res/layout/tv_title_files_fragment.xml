@@ -36,7 +36,7 @@
 
         <fragment
             android:id="@+id/files_layout"
-            android:name="com.lukakordzaia.imoviesapp.ui.tv.details.titlefiles.TvTitleFilesBrowse"
+            android:name="com.lukakordzaia.medootv.ui.tv.details.titlefiles.TvTitleFilesBrowse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_details_go_top"/>

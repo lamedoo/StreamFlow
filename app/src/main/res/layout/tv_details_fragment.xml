@@ -308,16 +308,19 @@
                     android:layout_height="wrap_content"
                     android:focusable="false"
                     android:paddingTop="3dp"
+                    android:layout_marginRight="5dp"
                     android:focusableInTouchMode="false"
                     android:fontFamily="@font/georgian_uppercase"
                     android:textStyle="bold"
                     android:text="წაშლა"
-                    android:textColor="@android:color/holo_red_dark"/>
+                    android:textColor="@color/red"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/remove_title_from_db"/>
+                    android:src="@drawable/remove_db_title_icon"
+                    android:tint="@color/red"
+                    tools:ignore="UseAppTint" />
 
             </LinearLayout>
 

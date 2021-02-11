@@ -23,7 +23,9 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            tools:visibility="visible">
             
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/single_title_appbar"
@@ -97,7 +99,8 @@
                         android:id="@+id/single_title_delete_image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/remove_title_from_db" />
+                        android:src="@drawable/remove_db_title_icon"
+                        app:tint="@color/red" />
 
                 </LinearLayout>
 

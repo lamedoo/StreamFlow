@@ -11,7 +11,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.lukakordzaia.imoviesapp"
+        applicationId "com.lukakordzaia.medootv"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1

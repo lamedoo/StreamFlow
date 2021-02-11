@@ -11,8 +11,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/rv_home_item_poster"
-        android:layout_width="140dp"
-        android:layout_height="200dp"
+        android:layout_width="130dp"
+        android:layout_height="180dp"
         android:scaleType="fitXY"
         app:shapeAppearanceOverlay="@style/roundedCornersImageView"
         tools:src="@drawable/friends_poster"

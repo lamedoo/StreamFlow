@@ -12,26 +12,60 @@
 
     <ImageView
         android:id="@+id/rv_watchedtitle_item_poster"
-        android:layout_width="140dp"
-        android:layout_height="200dp"
+        android:layout_width="130dp"
+        android:layout_height="180dp"
         android:scaleType="fitXY"
         tools:src="@drawable/friends_poster"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <View
+        android:layout_width="130dp"
+        android:layout_height="180dp"
+        android:background="@drawable/video_player_background"
+        app:layout_constraintStart_toStartOf="@id/rv_watchedtitle_item_poster"
+        app:layout_constraintEnd_toEndOf="@id/rv_watchedtitle_item_poster"
+        app:layout_constraintTop_toTopOf="@id/rv_watchedtitle_item_poster"
+        app:layout_constraintBottom_toBottomOf="@id/rv_watchedtitle_item_poster"/>
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/rv_db_item_seekbar"
+        android:layout_width="130dp"
+        android:layout_height="10dp"
+        android:thumbTint="@color/general_text_color"
+        android:thumb="@color/accent_color"
+        android:progressTint="@color/accent_color"
+        tools:progress="50"
+        android:progressBackgroundTint="@color/general_text_color"
+        app:layout_constraintStart_toStartOf="@id/rv_watchedtitle_item_poster"
+        app:layout_constraintEnd_toEndOf="@id/rv_watchedtitle_item_poster"
+        app:layout_constraintBottom_toBottomOf="@id/rv_watchedtitle_item_poster"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/exo_play"
+        android:background="@drawable/phone_db_title_play_button_background"
+        app:layout_constraintStart_toStartOf="@id/rv_watchedtitle_item_poster"
+        app:layout_constraintEnd_toEndOf="@id/rv_watchedtitle_item_poster"
+        app:layout_constraintTop_toTopOf="@id/rv_watchedtitle_item_poster"
+        app:layout_constraintBottom_toBottomOf="@id/rv_watchedtitle_item_poster"/>
+
     <TextView
         android:id="@+id/rv_watchedtitle_item_season"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:background="@color/accent_color"
+        android:textSize="11sp"
         android:fontFamily="@font/georgian_uppercase"
-        android:padding="5dp"
+        android:paddingTop="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:text="ს1 ე24"
         android:textStyle="bold"
-        android:textColor="@color/text_on_accent_color"
-        app:layout_constraintBottom_toBottomOf="@id/rv_watchedtitle_item_poster"
+        android:textColor="@color/general_text_color"
+        app:layout_constraintBottom_toTopOf="@id/rv_db_item_seekbar"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible" />
 

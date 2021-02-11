@@ -7,13 +7,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.phone.searchtitles.SearchTitlesFragment">
 
-    <androidx.appcompat.widget.SearchView
+    <com.lukakordzaia.medootv.ui.customviews.SearchEditText
         android:id="@+id/search_title_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:iconifiedByDefault="false"
-        android:queryHint="შეიყვანეთ სათაური"
+        android:background="@drawable/phone_search_bar_background"
+        android:padding="10dp"
+        android:hint="ფილმები, სერიალები"
+        android:fontFamily="@font/georgian_uppercase"
         android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:maxLines="1"
         app:layout_constraintTop_toTopOf="parent"/>
 
 

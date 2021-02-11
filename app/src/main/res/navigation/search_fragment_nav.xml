@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/searchTitlesFragment"
-        android:name="com.lukakordzaia.imoviesapp.ui.phone.searchtitles.SearchTitlesFragment"
+        android:name="com.lukakordzaia.medootv.ui.phone.searchtitles.SearchTitlesFragment"
         android:label="fragment_search_titles"
         tools:layout="@layout/phone_search_titles_framgent" >
         <action
