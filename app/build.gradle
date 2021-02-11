@@ -11,7 +11,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.lukakordzaia.medootv"
+        applicationId "com.lukakordzaia.streamflow"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1

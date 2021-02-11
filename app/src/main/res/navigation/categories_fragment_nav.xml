@@ -6,7 +6,7 @@
     app:startDestination="@id/categoriesFragment">
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.lukakordzaia.medootv.ui.phone.categories.CategoriesFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.categories.CategoriesFragment"
         android:label="fragment_genres_categories"
         tools:layout="@layout/phone_categories_framgent" >
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/singleGenreFragment"
-        android:name="com.lukakordzaia.medootv.ui.phone.categories.singlegenre.SingleGenreFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleGenreFragment"
         android:label="fragment_single_genre"
         tools:layout="@layout/phone_single_category_fragment" >
         <argument
@@ -41,7 +41,7 @@
     <include app:graph="@navigation/single_title_fragment_nav" />
     <fragment
         android:id="@+id/singleStudioFragment"
-        android:name="com.lukakordzaia.medootv.ui.phone.categories.singlestudio.SingleStudioFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.categories.singlestudio.SingleStudioFragment"
         android:label="SingleStudioFragment" >
         <argument
             android:name="studioId"

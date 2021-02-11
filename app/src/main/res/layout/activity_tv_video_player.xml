@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:name="com.lukakordzaia.medootv.ui.tv.tvvideoplayer.TvVideoPlayerFragment"
+        android:name="com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerFragment"
         android:id="@+id/tv_video_player_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

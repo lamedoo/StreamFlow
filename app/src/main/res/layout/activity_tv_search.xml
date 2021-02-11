@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <fragment
-        android:name="com.lukakordzaia.medootv.ui.tv.search.TvSearchFragment"
+        android:name="com.lukakordzaia.streamflow.ui.tv.search.TvSearchFragment"
         android:id="@+id/tv_details_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

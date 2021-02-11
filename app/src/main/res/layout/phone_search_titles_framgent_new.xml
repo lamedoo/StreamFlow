@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.phone.searchtitles.SearchTitlesFragment">
 
-    <com.lukakordzaia.medootv.ui.customviews.SearchEditText
+    <com.lukakordzaia.streamflow.ui.customviews.SearchEditText
         android:id="@+id/search_title_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

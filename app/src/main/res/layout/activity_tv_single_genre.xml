@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:name="com.lukakordzaia.medootv.ui.tv.genres.TvSingleGenreFragment"
+        android:name="com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreFragment"
         android:id="@+id/tv_single_genre_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
