@@ -1,5 +1,4 @@
-package com.lukakordzaia
-.medootv.ui.phone.searchtitles
+package com.lukakordzaia.streamflow.ui.phone.searchtitles
 
 import android.os.Bundle
 import android.util.Log

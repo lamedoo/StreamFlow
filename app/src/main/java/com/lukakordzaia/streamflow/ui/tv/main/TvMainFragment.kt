@@ -199,7 +199,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun setupUIElements() {
         badgeDrawable = resources.getDrawable(R.drawable.streamflowlogo)
-        title = "IMOVIES"
+        title = "StreamFlow"
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)

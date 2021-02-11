@@ -17,6 +17,7 @@ import androidx.leanback.widget.*
 import androidx.leanback.widget.BrowseFrameLayout.OnFocusSearchListener
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.*
+import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvCastPresenter
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvEpisodesPresenter
@@ -215,6 +216,11 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
             } else if (item is String) {
                 requireContext().createToast("შეიცვალა ენა: $item. შეგიძლიათ აირჩიოთ ეპიზოდი")
                 tvDetailsViewModel.getTitleLanguageFiles(item)
+            } else if (item is TitleList.Data) {
+                val intent = Intent(context, TvDetailsActivity::class.java)
+                intent.putExtra("titleId", item.id)
+                intent.putExtra("isTvShow", item.isTvShow)
+                activity?.startActivity(intent)
             }
         }
     }
