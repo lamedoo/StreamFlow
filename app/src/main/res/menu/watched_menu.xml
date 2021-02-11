@@ -4,6 +4,5 @@
         android:title="ინფო"/>
 
     <item android:id="@+id/delete_from_db"
-        android:title="სიიდან წაშლა"
-        android:icon="@drawable/remove_title_from_db"/>
+        android:title="სიიდან წაშლა" />
 </menu>

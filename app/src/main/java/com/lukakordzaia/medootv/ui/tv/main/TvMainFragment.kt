@@ -14,7 +14,7 @@ import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.medootv.R
 import com.lukakordzaia.medootv.datamodels.*
-import com.lukakordzaia.medootv.ui.phone.genres.GenresViewModel
+import com.lukakordzaia.medootv.ui.phone.categories.CategoriesViewModel
 import com.lukakordzaia.medootv.ui.phone.home.HomeViewModel
 import com.lukakordzaia.medootv.ui.phone.settings.SettingsViewModel
 import com.lukakordzaia.medootv.ui.tv.categories.TvNewMoviesActivity
@@ -28,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvMainFragment : BrowseSupportFragment() {
     private val homeViewModel by viewModel<HomeViewModel>()
-    private val genresViewModel by viewModel<GenresViewModel>()
+    private val genresViewModel by viewModel<CategoriesViewModel>()
     private lateinit var settingsViewModel: SettingsViewModel
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var defaultBackground: Drawable
@@ -167,7 +167,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun genresRowsAdapter(genreList: List<GenreList.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvCategoriesPresenter()).apply {
-            add(TvCategoriesList(0, "ჟანრის მიხედვით", R.drawable.tv_genre_icon))
+            add(TvCategoriesList(0, "ჟანრის მიხედვით", R.drawable.genre_icon_bottom))
             add(TvCategoriesList(1, "ახალი ფილები", R.drawable.tv_new_movies_icon))
             add(TvCategoriesList(2, "ტოპ ფილები", R.drawable.tv_top_titles_icon))
             add(TvCategoriesList(3, "ტოპ სერიალები", R.drawable.tv_top_titles_icon))

@@ -4,8 +4,8 @@ import com.lukakordzaia.medootv.helpers.SpinnerClass
 import com.lukakordzaia.medootv.network.NetworkConnectionInterceptor
 import com.lukakordzaia.medootv.network.RetrofitBuilder
 import com.lukakordzaia.medootv.repository.*
-import com.lukakordzaia.medootv.ui.phone.genres.GenresViewModel
-import com.lukakordzaia.medootv.ui.phone.genres.singlegenre.SingleGenreViewModel
+import com.lukakordzaia.medootv.ui.phone.categories.CategoriesViewModel
+import com.lukakordzaia.medootv.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.medootv.ui.phone.home.HomeViewModel
 import com.lukakordzaia.medootv.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.medootv.ui.phone.singletitle.SingleTitleViewModel
@@ -19,8 +19,8 @@ val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { SingleTitleViewModel(get()) }
     viewModel { VideoPlayerViewModel(get()) }
-    viewModel { GenresViewModel(get()) }
-    viewModel { SingleGenreViewModel(get()) }
+    viewModel { CategoriesViewModel(get()) }
+    viewModel { SingleCategoryViewModel(get()) }
     viewModel { SearchTitlesViewModel(get()) }
     viewModel { TvDetailsViewModel(get()) }
     viewModel { TvCategoriesViewModel(get()) }
@@ -29,7 +29,7 @@ val viewModelModule = module {
 val repositoryModule = module {
     single { HomeRepository(get()) }
     single { SingleTitleRepository(get()) }
-    single { GenresRepository(get()) }
+    single { CategoriesRepository(get()) }
     single { SearchTitleRepository(get()) }
     single { TvDetailsRepository(get()) }
 }

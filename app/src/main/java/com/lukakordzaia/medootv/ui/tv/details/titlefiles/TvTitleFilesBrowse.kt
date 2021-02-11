@@ -94,6 +94,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
             tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
                 val languages = it.reversed()
                 languageRowsAdapter(languages)
+                tvDetailsViewModel.getTitleLanguageFiles(languages[0])
             })
         }
         tvDetailsViewModel.getSingleTitleCast(titleId)

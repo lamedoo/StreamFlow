@@ -31,6 +31,14 @@ interface TitlesNetwork {
     suspend fun getSingleGenre(@Query("filters[genre]") genreId: Int, @Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
+    @GET ("studios?page=1&per_page=15&sort=-rating")
+    suspend fun getTopStudios() : Response<StudioList>
+
+    @Headers("User-Agent: imovies")
+    @GET("movies?filters%5Bwith_files%5D=yes&per_page=55&sort=-year")
+    suspend fun getSingleStudio(@Query("filters[studio]") genreId: Int, @Query("page") page: Int) : Response<TitleList>
+
+    @Headers("User-Agent: imovies")
     @GET ("search-advanced?filters%5Btype%5D=movie&per_page=25")
     suspend fun getSearchTitles(@Query("keywords") keywords: String, @Query("page") page: Int) : Response<TitleList>
 

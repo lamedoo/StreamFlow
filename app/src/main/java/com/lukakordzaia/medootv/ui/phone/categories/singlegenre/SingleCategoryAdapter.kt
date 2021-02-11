@@ -1,4 +1,4 @@
-package com.lukakordzaia.medootv.ui.phone.genres.singlegenre
+package com.lukakordzaia.medootv.ui.phone.categories.singlegenre
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -14,7 +14,7 @@ import com.lukakordzaia.medootv.datamodels.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_single_genre_item.view.*
 
-class SingleGenreAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SingleGenreAdapter.ViewHolder>() {
+class SingleCategoryAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SingleCategoryAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
 
     fun setGenreTitleList(list: List<TitleList.Data>) {

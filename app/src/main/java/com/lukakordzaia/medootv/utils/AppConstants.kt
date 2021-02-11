@@ -15,6 +15,9 @@ class AppConstants {
         const val NAV_TOP_MOVIES_TO_SINGLE = 1
         const val NAV_TOP_TV_SHOWS_TO_SINGLE = 2
 
+        const val NAV_GENRE_TO_SINGLE = 0
+        const val NAV_STUDIO_TO_SINGLE = 1
+
         const val GENRE_ANIMATION = "ანიმაცია"
         const val GENRE_COMEDY = "კომედია"
         const val GENRE_MELODRAMA = "მელოდრამა"

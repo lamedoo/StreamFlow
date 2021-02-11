@@ -1,4 +1,4 @@
-package com.lukakordzaia.medootv.ui.phone.genres
+package com.lukakordzaia.medootv.ui.phone.categories
 
 import android.content.Context
 import android.view.LayoutInflater

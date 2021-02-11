@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/genres_fragment_nav"
+    app:startDestination="@id/categoriesFragment">
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.lukakordzaia.medootv.ui.phone.categories.CategoriesFragment"
+        android:label="fragment_genres_categories"
+        tools:layout="@layout/phone_categories_framgent" >
+        <action
+            android:id="@+id/action_categoriesFragment_to_singleGenreFragment"
+            app:destination="@id/singleGenreFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_categoriesFragment_to_singleStudioFragment"
+            app:destination="@id/singleStudioFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/singleGenreFragment"
+        android:name="com.lukakordzaia.medootv.ui.phone.categories.singlegenre.SingleGenreFragment"
+        android:label="fragment_single_genre"
+        tools:layout="@layout/phone_single_category_fragment" >
+        <argument
+            android:name="genreId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_singleGenreFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+    <include app:graph="@navigation/single_title_fragment_nav" />
+    <fragment
+        android:id="@+id/singleStudioFragment"
+        android:name="com.lukakordzaia.medootv.ui.phone.categories.singlestudio.SingleStudioFragment"
+        android:label="SingleStudioFragment" >
+        <argument
+            android:name="studioId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_singleStudioFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+</navigation>

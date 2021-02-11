@@ -4,11 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/fragment_padding"
-    tools:context=".ui.phone.genres.singlegenre.SingleGenreFragment">
+    android:paddingBottom="10dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+
+    tools:context=".ui.phone.categories.singlegenre.SingleGenreFragment">
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/singlegenre_nested_scroll"
+        android:id="@+id/single_category_nested_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -20,14 +23,14 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_single_genre"
+                android:id="@+id/rv_single_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
             <ProgressBar
-                android:id="@+id/single_genre_progressBar"
+                android:id="@+id/single_category_progressBar"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

@@ -1,4 +1,4 @@
-package com.lukakordzaia.medootv.ui.phone.genres.singlegenre
+package com.lukakordzaia.medootv.ui.phone.categories.singlegenre
 
 import android.os.Bundle
 import android.util.Log
@@ -8,12 +8,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.medootv.R
 import com.lukakordzaia.medootv.utils.*
-import kotlinx.android.synthetic.main.phone_single_genre_fragment.*
+import kotlinx.android.synthetic.main.phone_single_category_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleGenreFragment : Fragment(R.layout.phone_single_genre_fragment) {
-    private val singleGenreViewModel by viewModel<SingleGenreViewModel>()
-    private lateinit var singleGenreAdapter: SingleGenreAdapter
+class SingleGenreFragment : Fragment(R.layout.phone_single_category_fragment) {
+    private val singleGenreViewModel by viewModel<SingleCategoryViewModel>()
+    private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private val args: SingleGenreFragmentArgs by navArgs()
     private var page = 1
 
@@ -25,23 +25,23 @@ class SingleGenreFragment : Fragment(R.layout.phone_single_genre_fragment) {
 
         singleGenreViewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
             if (!it) {
-                single_genre_progressBar.setGone()
+                single_category_progressBar.setGone()
             }
         })
 
-        singleGenreAdapter = SingleGenreAdapter(requireContext()) {
-            singleGenreViewModel.onSingleTitlePressed(it)
+        singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
+            singleGenreViewModel.onSingleTitlePressed(it, AppConstants.NAV_GENRE_TO_SINGLE)
         }
-        rv_single_genre.adapter = singleGenreAdapter
-        rv_single_genre.layoutManager = layoutManager
+        rv_single_category.adapter = singleCategoryAdapter
+        rv_single_category.layoutManager = layoutManager
 
         singleGenreViewModel.singleGenreList.observe(viewLifecycleOwner, {
-            singleGenreAdapter.setGenreTitleList(it)
+            singleCategoryAdapter.setGenreTitleList(it)
         })
 
         singleGenreViewModel.hasMorePage.observe(viewLifecycleOwner, {
             if (it) {
-                infiniteScroll(singlegenre_nested_scroll) { fetchMoreTitle() }
+                infiniteScroll(single_category_nested_scroll) { fetchMoreTitle() }
             }
         })
 
@@ -51,7 +51,7 @@ class SingleGenreFragment : Fragment(R.layout.phone_single_genre_fragment) {
     }
 
     private fun fetchMoreTitle() {
-        single_genre_progressBar.setVisible()
+        single_category_progressBar.setVisible()
         page++
         Log.d("currentpage", page.toString())
         singleGenreViewModel.getSingleGenre(args.genreId, page)

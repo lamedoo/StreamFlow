@@ -30,7 +30,7 @@
         android:background="@drawable/phone_search_result_background"
         app:layout_constraintTop_toTopOf="@id/search_title_text"
         android:padding="@dimen/fragment_padding"
-        tools:context=".ui.phone.genres.singlegenre.SingleGenreFragment"
+        tools:context=".ui.phone.categories.singlegenre.SingleGenreFragment"
         android:visibility="gone"
         tools:visibility="visible">
 

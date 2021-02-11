@@ -21,7 +21,7 @@ class TvSettingsPresenter(private val context: Context) : Presenter() {
         val cardView = viewHolder.view as TvCategoriesCardView
 
         cardView.tv_categories_card_title.text = settings.settingsTitle
-        Picasso.get().load(R.drawable.tv_delete_forever_icon).error(R.drawable.tv_delete_forever_icon).into(cardView.tv_categories_card_poster)
+        Picasso.get().load(R.drawable.clear_db_icon).error(R.drawable.clear_db_icon).into(cardView.tv_categories_card_poster)
 
     }
 

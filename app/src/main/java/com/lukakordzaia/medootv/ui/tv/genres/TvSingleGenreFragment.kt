@@ -10,8 +10,8 @@ import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.medootv.R
-import com.lukakordzaia.medootv.datamodels.*
-import com.lukakordzaia.medootv.ui.phone.genres.singlegenre.SingleGenreViewModel
+import com.lukakordzaia.medootv.datamodels.TitleList
+import com.lukakordzaia.medootv.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.medootv.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.medootv.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.medootv.ui.tv.main.presenters.TvHeaderItemPresenter
@@ -20,7 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvSingleGenreFragment : BrowseSupportFragment() {
-    private val singleGenreViewModel by viewModel<SingleGenreViewModel>()
+    private val singleGenreViewModel by viewModel<SingleCategoryViewModel>()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var defaultBackground: Drawable
     lateinit var metrics: DisplayMetrics
@@ -177,10 +177,10 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     }
 
     private fun setupUIElements() {
-        badgeDrawable = resources.getDrawable(R.drawable.category_icon)
+        badgeDrawable = resources.getDrawable(R.drawable.tv_genre_icon_full)
         title = "MedooTV"
         isHeadersTransitionOnBackEnabled = true
-        brandColor = ContextCompat.getColor(requireContext(), R.color.green_dark)
+        brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
         adapter = rowsAdapter
     }
 

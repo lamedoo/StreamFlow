@@ -22,7 +22,7 @@ class TvNewMoviesFragment : VerticalGridSupportFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        title = "Leanback Vertical Grid Demo"
+        title = ""
         setupFragment()
         if (TEST_ENTRANCE_TRANSITION) {
             if (savedInstanceState == null) {
@@ -76,8 +76,7 @@ class TvNewMoviesFragment : VerticalGridSupportFragment() {
     }
 
     private fun setupFragment() {
-        val gridPresenter = VerticalGridPresenter().apply {
-            keepChildForeground
+        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_LARGE, false).apply {
             numberOfColumns = 6
         }
         setGridPresenter(gridPresenter)

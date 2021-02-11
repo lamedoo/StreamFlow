@@ -3,6 +3,7 @@ package com.lukakordzaia.medootv.ui.tv.details.titledetails
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.lukakordzaia.medootv.R
 import com.lukakordzaia.medootv.database.DbDetails
@@ -128,23 +129,26 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                         continueTitlePlay(it)
                     }
 
-                    if (isTvShow) {
-                        tv_continue_play_button.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d - ${it.language}",
+                    if (tv_continue_play_button.isVisible) {
+                        if (isTvShow) {
+                            tv_continue_play_button.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d - ${it.language}",
                                 TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                                 TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
                                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                        )
-                    } else {
-                        tv_continue_play_button.text = String.format("განაგრძეთ - %02d:%02d - ${it.language}",
+                            )
+                        } else {
+                            tv_continue_play_button.text = String.format("განაგრძეთ - %02d:%02d - ${it.language}",
                                 TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                                 TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
                                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                        )
+                            )
+                        }
                     }
                 })
                 tv_continue_play_button.setVisible()
                 tv_continue_play_button.requestFocus()
                 tv_play_button.text = "თავიდან ყურება"
+                tv_files_title_delete.setVisible()
             } else {
                 tv_files_title_delete.setGone()
                 tv_play_button.requestFocus()
