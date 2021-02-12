@@ -11,7 +11,9 @@ import kotlinx.android.synthetic.main.phone_search_titles_framgent_new.*
 class SearchAnimations {
     fun textTopTop(view: View, container: View, duration: Long, Unit: () -> Unit) {
         val height = container.height.toFloat()
-        val animateTextTop = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0f, -height)
+        val width = container.width.toFloat()
+        val animateTextTop = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0F, -height)
+        val animateTextFullWidth = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -100F)
         val moveTextToTop = AnimatorSet().apply {
             interpolator = AccelerateInterpolator()
             this.duration = duration

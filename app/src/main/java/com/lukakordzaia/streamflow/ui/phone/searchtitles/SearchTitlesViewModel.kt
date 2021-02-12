@@ -1,17 +1,20 @@
 package com.lukakordzaia.streamflow.ui.phone.searchtitles
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.FranchiseList
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.repository.SearchTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
 class SearchTitlesViewModel(private val repository: SearchTitleRepository) : BaseViewModel() {
+    val searchLoader = MutableLiveData<LoadingState>()
+    val franchisesLoader = MutableLiveData<LoadingState>()
+
     private val _searchList = MutableLiveData<List<TitleList.Data>>()
     val searchList: LiveData<List<TitleList.Data>> = _searchList
 
@@ -30,16 +33,21 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
 
     fun getSearchTitles(keywords: String, page: Int) {
         viewModelScope.launch {
-            when (val movies = repository.getSearchTitles(keywords, page)) {
+            searchLoader.value = LoadingState.LOADING
+            when (val search = repository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
-                    val data = movies.data.data
+                    val data = search.data.data
                     data.forEach {
                         fetchSearchTitleList.add(it)
                     }
                     _searchList.value = fetchSearchTitleList
+                    searchLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    Log.d("errornewmovies", movies.exception)
+                    newToastMessage("ძიება - ${search.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }
@@ -47,13 +55,13 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
 
     fun getSearchTitlesTv(keywords: String, page: Int) {
         viewModelScope.launch {
-            when (val movies = repository.getSearchTitles(keywords, page)) {
+            when (val searchTv = repository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
-                    val data = movies.data.data
+                    val data = searchTv.data.data
                     _searchList.value = data
                 }
                 is Result.Error -> {
-                    Log.d("errorsearchtitles", movies.exception)
+                    newToastMessage("ძიება - ${searchTv.exception}")
                 }
             }
         }
@@ -61,15 +69,24 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
 
     fun getTopFranchises() {
         viewModelScope.launch {
+            franchisesLoader.value = LoadingState.LOADING
             when (val franchises = repository.getTopFranchises()) {
                 is Result.Success -> {
                     val data = franchises.data.data
                     _franchiseList.value = data
+                    franchisesLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    Log.d("errorfranchises", franchises.exception)
+                    newToastMessage("ძიება - ${franchises.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }
+    }
+
+    fun refreshContent() {
+        getTopFranchises()
     }
 }

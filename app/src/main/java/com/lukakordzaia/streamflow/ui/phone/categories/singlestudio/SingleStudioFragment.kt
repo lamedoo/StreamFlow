@@ -1,12 +1,15 @@
 package com.lukakordzaia.streamflow.ui.phone.categories.singlestudio
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.utils.*
@@ -14,40 +17,50 @@ import kotlinx.android.synthetic.main.phone_single_category_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SingleStudioFragment : Fragment(R.layout.phone_single_category_fragment) {
-    private val singleGenreViewModel by viewModel<SingleCategoryViewModel>()
+    private val singleCategoryViewModel by viewModel<SingleCategoryViewModel>()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private val args: SingleStudioFragmentArgs by navArgs()
     private var page = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        singleGenreViewModel.getSingleStudio(args.studioId, page)
 
-        val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
-
-        singleGenreViewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
-            if (!it) {
-                single_category_progressBar.setGone()
+        singleCategoryViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    singleCategoryViewModel.getSingleStudio(args.studioId, page)
+                }, 5000)
             }
         })
 
+        singleCategoryViewModel.getSingleStudio(args.studioId, page)
+
+        val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
+
+        singleCategoryViewModel.categoryLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> single_category_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> single_category_progressBar.setGone()
+            }
+        })
         singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
-            singleGenreViewModel.onSingleTitlePressed(it, AppConstants.NAV_STUDIO_TO_SINGLE)
+            singleCategoryViewModel.onSingleTitlePressed(it, AppConstants.NAV_STUDIO_TO_SINGLE)
         }
         rv_single_category.adapter = singleCategoryAdapter
         rv_single_category.layoutManager = layoutManager
 
-        singleGenreViewModel.singleStudioList.observe(viewLifecycleOwner, {
+        singleCategoryViewModel.singleStudioList.observe(viewLifecycleOwner, {
             singleCategoryAdapter.setGenreTitleList(it)
         })
 
-        singleGenreViewModel.hasMorePage.observe(viewLifecycleOwner, {
+        singleCategoryViewModel.hasMorePage.observe(viewLifecycleOwner, {
             if (it) {
                 infiniteScroll(single_category_nested_scroll) { fetchMoreTitle() }
             }
         })
 
-        singleGenreViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+        singleCategoryViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
     }
@@ -56,6 +69,6 @@ class SingleStudioFragment : Fragment(R.layout.phone_single_category_fragment) {
         single_category_progressBar.setVisible()
         page++
         Log.d("currentpage", page.toString())
-        singleGenreViewModel.getSingleGenre(args.studioId, page)
+        singleCategoryViewModel.getSingleGenre(args.studioId, page)
     }
 }

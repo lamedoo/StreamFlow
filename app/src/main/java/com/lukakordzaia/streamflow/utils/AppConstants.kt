@@ -28,5 +28,11 @@ class AppConstants {
         const val TV_CATEGORY_NEW_MOVIES = 0
         const val TV_CATEGORY_TOP_MOVIES = 1
         const val TV_CATEGORY_TOP_TV_SHOWS = 2
+
+        const val NOT_FOUND_ERROR = "404 ვერ მოიძებნა"
+        const val SERVER_ERROR = "500 სერვერთან დაკავშირება ვერ მოხერხდა"
+        const val UNKNOWN_ERROR = "410 გაურკვეველი პრობლემა"
+
+        const val NO_INTERNET = "შეამოწმეთ ინტერნეტთან კავშირი"
     }
 }

@@ -2,6 +2,8 @@ package com.lukakordzaia.streamflow.ui.phone.home
 
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -34,6 +36,15 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    viewModel.refreshContent(1)
+                }, 5000)
+            }
+        })
 
 
         //Watched Titles List

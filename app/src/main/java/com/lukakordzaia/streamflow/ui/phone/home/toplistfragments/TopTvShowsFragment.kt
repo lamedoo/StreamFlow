@@ -1,6 +1,8 @@
 package com.lukakordzaia.streamflow.ui.phone.home.toplistfragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -21,6 +23,15 @@ class TopTvShowsFragment : Fragment(R.layout.phone_single_category_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getTopTvShows(page)
+
+        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    viewModel.getTopTvShows(page)
+                }, 3000)
+            }
+        })
 
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
 

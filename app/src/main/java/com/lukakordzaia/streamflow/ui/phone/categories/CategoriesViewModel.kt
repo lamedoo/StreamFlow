@@ -7,12 +7,18 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.GenreList
 import com.lukakordzaia.streamflow.datamodels.StudioList
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.CategoriesRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class CategoriesViewModel(private val repository: CategoriesRepository) : BaseViewModel() {
+
+    val trailersLoader = MutableLiveData<LoadingState>()
+    val genresLoader = MutableLiveData<LoadingState>()
+    val studiosLoader = MutableLiveData<LoadingState>()
 
     private val _allGenresList = MutableLiveData<List<GenreList.Data>>()
     val allGenresList: LiveData<List<GenreList.Data>> = _allGenresList
@@ -44,13 +50,17 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
 
     fun getAllGenres() {
         viewModelScope.launch {
+            genresLoader.value = LoadingState.LOADING
             when (val genres = repository.getAllGenres()) {
                 is Result.Success -> {
                     _allGenresList.value = genres.data.data
-                    setLoading(false)
+                    genresLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    Log.d("errorgenres", genres.exception)
+                    newToastMessage("ჟანრები - ${genres.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }
@@ -58,29 +68,43 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
 
     fun getTopStudios() {
         viewModelScope.launch {
+            studiosLoader.value = LoadingState.LOADING
             when (val studios = repository.getTopStudios()) {
                 is Result.Success -> {
                     _topStudioList.value = studios.data.data
-                    setLoading(false)
+                    studiosLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    Log.d("errorgenres", studios.exception)
+                    newToastMessage("სტუდიები - ${studios.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }
     }
 
     fun getTopTrailers() {
+        trailersLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (val trailers = repository.getTopTrailers()) {
                 is Result.Success -> {
                     _topTrailerList.value = trailers.data.data
-                    setLoading(false)
+                    trailersLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    Log.d("errortrailers", trailers.exception)
+                    newToastMessage("ტრეილერები - ${trailers.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }
+    }
+
+    fun refreshContent() {
+        getTopTrailers()
+        getAllGenres()
+        getTopStudios()
     }
 }

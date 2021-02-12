@@ -1,6 +1,8 @@
 package com.lukakordzaia.streamflow.ui.phone.categories
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -10,11 +12,10 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.helpers.DotsIndicatorDecoration
-import com.lukakordzaia.streamflow.utils.EventObserver
-import com.lukakordzaia.streamflow.utils.navController
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_categories_framgent.*
+import kotlinx.android.synthetic.main.phone_home_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
@@ -26,17 +27,24 @@ class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoriesViewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
-            if (!it) {
-                categories_progressBar.setGone()
-                rv_trailers.setVisible()
-                rv_genres.setVisible()
-                rv_studios.setVisible()
+        categoriesViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    categoriesViewModel.refreshContent()
+                }, 5000)
             }
         })
 
         // Trailers
         categoriesViewModel.getTopTrailers()
+
+        categoriesViewModel.trailersLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> trailers_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> trailers_progressBar.setGone()
+            }
+        })
 
         val trailerLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         trailersAdapter = TrailersAdapter(requireContext()) { titleId, trailerUrl ->
@@ -62,6 +70,13 @@ class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
         // Genres
         categoriesViewModel.getAllGenres()
 
+        categoriesViewModel.genresLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> genres_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> genres_progressBar.setGone()
+            }
+        })
+
         val genreLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         genresAdapter = GenresAdapter(requireContext()) {
             categoriesViewModel.onSingleGenrePressed(it)
@@ -77,6 +92,13 @@ class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
         // Studios
         categoriesViewModel.getTopStudios()
 
+        categoriesViewModel.studiosLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> studios_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> studios_progressBar.setGone()
+            }
+        })
+
         val studioLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         studiosAdapter = StudiosAdapter(requireContext()) {
             categoriesViewModel.onSingleStudioPressed(it)
@@ -91,6 +113,10 @@ class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
 
         categoriesViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
+        })
+
+        categoriesViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
         })
     }
 }

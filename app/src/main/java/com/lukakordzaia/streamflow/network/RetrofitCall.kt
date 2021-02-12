@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.network
 
+import com.lukakordzaia.streamflow.utils.AppConstants
 import retrofit2.Response
 
 open class RetrofitCall {
@@ -12,13 +13,13 @@ open class RetrofitCall {
             } else {
                 error = when {
                     response.code() == 404 -> {
-                        "404 - არ იძებნება"
+                        AppConstants.NOT_FOUND_ERROR
                     }
                     response.code() == 500 -> {
-                        "ვერ ხერხდება სერვერთან დაკავშირება"
+                        AppConstants.SERVER_ERROR
                     }
                     else -> {
-                        "410 - გაურკვეველი პრობლემა"
+                        AppConstants.UNKNOWN_ERROR
                     }
                 }
                 Result.Error(error)

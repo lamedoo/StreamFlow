@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.ui.phone.home
 
 import android.content.Context
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +18,7 @@ import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragm
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragmentDirections
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
+import java.util.logging.Handler
 
 class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
@@ -124,11 +126,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                         )
                     }
                     is Result.Error -> {
-                        newToastMessage(dbTitles.exception)
-                        Log.d("errordbtitles", dbTitles.exception)
-                    }
-                    is Result.Internet -> {
-                        newToastMessage(dbTitles.exception)
+                        newToastMessage("ბაზის ფილმები - ${dbTitles.exception}")
                     }
                 }
             }
@@ -140,9 +138,9 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     fun getNewMovies(page: Int) {
         viewModelScope.launch {
             newMovieLoader.value = LoadingState.LOADING
-            when (val movies = repository.getNewMovies(page)) {
+            when (val newMovies = repository.getNewMovies(page)) {
                 is Result.Success -> {
-                    val data = movies.data.data
+                    val data = newMovies.data.data
                     data.forEach {
                         fetchNewMoviesList.add(it)
                     }
@@ -150,12 +148,10 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     newMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    newToastMessage(movies.exception)
-                    Log.d("errornewmovies", movies.exception)
+                    newToastMessage("ახალი ფილმები - ${newMovies.exception}")
                 }
                 is Result.Internet -> {
-                    newToastMessage("შეამოწმეთ ინტერნეტთან კავშირი")
-                    getNewMovies(page)
+                    setNoInternet()
                 }
             }
         }
@@ -174,11 +170,10 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     topMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    newToastMessage(topMovies.exception)
-                    Log.d("errornewmovies", topMovies.exception)
+                    newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
                 }
                 is Result.Internet -> {
-                    getTopMovies(page)
+                    setNoInternet()
                 }
             }
         }
@@ -187,9 +182,9 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     fun getTopTvShows(page: Int) {
         viewModelScope.launch {
             topTvShowsLoader.value = LoadingState.LOADING
-            when (val tvShows = repository.getTopTvShows(page)) {
+            when (val topTvShows = repository.getTopTvShows(page)) {
                 is Result.Success -> {
-                    val data = tvShows.data.data
+                    val data = topTvShows.data.data
                     data.forEach {
                         fetchTopTvShowsList.add(it)
                     }
@@ -197,13 +192,18 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     topTvShowsLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    newToastMessage(tvShows.exception)
-                    Log.d("errornewtvshows", tvShows.exception)
+                    newToastMessage("ტოპ სერიალები- ${topTvShows.exception}")
                 }
                 is Result.Internet -> {
-                    getTopTvShows(page)
+                    setNoInternet()
                 }
             }
         }
+    }
+
+    fun refreshContent(page: Int) {
+        getNewMovies(page)
+        getTopMovies(page)
+        getTopTvShows(page)
     }
 }

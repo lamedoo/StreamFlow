@@ -18,6 +18,8 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesFragment
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleGenreFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
+import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment
+import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragment
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesFragment
 import com.lukakordzaia.streamflow.ui.phone.settings.SettingsFragment
 import com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleFragment
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                         showBottomNavigation()
                         app_main_toolbar.setVisible()
                     }
-                    is ChooseTitleDetailsFragment, is SettingsFragment, is SingleGenreFragment -> {
+                    is ChooseTitleDetailsFragment, is SettingsFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment -> {
                         hideBottomNavigation()
                     }
                     is SingleTitleFragment -> {

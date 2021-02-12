@@ -16,6 +16,9 @@ abstract class BaseViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Event<Boolean>>()
     val isLoading: LiveData<Event<Boolean>> = _isLoading
 
+    private val _noInternet = MutableLiveData<Event<Boolean>>(Event(false))
+    val noInternet: LiveData<Event<Boolean>> = _noInternet
+
 
 
     fun navigateToNewFragment(navId: NavDirections) {
@@ -28,5 +31,9 @@ abstract class BaseViewModel : ViewModel() {
 
     fun setLoading(loading: Boolean) {
         _isLoading.value = Event(loading)
+    }
+
+    fun setNoInternet() {
+        _noInternet.value = Event(true)
     }
 }

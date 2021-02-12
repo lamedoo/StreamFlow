@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.CategoriesRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -44,6 +45,8 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
     private val _hasMorePage = MutableLiveData(true)
     val hasMorePage: LiveData<Boolean> = _hasMorePage
 
+    val categoryLoader = MutableLiveData<LoadingState>()
+
     fun onSingleTitlePressed(titleId: Int, start: Int) {
         when (start) {
             AppConstants.NAV_GENRE_TO_SINGLE -> navigateToNewFragment(SingleGenreFragmentDirections.actionSingleGenreFragmentToSingleTitleFragmentNav(titleId))
@@ -53,6 +56,7 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
 
     fun getSingleGenre(genreId: Int, page: Int) {
         viewModelScope.launch {
+            categoryLoader.value = LoadingState.LOADING
             when (val singleGenre = repository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
                     singleGenre.data.data.forEach {
@@ -60,10 +64,13 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
                     }
                     _singleGenreList.value = fetchSingleGenreList
                     _hasMorePage.value = singleGenre.data.meta.pagination.totalPages!! > singleGenre.data.meta.pagination.currentPage!!
-                    setLoading(false)
+                    categoryLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    Log.d("errorsinglegenre", singleGenre.exception)
+                    newToastMessage("ჟანრი - ${singleGenre.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }
@@ -84,7 +91,7 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
                     }
                 }
                 is Result.Error -> {
-                    Log.d("errorsinglegenre", singleGenre.exception)
+                    newToastMessage("ჟანრი - ${singleGenre.exception}")
                 }
             }
         }
@@ -92,16 +99,20 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
 
     fun getSingleStudio(studioId: Int, page: Int) {
         viewModelScope.launch {
+            categoryLoader.value = LoadingState.LOADING
             when (val singleStudio = repository.getSingleStudio(studioId, page)) {
                 is Result.Success -> {
                     singleStudio.data.data.forEach {
                         fetchSingleStudioList.add(it)
                     }
                     _singleStudioList.value = fetchSingleStudioList
-                    setLoading(false)
+                    categoryLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    Log.d("errorsinglestudio", singleStudio.exception)
+                    newToastMessage("სტუდია - ${singleStudio.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }
