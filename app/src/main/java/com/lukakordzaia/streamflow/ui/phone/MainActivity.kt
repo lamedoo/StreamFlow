@@ -57,10 +57,11 @@ class MainActivity : AppCompatActivity() {
                         showBottomNavigation()
                         app_main_toolbar.setVisible()
                     }
-                    is ChooseTitleDetailsFragment, is SettingsFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment -> {
+                    is SettingsFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment -> {
+                        app_main_toolbar.setVisible()
                         hideBottomNavigation()
                     }
-                    is SingleTitleFragment -> {
+                    is SingleTitleFragment, is ChooseTitleDetailsFragment -> {
                         app_main_toolbar.setGone()
                         hideBottomNavigation()
                     }

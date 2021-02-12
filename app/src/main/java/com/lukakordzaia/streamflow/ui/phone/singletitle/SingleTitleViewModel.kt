@@ -69,8 +69,12 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
                             val data = titleData.data.data
                             _singleTitleData.value = data
 
-                            if (data.seasons.data.isNotEmpty()) {
-                                numOfSeasons.value = data.seasons.data.size
+                            if (data.seasons != null) {
+                                if (data.seasons.data.isNotEmpty()) {
+                                    numOfSeasons.value = data.seasons.data.size
+                                } else {
+                                    numOfSeasons.value = 0
+                                }
                             } else {
                                 numOfSeasons.value = 0
                             }

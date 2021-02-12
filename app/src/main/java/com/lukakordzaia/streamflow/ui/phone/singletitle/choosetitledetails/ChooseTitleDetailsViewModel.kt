@@ -12,19 +12,20 @@ import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
     private val _titleIsInDb = MutableLiveData<Boolean>()
     val titleIsInDb: LiveData<Boolean> = _titleIsInDb
 
-    private val _singleMovieFiles = MutableLiveData<TitleFiles>()
-
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
 
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
+
+    private val fetchLanguages: MutableList<String> = ArrayList()
 
     private val _chosenLanguage = MutableLiveData<String>()
     val chosenLanguage: LiveData<String> = _chosenLanguage
@@ -93,37 +94,6 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
         return repository.getSingleWatchedTitles(database!!, titleId)
     }
 
-    fun getSingleTitleFiles(titleId: Int) {
-        viewModelScope.launch {
-            when (val files = repository.getSingleTitleFiles(titleId)) {
-                is Result.Success -> {
-                    val data = files.data.data
-                    if (data.isNotEmpty()) {
-                        val languages: MutableList<String> = ArrayList()
-                        _singleMovieFiles.value = files.data
-                        data[0].files!!.forEach {
-                            it.lang?.let { it1 -> languages.add(it1) }
-                        }
-                        _availableLanguages.value = languages
-
-                        _movieNotYetAdded.value = false
-                    } else {
-                    }
-                    setLoading(false)
-                }
-                is Result.Error -> {
-                    when (files.exception) {
-                        "404 - გაურკვეველი პრობლემა" -> {
-                            _movieNotYetAdded.value = true
-                            setLoading(false)
-                        }
-                    }
-                    Log.d("errorfiles", files.exception)
-                }
-            }
-        }
-    }
-
     fun getTitleLanguageFiles(language: String) {
         _chosenLanguage.value = language
     }
@@ -139,17 +109,29 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
                 is Result.Success -> {
                     val data = files.data.data
 
+                    data[0].files!!.forEach {
+                        fetchLanguages.add(it.lang)
+                    }
+                    _availableLanguages.value = fetchLanguages
+
                     val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
                     data.forEach {
                         getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
                     }
                     _episodeNames.value = getEpisodeNames
-                    Log.d("episodenames", "${episodeNames.value}")
 
+                    _movieNotYetAdded.value = false
                     setLoading(false)
                 }
                 is Result.Error -> {
-                    Log.d("errorseasons", files.exception)
+                    when (files.exception) {
+                        AppConstants.UNKNOWN_ERROR -> {
+                            _movieNotYetAdded.value = true
+                        }
+                        else -> {
+                            newToastMessage(files.exception)
+                        }
+                    }
                 }
             }
         }

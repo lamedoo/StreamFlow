@@ -48,7 +48,7 @@ data class TitleFiles(
             @SerializedName("files")
             val files: List<FileEpisodes>,
             @SerializedName("lang")
-            val lang: String?,
+            val lang: String,
             @SerializedName("subtitles")
             val subtitles: List<Subtitle?>?
         ) {

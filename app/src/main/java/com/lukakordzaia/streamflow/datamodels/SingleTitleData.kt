@@ -63,7 +63,7 @@ data class SingleTitleData(
         @SerializedName("releaseDate")
         val releaseDate: String?,
         @SerializedName("seasons")
-        val seasons: Seasons,
+        val seasons: Seasons?,
         @SerializedName("secondaryName")
         val secondaryName: String?,
         @SerializedName("studios")

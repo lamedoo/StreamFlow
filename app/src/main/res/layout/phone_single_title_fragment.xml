@@ -77,7 +77,7 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/iv_single_title_play"
+                    android:id="@+id/single_title_cover"
                     android:layout_width="match_parent"
                     android:layout_height="325dp"
                     android:src="@drawable/movie_image_placeholder_landscape"
@@ -129,7 +129,7 @@
                         app:layout_constraintTop_toTopOf="parent"/>
 
                     <TextView
-                        android:id="@+id/tv_single_title_name_eng"
+                        android:id="@+id/single_title_name_eng"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -141,14 +141,14 @@
                         tools:text="Movie Title"/>
 
                     <TextView
-                        android:id="@+id/tv_single_title_name_geo"
+                        android:id="@+id/single_title_name_geo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/default_data"
                         android:textAlignment="center"
                         android:textColor="@color/general_text_color"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        app:layout_constraintTop_toBottomOf="@id/tv_single_title_name_eng"
+                        app:layout_constraintTop_toBottomOf="@id/single_title_name_eng"
                         tools:text="ფილმის სახელი"/>
 
                     <include
@@ -158,10 +158,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:padding="10dp"
-                        app:layout_constraintTop_toBottomOf="@id/tv_single_title_name_geo"/>
+                        app:layout_constraintTop_toBottomOf="@id/single_title_name_geo"/>
 
                     <TextView
-                        android:id="@+id/iv_post_video_icon"
+                        android:id="@+id/single_post_to_files_button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -180,8 +180,8 @@
                         android:id="@+id/single_title_trailer_container"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="@id/iv_post_video_icon"
-                        app:layout_constraintBottom_toBottomOf="@id/iv_post_video_icon"
+                        app:layout_constraintTop_toTopOf="@id/single_post_to_files_button"
+                        app:layout_constraintBottom_toBottomOf="@id/single_post_to_files_button"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:gravity="end"
                         app:layout_constraintWidth_default="percent"
@@ -209,7 +209,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginTop="15dp"
                         android:orientation="vertical"
-                        app:layout_constraintTop_toBottomOf="@id/iv_post_video_icon">
+                        app:layout_constraintTop_toBottomOf="@id/single_post_to_files_button">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -224,7 +224,7 @@
                             android:id="@+id/single_title_desc"
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
-                            android:text="@string/default_data"
+                            android:text="აღწერა არ მოიძებნა"
                             tools:text="Lorem Ipsum" />
 
                     </LinearLayout>

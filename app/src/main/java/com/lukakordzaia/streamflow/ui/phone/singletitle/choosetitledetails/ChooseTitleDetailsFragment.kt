@@ -13,12 +13,14 @@ import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_choose_title_details_fragment.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
 class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
     private val chooseTitleDetailsViewModel by viewModel<ChooseTitleDetailsViewModel>()
+    private val spinnerClass: SpinnerClass by inject()
     private lateinit var chooseTitleDetailsEpisodesAdapter: ChooseTitleDetailsEpisodesAdapter
     private val args: ChooseTitleDetailsFragmentArgs by navArgs()
 
@@ -33,9 +35,6 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chooseTitleDetailsViewModel.getSingleTitleFiles(args.titleId)
-        val spinnerClass = SpinnerClass(requireContext())
-
         chooseTitleDetailsViewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
             if (!it) {
                 details_progressBar.setGone()
@@ -47,6 +46,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
                 movie_file_not_yet.setVisible()
                 season_spinner_container.setGone()
                 rv_episodes.setGone()
+                details_progressBar.setGone()
             } else {
                 movie_files_container.setVisible()
             }
@@ -62,11 +62,13 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         if (args.isTvShow) {
             season_spinner_container.setVisible()
             rv_episodes.setVisible()
-        }
 
-        val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
-        spinnerClass.createSpinner(spinner_season_numbers, numOfSeasons) {
-            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it.toInt())
+            val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
+            spinnerClass.createSpinner(spinner_season_numbers, numOfSeasons) {
+                chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it.toInt())
+            }
+        } else {
+            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, args.numOfSeasons)
         }
 
         chooseTitleDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {

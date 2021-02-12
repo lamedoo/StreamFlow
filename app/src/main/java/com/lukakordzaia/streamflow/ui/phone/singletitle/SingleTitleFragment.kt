@@ -68,11 +68,11 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
 
         singleTitleViewModel.singleSingleTitleData.observe(viewLifecycleOwner, {
             if (it.primaryName.isNotBlank()) {
-                tv_single_title_name_geo.text = it.primaryName
+                single_title_name_geo.text = it.primaryName
             }
-            tv_single_title_name_eng.text = it.secondaryName
+            single_title_name_eng.text = it.secondaryName
             if (!it.covers?.data?.x1050.isNullOrEmpty()) {
-                Picasso.get().load(it.covers?.data?.x1050).into(iv_single_title_play)
+                Picasso.get().load(it.covers?.data?.x1050).into(single_title_cover)
             }
 
             single_title_trailer_container.setOnClickListener { _ ->
@@ -81,7 +81,7 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
                         if (trailer.language == "ENG") {
                             singleTitleViewModel.onTrailerPressed(
                                 args.titleId,
-                                it.isTvShow!!,
+                                it.isTvShow,
                                 trailer.fileUrl
                             )
                         } else {
@@ -96,11 +96,7 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
             if (it.plot.data != null) {
                 if (!it.plot.data.description.isNullOrEmpty()) {
                     single_title_desc.text = it.plot.data.description
-                } else {
-                    single_title_desc.text = "აღწერა არ მოიძებნა"
                 }
-            } else {
-                single_title_desc.text = "აღწერა არ მოიძებნა"
             }
 
             if (it.rating.imdb != null) {
@@ -109,22 +105,19 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
 
             tv_single_title_year.text = it.year.toString()
             tv_single_title_duration.text = "${it.duration} წ."
-            if (it.countries.data.isEmpty()) {
-                tv_single_title_country.text = "N/A"
-            } else {
+            if (it.countries.data.isNotEmpty()) {
                 tv_single_title_country.text = it.countries.data[0].secondaryName
             }
-
         })
 
         singleTitleViewModel.titleGenres.observe(viewLifecycleOwner, {
             single_title_genre_names.text = TextUtils.join(", ", it)
         })
 
-        iv_post_video_icon.setOnClickListener { _ ->
+        single_post_to_files_button.setOnClickListener { _ ->
             singleTitleViewModel.onPlayButtonPressed(args.titleId)
 
-            PlayButtonAnimations().rotatePlayButton(iv_post_video_icon, 1000)
+            PlayButtonAnimations().rotatePlayButton(single_post_to_files_button, 1000)
         }
 
         singleTitleViewModel.titleDirector.observe(viewLifecycleOwner, {
@@ -133,8 +126,7 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
 
 
         // Cast
-        val castLayout =
-            GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        val castLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         singleTitleCastAdapter = SingleTitleCastAdapter(requireContext()) {
             requireContext().createToast(it)
         }
@@ -146,8 +138,7 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
         })
 
         //Related
-        val relatedLayout =
-            GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        val relatedLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         singleTitleRelatedAdapter = SingleTitleRelatedAdapter(requireContext()) {
             singleTitleViewModel.onRelatedTitlePressed(it)
         }
