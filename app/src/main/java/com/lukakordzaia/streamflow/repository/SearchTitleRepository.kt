@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.repository
 
+import com.lukakordzaia.streamflow.datamodels.FranchiseList
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
@@ -10,5 +11,9 @@ class SearchTitleRepository(private val retrofitBuilder: RetrofitBuilder): Retro
 
     suspend fun getSearchTitles(keywords: String, page: Int): Result<TitleList> {
         return retrofitCall { service.getSearchTitles(keywords, page) }
+    }
+
+    suspend fun getTopFranchises(): Result<FranchiseList> {
+        return retrofitCall { service.getTopFranchises() }
     }
 }

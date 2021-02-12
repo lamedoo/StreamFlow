@@ -47,6 +47,10 @@ interface TitlesNetwork {
     suspend fun getSearchTitles(@Query("keywords") keywords: String, @Query("page") page: Int) : Response<TitleList>
 
     @Headers("User-Agent: imovies")
+    @GET ("franchises?page=1&per_page=12&sort=rand&filters%5Bfeatured%5D=yes")
+    suspend fun getTopFranchises() : Response<FranchiseList>
+
+    @Headers("User-Agent: imovies")
     @GET ("movies/{id}/")
     suspend fun getSingleTitle(@Path("id") id: Int) : Response<TitleData>
 

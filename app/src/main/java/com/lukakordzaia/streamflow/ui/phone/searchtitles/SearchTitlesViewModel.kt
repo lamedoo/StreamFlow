@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.lukakordzaia.streamflow.datamodels.FranchiseList
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.repository.SearchTitleRepository
@@ -15,6 +16,9 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
     val searchList: LiveData<List<TitleList.Data>> = _searchList
 
     private val fetchSearchTitleList: MutableList<TitleList.Data> = ArrayList()
+
+    private val _franchiseList = MutableLiveData<List<FranchiseList.Data>>()
+    val franchiseList: LiveData<List<FranchiseList.Data>> = _franchiseList
 
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(SearchTitlesFragmentDirections.actionSearchTitlesFragmentToSingleTitleFragmentNav(titleId))
@@ -49,7 +53,21 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
                     _searchList.value = data
                 }
                 is Result.Error -> {
-                    Log.d("errornewmovies", movies.exception)
+                    Log.d("errorsearchtitles", movies.exception)
+                }
+            }
+        }
+    }
+
+    fun getTopFranchises() {
+        viewModelScope.launch {
+            when (val franchises = repository.getTopFranchises()) {
+                is Result.Success -> {
+                    val data = franchises.data.data
+                    _franchiseList.value = data
+                }
+                is Result.Error -> {
+                    Log.d("errorfranchises", franchises.exception)
                 }
             }
         }
