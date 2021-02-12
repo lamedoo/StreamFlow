@@ -35,7 +35,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         mediaPlayer = MediaPlayerClass(player)
 
 
-        videoPlayerViewModel.singleTitleData.observe(viewLifecycleOwner, {
+        videoPlayerViewModel.singleSingleTitleData.observe(viewLifecycleOwner, {
             if (it.seasons != null) {
                 videoPlayerViewModel.getNumOfSeasons(it.seasons.data.size)
             } else {

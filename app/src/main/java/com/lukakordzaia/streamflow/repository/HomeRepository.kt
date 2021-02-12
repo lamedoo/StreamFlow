@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.repository
 import androidx.lifecycle.LiveData
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.WatchedDao
-import com.lukakordzaia.streamflow.datamodels.TitleData
+import com.lukakordzaia.streamflow.datamodels.SingleTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
@@ -24,7 +24,7 @@ class HomeRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall
         return retrofitCall { service.getTopTvShows(page) }
     }
 
-    suspend fun getSingleTitleData(movieId: Int): Result<TitleData> {
+    suspend fun getSingleTitleData(movieId: Int): Result<SingleTitleData> {
         return retrofitCall { service.getSingleTitle(movieId) }
     }
 

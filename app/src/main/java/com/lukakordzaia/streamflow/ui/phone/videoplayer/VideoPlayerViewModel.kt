@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.datamodels.TitleData
+import com.lukakordzaia.streamflow.datamodels.SingleTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInit
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerRelease
@@ -43,8 +43,8 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     private val setTitleNameList = MutableLiveData<List<String>>()
     val setTitleName: LiveData<List<String>> = setTitleNameList
 
-    private val _singleTitleData = MutableLiveData<TitleData.Data>()
-    val singleTitleData: LiveData<TitleData.Data> = _singleTitleData
+    private val _singleTitleData = MutableLiveData<SingleTitleData.Data>()
+    val singleSingleTitleData: LiveData<SingleTitleData.Data> = _singleTitleData
 
     fun getNumOfSeasons(numOfSeasons: Int) {
         this.numOfSeasons.value = numOfSeasons

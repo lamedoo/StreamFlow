@@ -52,7 +52,7 @@ interface TitlesNetwork {
 
     @Headers("User-Agent: imovies")
     @GET ("movies/{id}/")
-    suspend fun getSingleTitle(@Path("id") id: Int) : Response<TitleData>
+    suspend fun getSingleTitle(@Path("id") id: Int) : Response<SingleTitleData>
 
     @Headers("User-Agent: imovies")
     @GET ("movies/{id}/persons")

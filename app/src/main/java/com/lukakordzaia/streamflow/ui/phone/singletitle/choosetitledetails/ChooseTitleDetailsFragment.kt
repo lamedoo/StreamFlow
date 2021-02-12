@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 
 
 class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
-    private val singleTitleViewModel by viewModel<SingleTitleViewModel>()
+    private val chooseTitleDetailsViewModel by viewModel<ChooseTitleDetailsViewModel>()
     private lateinit var chooseTitleDetailsEpisodesAdapter: ChooseTitleDetailsEpisodesAdapter
     private val args: ChooseTitleDetailsFragmentArgs by navArgs()
 
@@ -33,16 +33,16 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        singleTitleViewModel.getSingleTitleFiles(args.titleId)
+        chooseTitleDetailsViewModel.getSingleTitleFiles(args.titleId)
         val spinnerClass = SpinnerClass(requireContext())
 
-        singleTitleViewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
+        chooseTitleDetailsViewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
             if (!it) {
                 details_progressBar.setGone()
             }
         })
 
-        singleTitleViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
+        chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (it) {
                 movie_file_not_yet.setVisible()
                 season_spinner_container.setGone()
@@ -52,10 +52,10 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
             }
         })
 
-        singleTitleViewModel.availableLanguages.observe(viewLifecycleOwner, {
+        chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
             val languages = it.reversed()
             spinnerClass.createSpinner(spinner_language, languages) { language ->
-                singleTitleViewModel.getTitleLanguageFiles(language)
+                chooseTitleDetailsViewModel.getTitleLanguageFiles(language)
             }
         })
 
@@ -66,33 +66,33 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
         val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
         spinnerClass.createSpinner(spinner_season_numbers, numOfSeasons) {
-            singleTitleViewModel.getSeasonFiles(args.titleId, it.toInt())
+            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it.toInt())
         }
 
-        singleTitleViewModel.episodeNames.observe(viewLifecycleOwner, {
+        chooseTitleDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
             chooseTitleDetailsEpisodesAdapter.setEpisodeList(it)
         })
 
         chooseTitleDetailsEpisodesAdapter = ChooseTitleDetailsEpisodesAdapter(requireContext()) {
-            singleTitleViewModel.getEpisodeFile(it)
+            chooseTitleDetailsViewModel.getEpisodeFile(it)
         }
         rv_episodes.adapter = chooseTitleDetailsEpisodesAdapter
 
-        singleTitleViewModel.chosenEpisode.observe(viewLifecycleOwner, {
+        chooseTitleDetailsViewModel.chosenEpisode.observe(viewLifecycleOwner, {
             if (it != 0) {
-                singleTitleViewModel.onEpisodePressed(args.titleId, args.isTvShow)
+                chooseTitleDetailsViewModel.onEpisodePressed(args.titleId, args.isTvShow)
             }
         })
 
-        singleTitleViewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
-            singleTitleViewModel.titleIsInDb(it)
+        chooseTitleDetailsViewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
+            chooseTitleDetailsViewModel.titleIsInDb(it)
         })
 
-        singleTitleViewModel.titleIsInDb.observe(viewLifecycleOwner, { exists ->
+        chooseTitleDetailsViewModel.titleIsInDb.observe(viewLifecycleOwner, { exists ->
             if (exists) {
-                singleTitleViewModel.getSingleWatchedTitleDetails(requireContext(), args.titleId).observe(viewLifecycleOwner, {
+                chooseTitleDetailsViewModel.getSingleWatchedTitleDetails(requireContext(), args.titleId).observe(viewLifecycleOwner, {
                     choose_movie_details_continue.setOnClickListener { _ ->
-                        singleTitleViewModel.onContinueWatchingPressed(it)
+                        chooseTitleDetailsViewModel.onContinueWatchingPressed(it)
                     }
 
                     if (args.isTvShow) {
@@ -123,15 +123,15 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
 
         choose_movie_details_play.setOnClickListener { _ ->
-            singleTitleViewModel.onPlayButtonPressed(args.titleId, args.isTvShow)
+            chooseTitleDetailsViewModel.onPlayButtonPressed(args.titleId, args.isTvShow)
         }
 
 
-        singleTitleViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+        chooseTitleDetailsViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
 
-        singleTitleViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+        chooseTitleDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
     }

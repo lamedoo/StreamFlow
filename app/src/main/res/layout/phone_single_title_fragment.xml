@@ -84,7 +84,7 @@
                     android:scaleType="centerCrop" />
 
                 <LinearLayout
-                    android:id="@+id/single_title_delete_container"
+                    android:id="@+id/single_title_favorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -96,11 +96,10 @@
                     app:layout_constraintStart_toStartOf="parent">
 
                     <ImageView
-                        android:id="@+id/single_title_delete_image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/remove_db_title_icon"
-                        app:tint="@color/red" />
+                        android:src="@drawable/title_favorite_icon_full"
+                        app:tint="@color/general_text_color" />
 
                 </LinearLayout>
 

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.WatchedDao
 import com.lukakordzaia.streamflow.datamodels.TitleCast
-import com.lukakordzaia.streamflow.datamodels.TitleData
+import com.lukakordzaia.streamflow.datamodels.SingleTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.Result
@@ -14,7 +14,7 @@ import com.lukakordzaia.streamflow.network.RetrofitCall
 class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
     private val service = retrofitBuilder.buildService()
 
-    suspend fun getSingleTitleData(titleId: Int): Result<TitleData> {
+    suspend fun getSingleTitleData(titleId: Int): Result<SingleTitleData> {
         return retrofitCall { service.getSingleTitle(titleId) }
     }
 

@@ -15,8 +15,8 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
 class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseViewModel() {
-    private val _singleTitleData = MutableLiveData<TitleData.Data>()
-    val singleTitleData: LiveData<TitleData.Data> = _singleTitleData
+    private val _singleTitleData = MutableLiveData<SingleTitleData.Data>()
+    val singleSingleTitleData: LiveData<SingleTitleData.Data> = _singleTitleData
 
     private val _singleMovieFiles = MutableLiveData<TitleFiles>()
 

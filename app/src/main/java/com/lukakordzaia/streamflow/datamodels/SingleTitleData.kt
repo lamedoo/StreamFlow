@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.datamodels
 
 import com.google.gson.annotations.SerializedName
 
-data class TitleData(
+data class SingleTitleData(
     @SerializedName("data")
     val `data`: Data
 ) {
@@ -37,7 +37,7 @@ data class TitleData(
         @SerializedName("income")
         val income: String?,
         @SerializedName("isTvShow")
-        val isTvShow: Boolean?,
+        val isTvShow: Boolean,
         @SerializedName("languages")
         val languages: Languages?,
         @SerializedName("originalName")
@@ -63,7 +63,7 @@ data class TitleData(
         @SerializedName("releaseDate")
         val releaseDate: String?,
         @SerializedName("seasons")
-        val seasons: Seasons?,
+        val seasons: Seasons,
         @SerializedName("secondaryName")
         val secondaryName: String?,
         @SerializedName("studios")
@@ -71,7 +71,7 @@ data class TitleData(
         @SerializedName("tertiaryName")
         val tertiaryName: String?,
         @SerializedName("trailers")
-        val trailers: Trailers?,
+        val trailers: Trailers,
         @SerializedName("tvcom")
         val tvcom: Tvcom?,
         @SerializedName("userFollows")
@@ -312,7 +312,7 @@ data class TitleData(
 
         data class Trailers(
             @SerializedName("data")
-            val `data`: List<DataTrailers>?
+            val `data`: List<DataTrailers>
         ) {
             data class DataTrailers(
                 @SerializedName("fileUrl")
