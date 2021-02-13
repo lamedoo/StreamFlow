@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.utils.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_home_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -44,6 +45,38 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
                     viewModel.refreshContent(1)
                 }, 5000)
             }
+        })
+
+        //Movie Day
+        viewModel.movieDayLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> movieDay_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> {
+                    movieDay_progressBar.setGone()
+                    main_movie_day_container.setVisible()
+                }
+            }
+        })
+
+        viewModel.getMovieDay()
+
+        viewModel.movieDayData.observe(viewLifecycleOwner, {
+            if (it.covers != null) {
+                if (it.covers.data != null) {
+                    if (!it.covers.data.x1050.isNullOrEmpty()) {
+                        Picasso.get().load(it.covers.data.x1050).into(movie_day_cover)
+                    } else {
+                        Picasso.get().load(R.drawable.movie_image_placeholder).into(movie_day_cover)
+                    }
+                }
+            }
+
+            if (!it.primaryName.isNullOrEmpty()) {
+                movie_day_name.text = it.primaryName
+            } else {
+                movie_day_name.text = it.secondaryName
+            }
+
         })
 
 
@@ -119,6 +152,7 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
         viewModel.dbList.observe(viewLifecycleOwner, {
             homeDbTitlesAdapter.setWatchedTitlesList(it)
         })
+
 
         //New Movies List
         viewModel.newMovieLoader.observe(viewLifecycleOwner, {

@@ -12,6 +12,10 @@ import com.lukakordzaia.streamflow.network.RetrofitCall
 class HomeRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
     private val service = retrofitBuilder.buildService()
 
+    suspend fun getMovieDay(): Result<TitleList> {
+        return retrofitCall { service.getMovieDay() }
+    }
+
     suspend fun getNewMovies(page: Int): Result<TitleList> {
         return retrofitCall { service.getNewMovies(page) }
     }

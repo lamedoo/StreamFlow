@@ -22,9 +22,13 @@ import java.util.logging.Handler
 
 class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
+    val movieDayLoader = MutableLiveData<LoadingState>()
     val newMovieLoader = MutableLiveData<LoadingState>()
     val topMovieLoader = MutableLiveData<LoadingState>()
     val topTvShowsLoader = MutableLiveData<LoadingState>()
+
+    private val _movieDayData = MutableLiveData<TitleList.Data>()
+    val movieDayData: LiveData<TitleList.Data> = _movieDayData
 
     private val _newMovieList = MutableLiveData<List<TitleList.Data>>()
     val newMovieList: LiveData<List<TitleList.Data>> = _newMovieList
@@ -49,17 +53,17 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     fun onSingleTitlePressed(start: Int, titleId: Int) {
         when (start) {
             AppConstants.NAV_HOME_TO_SINGLE -> navigateToNewFragment(
-                HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(
-                    titleId
-                )
+                    HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(
+                            titleId
+                    )
             )
             AppConstants.NAV_TOP_MOVIES_TO_SINGLE -> navigateToNewFragment(
-                TopMoviesFragmentDirections.actionTopMoviesFragmentToSingleTitleFragmentNav(titleId)
+                    TopMoviesFragmentDirections.actionTopMoviesFragmentToSingleTitleFragmentNav(titleId)
             )
             AppConstants.NAV_TOP_TV_SHOWS_TO_SINGLE -> navigateToNewFragment(
-                TopTvShowsFragmentDirections.actionTopTvShowsFragmentToSingleTitleFragmentNav(
-                    titleId
-                )
+                    TopTvShowsFragmentDirections.actionTopTvShowsFragmentToSingleTitleFragmentNav(
+                            titleId
+                    )
             )
         }
     }
@@ -74,15 +78,15 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
     fun onDbTitlePressed(dbTitleData: DbTitleData) {
         navigateToNewFragment(
-            HomeFragmentDirections.actionHomeFragmentToVideoPlayerFragmentNav(
-                titleId = dbTitleData.id,
-                chosenSeason = dbTitleData.season,
-                chosenEpisode = dbTitleData.episode,
-                isTvShow = dbTitleData.isTvShow,
-                watchedTime = dbTitleData.watchedDuration,
-                chosenLanguage = dbTitleData.language,
-                trailerUrl = null
-            )
+                HomeFragmentDirections.actionHomeFragmentToVideoPlayerFragmentNav(
+                        titleId = dbTitleData.id,
+                        chosenSeason = dbTitleData.season,
+                        chosenEpisode = dbTitleData.episode,
+                        isTvShow = dbTitleData.isTvShow,
+                        watchedTime = dbTitleData.watchedDuration,
+                        chosenLanguage = dbTitleData.language,
+                        trailerUrl = null
+                )
         )
     }
 
@@ -110,19 +114,19 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     is Result.Success -> {
                         val data = dbTitles.data.data
                         this@HomeViewModel.dbTitles.add(
-                            DbTitleData(
-                                data.posters.data!!.x240,
-                                data.duration,
-                                data.id!!,
-                                data.isTvShow!!,
-                                data.primaryName,
-                                data.originalName,
-                                it.watchedDuration,
-                                it.titleDuration,
-                                it.season,
-                                it.episode,
-                                it.language
-                            )
+                                DbTitleData(
+                                        data.posters.data!!.x240,
+                                        data.duration,
+                                        data.id!!,
+                                        data.isTvShow,
+                                        data.primaryName,
+                                        data.originalName,
+                                        it.watchedDuration,
+                                        it.titleDuration,
+                                        it.season,
+                                        it.episode,
+                                        it.language
+                                )
                         )
                     }
                     is Result.Error -> {
@@ -132,6 +136,26 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             }
             Log.d("savedtitles", "$dbTitles")
             _dbList.value = dbTitles
+        }
+    }
+
+    fun getMovieDay() {
+        viewModelScope.launch {
+            movieDayLoader.value = LoadingState.LOADING
+            when (val movieDay = repository.getMovieDay()) {
+                is Result.Success -> {
+                    val data = movieDay.data.data
+                    _movieDayData.value = data[0]
+
+                    movieDayLoader.value = LoadingState.LOADED
+                }
+                is Result.Error -> {
+                    newToastMessage("დღის ფილმი - ${movieDay.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
+            }
         }
     }
 
@@ -202,6 +226,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     }
 
     fun refreshContent(page: Int) {
+        getMovieDay()
         getNewMovies(page)
         getTopMovies(page)
         getTopTvShows(page)

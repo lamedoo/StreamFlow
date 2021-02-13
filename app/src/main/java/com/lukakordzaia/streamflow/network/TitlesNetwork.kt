@@ -11,6 +11,10 @@ import retrofit2.http.Query
 interface TitlesNetwork {
 
     @Headers("User-Agent: imovies")
+    @GET("movies/movie-day?page=1&per_page=1")
+    suspend fun getMovieDay() : Response <TitleList>
+
+    @Headers("User-Agent: imovies")
     @GET("movies?filters%5Bwith_files%5D=yes&filters%5Btype%5D=movie&sort=-upload_date&per_page=55")
     suspend fun getNewMovies(@Query("page") page: Int) : Response<TitleList>
 

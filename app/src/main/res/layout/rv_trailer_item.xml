@@ -9,7 +9,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/rv_trailer_poster"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="225dp"
         android:scaleType="fitXY"
         app:shapeAppearanceOverlay="@style/roundedCornersImageView"
         android:src="@drawable/movie_image_placeholder_landscape"
@@ -18,7 +18,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="225dp"
         android:background="@drawable/phone_trailer_background"
         app:layout_constraintTop_toTopOf="parent"/>
 
