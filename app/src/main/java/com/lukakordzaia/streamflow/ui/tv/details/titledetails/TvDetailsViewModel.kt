@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.tv.details
+package com.lukakordzaia.streamflow.ui.tv.details.titledetails
 
 import android.content.Context
 import android.util.Log

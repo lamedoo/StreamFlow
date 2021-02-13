@@ -19,9 +19,6 @@ import kotlinx.coroutines.launch
 class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
     val chooseDetailsLoader = MutableLiveData<LoadingState>()
 
-    private val _titleIsInDb = MutableLiveData<Boolean>()
-    val titleIsInDb: LiveData<Boolean> = _titleIsInDb
-
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
 
@@ -82,11 +79,7 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
         return repository.checkTitleInDb(database!!, titleId)
     }
 
-    fun titleIsInDb(exists: Boolean) {
-        _titleIsInDb.value = exists
-    }
-
-    fun getSingleWatchedTitleDetails(context: Context, titleId: Int): LiveData<DbDetails> {
+    fun getTitleDbDetails(context: Context, titleId: Int): LiveData<DbDetails> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         return repository.getSingleWatchedTitles(database!!, titleId)
     }
@@ -127,6 +120,9 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
                             newToastMessage(files.exception)
                         }
                     }
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }

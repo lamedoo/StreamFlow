@@ -14,22 +14,18 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TvNewMoviesFragment : VerticalGridSupportFragment() {
+class TvCategoriesFragment : VerticalGridSupportFragment() {
     private val gridAdapter = ArrayObjectAdapter(TvCardPresenter())
     private val tvCategoriesViewModel: TvCategoriesViewModel by viewModel()
-    private val TEST_ENTRANCE_TRANSITION = true
     private var page = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = ""
         setupFragment()
-        if (TEST_ENTRANCE_TRANSITION) {
             if (savedInstanceState == null) {
                 prepareEntranceTransition()
             }
-        }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

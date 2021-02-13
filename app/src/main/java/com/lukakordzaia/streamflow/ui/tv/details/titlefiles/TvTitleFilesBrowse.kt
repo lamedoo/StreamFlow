@@ -18,7 +18,7 @@ import androidx.leanback.widget.BrowseFrameLayout.OnFocusSearchListener
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsViewModel
+import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvCastPresenter
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvEpisodesPresenter
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvLanguagesPresenter

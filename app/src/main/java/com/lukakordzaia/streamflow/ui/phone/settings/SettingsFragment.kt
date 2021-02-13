@@ -8,21 +8,21 @@ import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.streamflow.R
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_settings_framgent.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment(R.layout.phone_settings_framgent) {
-    private lateinit var viewModel: SettingsViewModel
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 
         settings_delete_history.setOnClickListener {
             val clearDbDialog = Dialog(requireContext())
             clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
             clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                        viewModel.deleteWatchedHistory(requireContext())
-                        viewModel.onDeletePressedPhone(requireContext())
-                    }
+                settingsViewModel.deleteWatchedHistory(requireContext())
+                settingsViewModel.onDeletePressedPhone(requireContext())
+            }
             clearDbDialog.clear_db_alert_no.setOnClickListener {
                 clearDbDialog.dismiss()
             }

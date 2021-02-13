@@ -9,7 +9,6 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.TvTitleFilesFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.createToast

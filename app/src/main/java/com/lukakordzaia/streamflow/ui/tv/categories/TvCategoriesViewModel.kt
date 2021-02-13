@@ -51,6 +51,7 @@ class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewMo
                     Log.d("errornewmovies", topMovies.exception)
                 }
                 is Result.Internet -> {
+                    newToastMessage("შეამოწმეთ ინტერნეტთან კავშირი")
                     getTopMoviesTv(page)
                 }
             }
@@ -69,6 +70,7 @@ class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewMo
                     Log.d("errornewtvshows", tvShows.exception)
                 }
                 is Result.Internet -> {
+                    newToastMessage("შეამოწმეთ ინტერნეტთან კავშირი")
                     getTopTvShowsTv(page)
                 }
             }

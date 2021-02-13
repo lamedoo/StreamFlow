@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsViewModel
+import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsFragment
 import kotlinx.android.synthetic.main.tv_title_files_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel

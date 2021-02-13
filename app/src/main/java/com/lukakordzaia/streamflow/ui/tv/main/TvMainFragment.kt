@@ -1,7 +1,6 @@
 package com.lukakordzaia.streamflow.ui.tv.main
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,13 +10,12 @@ import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.phone.settings.SettingsViewModel
-import com.lukakordzaia.streamflow.ui.tv.categories.TvNewMoviesActivity
+import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.*
@@ -27,33 +25,36 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvMainFragment : BrowseSupportFragment() {
-    private val homeViewModel by viewModel<HomeViewModel>()
-    private val genresViewModel by viewModel<CategoriesViewModel>()
-    private lateinit var settingsViewModel: SettingsViewModel
+    private val homeViewModel: HomeViewModel by viewModel()
+    private val genresViewModel: CategoriesViewModel by viewModel()
+    private val settingsViewModel: SettingsViewModel by viewModel()
     private lateinit var rowsAdapter: ArrayObjectAdapter
-    lateinit var defaultBackground: Drawable
+    private val page = 1
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
-    private val TEST_ENTRANCE_TRANSITION = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (TEST_ENTRANCE_TRANSITION) {
-            if (savedInstanceState == null) {
-                prepareEntranceTransition()
-            }
+        if (savedInstanceState == null) {
+            prepareEntranceTransition()
         }
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        settingsViewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
+        setHeaderPresenterSelector(object : PresenterSelector() {
+            override fun getPresenter(item: Any?): Presenter {
+                return TvHeaderItemPresenter()
+            }
+        })
 
         val listRowPresenter = ListRowPresenter().apply {
             shadowEnabled = false
             selectEffectEnabled = false
         }
         rowsAdapter = ArrayObjectAdapter(listRowPresenter)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRowsAdapter()
 
         homeViewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
@@ -62,25 +63,15 @@ class TvMainFragment : BrowseSupportFragment() {
         })
 
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            homeViewModel.getTopMovies(1)
-            homeViewModel.getTopTvShows(1)
-            homeViewModel.getNewMovies(1)
+            homeViewModel.getTopMovies(page)
+            homeViewModel.getTopTvShows(page)
+            homeViewModel.getNewMovies(page)
             genresViewModel.getAllGenres()
             startEntranceTransition()
         }, 2000)
 
-
-
-        setHeaderPresenterSelector(object : PresenterSelector() {
-            override fun getPresenter(item: Any?): Presenter {
-                return TvHeaderItemPresenter()
-            }
-        })
-
-        initRowsAdapter()
-
         homeViewModel.dbList.observe(viewLifecycleOwner, {
-                watchedListRowsAdapter(it)
+            watchedListRowsAdapter(it)
         })
 
         homeViewModel.topMovieList.observe(viewLifecycleOwner, { movies ->
@@ -113,7 +104,7 @@ class TvMainFragment : BrowseSupportFragment() {
         val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvCardPresenter()))
         val fifthHeaderItem = ListRow(HeaderItem(4, AppConstants.TV_SETTINGS), ArrayObjectAdapter(TvCardPresenter()))
         val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
-        val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, sixthHeaderItem, thirdHeaderItem, fourthHeaderItem, fifthHeaderItem)
+        val initListRows = mutableListOf(firstHeaderItem, sixthHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem, fifthHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }
 
@@ -124,20 +115,8 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         }
 
-        HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING). also {
+        HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING).also {
             rowsAdapter.replace(0, ListRow(it, listRowAdapter))
-        }
-    }
-
-    private fun topMoviesRowsAdapter(movies: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
-            movies.forEach {
-                add(it)
-            }
-        }
-
-        HeaderItem(1, AppConstants.TV_TOP_MOVIES).also { header ->
-            rowsAdapter.replace(1, ListRow(header, listRowAdapter))
         }
     }
 
@@ -148,7 +127,19 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         }
 
-        HeaderItem(2, AppConstants.TV_NEW_MOVIES).also { header ->
+        HeaderItem(1, AppConstants.TV_NEW_MOVIES).also { header ->
+            rowsAdapter.replace(1, ListRow(header, listRowAdapter))
+        }
+    }
+
+    private fun topMoviesRowsAdapter(movies: List<TitleList.Data>) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+            movies.forEach {
+                add(it)
+            }
+        }
+
+        HeaderItem(2, AppConstants.TV_TOP_MOVIES).also { header ->
             rowsAdapter.replace(2, ListRow(header, listRowAdapter))
         }
     }
@@ -192,9 +183,8 @@ class TvMainFragment : BrowseSupportFragment() {
         backgroundManager = BackgroundManager.getInstance(activity).apply {
             attach(activity?.window)
         }
-        defaultBackground = resources.getDrawable(R.drawable.main_background)
         metrics = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
+        activity?.windowManager?.defaultDisplay?.getMetrics(DisplayMetrics())
     }
 
     private fun setupUIElements() {
@@ -251,17 +241,17 @@ class TvMainFragment : BrowseSupportFragment() {
                         activity?.startActivity(intent)
                     }
                     1 -> {
-                        val intent = Intent(context, TvNewMoviesActivity::class.java)
+                        val intent = Intent(context, TvCategoriesActivity::class.java)
                         intent.putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
                         activity?.startActivity(intent)
                     }
                     2 -> {
-                        val intent = Intent(context, TvNewMoviesActivity::class.java)
+                        val intent = Intent(context, TvCategoriesActivity::class.java)
                         intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_MOVIES)
                         activity?.startActivity(intent)
                     }
                     3 -> {
-                        val intent = Intent(context, TvNewMoviesActivity::class.java)
+                        val intent = Intent(context, TvCategoriesActivity::class.java)
                         intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_TV_SHOWS)
                         activity?.startActivity(intent)
                     }
