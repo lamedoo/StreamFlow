@@ -34,15 +34,6 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         player = SimpleExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
 
-
-        videoPlayerViewModel.singleSingleTitleData.observe(viewLifecycleOwner, {
-            if (it.seasons != null) {
-                videoPlayerViewModel.getNumOfSeasons(it.seasons.data.size)
-            } else {
-                videoPlayerViewModel.getNumOfSeasons(0)
-            }
-        })
-
         mediaPlayer.setPlayerListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)

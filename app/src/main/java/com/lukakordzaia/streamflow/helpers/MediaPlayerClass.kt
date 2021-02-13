@@ -34,7 +34,6 @@ class MediaPlayerClass(private val player: SimpleExoPlayer) {
 
     fun addAllEpisodes(episodes: MutableList<MediaItem>) {
         player.addMediaItems(episodes)
-        Log.d("mediaitems", "$episodes")
     }
 
     fun setPlayerListener(event: Player.EventListener) {

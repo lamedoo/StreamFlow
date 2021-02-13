@@ -19,7 +19,6 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
 class VideoPlayerViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
-
     val isTvShow = MutableLiveData<Boolean>()
     val numOfSeasons = MutableLiveData<Int>()
 
@@ -42,13 +41,6 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
 
     private val setTitleNameList = MutableLiveData<List<String>>()
     val setTitleName: LiveData<List<String>> = setTitleNameList
-
-    private val _singleTitleData = MutableLiveData<SingleTitleData.Data>()
-    val singleSingleTitleData: LiveData<SingleTitleData.Data> = _singleTitleData
-
-    fun getNumOfSeasons(numOfSeasons: Int) {
-        this.numOfSeasons.value = numOfSeasons
-    }
 
     fun initPlayer(isTvShow: Boolean, watchTime: Long, chosenEpisode: Int) {
         if (isTvShow) {
@@ -113,7 +105,6 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     }
                     setTitleNameList.value = getTitleNameList
                     episodesUri.value = seasonEpisodesUri
-                    Log.d("episodesaaa", "${seasonEpisodes}")
                 }
                 is Result.Error -> {
                     Log.d("errornextepisode", files.exception)
@@ -143,12 +134,18 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
 
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
-            when (val data = repository.getSingleTitleData(titleId)) {
+            when (val titleData = repository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
-                    _singleTitleData.value = data.data.data
+                    val data = titleData.data.data
+
+                    if (data.seasons == null) {
+                        numOfSeasons.value = 0
+                    } else {
+                        numOfSeasons.value = data.seasons.data.size
+                    }
                 }
                 is Result.Error -> {
-                    Log.d("errorsinglemovies", data.exception)
+                    Log.d("errorsinglemovies", titleData.exception)
                 }
             }
         }
