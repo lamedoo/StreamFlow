@@ -22,6 +22,8 @@ import com.lukakordzaia.streamflow.ui.tv.main.presenters.*
 import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.EventObserver
+import com.lukakordzaia.streamflow.utils.createToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvMainFragment : BrowseSupportFragment() {
@@ -56,6 +58,15 @@ class TvMainFragment : BrowseSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         initRowsAdapter()
 
+        homeViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    homeViewModel.refreshContent(page)
+                }, 5000)
+            }
+        })
+
         homeViewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 homeViewModel.getDbTitlesFromApi(it)
@@ -66,7 +77,6 @@ class TvMainFragment : BrowseSupportFragment() {
             homeViewModel.getTopMovies(page)
             homeViewModel.getTopTvShows(page)
             homeViewModel.getNewMovies(page)
-            genresViewModel.getAllGenres()
             startEntranceTransition()
         }, 2000)
 
@@ -86,10 +96,7 @@ class TvMainFragment : BrowseSupportFragment() {
             topTvShowsRowsAdapter(tvShows)
         })
 
-        genresViewModel.allGenresList.observe(viewLifecycleOwner, { genres ->
-            genresRowsAdapter(genres)
-        })
-
+        categoriesRowsAdapter()
         settingsRowsAdapter()
 
         prepareBackgroundManager()
@@ -156,7 +163,7 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun genresRowsAdapter(genreList: List<GenreList.Data>) {
+    private fun categoriesRowsAdapter() {
         val listRowAdapter = ArrayObjectAdapter(TvCategoriesPresenter()).apply {
             add(TvCategoriesList(0, "ჟანრის მიხედვით", R.drawable.genre_icon_bottom))
             add(TvCategoriesList(1, "ახალი ფილები", R.drawable.tv_new_movies_icon))

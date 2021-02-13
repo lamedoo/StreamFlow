@@ -77,6 +77,7 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent_new)
                     top_search_container.setVisible()
                     searchTitlesViewModel.clearSearchResults()
                 } else {
+                    rv_search_titles_container.setVisible()
                     top_search_container.setGone()
                 }
             }

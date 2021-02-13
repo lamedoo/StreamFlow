@@ -60,7 +60,11 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
 
         viewModel.getMovieDay()
 
-        viewModel.movieDayData.observe(viewLifecycleOwner, {
+        viewModel.movieDayData.observe(viewLifecycleOwner, { it ->
+            main_movie_day_container.setOnClickListener { _ ->
+                viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it.id)
+            }
+
             if (it.covers != null) {
                 if (it.covers.data != null) {
                     if (!it.covers.data.x1050.isNullOrEmpty()) {
@@ -76,9 +80,7 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
             } else {
                 movie_day_name.text = it.secondaryName
             }
-
         })
-
 
         //Watched Titles List
         val dbLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
