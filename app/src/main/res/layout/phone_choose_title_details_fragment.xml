@@ -19,7 +19,7 @@
         android:visibility="visible"/>
 
     <TextView
-        android:id="@+id/movie_file_not_yet"
+        android:id="@+id/title_file_not_yet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="20dp"

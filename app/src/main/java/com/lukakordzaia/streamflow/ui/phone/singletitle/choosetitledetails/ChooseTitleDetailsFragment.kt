@@ -10,7 +10,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
-import com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleViewModel
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_choose_title_details_fragment.*
 import org.koin.android.ext.android.inject
@@ -35,27 +35,22 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chooseTitleDetailsViewModel.isLoading.observe(viewLifecycleOwner, EventObserver {
-            if (!it) {
-                details_progressBar.setGone()
+        chooseTitleDetailsViewModel.chooseDetailsLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> details_progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> {
+                    details_progressBar.setGone()
+                    movie_files_container.setVisible()
+                }
             }
         })
 
         chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (it) {
-                movie_file_not_yet.setVisible()
-                season_spinner_container.setGone()
-                rv_episodes.setGone()
+                title_file_not_yet.setVisible()
                 details_progressBar.setGone()
             } else {
                 movie_files_container.setVisible()
-            }
-        })
-
-        chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
-            val languages = it.reversed()
-            spinnerClass.createSpinner(spinner_language, languages) { language ->
-                chooseTitleDetailsViewModel.getTitleLanguageFiles(language)
             }
         })
 
@@ -71,20 +66,21 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
             chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, args.numOfSeasons)
         }
 
+        chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
+            val languages = it.reversed()
+            spinnerClass.createSpinner(spinner_language, languages) { language ->
+                chooseTitleDetailsViewModel.setFileLanguage(language)
+            }
+        })
+
         chooseTitleDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
             chooseTitleDetailsEpisodesAdapter.setEpisodeList(it)
         })
 
         chooseTitleDetailsEpisodesAdapter = ChooseTitleDetailsEpisodesAdapter(requireContext()) {
-            chooseTitleDetailsViewModel.getEpisodeFile(it)
+            chooseTitleDetailsViewModel.onEpisodePressed(args.titleId, args.isTvShow, it)
         }
         rv_episodes.adapter = chooseTitleDetailsEpisodesAdapter
-
-        chooseTitleDetailsViewModel.chosenEpisode.observe(viewLifecycleOwner, {
-            if (it != 0) {
-                chooseTitleDetailsViewModel.onEpisodePressed(args.titleId, args.isTvShow)
-            }
-        })
 
         chooseTitleDetailsViewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, {
             chooseTitleDetailsViewModel.titleIsInDb(it)

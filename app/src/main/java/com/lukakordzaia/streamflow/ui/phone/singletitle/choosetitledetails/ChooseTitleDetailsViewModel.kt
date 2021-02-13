@@ -9,6 +9,7 @@ import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
 import com.lukakordzaia.streamflow.datamodels.TitleFiles
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -16,6 +17,8 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
+    val chooseDetailsLoader = MutableLiveData<LoadingState>()
+
     private val _titleIsInDb = MutableLiveData<Boolean>()
     val titleIsInDb: LiveData<Boolean> = _titleIsInDb
 
@@ -25,16 +28,11 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
-    private val fetchLanguages: MutableList<String> = ArrayList()
-
     private val _chosenLanguage = MutableLiveData<String>()
     val chosenLanguage: LiveData<String> = _chosenLanguage
 
-    private val _chosenSeason = MutableLiveData<Int>(0)
+    private val _chosenSeason = MutableLiveData<Int>()
     val chosenSeason: LiveData<Int> = _chosenSeason
-
-    private val _chosenEpisode = MutableLiveData<Int>(0)
-    val chosenEpisode: LiveData<Int> = _chosenEpisode
 
     private val _episodeNames = MutableLiveData<List<TitleEpisodes>>()
     val episodeNames: LiveData<List<TitleEpisodes>> = _episodeNames
@@ -44,7 +42,7 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
         navigateToNewFragment(
             ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
                 if (isTvShow) 1 else chosenSeason.value!!,
-                if (isTvShow) 1 else chosenEpisode.value!!,
+                if (isTvShow) 1 else 0,
                 titleId,
                 isTvShow,
                 chosenLanguage.value!!,
@@ -53,11 +51,11 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
         )
     }
 
-    fun onEpisodePressed(titleId: Int, isTvShow: Boolean) {
+    fun onEpisodePressed(titleId: Int, isTvShow: Boolean, chosenEpisode: Int) {
         navigateToNewFragment(
             ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
                 chosenSeason.value!!,
-                chosenEpisode.value!!,
+                chosenEpisode,
                 titleId,
                 isTvShow,
                 chosenLanguage.value!!,
@@ -65,7 +63,6 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
             ),
         )
     }
-
 
     fun onContinueWatchingPressed(dbDetails: DbDetails) {
         navigateToNewFragment(
@@ -94,20 +91,18 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
         return repository.getSingleWatchedTitles(database!!, titleId)
     }
 
-    fun getTitleLanguageFiles(language: String) {
+    fun setFileLanguage(language: String) {
         _chosenLanguage.value = language
-    }
-
-    fun getEpisodeFile(episodeNum: Int) {
-        _chosenEpisode.value = episodeNum
     }
 
     fun getSeasonFiles(titleId: Int, season: Int) {
         _chosenSeason.value = season
         viewModelScope.launch {
+            chooseDetailsLoader.value = LoadingState.LOADING
             when (val files = repository.getSingleTitleFiles(titleId, season)) {
                 is Result.Success -> {
                     val data = files.data.data
+                    val fetchLanguages: MutableList<String> = ArrayList()
 
                     data[0].files!!.forEach {
                         fetchLanguages.add(it.lang)
@@ -121,7 +116,7 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
                     _episodeNames.value = getEpisodeNames
 
                     _movieNotYetAdded.value = false
-                    setLoading(false)
+                    chooseDetailsLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
                     when (files.exception) {
