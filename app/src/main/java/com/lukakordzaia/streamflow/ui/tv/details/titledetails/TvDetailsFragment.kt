@@ -21,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
-    private val tvDetailsViewModel by viewModel<TvDetailsViewModel>()
+    private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
     private val spinnerClass: SpinnerClass by inject()
     private var trailerUrl: String? = null
     private var hasFocus: Boolean = false
@@ -33,7 +33,10 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
 
         tvDetailsViewModel.getSingleTitleData(titleId)
 
-        tvDetailsViewModel.loader.observe(viewLifecycleOwner, {
+        // For Languages
+        tvDetailsViewModel.getSingleTitleFiles(titleId)
+
+        tvDetailsViewModel.dataLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> tv_details_progressBar.setVisible()
                 LoadingState.LOADED -> {
@@ -55,26 +58,22 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
         tvDetailsViewModel.singleSingleTitleData.observe(viewLifecycleOwner, {
 
             tv_files_trailer.setOnClickListener { _ ->
-                if (it.trailers != null) {
-                    if (!it.trailers.data.isNullOrEmpty()) {
-                        it.trailers.data.forEach { trailer ->
-                            when (tvDetailsViewModel.chosenLanguage.value) {
-                                "ENG" -> {
-                                    if (trailer.language == tvDetailsViewModel.chosenLanguage.value) {
-                                        trailerUrl = trailer.fileUrl
-                                        playTitleTrailer(titleId, isTvShow, trailerUrl!!)
-                                    }
+                if (!it.trailers.data.isNullOrEmpty()) {
+                    it.trailers.data.forEach { trailer ->
+                        when (tvDetailsViewModel.chosenLanguage.value) {
+                            "ENG" -> {
+                                if (trailer.language == tvDetailsViewModel.chosenLanguage.value) {
+                                    trailerUrl = trailer.fileUrl
+                                    playTitleTrailer(titleId, isTvShow, trailerUrl!!)
                                 }
-                                else -> {
-                                    if (trailer.language == "RUS") {
-                                        trailerUrl = trailer.fileUrl
-                                        playTitleTrailer(titleId, isTvShow, trailerUrl!!)
-                                    }
+                            }
+                            else -> {
+                                if (trailer.language == "RUS") {
+                                    trailerUrl = trailer.fileUrl
+                                    playTitleTrailer(titleId, isTvShow, trailerUrl!!)
                                 }
                             }
                         }
-                    } else {
-                        requireContext().createToast("no trailer")
                     }
                 } else {
                     requireContext().createToast("no trailer")
@@ -101,7 +100,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                 tv_files_title_country.text = it.countries.data[0].secondaryName
             }
             tv_files_title_name_eng.text = it.secondaryName
-            if (it.isTvShow == true) {
+            if (it.isTvShow) {
                 tv_files_title_duration.text = "${it.seasons!!.data.size} სეზონი"
             } else {
                 tv_files_title_duration.text = "${it.duration.toString()} წთ."
@@ -123,7 +122,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                     tvDetailsViewModel.deleteTitleFromDb(requireContext(), titleId)
                 }
 
-                tvDetailsViewModel.getSingleWatchedTitleDetails(requireContext(), titleId).observe(viewLifecycleOwner, {
+                tvDetailsViewModel.getTitleDbDetails(requireContext(), titleId).observe(viewLifecycleOwner, {
                     tv_continue_play_button.setOnClickListener { _ ->
                         continueTitlePlay(it)
                     }
@@ -159,12 +158,20 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             playTitleFromStart(titleId, isTvShow)
         }
 
+        tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
+            val languages = it.reversed()
+            spinnerClass.createSpinner(tv_details_spinner_language, languages) { language ->
+                tvDetailsViewModel.getTitleLanguageFiles(language)
+            }
+        })
+
         if (isTvShow) {
             tv_details_go_bottom_title.text = "ეპიზოდები და მეტი"
         } else {
             tv_details_go_bottom_title.text = "მსხახიობები და მეტი"
         }
-        tv_details_go_bottom.setOnFocusChangeListener { v, hasFocus ->
+
+        tv_details_go_bottom.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 parentFragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
@@ -174,15 +181,6 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
             this.hasFocus = hasFocus
         }
-
-        tvDetailsViewModel.getSingleTitleFiles(titleId)
-
-        tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
-            val languages = it.reversed()
-            spinnerClass.createSpinner(tv_details_spinner_language, languages) { language ->
-                tvDetailsViewModel.getTitleLanguageFiles(language)
-            }
-        })
     }
 
     private fun playTitleTrailer(titleId: Int, isTvShow: Boolean, trailerUrl: String) {

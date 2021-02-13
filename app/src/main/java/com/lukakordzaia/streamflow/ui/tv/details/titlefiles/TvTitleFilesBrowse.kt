@@ -30,11 +30,9 @@ import com.lukakordzaia.streamflow.utils.createToast
 import kotlinx.android.synthetic.main.tv_title_files_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class TvTitleFilesBrowse : BrowseSupportFragment() {
-    private val tvDetailsViewModel by viewModel<TvDetailsViewModel>()
+    private val tvTitleFilesViewModel: TvTitleFilesViewModel by viewModel()
     private lateinit var rowsAdapter: ArrayObjectAdapter
-    lateinit var defaultBackground: Drawable
     lateinit var metrics: DisplayMetrics
     private var hasFocus = false
 
@@ -46,6 +44,18 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         headersState = HEADERS_DISABLED
+
+        val listRowPresenter = ListRowPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false).apply {
+            shadowEnabled = false
+            selectEffectEnabled = false
+        }
+        rowsAdapter = ArrayObjectAdapter(listRowPresenter)
+
+        setHeaderPresenterSelector(object : PresenterSelector() {
+            override fun getPresenter(item: Any?): Presenter {
+                return TvHeaderItemPresenter()
+            }
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -65,48 +75,37 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
 
-        val listRowPresenter = ListRowPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false).apply {
-            shadowEnabled = false
-            selectEffectEnabled = false
-        }
-        rowsAdapter = ArrayObjectAdapter(listRowPresenter)
-
-        setHeaderPresenterSelector(object : PresenterSelector() {
-            override fun getPresenter(item: Any?): Presenter {
-                return TvHeaderItemPresenter()
-            }
-        })
-
         initRowsAdapter(isTvShow)
 
         if (isTvShow) {
-            tvDetailsViewModel.getSingleTitleData(titleId)
-            tvDetailsViewModel.getSingleTitleFiles(titleId)
+            // For Seasons Number
+            tvTitleFilesViewModel.getSingleTitleData(titleId)
 
-            tvDetailsViewModel.numOfSeasons.observe(viewLifecycleOwner, {
+            tvTitleFilesViewModel.numOfSeasons.observe(viewLifecycleOwner, {
                 val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
                 seasonsRowsAdapter(seasonCount)
             })
 
-            tvDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
+            tvTitleFilesViewModel.episodeNames.observe(viewLifecycleOwner, {
                 episodesRowsAdapter(it)
             })
 
-            tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
+            tvTitleFilesViewModel.availableLanguages.observe(viewLifecycleOwner, {
                 val languages = it.reversed()
                 languageRowsAdapter(languages)
-                tvDetailsViewModel.getTitleLanguageFiles(languages[0])
+                tvTitleFilesViewModel.getTitleLanguageFiles(languages[0])
             })
         }
-        tvDetailsViewModel.getSingleTitleCast(titleId)
-        tvDetailsViewModel.getSingleTitleRelated(titleId)
+
+        tvTitleFilesViewModel.getSingleTitleCast(titleId)
+        tvTitleFilesViewModel.getSingleTitleRelated(titleId)
 
 
-        tvDetailsViewModel.castData.observe(viewLifecycleOwner, {
+        tvTitleFilesViewModel.castData.observe(viewLifecycleOwner, {
             castRowsAdapter(it, isTvShow)
         })
 
-        tvDetailsViewModel.singleTitleRelated.observe(viewLifecycleOwner, {
+        tvTitleFilesViewModel.singleTitleRelated.observe(viewLifecycleOwner, {
             relatedRowsAdapter(it, isTvShow)
         })
 
@@ -189,7 +188,6 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     }
 
     private fun prepareBackgroundManager() {
-        defaultBackground = resources.getDrawable(R.drawable.main_background)
         metrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
     }
@@ -215,7 +213,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                 playEpisode(titleId, isTvShow)
             } else if (item is String) {
                 requireContext().createToast("შეიცვალა ენა: $item. შეგიძლიათ აირჩიოთ ეპიზოდი")
-                tvDetailsViewModel.getTitleLanguageFiles(item)
+                tvTitleFilesViewModel.getTitleLanguageFiles(item)
             } else if (item is TitleList.Data) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
@@ -229,9 +227,9 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             if (item is Int) {
                 val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
-                tvDetailsViewModel.getSeasonFiles(titleId, item)
+                tvTitleFilesViewModel.getSeasonFiles(titleId, item)
             } else if (item is TitleEpisodes) {
-                tvDetailsViewModel.getEpisodeFile(item.episodeNum)
+                tvTitleFilesViewModel.getEpisodeFile(item.episodeNum)
             }
         }
     }
@@ -241,9 +239,9 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra("titleId", titleId)
         intent.putExtra("isTvShow", isTvShow)
-        intent.putExtra("chosenLanguage", this.tvDetailsViewModel.chosenLanguage.value)
-        intent.putExtra("chosenSeason", this.tvDetailsViewModel.chosenSeason.value)
-        intent.putExtra("chosenEpisode", this.tvDetailsViewModel.chosenEpisode.value)
+        intent.putExtra("chosenLanguage", this.tvTitleFilesViewModel.chosenLanguage.value)
+        intent.putExtra("chosenSeason", this.tvTitleFilesViewModel.chosenSeason.value)
+        intent.putExtra("chosenEpisode", this.tvTitleFilesViewModel.chosenEpisode.value)
         intent.putExtra("watchedTime", 0L)
         intent.putExtra("trailerUrl", trailerUrl)
         activity?.startActivity(intent)
@@ -253,7 +251,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         if (view != null) {
             val viewToFocus = requireActivity().findViewById<View>(R.id.tv_details_go_top)
             val browseFrameLayout: BrowseFrameLayout = requireView().findViewById(androidx.leanback.R.id.browse_frame)
-            browseFrameLayout.onFocusSearchListener = OnFocusSearchListener setOnFocusSearchListener@{ focused: View?, direction: Int ->
+            browseFrameLayout.onFocusSearchListener = OnFocusSearchListener setOnFocusSearchListener@{ _: View?, direction: Int ->
                 if (direction == View.FOCUS_UP) {
                     this.hasFocus = true
                     return@setOnFocusSearchListener viewToFocus

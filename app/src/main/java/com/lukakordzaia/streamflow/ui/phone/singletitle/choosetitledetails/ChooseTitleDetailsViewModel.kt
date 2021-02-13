@@ -95,20 +95,24 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
             when (val files = repository.getSingleTitleFiles(titleId, season)) {
                 is Result.Success -> {
                     val data = files.data.data
-                    val fetchLanguages: MutableList<String> = ArrayList()
+                    if (data.isNotEmpty()) {
+                        val fetchLanguages: MutableList<String> = ArrayList()
 
-                    data[0].files!!.forEach {
-                        fetchLanguages.add(it.lang)
+                        data[0].files!!.forEach {
+                            fetchLanguages.add(it.lang)
+                        }
+                        _availableLanguages.value = fetchLanguages
+
+                        val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
+                        data.forEach {
+                            getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+                        }
+                        _episodeNames.value = getEpisodeNames
+
+                        _movieNotYetAdded.value = false
+                    } else {
+                        _movieNotYetAdded.value = true
                     }
-                    _availableLanguages.value = fetchLanguages
-
-                    val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
-                    data.forEach {
-                        getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
-                    }
-                    _episodeNames.value = getEpisodeNames
-
-                    _movieNotYetAdded.value = false
                     chooseDetailsLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {

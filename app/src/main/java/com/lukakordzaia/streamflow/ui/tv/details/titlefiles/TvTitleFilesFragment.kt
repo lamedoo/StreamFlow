@@ -10,15 +10,9 @@ import kotlinx.android.synthetic.main.tv_title_files_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment) {
-    private val tvDetailsViewModel by viewModel<TvDetailsViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
-        val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
-
-        tvDetailsViewModel.getSingleTitleData(titleId)
-        tvDetailsViewModel.getSingleTitleFiles(titleId)
 
         tv_details_go_top.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {

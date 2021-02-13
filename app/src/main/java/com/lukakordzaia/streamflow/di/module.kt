@@ -14,6 +14,7 @@ import com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.Choos
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
+import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.TvTitleFilesViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -28,6 +29,7 @@ val viewModelModule = module {
     viewModel { TvCategoriesViewModel(get()) }
     viewModel { ChooseTitleDetailsViewModel(get()) }
     viewModel { SettingsViewModel() }
+    viewModel { TvTitleFilesViewModel(get()) }
 }
 
 val repositoryModule = module {
