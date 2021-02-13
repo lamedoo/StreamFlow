@@ -29,7 +29,6 @@ class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewMo
                 }
                 is Result.Error -> {
                     newToastMessage(movies.exception)
-                    Log.d("errornewmovies", movies.exception)
                 }
                 is Result.Internet -> {
                     newToastMessage("შეამოწმეთ ინტერნეტთან კავშირი")
@@ -48,7 +47,6 @@ class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewMo
                 }
                 is Result.Error -> {
                     newToastMessage(topMovies.exception)
-                    Log.d("errornewmovies", topMovies.exception)
                 }
                 is Result.Internet -> {
                     newToastMessage("შეამოწმეთ ინტერნეტთან კავშირი")
@@ -67,7 +65,6 @@ class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewMo
                 }
                 is Result.Error -> {
                     newToastMessage(tvShows.exception)
-                    Log.d("errornewtvshows", tvShows.exception)
                 }
                 is Result.Internet -> {
                     newToastMessage("შეამოწმეთ ინტერნეტთან კავშირი")

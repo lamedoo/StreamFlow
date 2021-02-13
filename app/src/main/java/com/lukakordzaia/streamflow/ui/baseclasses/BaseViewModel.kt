@@ -13,10 +13,7 @@ abstract class BaseViewModel : ViewModel() {
     private val _toastMessage = MutableLiveData<Event<String>>()
     val toastMessage: LiveData<Event<String>> = _toastMessage
 
-    private val _isLoading = MutableLiveData<Event<Boolean>>()
-    val isLoading: LiveData<Event<Boolean>> = _isLoading
-
-    private val _noInternet = MutableLiveData<Event<Boolean>>(Event(false))
+    private val _noInternet = MutableLiveData(Event(false))
     val noInternet: LiveData<Event<Boolean>> = _noInternet
 
 
@@ -27,10 +24,6 @@ abstract class BaseViewModel : ViewModel() {
 
     fun newToastMessage(message: String) {
         _toastMessage.value = Event(message)
-    }
-
-    fun setLoading(loading: Boolean) {
-        _isLoading.value = Event(loading)
     }
 
     fun setNoInternet() {

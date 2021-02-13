@@ -2,6 +2,8 @@ package com.lukakordzaia.streamflow.ui.tv.details.titledetails
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,9 +13,7 @@ import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.TvTitleFilesFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
-import com.lukakordzaia.streamflow.utils.createToast
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_details_fragment.*
 import org.koin.android.ext.android.inject
@@ -30,6 +30,16 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
         super.onViewCreated(view, savedInstanceState)
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
+
+        tvDetailsViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    tvDetailsViewModel.getSingleTitleData(titleId)
+                    tvDetailsViewModel.getSingleTitleFiles(titleId)
+                }, 5000)
+            }
+        })
 
         tvDetailsViewModel.getSingleTitleData(titleId)
 

@@ -93,6 +93,9 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
                 is Result.Error -> {
                     newToastMessage("ჟანრი - ${singleGenre.exception}")
                 }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
             }
         }
     }

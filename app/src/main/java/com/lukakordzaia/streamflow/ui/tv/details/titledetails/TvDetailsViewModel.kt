@@ -43,6 +43,9 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
                 is Result.Error -> {
                     newToastMessage(data.exception)
                 }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
             }
         }
     }
@@ -87,6 +90,9 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
                             _movieNotYetAdded.value = true
                         }
                     }
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }

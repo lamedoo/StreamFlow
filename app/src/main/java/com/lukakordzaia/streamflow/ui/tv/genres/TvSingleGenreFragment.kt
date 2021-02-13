@@ -3,6 +3,8 @@ package com.lukakordzaia.streamflow.ui.tv.genres
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -16,6 +18,8 @@ import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.EventObserver
+import com.lukakordzaia.streamflow.utils.createToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -29,10 +33,6 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         headersState = HEADERS_DISABLED
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         val listRowPresenter = ListRowPresenter().apply {
             shadowEnabled = false
@@ -40,20 +40,36 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         }
         rowsAdapter = ArrayObjectAdapter(listRowPresenter)
 
+        setHeaderPresenterSelector(object : PresenterSelector() {
+            override fun getPresenter(item: Any?): Presenter {
+                return TvHeaderItemPresenter()
+            }
+        })
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        singleGenreViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    singleGenreViewModel.getSingleGenreForTv(265, 1)
+                    singleGenreViewModel.getSingleGenreForTv(258, 1)
+                    singleGenreViewModel.getSingleGenreForTv(260, 1)
+                    singleGenreViewModel.getSingleGenreForTv(255, 1)
+                    singleGenreViewModel.getSingleGenreForTv(266, 1)
+                    singleGenreViewModel.getSingleGenreForTv(248, 1)
+                }, 5000)
+            }
+        })
+
         singleGenreViewModel.getSingleGenreForTv(265, 1)
         singleGenreViewModel.getSingleGenreForTv(258, 1)
         singleGenreViewModel.getSingleGenreForTv(260, 1)
         singleGenreViewModel.getSingleGenreForTv(255, 1)
         singleGenreViewModel.getSingleGenreForTv(266, 1)
         singleGenreViewModel.getSingleGenreForTv(248, 1)
-
-        setHeaderPresenterSelector(object : PresenterSelector() {
-            override fun getPresenter(item: Any?): Presenter {
-                return TvHeaderItemPresenter()
-            }
-        })
-
-//        initRowsAdapter()
 
         singleGenreViewModel.singleGenreAnimation.observe(viewLifecycleOwner, {
             firstCategoryAdapter(it)
@@ -82,17 +98,10 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         prepareBackgroundManager()
         setupUIElements()
         setupEventListeners()
-    }
 
-    private fun initRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.GENRE_ANIMATION), ArrayObjectAdapter(TvCardPresenter()))
-        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.GENRE_COMEDY), ArrayObjectAdapter(TvCardPresenter()))
-        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.GENRE_MELODRAMA), ArrayObjectAdapter(TvCardPresenter()))
-        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.GENRE_HORROR), ArrayObjectAdapter(TvCardPresenter()))
-        val fifthHeaderItem = ListRow(HeaderItem(4, AppConstants.GENRE_ADVENTURE), ArrayObjectAdapter(TvCardPresenter()))
-//        val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
-        val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem, fifthHeaderItem)
-        rowsAdapter.addAll(0, initListRows)
+        singleGenreViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
+        })
     }
 
     private fun firstCategoryAdapter(category: List<TitleList.Data>) {
