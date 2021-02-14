@@ -17,7 +17,7 @@ data class TitleFiles(
         @SerializedName("episodes_include")
         val episodesInclude: String?,
         @SerializedName("files")
-        val files: List<File>?,
+        val files: List<File>,
         @SerializedName("poster")
         val poster: String?,
         @SerializedName("title")
@@ -60,7 +60,7 @@ data class TitleFiles(
                 @SerializedName("quality")
                 val quality: String?,
                 @SerializedName("src")
-                val src: String?,
+                val src: String,
                 @SerializedName("thumbnails")
                 val thumbnails: List<Thumbnail>?
             ) {

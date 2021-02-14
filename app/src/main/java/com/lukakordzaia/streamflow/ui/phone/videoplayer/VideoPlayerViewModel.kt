@@ -7,9 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
-import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
+import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInit
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerRelease
@@ -95,14 +94,17 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     val season = files.data.data
                     season.forEach { singleEpisode ->
                         getTitleNameList.add(singleEpisode.title)
-                        singleEpisode.files!!.forEach { singleFiles ->
-                            checkAvailability(singleFiles, chosenLanguage)
+                        singleEpisode.files.forEach { singleEpisodeFiles ->
+                            if (singleEpisodeFiles.lang == chosenLanguage) {
+                                checkAvailability(singleEpisodeFiles, chosenLanguage)
+                            }
                         }
                     }
                     seasonEpisodes.forEach {
                         val items = MediaItem.fromUri(Uri.parse(it))
                         seasonEpisodesUri.add(items)
                     }
+                    Log.d("episodelinks", seasonEpisodes.toString())
                     setTitleNameList.value = getTitleNameList
                     episodesUri.value = seasonEpisodesUri
                 }
@@ -114,22 +116,18 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
 
     }
 
-    private fun checkAvailability(singleFiles: TitleFiles.Data.File, chosenLanguage: String) {
-        if (singleFiles.lang == chosenLanguage) {
-            if (singleFiles.files.size == 1) {
-                if (singleFiles.files[0].quality == "MEDIUM") {
-                    seasonEpisodes.add(singleFiles.files[0].src!!)
-                } else {
-                    seasonEpisodes.add(singleFiles.files[0].src!!)
-                }
-            } else if (singleFiles.files.size > 1) {
-                singleFiles.files.forEach {
-                    if (it.quality == "HIGH" && it.src != null) {
+    private fun checkAvailability(singleEpisodeFiles: TitleFiles.Data.File, chosenLanguage: String) {
+//        if (singleEpisodeFiles.lang == chosenLanguage) {
+            if (singleEpisodeFiles.files.size == 1) {
+                    seasonEpisodes.add(singleEpisodeFiles.files[0].src)
+            } else if (singleEpisodeFiles.files.size > 1) {
+                singleEpisodeFiles.files.forEach {
+                    if (it.quality == "HIGH") {
                         seasonEpisodes.add(it.src)
                     }
                 }
             }
-        }
+//        }
     }
 
     fun getSingleTitleData(titleId: Int) {
