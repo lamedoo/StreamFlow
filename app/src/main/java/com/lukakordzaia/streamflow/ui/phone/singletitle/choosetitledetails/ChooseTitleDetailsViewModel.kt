@@ -1,14 +1,12 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
@@ -98,7 +96,7 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
                     if (data.isNotEmpty()) {
                         val fetchLanguages: MutableList<String> = ArrayList()
 
-                        data[0].files!!.forEach {
+                        data[0].files.forEach {
                             fetchLanguages.add(it.lang)
                         }
                         _availableLanguages.value = fetchLanguages

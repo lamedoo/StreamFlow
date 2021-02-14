@@ -21,39 +21,38 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     val isTvShow = MutableLiveData<Boolean>()
     val numOfSeasons = MutableLiveData<Int>()
 
-    private var currentWindow = MutableLiveData<Int>(0)
-    private var playbackPosition = MutableLiveData<Long>(0L)
-
-    val episodesUri = MutableLiveData<MutableList<MediaItem>>()
     val playBackOptions = MutableLiveData<VideoPlayerInit>()
 
-    private val seasonEpisodes: MutableList<String> = ArrayList()
-    private val seasonEpisodesUri: MutableList<MediaItem> = ArrayList()
+    private val getSeasonEpisodes: MutableList<String> = ArrayList()
+    private val seasonEpisodesIntoUri: MutableList<MediaItem> = ArrayList()
 
+    private val _setSeasonEpisodesUri = MutableLiveData<List<MediaItem>>()
+    val setSeasonEpisodesUri: LiveData<List<MediaItem>> = _setSeasonEpisodesUri
+
+    val titleIdForDb = MutableLiveData<Int>()
+    private val playbackPositionForDb = MutableLiveData(0L)
+    private val titleDurationForDb = MutableLiveData(0L)
     val seasonForDb = MutableLiveData(1)
     private val episodeForDb = MutableLiveData<Int>()
-    val titleIdForDb = MutableLiveData<Int>()
     val languageForDb = MutableLiveData<String>()
-    private var titleDurationForDb = MutableLiveData<Long>(0L)
 
-    private val getTitleNameList: MutableList<String> = mutableListOf()
+    private val getTitleNameList: MutableList<String> = ArrayList()
 
-    private val setTitleNameList = MutableLiveData<List<String>>()
-    val setTitleName: LiveData<List<String>> = setTitleNameList
+    private val _setTitleNameList = MutableLiveData<List<String>>()
+    val setTitleName: LiveData<List<String>> = _setTitleNameList
 
     fun initPlayer(isTvShow: Boolean, watchTime: Long, chosenEpisode: Int) {
         if (isTvShow) {
             this.isTvShow.value = isTvShow
-            currentWindow.value = chosenEpisode - 1
         }
         playBackOptions.value = VideoPlayerInit(
-            currentWindow.value!!,
+            if (isTvShow) chosenEpisode-1 else chosenEpisode,
             watchTime
         )
     }
 
     fun releasePlayer(videoPlayerRelease: VideoPlayerRelease) {
-        playbackPosition.value = videoPlayerRelease.playbackPosition
+        playbackPositionForDb.value = videoPlayerRelease.playbackPosition
         episodeForDb.value = videoPlayerRelease.currentWindow
         titleDurationForDb.value = videoPlayerRelease.titleDuration
     }
@@ -61,12 +60,12 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     fun saveTitleToDb(context: Context, titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         viewModelScope.launch {
-            if (playbackPosition.value!! > 0) {
+            if (playbackPositionForDb.value!! > 0) {
                 database?.insertWatchedTitle(
                     DbDetails(
                         titleId,
                         chosenLanguage,
-                        playbackPosition.value!!,
+                        playbackPositionForDb.value!!,
                         titleDurationForDb.value!!,
                         isTvShow,
                         seasonForDb.value!!,
@@ -78,8 +77,8 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     }
 
     private fun clearPlayerForNextSeason() {
-        seasonEpisodes.clear()
-        seasonEpisodesUri.clear()
+        getSeasonEpisodes.clear()
+        seasonEpisodesIntoUri.clear()
         getTitleNameList.clear()
     }
 
@@ -99,9 +98,9 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                         }
                     }
 
-                    if (seasonEpisodes.size < season.size) {
-                        newToastMessage("${seasonEpisodes.size+1} ეპიზოდიდან ავტომატურად გადაირთვება ინგლისურ ენაზე")
-                        val restOfSeason = season.subList(seasonEpisodes.size, season.size)
+                    if (getSeasonEpisodes.size < season.size) {
+                        newToastMessage("${getSeasonEpisodes.size+1} ეპიზოდიდან ავტომატურად გადაირთვება ინგლისურ ენაზე")
+                        val restOfSeason = season.subList(getSeasonEpisodes.size, season.size)
                         restOfSeason.forEach {singleEpisode ->
                             singleEpisode.files.forEach { singleEpisodeFiles ->
                                 checkAvailability(singleEpisodeFiles, "ENG")
@@ -109,13 +108,13 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                         }
                     }
                     
-                    seasonEpisodes.forEach {
+                    getSeasonEpisodes.forEach {
                         val items = MediaItem.fromUri(Uri.parse(it))
-                        seasonEpisodesUri.add(items)
+                        seasonEpisodesIntoUri.add(items)
                     }
-                    Log.d("episodelinks", seasonEpisodes.toString())
-                    setTitleNameList.value = getTitleNameList
-                    episodesUri.value = seasonEpisodesUri
+                    Log.d("episodelinks", getSeasonEpisodes.toString())
+                    _setTitleNameList.value = getTitleNameList
+                    _setSeasonEpisodesUri.value = seasonEpisodesIntoUri
                 }
                 is Result.Error -> {
                     Log.d("errornextepisode", files.exception)
@@ -128,11 +127,11 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     private fun checkAvailability(singleEpisodeFiles: TitleFiles.Data.File, chosenLanguage: String) {
         if (singleEpisodeFiles.lang == chosenLanguage) {
             if (singleEpisodeFiles.files.size == 1) {
-                    seasonEpisodes.add(singleEpisodeFiles.files[0].src)
+                    getSeasonEpisodes.add(singleEpisodeFiles.files[0].src)
             } else if (singleEpisodeFiles.files.size > 1) {
                 singleEpisodeFiles.files.forEach {
                     if (it.quality == "HIGH") {
-                        seasonEpisodes.add(it.src)
+                        getSeasonEpisodes.add(it.src)
                     }
                 }
             }

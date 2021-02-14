@@ -44,12 +44,6 @@ class HomeTvShowAdapter(private val context: Context, private val onTvShowClick:
             }
         }
 
-//        if (!listModel.secondaryName.isNullOrEmpty()) {
-//            holder.titleNameEngTextView.text = listModel.secondaryName
-//        } else {
-//            holder.titleNameEngTextView.text = ""
-//        }
-
         if (!listModel.primaryName.isNullOrEmpty()) {
             holder.titleNameGeoTextView.text = listModel.primaryName
         } else {

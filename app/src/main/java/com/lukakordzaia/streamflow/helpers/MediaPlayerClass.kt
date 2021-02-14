@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.helpers
 
-import android.util.Log
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -32,7 +31,7 @@ class MediaPlayerClass(private val player: SimpleExoPlayer) {
         player.release()
     }
 
-    fun addAllEpisodes(episodes: MutableList<MediaItem>) {
+    fun addAllEpisodes(episodes: List<MediaItem>) {
         player.addMediaItems(episodes)
     }
 

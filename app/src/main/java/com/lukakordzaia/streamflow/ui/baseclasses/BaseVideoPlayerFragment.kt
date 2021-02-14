@@ -77,7 +77,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             }
         })
 
-        videoPlayerViewModel.episodesUri.observe(viewLifecycleOwner, {
+        videoPlayerViewModel.setSeasonEpisodesUri.observe(viewLifecycleOwner, {
             mediaPlayer.addAllEpisodes(it)
         })
 

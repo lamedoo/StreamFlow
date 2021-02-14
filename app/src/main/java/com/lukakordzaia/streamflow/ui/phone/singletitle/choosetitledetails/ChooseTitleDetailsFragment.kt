@@ -53,24 +53,24 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
             }
         })
 
-        chooseTitleDetailsViewModel.chooseDetailsLoader.observe(viewLifecycleOwner,
-                {
+        chooseTitleDetailsViewModel.chooseDetailsLoader.observe(viewLifecycleOwner, {
                     when (it.status) {
                         LoadingState.Status.RUNNING -> details_progressBar.setVisible()
                         LoadingState.Status.SUCCESS -> {
                             details_progressBar.setGone()
-                            movie_files_container.setVisible()
+
+                            if (chooseTitleDetailsViewModel.movieNotYetAdded.value == false) {
+                                movie_files_container.setVisible()
+                            }
                         }
                     }
                 })
 
-        chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner,
-                {
+        chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
                     if (it) {
                         title_file_not_yet.setVisible()
                         details_progressBar.setGone()
-                    } else {
-                        movie_files_container.setVisible()
+                        movie_files_container.setGone()
                     }
                 })
 
