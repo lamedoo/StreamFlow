@@ -95,11 +95,20 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     season.forEach { singleEpisode ->
                         getTitleNameList.add(singleEpisode.title)
                         singleEpisode.files.forEach { singleEpisodeFiles ->
-                            if (singleEpisodeFiles.lang == chosenLanguage) {
-                                checkAvailability(singleEpisodeFiles, chosenLanguage)
+                            checkAvailability(singleEpisodeFiles, chosenLanguage)
+                        }
+                    }
+
+                    if (seasonEpisodes.size < season.size) {
+                        newToastMessage("${seasonEpisodes.size+1} ეპიზოდიდან ავტომატურად გადაირთვება ინგლისურ ენაზე")
+                        val restOfSeason = season.subList(seasonEpisodes.size, season.size)
+                        restOfSeason.forEach {singleEpisode ->
+                            singleEpisode.files.forEach { singleEpisodeFiles ->
+                                checkAvailability(singleEpisodeFiles, "ENG")
                             }
                         }
                     }
+                    
                     seasonEpisodes.forEach {
                         val items = MediaItem.fromUri(Uri.parse(it))
                         seasonEpisodesUri.add(items)
@@ -117,7 +126,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     }
 
     private fun checkAvailability(singleEpisodeFiles: TitleFiles.Data.File, chosenLanguage: String) {
-//        if (singleEpisodeFiles.lang == chosenLanguage) {
+        if (singleEpisodeFiles.lang == chosenLanguage) {
             if (singleEpisodeFiles.files.size == 1) {
                     seasonEpisodes.add(singleEpisodeFiles.files[0].src)
             } else if (singleEpisodeFiles.files.size > 1) {
@@ -127,7 +136,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     }
                 }
             }
-//        }
+        }
     }
 
     fun getSingleTitleData(titleId: Int) {

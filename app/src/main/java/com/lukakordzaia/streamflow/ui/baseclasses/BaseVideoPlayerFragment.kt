@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -12,6 +13,8 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.streamflow.helpers.MediaPlayerClass
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerViewModel
+import com.lukakordzaia.streamflow.utils.EventObserver
+import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
@@ -80,6 +83,10 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
 
         videoPlayerViewModel.playBackOptions.observe(viewLifecycleOwner, {
             mediaPlayer.initPlayer(playerView, it)
+        })
+
+        videoPlayerViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it, Toast.LENGTH_LONG)
         })
     }
 
