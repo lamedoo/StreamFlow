@@ -11,13 +11,11 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.SubtitleView
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
-import com.lukakordzaia.streamflow.utils.EventObserver
-import com.lukakordzaia.streamflow.utils.createToast
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
@@ -39,6 +37,9 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         player = SimpleExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
 
+        val subtitleView = requireActivity().findViewById<SubtitleView>(com.google.android.exoplayer2.R.id.exo_subtitles)
+//        subtitleView.setInvisible()
+//
 //        player.addTextOutput {
 //            subtitle?.onCues(it)
 //        }
@@ -176,6 +177,10 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
 
     fun setExoPlayer(playerView: PlayerView) {
         this.playerView = playerView
+
+        playerView.subtitleView?.apply {
+            setInvisible()
+        }
     }
 
     fun getPlayListFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
