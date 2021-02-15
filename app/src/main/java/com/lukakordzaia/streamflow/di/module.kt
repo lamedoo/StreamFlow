@@ -1,6 +1,8 @@
 package com.lukakordzaia.streamflow.di
 
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
+import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
+import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.network.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.repository.*
@@ -11,7 +13,6 @@ import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.phone.settings.SettingsViewModel
 import com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsViewModel
-import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.TvTitleFilesViewModel
@@ -44,4 +45,5 @@ val generalModule = module {
     single { RetrofitBuilder(get()) }
     single { NetworkConnectionInterceptor(get()) }
     single { SpinnerClass(get()) }
+    single { BuildMediaSource(get()) }
 }

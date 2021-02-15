@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.videoplayer
+package com.lukakordzaia.streamflow.helpers.videoplayer
 
 import android.content.Context
 import android.net.Uri
@@ -41,12 +41,17 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     private val _setTitleNameList = MutableLiveData<List<String>>()
     val setTitleName: LiveData<List<String>> = _setTitleNameList
 
+    private val getMovieSubtitles: MutableList<String> = ArrayList()
+    private val setMovieSubtitles = MutableLiveData<List<String>>()
+
+    val mediaAndSubtitle = MutableLiveData<Pair<List<MediaItem>, List<String>>>()
+
     fun initPlayer(isTvShow: Boolean, watchTime: Long, chosenEpisode: Int) {
         if (isTvShow) {
             this.isTvShow.value = isTvShow
         }
         playBackOptions.value = VideoPlayerInit(
-            if (isTvShow) chosenEpisode-1 else chosenEpisode,
+            if (isTvShow) chosenEpisode-1 else 0,
             watchTime
         )
     }
@@ -112,9 +117,10 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                         val items = MediaItem.fromUri(Uri.parse(it))
                         seasonEpisodesIntoUri.add(items)
                     }
-                    Log.d("episodelinks", getSeasonEpisodes.toString())
+                    setMovieSubtitles.value = getMovieSubtitles
                     _setTitleNameList.value = getTitleNameList
                     _setSeasonEpisodesUri.value = seasonEpisodesIntoUri
+                    mediaAndSubtitle.value = Pair(seasonEpisodesIntoUri, setMovieSubtitles.value!!)
                 }
                 is Result.Error -> {
                     Log.d("errornextepisode", files.exception)
@@ -134,6 +140,15 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                         getSeasonEpisodes.add(it.src)
                     }
                 }
+            }
+            if (singleEpisodeFiles.subtitles?.isNotEmpty() == true) {
+                singleEpisodeFiles.subtitles.forEach {
+                    if (it?.lang.equals(chosenLanguage, true)) {
+                        getMovieSubtitles.add(it?.url!!)
+                    }
+                }
+            } else {
+                getMovieSubtitles.add("0")
             }
         }
     }

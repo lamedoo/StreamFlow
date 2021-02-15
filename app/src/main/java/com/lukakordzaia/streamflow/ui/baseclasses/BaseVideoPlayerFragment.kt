@@ -7,25 +7,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.database.DatabaseProvider
-import com.google.android.exoplayer2.database.ExoDatabaseProvider
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.MergingMediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.SingleSampleMediaSource
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
-import com.google.android.exoplayer2.upstream.cache.SimpleCache
-import com.google.android.exoplayer2.util.MimeTypes
-import com.google.android.exoplayer2.util.Util
-import com.lukakordzaia.streamflow.helpers.MediaPlayerClass
-import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerViewModel
+import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
+import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
+import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
@@ -34,11 +22,11 @@ import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
+import org.koin.android.ext.android.inject
 
 abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     abstract val videoPlayerViewModel: VideoPlayerViewModel
+    private val buildMediaSource: BuildMediaSource by inject()
 
     private lateinit var mediaPlayer: MediaPlayerClass
     private lateinit var player: SimpleExoPlayer
@@ -51,7 +39,9 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         player = SimpleExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
 
-        player.prepare(buildMediaSource())
+//        player.addTextOutput {
+//            subtitle?.onCues(it)
+//        }
 
         mediaPlayer.setPlayerListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -93,8 +83,12 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             }
         })
 
-        videoPlayerViewModel.setSeasonEpisodesUri.observe(viewLifecycleOwner, {
-            mediaPlayer.setMediaItems(it)
+        videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
+            if (it.first.size == 1) {
+                mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it.first, it.second))
+            } else if (it.first.size > 1) {
+                mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it.first, it.second))
+            }
         })
 
         videoPlayerViewModel.playBackOptions.observe(viewLifecycleOwner, {
@@ -182,12 +176,6 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
 
     fun setExoPlayer(playerView: PlayerView) {
         this.playerView = playerView
-    }
-
-    private fun buildMediaSource(): MediaSource {
-        val dataSourceFactory = DefaultDataSourceFactory(requireContext(), "sample")
-        return ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse("https://api.imovies.cc/api/v1/movies/878365229/files/1219934"))
     }
 
     fun getPlayListFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
