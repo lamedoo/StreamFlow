@@ -104,8 +104,8 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         when (playerView) {
             phone_title_player -> {
                 next_season_button.setVisible()
-                next_season_button.text = "სეზონი: ${nextSeasonNum!!}"
-                next_season_button.setOnClickListener { _ ->
+                next_season_button.text = "სეზონი: $nextSeasonNum"
+                next_season_button.setOnClickListener {
                     player.clearMediaItems()
                     videoPlayerViewModel.getPlaylistFiles(
                             videoPlayerViewModel.titleIdForDb.value!!,
@@ -117,8 +117,8 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             }
             tv_title_player -> {
                 tv_next_season_button.setVisible()
-                tv_next_season_button.text = "სეზონი: ${nextSeasonNum!!}"
-                tv_next_season_button.setOnClickListener { _ ->
+                tv_next_season_button.text = "სეზონი: $nextSeasonNum"
+                tv_next_season_button.setOnClickListener {
                     player.clearMediaItems()
                     videoPlayerViewModel.getPlaylistFiles(
                             videoPlayerViewModel.titleIdForDb.value!!,
