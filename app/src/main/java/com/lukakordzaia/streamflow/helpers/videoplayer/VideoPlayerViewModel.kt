@@ -10,6 +10,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.TitleFiles
+import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInit
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerRelease
 import com.lukakordzaia.streamflow.network.Result
@@ -26,9 +27,6 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     private val getSeasonEpisodes: MutableList<String> = ArrayList()
     private val seasonEpisodesIntoUri: MutableList<MediaItem> = ArrayList()
 
-    private val _setSeasonEpisodesUri = MutableLiveData<List<MediaItem>>()
-    val setSeasonEpisodesUri: LiveData<List<MediaItem>> = _setSeasonEpisodesUri
-
     val titleIdForDb = MutableLiveData<Int>()
     private val playbackPositionForDb = MutableLiveData(0L)
     private val titleDurationForDb = MutableLiveData(0L)
@@ -42,9 +40,8 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     val setTitleName: LiveData<List<String>> = _setTitleNameList
 
     private val getMovieSubtitles: MutableList<String> = ArrayList()
-    private val setMovieSubtitles = MutableLiveData<List<String>>()
 
-    val mediaAndSubtitle = MutableLiveData<Pair<List<MediaItem>, List<String>>>()
+    val mediaAndSubtitle = MutableLiveData<TitleMediaItemsUri>()
 
     fun initPlayer(isTvShow: Boolean, watchTime: Long, chosenEpisode: Int) {
         if (isTvShow) {
@@ -117,10 +114,9 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                         val items = MediaItem.fromUri(Uri.parse(it))
                         seasonEpisodesIntoUri.add(items)
                     }
-                    setMovieSubtitles.value = getMovieSubtitles
+
                     _setTitleNameList.value = getTitleNameList
-                    _setSeasonEpisodesUri.value = seasonEpisodesIntoUri
-                    mediaAndSubtitle.value = Pair(seasonEpisodesIntoUri, setMovieSubtitles.value!!)
+                    mediaAndSubtitle.value = TitleMediaItemsUri(seasonEpisodesIntoUri, getMovieSubtitles)
                 }
                 is Result.Error -> {
                     Log.d("errornextepisode", files.exception)
@@ -141,10 +137,10 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     }
                 }
             }
-            if (singleEpisodeFiles.subtitles?.isNotEmpty() == true) {
+            if (!singleEpisodeFiles.subtitles.isNullOrEmpty()) {
                 singleEpisodeFiles.subtitles.forEach {
-                    if (it?.lang.equals(chosenLanguage, true)) {
-                        getMovieSubtitles.add(it?.url!!)
+                    if (it!!.lang.equals(chosenLanguage, true)) {
+                        getMovieSubtitles.add(it.url)
                     }
                 }
             } else {

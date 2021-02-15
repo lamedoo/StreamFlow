@@ -88,9 +88,9 @@ data class TitleFiles(
 
             data class Subtitle(
                 @SerializedName("lang")
-                val lang: String?,
+                val lang: String,
                 @SerializedName("url")
-                val url: String?
+                val url: String
             )
         }
     }

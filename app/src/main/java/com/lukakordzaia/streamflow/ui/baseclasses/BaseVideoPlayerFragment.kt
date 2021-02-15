@@ -84,10 +84,10 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         })
 
         videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
-            if (it.first.size == 1) {
-                mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it.first, it.second))
-            } else if (it.first.size > 1) {
-                mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it.first, it.second))
+            if (it.titleFileUri.size == 1) {
+                mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
+            } else if (it.titleFileUri.size > 1) {
+                mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
             }
         })
 
