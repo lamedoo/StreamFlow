@@ -31,20 +31,12 @@ class HomeNewMovieAdapter(private val context: Context, private val onMovieClick
         val listModel = list[position]
 
         holder.movieRoot.setOnClickListener {
-            listModel.id?.let { movieId -> onMovieClick(movieId) }
+            onMovieClick(listModel.id)
         }
 
-        if (listModel.posters != null) {
-            if (listModel.posters.data != null) {
-                if (!listModel.posters.data.x240.isNullOrEmpty()) {
-                    Picasso.get().load(listModel.posters.data.x240).into(holder.moviePosterImageView)
-                } else {
-                    Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.moviePosterImageView)
-                }
-            }
-        }
+        Picasso.get().load(listModel.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.moviePosterImageView)
 
-        if (!listModel.primaryName.isNullOrEmpty()) {
+        if (listModel.primaryName.isNotEmpty()) {
             holder.movieTitleGeoTextView.text = listModel.primaryName
         } else {
             holder.movieTitleGeoTextView.text = listModel.secondaryName

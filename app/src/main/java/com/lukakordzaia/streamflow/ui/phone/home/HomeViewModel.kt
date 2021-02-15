@@ -10,6 +10,7 @@ import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.HomeRepository
@@ -79,13 +80,15 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     fun onDbTitlePressed(dbTitleData: DbTitleData) {
         navigateToNewFragment(
                 HomeFragmentDirections.actionHomeFragmentToVideoPlayerFragmentNav(
-                        titleId = dbTitleData.id,
-                        chosenSeason = dbTitleData.season,
-                        chosenEpisode = dbTitleData.episode,
-                        isTvShow = dbTitleData.isTvShow,
-                        watchedTime = dbTitleData.watchedDuration,
-                        chosenLanguage = dbTitleData.language,
-                        trailerUrl = null
+                        VideoPlayerData(
+                                dbTitleData.id,
+                                dbTitleData.isTvShow,
+                                dbTitleData.season,
+                                dbTitleData.language,
+                                dbTitleData.episode,
+                                dbTitleData.watchedDuration,
+                                null
+                        )
                 )
         )
     }
@@ -194,6 +197,9 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     topMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
+                    when (topMovies.exception) {
+                        
+                    }
                     newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
                 }
                 is Result.Internet -> {

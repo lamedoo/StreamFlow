@@ -31,20 +31,12 @@ class HomeTvShowAdapter(private val context: Context, private val onTvShowClick:
         val listModel = list[position]
 
         holder.titleRoot.setOnClickListener {
-            listModel.id?.let { tvShowId -> onTvShowClick(tvShowId) }
+            onTvShowClick(listModel.id)
         }
 
-        if (listModel.posters != null) {
-            if (listModel.posters.data != null) {
-                if (!listModel.posters.data.x240.isNullOrEmpty()) {
-                    Picasso.get().load(listModel.posters.data.x240).into(holder.titlePosterImageView)
-                } else {
-                    Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.titlePosterImageView)
-                }
-            }
-        }
+        Picasso.get().load(listModel.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.titlePosterImageView)
 
-        if (!listModel.primaryName.isNullOrEmpty()) {
+        if (listModel.primaryName.isNotEmpty()) {
             holder.titleNameGeoTextView.text = listModel.primaryName
         } else {
             holder.titleNameGeoTextView.text = listModel.secondaryName
@@ -59,7 +51,6 @@ class HomeTvShowAdapter(private val context: Context, private val onTvShowClick:
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titleRoot: ConstraintLayout = view.rv_home_item_root
         val titlePosterImageView: ImageView = view.rv_home_item_poster
-//        val titleNameEngTextView: TextView = view.rv_home_item_name_eng
         val titleNameGeoTextView: TextView = view.rv_home_item_name_geo
     }
 }

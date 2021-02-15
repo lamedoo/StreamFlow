@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.GenreList
 import com.lukakordzaia.streamflow.datamodels.StudioList
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.CategoriesRepository
@@ -39,12 +40,15 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
 
     fun onSingleTrailerPressed(titleId: Int, trailerUrl: String) {
         navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToVideoPlayerFragmentNav(
-            titleId = titleId,
-            chosenSeason = 0,
-            chosenEpisode = 0,
-            isTvShow = false,
-            chosenLanguage = "ENG",
-            trailerUrl = trailerUrl
+                VideoPlayerData(
+                        titleId,
+                        false,
+                        0,
+                        "ENG",
+                        0,
+                        0L,
+                        trailerUrl
+                )
         ))
     }
 

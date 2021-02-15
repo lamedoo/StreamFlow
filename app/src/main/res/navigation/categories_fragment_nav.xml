@@ -23,30 +23,8 @@
             android:id="@+id/action_categoriesFragment_to_video_player_fragment_nav"
             app:destination="@id/video_player_fragment_nav">
             <argument
-                android:name="chosenSeason"
-                android:defaultValue="0"
-                app:argType="integer" />
-            <argument
-                android:name="chosenEpisode"
-                android:defaultValue="0"
-                app:argType="integer" />
-            <argument
-                android:name="titleId"
-                app:argType="integer" />
-            <argument
-                android:name="isTvShow"
-                app:argType="boolean" />
-            <argument
-                android:name="chosenLanguage"
-                app:argType="string" />
-            <argument
-                android:name="watchedTime"
-                android:defaultValue="0L"
-                app:argType="long" />
-            <argument
-                android:name="trailerUrl"
-                app:argType="string"
-                app:nullable="true" />
+                android:name="videoPlayerData"
+                app:argType="com.lukakordzaia.streamflow.datamodels.VideoPlayerData" />
         </action>
     </fragment>
     <fragment

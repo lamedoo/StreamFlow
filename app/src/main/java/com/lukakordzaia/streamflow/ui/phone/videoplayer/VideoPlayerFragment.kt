@@ -20,7 +20,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         setExoPlayer(phone_title_player)
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getPlayListFiles(args.titleId, args.chosenSeason, args.chosenLanguage)
+            getPlayListFiles(args.videoPlayerData.titleId, args.videoPlayerData.chosenSeason, args.videoPlayerData.chosenLanguage)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -38,28 +38,28 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
     override fun onStart() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
-            initPlayer(args.isTvShow, args.watchedTime, args.chosenEpisode, args.trailerUrl)
+            initPlayer(args.videoPlayerData.isTvShow, args.videoPlayerData.watchedTime, args.videoPlayerData.chosenEpisode, args.videoPlayerData.trailerUrl)
         }
     }
 
     override fun onResume() {
         super.onResume()
         if (Util.SDK_INT < 24) {
-            initPlayer(args.isTvShow, args.watchedTime, args.chosenEpisode, args.trailerUrl)
+            initPlayer(args.videoPlayerData.isTvShow, args.videoPlayerData.watchedTime, args.videoPlayerData.chosenEpisode, args.videoPlayerData.trailerUrl)
         }
     }
 
     override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
-            releasePlayer(args.titleId, args.isTvShow, args.chosenLanguage, args.trailerUrl)
+            releasePlayer(args.videoPlayerData.titleId, args.videoPlayerData.isTvShow, args.videoPlayerData.chosenLanguage, args.videoPlayerData.trailerUrl)
         }
     }
 
     override fun onStop() {
         super.onStop()
         if (Util.SDK_INT >= 24) {
-            releasePlayer(args.titleId, args.isTvShow, args.chosenLanguage, args.trailerUrl)
+            releasePlayer(args.videoPlayerData.titleId, args.videoPlayerData.isTvShow, args.videoPlayerData.chosenLanguage, args.videoPlayerData.trailerUrl)
         }
     }
 }

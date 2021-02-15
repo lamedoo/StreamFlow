@@ -31,7 +31,7 @@ data class SingleTitleData(
         @SerializedName("hasSubtitles")
         val hasSubtitles: Boolean?,
         @SerializedName("id")
-        val id: Int?,
+        val id: Int,
         @SerializedName("imdbUrl")
         val imdbUrl: String?,
         @SerializedName("income")
@@ -197,13 +197,13 @@ data class SingleTitleData(
 
         data class Plot(
             @SerializedName("data")
-            val `data`: Data?
+            val `data`: Data
         ) {
             data class Data(
                 @SerializedName("description")
-                val description: String?,
+                val description: String,
                 @SerializedName("language")
-                val language: String?
+                val language: String
             )
         }
 

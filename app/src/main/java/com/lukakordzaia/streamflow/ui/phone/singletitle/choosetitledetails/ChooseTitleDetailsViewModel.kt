@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
@@ -35,41 +36,49 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
 
     fun onPlayButtonPressed(titleId: Int, isTvShow: Boolean) {
         navigateToNewFragment(
-            ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
-                if (isTvShow) 1 else chosenSeason.value!!,
-                if (isTvShow) 1 else 0,
-                titleId,
-                isTvShow,
-                chosenLanguage.value!!,
-                trailerUrl = null
-            ),
+                ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
+                        VideoPlayerData(
+                                titleId,
+                                isTvShow,
+                                if (isTvShow) 1 else 0,
+                                chosenLanguage.value!!,
+                                if (isTvShow) 1 else 0,
+                                0L,
+                                null
+                        )
+                ),
         )
     }
 
     fun onEpisodePressed(titleId: Int, isTvShow: Boolean, chosenEpisode: Int) {
         navigateToNewFragment(
-            ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
-                chosenSeason.value!!,
-                chosenEpisode,
-                titleId,
-                isTvShow,
-                chosenLanguage.value!!,
-                trailerUrl = null
-            ),
+                ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
+                        VideoPlayerData(
+                                titleId,
+                                isTvShow,
+                                chosenSeason.value!!,
+                                chosenLanguage.value!!,
+                                chosenEpisode,
+                                0L,
+                                null
+                        )
+                )
         )
     }
 
     fun onContinueWatchingPressed(dbDetails: DbDetails) {
         navigateToNewFragment(
-            ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
-                titleId = dbDetails.titleId,
-                chosenSeason = dbDetails.season,
-                chosenEpisode = dbDetails.episode,
-                isTvShow = dbDetails.isTvShow,
-                watchedTime = dbDetails.watchedDuration,
-                chosenLanguage = dbDetails.language,
-                trailerUrl = null
-            ))
+                ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
+                        VideoPlayerData(
+                                dbDetails.titleId,
+                                dbDetails.isTvShow,
+                                dbDetails.season,
+                                dbDetails.language,
+                                dbDetails.episode,
+                                dbDetails.watchedDuration,
+                                null
+                        )
+                ))
     }
 
     fun checkTitleInDb(context: Context, titleId: Int): LiveData<Boolean> {

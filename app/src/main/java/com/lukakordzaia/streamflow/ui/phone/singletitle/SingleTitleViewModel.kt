@@ -45,12 +45,15 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
     fun onTrailerPressed(titleId: Int, isTvShow: Boolean, trailerURl: String?) {
         navigateToNewFragment(
             SingleTitleFragmentDirections.actionSingleTitleFragmentToVideoPlayerFragmentNav(
-                0,
-                0,
-                titleId,
-                isTvShow,
-                "ENG",
-                trailerUrl = trailerURl
+                    VideoPlayerData(
+                            titleId,
+                            isTvShow,
+                            0,
+                            "ENG",
+                            0,
+                            0L,
+                            trailerURl
+                    )
             )
         )
     }

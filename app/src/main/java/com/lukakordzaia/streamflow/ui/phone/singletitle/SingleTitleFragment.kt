@@ -71,9 +71,8 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
                 single_title_name_geo.text = it.primaryName
             }
             single_title_name_eng.text = it.secondaryName
-            if (!it.covers?.data?.x1050.isNullOrEmpty()) {
-                Picasso.get().load(it.covers?.data?.x1050).into(single_title_cover)
-            }
+
+            Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder_landscape).error(R.drawable.movie_image_placeholder_landscape).into(single_title_cover)
 
             single_title_trailer_container.setOnClickListener { _ ->
                 if (it.trailers.data.isNotEmpty()) {
@@ -93,10 +92,8 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
                 }
             }
 
-            if (it.plot.data != null) {
-                if (!it.plot.data.description.isNullOrEmpty()) {
-                    single_title_desc.text = it.plot.data.description
-                }
+            if (it.plot.data.description.isNotEmpty()) {
+                single_title_desc.text = it.plot.data.description
             }
 
             if (it.rating.imdb != null) {

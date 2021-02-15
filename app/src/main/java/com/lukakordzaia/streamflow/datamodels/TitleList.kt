@@ -47,7 +47,7 @@ data class TitleList(
         @SerializedName("posters")
         val posters: Posters?,
         @SerializedName("primaryName")
-        val primaryName: String?,
+        val primaryName: String,
         @SerializedName("rating")
         val rating: Rating?,
         @SerializedName("regionAllowed")

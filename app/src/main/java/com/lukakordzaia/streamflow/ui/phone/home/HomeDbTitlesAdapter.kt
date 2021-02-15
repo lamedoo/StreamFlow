@@ -55,12 +55,7 @@ class HomeDbTitlesAdapter(
             )
         }
 
-        if (listModel.cover != null) {
-            Picasso.get().load(listModel.cover).into(holder.dbTitlePosterImageView)
-        } else {
-            Picasso.get().load(R.drawable.movie_image_placeholder)
-                .into(holder.dbTitlePosterImageView)
-        }
+        Picasso.get().load(listModel.cover).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.dbTitlePosterImageView)
 
         holder.dbTitleInfo.setOnClickListener {
             onInfoClick(listModel.id)

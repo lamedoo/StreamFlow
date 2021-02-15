@@ -65,15 +65,7 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
                 viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it.id)
             }
 
-            if (it.covers != null) {
-                if (it.covers.data != null) {
-                    if (!it.covers.data.x1050.isNullOrEmpty()) {
-                        Picasso.get().load(it.covers.data.x1050).into(movie_day_cover)
-                    } else {
-                        Picasso.get().load(R.drawable.movie_image_placeholder).into(movie_day_cover)
-                    }
-                }
-            }
+            Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(movie_day_cover)
 
             if (!it.primaryName.isNullOrEmpty()) {
                 movie_day_name.text = it.primaryName
