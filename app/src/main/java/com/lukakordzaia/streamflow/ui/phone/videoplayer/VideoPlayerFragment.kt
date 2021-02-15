@@ -9,9 +9,11 @@ import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
 import kotlinx.android.synthetic.main.phone_fragment_video_player.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment_video_player) {
+    override val videoPlayerViewModel by viewModel<VideoPlayerViewModel>()
     private val args: VideoPlayerFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -16,7 +16,7 @@ class MediaPlayerClass(private val player: SimpleExoPlayer) {
         player.playWhenReady = true
         player.seekTo(playBackInit.currentWindow, position)
         player.repeatMode = Player.REPEAT_MODE_OFF
-        player.prepare()
+//        player.prepare()
         player.play()
     }
 
@@ -31,15 +31,11 @@ class MediaPlayerClass(private val player: SimpleExoPlayer) {
         player.release()
     }
 
-    fun addAllEpisodes(episodes: List<MediaItem>) {
-        player.addMediaItems(episodes)
+    fun setMediaItems(episodes: List<MediaItem>) {
+//        player.addMediaItems(episodes)
     }
 
     fun setPlayerListener(event: Player.EventListener) {
         player.addListener(event)
-    }
-
-    fun setTrailerMediaItem(trailer: MediaItem) {
-        player.addMediaItem(trailer)
     }
 }

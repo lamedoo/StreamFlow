@@ -60,7 +60,6 @@ class TvVideoPlayerActivity : FragmentActivity() {
             }
             KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
                 tv_title_player.dispatchMediaKeyEvent(event!!)
-                displayCurrentPosition()
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_NEXT -> {
@@ -69,7 +68,6 @@ class TvVideoPlayerActivity : FragmentActivity() {
             }
             KeyEvent.KEYCODE_MEDIA_REWIND -> {
                 tv_title_player.dispatchMediaKeyEvent(event!!)
-                displayCurrentPosition()
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
@@ -92,31 +90,5 @@ class TvVideoPlayerActivity : FragmentActivity() {
             startActivity(intent)
             finish()
         }
-    }
-
-    private fun displayCurrentPosition() {
-        position_on_skip.setVisible()
-        current_position.text = String.format("%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(tv_title_player.player!!.currentPosition),
-                TimeUnit.MILLISECONDS.toMinutes(tv_title_player.player!!.currentPosition) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(tv_title_player.player!!.currentPosition)),
-                TimeUnit.MILLISECONDS.toSeconds(tv_title_player.player!!.currentPosition) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(tv_title_player.player!!.currentPosition))
-        )
-
-        media_duration.text = String.format(" - %02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(tv_title_player.player!!.duration),
-                TimeUnit.MILLISECONDS.toMinutes(tv_title_player.player!!.duration) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(tv_title_player.player!!.duration)),
-                TimeUnit.MILLISECONDS.toSeconds(tv_title_player.player!!.duration) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(tv_title_player.player!!.duration))
-        )
-        hidePosition()
-    }
-
-    private fun hidePosition() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            position_on_skip.setInvisible()
-        }, 2000)
     }
 }

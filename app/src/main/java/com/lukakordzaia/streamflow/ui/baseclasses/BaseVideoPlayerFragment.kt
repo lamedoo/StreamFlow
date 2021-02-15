@@ -7,10 +7,23 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.database.DatabaseProvider
+import com.google.android.exoplayer2.database.ExoDatabaseProvider
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.MergingMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.SingleSampleMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import com.google.android.exoplayer2.util.MimeTypes
+import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.helpers.MediaPlayerClass
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.EventObserver
@@ -22,9 +35,10 @@ import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 
-open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
-    private val videoPlayerViewModel by viewModel<VideoPlayerViewModel>()
+abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
+    abstract val videoPlayerViewModel: VideoPlayerViewModel
 
     private lateinit var mediaPlayer: MediaPlayerClass
     private lateinit var player: SimpleExoPlayer
@@ -36,6 +50,8 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         player = SimpleExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
+
+        player.prepare(buildMediaSource())
 
         mediaPlayer.setPlayerListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -78,7 +94,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         })
 
         videoPlayerViewModel.setSeasonEpisodesUri.observe(viewLifecycleOwner, {
-            mediaPlayer.addAllEpisodes(it)
+            mediaPlayer.setMediaItems(it)
         })
 
         videoPlayerViewModel.playBackOptions.observe(viewLifecycleOwner, {
@@ -168,6 +184,12 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         this.playerView = playerView
     }
 
+    private fun buildMediaSource(): MediaSource {
+        val dataSourceFactory = DefaultDataSourceFactory(requireContext(), "sample")
+        return ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(Uri.parse("https://api.imovies.cc/api/v1/movies/878365229/files/1219934"))
+    }
+
     fun getPlayListFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
         videoPlayerViewModel.getPlaylistFiles(titleId, chosenSeason, chosenLanguage)
         videoPlayerViewModel.getSingleTitleData(titleId)
@@ -175,7 +197,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
 
     fun initPlayer(isTvShow: Boolean, watchedTime: Long, chosenEpisode: Int, trailerUrl: String?) {
         if (trailerUrl != null) {
-            mediaPlayer.setTrailerMediaItem(MediaItem.fromUri(Uri.parse(trailerUrl)))
+            mediaPlayer.setMediaItems(listOf(MediaItem.fromUri(Uri.parse(trailerUrl))))
         }
         videoPlayerViewModel.initPlayer(isTvShow, watchedTime, chosenEpisode)
     }
