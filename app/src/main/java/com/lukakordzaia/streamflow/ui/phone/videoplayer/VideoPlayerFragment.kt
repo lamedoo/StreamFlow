@@ -7,8 +7,10 @@ import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
 import kotlinx.android.synthetic.main.phone_fragment_video_player.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment_video_player) {

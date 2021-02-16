@@ -1,7 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.home
 
 import android.content.Context
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,7 +18,6 @@ import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragm
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragmentDirections
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
-import java.util.logging.Handler
 
 class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
@@ -107,20 +105,20 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
     fun clearWatchedTitleList() {
         dbTitles.clear()
+        _dbList.value = mutableListOf()
     }
 
     fun getDbTitlesFromApi(dbDetails: List<DbDetails>) {
-        dbTitles.clear()
         viewModelScope.launch {
             dbDetails.forEach {
-                when (val dbTitles = repository.getSingleTitleData(it.titleId)) {
+                when (val databaseTitles = repository.getSingleTitleData(it.titleId)) {
                     is Result.Success -> {
-                        val data = dbTitles.data.data
-                        this@HomeViewModel.dbTitles.add(
+                        val data = databaseTitles.data.data
+                        dbTitles.add(
                                 DbTitleData(
                                         data.posters.data!!.x240,
                                         data.duration,
-                                        data.id!!,
+                                        data.id,
                                         data.isTvShow,
                                         data.primaryName,
                                         data.originalName,
@@ -131,14 +129,14 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                                         it.language
                                 )
                         )
+                        Log.d("savedtitles", "$databaseTitles")
+                        _dbList.value = dbTitles
                     }
                     is Result.Error -> {
-                        newToastMessage("ბაზის ფილმები - ${dbTitles.exception}")
+                        newToastMessage("ბაზის ფილმები - ${databaseTitles.exception}")
                     }
                 }
             }
-            Log.d("savedtitles", "$dbTitles")
-            _dbList.value = dbTitles
         }
     }
 

@@ -7,10 +7,12 @@ import android.view.View
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
+import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_player_fragment) {
+open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_player_fragment) {
     private lateinit var videoPlayerData: VideoPlayerData
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
