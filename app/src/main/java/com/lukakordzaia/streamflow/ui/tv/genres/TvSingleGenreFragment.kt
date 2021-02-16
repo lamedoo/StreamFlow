@@ -1,12 +1,17 @@
 package com.lukakordzaia.streamflow.ui.tv.genres
 
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
@@ -15,7 +20,6 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
@@ -46,6 +50,19 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
             }
         })
     }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        val containerDock = view!!.findViewById<View>(R.id.browse_container_dock) as FrameLayout
+        val params = containerDock.layoutParams as ViewGroup.MarginLayoutParams
+        val resources: Resources = inflater.context.resources
+        val newHeaderMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, resources.displayMetrics).toInt()
+        val offsetToZero: Int = -resources.getDimensionPixelSize(R.dimen.lb_browse_rows_margin_top)
+        params.topMargin = offsetToZero + newHeaderMargin
+        containerDock.layoutParams = params
+        return view
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -186,8 +203,8 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     }
 
     private fun setupUIElements() {
-        badgeDrawable = resources.getDrawable(R.drawable.tv_genre_icon_full)
-        title = "MedooTV"
+//        badgeDrawable = resources.getDrawable(R.drawable.tv_genre_icon_full)
+//        title = "MedooTV"
         isHeadersTransitionOnBackEnabled = true
         brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
         adapter = rowsAdapter
