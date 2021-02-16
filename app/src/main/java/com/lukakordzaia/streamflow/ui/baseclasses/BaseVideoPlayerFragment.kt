@@ -23,9 +23,10 @@ import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
-    abstract val videoPlayerViewModel: VideoPlayerViewModel
+open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
+    protected val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
     private val buildMediaSource: BuildMediaSource by inject()
 
     private lateinit var mediaPlayer: MediaPlayerClass
@@ -144,36 +145,18 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     }
 
     private fun nextSeasonButtonGone() {
-        when (playerView) {
-            phone_title_player -> {
-                next_season_button.setGone()
-            }
-            tv_title_player -> {
-                tv_next_season_button.setGone()
-            }
-        }
+        next_season_button?.setGone()
+        tv_next_season_button?.setGone()
     }
 
     private fun setEpisodeName(names: List<String>) {
-        when (playerView) {
-            phone_title_player -> {
-                header_tv.text = "ს${videoPlayerViewModel.seasonForDb.value}. ე${player.currentWindowIndex + 1}. ${names[player.currentWindowIndex]}"
-            }
-            tv_title_player -> {
-                tv_header_tv.text = "ს${videoPlayerViewModel.seasonForDb.value}. ე${player.currentWindowIndex + 1}. ${names[player.currentWindowIndex]}"
-            }
-        }
+        header_tv?.text = "ს${videoPlayerViewModel.seasonForDb.value}. ე${player.currentWindowIndex + 1}. ${names[player.currentWindowIndex]}"
+        tv_header_tv?.text = "ს${videoPlayerViewModel.seasonForDb.value}. ე${player.currentWindowIndex + 1}. ${names[player.currentWindowIndex]}"
     }
 
     private fun setMovieName(name: String) {
-        when (playerView) {
-            phone_title_player -> {
-                header_tv.text = name
-            }
-            tv_title_player -> {
-                tv_header_tv.text = name
-            }
-        }
+        header_tv?.text = name
+        tv_header_tv?.text = name
     }
 
     fun setExoPlayer(playerView: PlayerView) {
@@ -187,21 +170,34 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     private fun subtitleFunctions(hasSubs: Boolean) {
         player.addTextOutput {
             subtitle?.onCues(it)
+            tv_subtitle?.onCues(it)
         }
 
         if (hasSubs) {
-            subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
+            subtitle_toggle?.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
+            tv_subtitle_toggle?.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
         } else {
-            subtitle_toggle.setInvisible()
+            subtitle_toggle?.setInvisible()
+            tv_subtitle_toggle?.setInvisible()
         }
 
-        subtitle_toggle.setOnClickListener {
+        subtitle_toggle?.setOnClickListener {
             if (subtitle.isVisible) {
                 subtitle.setInvisible()
                 subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_off, requireContext().theme))
             } else {
                 subtitle.setVisible()
                 subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
+            }
+        }
+
+        tv_subtitle_toggle?.setOnClickListener {
+            if (tv_subtitle.isVisible) {
+                tv_subtitle.setInvisible()
+                tv_subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_off, requireContext().theme))
+            } else {
+                tv_subtitle.setVisible()
+                tv_subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
             }
         }
     }

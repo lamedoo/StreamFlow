@@ -42,6 +42,17 @@
             app:layout_constraintWidth_percent="0.9"
             tools:text="Funny Anim Videos" />
 
+        <ImageButton
+            android:id="@+id/tv_subtitle_toggle"
+            android:src="@drawable/exo_subtitles_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nextFocusLeft="@id/tv_subtitle_toggle"
+            android:nextFocusRight="@id/tv_subtitle_toggle"
+            android:background="@drawable/exo_buttons_focused"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
@@ -60,6 +71,7 @@
         app:layout_constraintStart_toStartOf="@id/barrier_left"
         tools:text="სეზონი: 2"
         tools:visibility="visible" />
+
 
     <ImageButton
         android:id="@id/exo_prev"

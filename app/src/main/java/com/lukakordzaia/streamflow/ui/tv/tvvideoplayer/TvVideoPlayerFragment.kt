@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_player_fragment) {
-    override val videoPlayerViewModel by viewModel<VideoPlayerViewModel>()
     private lateinit var videoPlayerData: VideoPlayerData
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
