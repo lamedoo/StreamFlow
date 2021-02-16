@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.phone_single_title_fragment.*
 import kotlinx.android.synthetic.main.rv_trailer_item.view.*
 
 class TrailersAdapter(private val context: Context, private val onTrailerClick: (trailerId: Int, trailerUrl: String) -> Unit) : RecyclerView.Adapter<TrailersAdapter.ViewHolder>() {
@@ -29,15 +28,7 @@ class TrailersAdapter(private val context: Context, private val onTrailerClick: 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val trailerModel = list[position]
 
-        if (trailerModel.covers != null) {
-            if (trailerModel.covers.data != null) {
-                if (!trailerModel.covers.data.x1050.isNullOrEmpty()) {
-                    Picasso.get().load(trailerModel.covers.data.x1050).into(holder.trailerPosterImageView)
-                } else {
-                    Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.trailerPosterImageView)
-                }
-            }
-        }
+        Picasso.get().load(trailerModel.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.trailerPosterImageView)
 
         if (!trailerModel.primaryName.isNullOrEmpty()) {
             holder.trailerNameTextView.text = trailerModel.primaryName
