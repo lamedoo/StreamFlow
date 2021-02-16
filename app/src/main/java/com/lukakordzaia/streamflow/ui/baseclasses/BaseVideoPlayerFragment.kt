@@ -6,12 +6,14 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.ui.SubtitleView
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
@@ -36,13 +38,6 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         player = SimpleExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
-
-        val subtitleView = requireActivity().findViewById<SubtitleView>(com.google.android.exoplayer2.R.id.exo_subtitles)
-//        subtitleView.setInvisible()
-//
-//        player.addTextOutput {
-//            subtitle?.onCues(it)
-//        }
 
         mediaPlayer.setPlayerListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -89,6 +84,12 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
             } else if (it.titleFileUri.size > 1) {
                 mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
+            }
+
+            if (it.titleSubUri[0] == "0") {
+                subtitleFunctions(false)
+            } else {
+                subtitleFunctions(true)
             }
         })
 
@@ -180,6 +181,28 @@ abstract class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
 
         playerView.subtitleView?.apply {
             setInvisible()
+        }
+    }
+
+    private fun subtitleFunctions(hasSubs: Boolean) {
+        player.addTextOutput {
+            subtitle?.onCues(it)
+        }
+
+        if (hasSubs) {
+            subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
+        } else {
+            subtitle_toggle.setInvisible()
+        }
+
+        subtitle_toggle.setOnClickListener {
+            if (subtitle.isVisible) {
+                subtitle.setInvisible()
+                subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_off, requireContext().theme))
+            } else {
+                subtitle.setVisible()
+                subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
+            }
         }
     }
 
