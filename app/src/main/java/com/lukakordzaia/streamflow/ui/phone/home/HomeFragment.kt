@@ -67,7 +67,7 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
 
             Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(movie_day_cover)
 
-            if (!it.primaryName.isNullOrEmpty()) {
+            if (it.primaryName.isNotEmpty()) {
                 movie_day_name.text = it.primaryName
             } else {
                 movie_day_name.text = it.secondaryName
@@ -128,6 +128,8 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
                 newMoviesMoreConstraint.topToBottom = rv_main_watched_titles.id
                 new_movies_more.requestLayout()
 
+                viewModel.clearWatchedTitleList()
+
                 viewModel.getDbTitlesFromApi(it)
             } else {
                 main_watched_titles_none.setVisible()
@@ -141,6 +143,7 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
                 newMoviesMoreConstraint.topToBottom = main_watched_titles_none.id
                 new_movies_more.requestLayout()
             }
+            viewModel.getDbTitles(requireContext()).removeObservers(viewLifecycleOwner)
         })
 
         viewModel.dbList.observe(viewLifecycleOwner, {
