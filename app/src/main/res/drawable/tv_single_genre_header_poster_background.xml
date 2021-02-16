@@ -7,9 +7,20 @@
             android:startColor="@color/primaryColor"
             android:centerColor="@color/primaryColor"
             android:endColor="@android:color/transparent"
-            android:centerX="0.3"
+            android:centerX="0.5"
             android:type="linear"
             android:angle="0" />
     </shape>
 </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="@color/primaryColor"
+                android:centerColor="@color/primaryColor"
+                android:endColor="@android:color/transparent"
+                android:centerX="0.1"
+                android:type="linear"
+                android:angle="90" />
+        </shape>
+    </item>
 </layer-list>

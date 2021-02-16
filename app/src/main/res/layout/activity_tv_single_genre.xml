@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/primaryColor"
@@ -14,18 +15,16 @@
 <!--        android:layout_alignParentTop="true"-->
 <!--        android:layout_weight="0.7" />-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_alignParentTop="true"
-        android:layout_weight="0.7"
-        android:padding="@dimen/fragment_padding"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_weight="0.7">
 
         <ImageView
-            android:id="@+id/single_genre_title_poster"
-            android:layout_width="300dp"
-            android:layout_height="200dp"
+            android:id="@+id/single_genre_top_poster"
+            android:layout_width="500dp"
+            android:layout_height="300dp"
+            android:scaleType="fitXY"
             android:src="@drawable/movie_image_placeholder_landscape"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -37,14 +36,27 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/single_genre_title_name"
+            android:id="@+id/single_genre_top_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Title Name"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textColor="@color/white"
-            app:layout_constraintTop_toTopOf="@id/single_genre_title_poster"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/single_genre_top_poster"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/single_genre_top_poster"/>
+
+        <TextView
+            android:id="@+id/single_genre_top_plot"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="აღწერა"
+            android:textColor="@color/general_text_color"
+            app:layout_constraintTop_toBottomOf="@id/single_genre_top_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.7"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

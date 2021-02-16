@@ -90,15 +90,9 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                 }
             }
 
-            if (it.covers != null) {
-                if (it.covers.data != null) {
-                    if (!it.covers.data.x1920.isNullOrEmpty()) {
-                        Picasso.get().load(it.covers.data.x1920).into(tv_files_title_poster)
-                    } else {
-                        Picasso.get().load(R.drawable.movie_image_placeholder).into(tv_files_title_poster)
-                    }
-                }
-            }
+
+            Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(tv_files_title_poster)
+
 
             tv_files_title_year.text = it.year.toString()
             if (it.rating.imdb?.score != null) {
@@ -115,12 +109,8 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             } else {
                 tv_files_title_duration.text = "${it.duration.toString()} წთ."
             }
-            if (it.plot.data != null) {
-                if (!it.plot.data.description.isNullOrEmpty()) {
-                    tv_files_title_desc.text = it.plot.data.description
-                } else {
-                    tv_files_title_desc.text = "აღწერა არ მოიძებნა"
-                }
+            if (it.plot.data.description.isNotEmpty()) {
+                tv_files_title_desc.text = it.plot.data.description
             } else {
                 tv_files_title_desc.text = "აღწერა არ მოიძებნა"
             }
@@ -139,13 +129,13 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
 
                     if (tv_continue_play_button.isVisible) {
                         if (isTvShow) {
-                            tv_continue_play_button.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d - ${it.language}",
+                            tv_continue_play_button?.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d - ${it.language}",
                                 TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                                 TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
                                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
                             )
                         } else {
-                            tv_continue_play_button.text = String.format("განაგრძეთ - %02d:%02d - ${it.language}",
+                            tv_continue_play_button?.text = String.format("განაგრძეთ - %02d:%02d - ${it.language}",
                                 TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                                 TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
                                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))

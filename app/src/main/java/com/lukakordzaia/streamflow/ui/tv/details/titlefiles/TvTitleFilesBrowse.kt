@@ -2,7 +2,6 @@ package com.lukakordzaia.streamflow.ui.tv.details.titlefiles
 
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -18,7 +17,6 @@ import androidx.leanback.widget.BrowseFrameLayout.OnFocusSearchListener
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvCastPresenter
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvEpisodesPresenter
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvLanguagesPresenter
@@ -27,6 +25,7 @@ import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.createToast
+import kotlinx.android.synthetic.main.tv_details_season_item.view.*
 import kotlinx.android.synthetic.main.tv_title_files_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -118,15 +117,15 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     private fun initRowsAdapter(isTvShow: Boolean) {
         if (isTvShow) {
             val secondHeaderItem = ListRow(HeaderItem(0, ""), ArrayObjectAdapter(TvCardPresenter()))
-            val firstHeaderItem = ListRow(HeaderItem(1, "ეპიზოდები"), ArrayObjectAdapter(TvCardPresenter()))
-            val thirdItem = ListRow(HeaderItem(2, ""), ArrayObjectAdapter(TvCardPresenter()))
+            val thirdItem = ListRow(HeaderItem(1, ""), ArrayObjectAdapter(TvCardPresenter()))
+            val firstHeaderItem = ListRow(HeaderItem(2, "ეპიზოდები"), ArrayObjectAdapter(TvCardPresenter()))
             val fourthItem = ListRow(HeaderItem(3, "მსახიობები"), ArrayObjectAdapter(TvCardPresenter()))
             val fifthItem = ListRow(HeaderItem(4, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter()))
             val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, thirdItem, fourthItem, fifthItem)
             rowsAdapter.addAll(0, initListRows)
         } else {
             val fourthItem = ListRow(HeaderItem(0, "მსახიობები"), ArrayObjectAdapter(TvCardPresenter()))
-            val fifthItem = ListRow(HeaderItem(0, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter()))
+            val fifthItem = ListRow(HeaderItem(1, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter()))
             val initListRows = mutableListOf(fourthItem, fifthItem)
             rowsAdapter.addAll(0, initListRows)
         }
@@ -143,24 +142,24 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         }
     }
 
-    private fun episodesRowsAdapter(episodeList: List<TitleEpisodes>) {
-        val listRowAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext())).apply {
-            episodeList.forEach {
-                add(it)
-            }
-        }
-        HeaderItem(1, "ეპიზოდები"). also {
-            rowsAdapter.replace(1, ListRow(it, listRowAdapter))
-        }
-    }
-
     private fun languageRowsAdapter(languageList: List<String>) {
         val listRowAdapter = ArrayObjectAdapter(TvLanguagesPresenter()).apply {
             languageList.forEach {
                 add(it)
             }
         }
-        HeaderItem(2, ""). also {
+        HeaderItem(1, ""). also {
+            rowsAdapter.replace(1, ListRow(it, listRowAdapter))
+        }
+    }
+
+    private fun episodesRowsAdapter(episodeList: List<TitleEpisodes>) {
+        val listRowAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext())).apply {
+            episodeList.forEach {
+                add(it)
+            }
+        }
+        HeaderItem(2, "ეპიზოდები"). also {
             rowsAdapter.replace(2, ListRow(it, listRowAdapter))
         }
     }
@@ -207,20 +206,25 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                 rowViewHolder: RowPresenter.ViewHolder,
                 row: Row
         ) {
-            if (item is TitleEpisodes) {
-                val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
-                val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
-                playEpisode(titleId, isTvShow)
-            } else if (item is String) {
-                requireContext().createToast("შეიცვალა ენა: $item. შეგიძლიათ აირჩიოთ ეპიზოდი")
-                tvTitleFilesViewModel.getTitleLanguageFiles(item)
-            } else if (item is TitleList.Data) {
-                val intent = Intent(context, TvDetailsActivity::class.java)
-                intent.putExtra("titleId", item.id)
-                intent.putExtra("isTvShow", item.isTvShow)
-                activity?.startActivity(intent)
+            when (item) {
+                is TitleEpisodes -> {
+                    val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
+                    val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
+                    playEpisode(titleId, isTvShow)
+                }
+                is String -> {
+                    requireContext().createToast("შეიცვალა ენა: $item. შეგიძლიათ აირჩიოთ ეპიზოდი")
+                    tvTitleFilesViewModel.getTitleLanguageFiles(item)
+                }
+                is TitleList.Data -> {
+                    val intent = Intent(context, TvDetailsActivity::class.java)
+                    intent.putExtra("titleId", item.id)
+                    intent.putExtra("isTvShow", item.isTvShow)
+                    activity?.startActivity(intent)
+                }
             }
         }
+
     }
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {

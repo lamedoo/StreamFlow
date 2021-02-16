@@ -6,7 +6,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.customviews.TvSeasonsCardView
 import kotlinx.android.synthetic.main.tv_details_season_item.view.*
 
-class TvLanguagesPresenter() : Presenter() {
+class TvLanguagesPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvSeasonsCardView(parent.context, null)
 
@@ -18,10 +18,20 @@ class TvLanguagesPresenter() : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val movie = item as String
+        val language = item as String
         val cardView = viewHolder.view as TvSeasonsCardView
 
-        cardView.rv_tv_files_season_number.text = movie
+        cardView.rv_tv_files_season_number.text = language
+
+        cardView.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                cardView.rv_tv_files_season_number.text = "$language - აირჩიეთ"
+            } else {
+                cardView.rv_tv_files_season_number.text = language
+            }
+        }
+
+
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {

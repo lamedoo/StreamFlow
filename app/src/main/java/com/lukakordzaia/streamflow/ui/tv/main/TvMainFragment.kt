@@ -11,7 +11,10 @@ import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.*
+import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
+import com.lukakordzaia.streamflow.datamodels.TvSettingsList
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.phone.settings.SettingsViewModel
@@ -68,6 +71,7 @@ class TvMainFragment : BrowseSupportFragment() {
         })
 
         homeViewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
+            homeViewModel.clearWatchedTitleList()
             if (!it.isNullOrEmpty()) {
                 homeViewModel.getDbTitlesFromApi(it)
             }
