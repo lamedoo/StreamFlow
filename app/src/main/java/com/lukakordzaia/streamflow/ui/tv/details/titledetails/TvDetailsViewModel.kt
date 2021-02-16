@@ -1,13 +1,12 @@
 package com.lukakordzaia.streamflow.ui.tv.details.titledetails
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
-import com.lukakordzaia.streamflow.datamodels.*
+import com.lukakordzaia.streamflow.datamodels.SingleTitleData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.TvDetailsRepository
@@ -17,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseViewModel() {
     private val _singleTitleData = MutableLiveData<SingleTitleData.Data>()
-    val singleSingleTitleData: LiveData<SingleTitleData.Data> = _singleTitleData
+    val singleTitleData: LiveData<SingleTitleData.Data> = _singleTitleData
 
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
@@ -74,7 +73,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
                     val data = files.data.data
                     if (data.isNotEmpty()) {
                         val fetchLanguages: MutableList<String> = ArrayList()
-                        data[0].files!!.forEach {
+                        data[0].files.forEach {
                             fetchLanguages.add(it.lang)
                         }
                         _availableLanguages.value = fetchLanguages

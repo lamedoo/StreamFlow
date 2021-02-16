@@ -65,7 +65,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
         })
 
-        tvDetailsViewModel.singleSingleTitleData.observe(viewLifecycleOwner, {
+        tvDetailsViewModel.singleTitleData.observe(viewLifecycleOwner, {
 
             tv_files_trailer.setOnClickListener { _ ->
                 if (!it.trailers.data.isNullOrEmpty()) {

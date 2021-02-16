@@ -6,13 +6,48 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <fragment
-        android:name="com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreHeaderFragment"
-        android:id="@+id/tv_single_genre_header_fragment"
+<!--    <fragment-->
+<!--        android:name="com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreHeaderFragment"-->
+<!--        android:id="@+id/tv_single_genre_header_fragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_weight="0.7" />-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_alignParentTop="true"
-        android:layout_weight="0.7" />
+        android:layout_weight="0.7"
+        android:padding="@dimen/fragment_padding"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <ImageView
+            android:id="@+id/single_genre_title_poster"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:src="@drawable/movie_image_placeholder_landscape"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tv_single_genre_header_poster_background"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/single_genre_title_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title Name"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="@id/single_genre_title_poster"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/tv_single_genre_fragment"

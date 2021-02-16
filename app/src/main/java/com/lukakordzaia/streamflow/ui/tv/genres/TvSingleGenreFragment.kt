@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.tv.genres
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
@@ -33,6 +34,16 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     lateinit var defaultBackground: Drawable
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        onTitleSelected = context as? OnTitleSelected
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        onTitleSelected = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -203,8 +214,6 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     }
 
     private fun setupUIElements() {
-//        badgeDrawable = resources.getDrawable(R.drawable.tv_genre_icon_full)
-//        title = "MedooTV"
         isHeadersTransitionOnBackEnabled = true
         brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
         adapter = rowsAdapter
@@ -213,6 +222,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     private fun setupEventListeners() {
 
         onItemViewClickedListener = ItemViewClickedListener()
+        onItemViewSelectedListener = ItemViewSelectedListener()
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
@@ -230,4 +240,17 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
             }
         }
     }
+
+    private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
+        override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
+            if (item is TitleList.Data) {
+                onTitleSelected?.getTitleId(item.id)
+            }
+        }
+    }
+
+    interface OnTitleSelected {
+        fun getTitleId(titleId: Int)
+    }
+    var onTitleSelected: OnTitleSelected? = null
 }
