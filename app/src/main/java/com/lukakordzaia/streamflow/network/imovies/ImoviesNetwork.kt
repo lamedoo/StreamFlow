@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.network
+package com.lukakordzaia.streamflow.network.imovies
 
 
 import com.lukakordzaia.streamflow.datamodels.*
@@ -8,7 +8,7 @@ import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface TitlesNetwork {
+interface ImoviesNetwork {
 
     @Headers("User-Agent: imovies")
     @GET("movies/movie-day?page=1&per_page=1")

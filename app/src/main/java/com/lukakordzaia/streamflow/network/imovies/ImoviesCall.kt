@@ -1,15 +1,17 @@
-package com.lukakordzaia.streamflow.network
+package com.lukakordzaia.streamflow.network.imovies
 
+import com.lukakordzaia.streamflow.network.InternetConnection
+import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.utils.AppConstants
 import retrofit2.Response
 
-open class RetrofitCall {
-    suspend fun <T: Any> retrofitCall(call: suspend () -> Response<T>): Result<T> {
+open class ImoviesCall {
+    suspend fun <T: Any> imoviesCall(call: suspend () -> Response<T>): Result<T> {
         return try {
             val response = call.invoke()
             var error = ""
             if (response.isSuccessful) {
-                Result.Success (response.body()!!)
+                Result.Success(response.body()!!)
             } else {
                 error = when {
                     response.code() == 404 -> {

@@ -4,16 +4,16 @@ import com.lukakordzaia.streamflow.datamodels.FranchiseList
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
-import com.lukakordzaia.streamflow.network.RetrofitCall
+import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 
-class SearchTitleRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
-    private val service = retrofitBuilder.buildService()
+class SearchTitleRepository(private val retrofitBuilder: RetrofitBuilder): ImoviesCall() {
+    private val service = retrofitBuilder.buildImoviesService()
 
     suspend fun getSearchTitles(keywords: String, page: Int): Result<TitleList> {
-        return retrofitCall { service.getSearchTitles(keywords, page) }
+        return imoviesCall { service.getSearchTitles(keywords, page) }
     }
 
     suspend fun getTopFranchises(): Result<FranchiseList> {
-        return retrofitCall { service.getTopFranchises() }
+        return imoviesCall { service.getTopFranchises() }
     }
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/secondary_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/connect_traktv_user_code_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="გამოიყენეთ ეს კოდი მითითებულ ბმულზე"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:textColor="@color/general_text_color"
+        android:padding="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/connect_traktv_user_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@color/accent_color"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/connect_traktv_user_code_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="1231293"/>
+
+    <TextView
+        android:id="@+id/connect_traktv_url_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="დააკლიკეთ ბმულს და შეიყვანეთ კოდი"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:textColor="@color/general_text_color"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@id/connect_traktv_user_code"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/connect_traktv_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@color/accent_color"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/connect_traktv_url_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="https://api.traktv"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

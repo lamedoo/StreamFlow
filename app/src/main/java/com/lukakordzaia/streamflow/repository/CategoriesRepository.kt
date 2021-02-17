@@ -5,28 +5,28 @@ import com.lukakordzaia.streamflow.datamodels.StudioList
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
-import com.lukakordzaia.streamflow.network.RetrofitCall
+import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 
-class CategoriesRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
-    private val service = retrofitBuilder.buildService()
+class CategoriesRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
+    private val service = retrofitBuilder.buildImoviesService()
 
     suspend fun getAllGenres(): Result<GenreList> {
-        return retrofitCall { service.getAllGenres() }
+        return imoviesCall { service.getAllGenres() }
     }
 
     suspend fun getSingleGenre(genreId: Int, page: Int): Result<TitleList> {
-        return retrofitCall { service.getSingleGenre(genreId, page) }
+        return imoviesCall { service.getSingleGenre(genreId, page) }
     }
 
     suspend fun getTopStudios(): Result<StudioList> {
-        return retrofitCall { service.getTopStudios() }
+        return imoviesCall { service.getTopStudios() }
     }
 
     suspend fun getSingleStudio(studioId: Int, page: Int): Result<TitleList> {
-        return retrofitCall { service.getSingleStudio(studioId, page) }
+        return imoviesCall { service.getSingleStudio(studioId, page) }
     }
 
     suspend fun getTopTrailers(): Result<TitleList> {
-        return retrofitCall { service.getTopTrailers() }
+        return imoviesCall { service.getTopTrailers() }
     }
 }

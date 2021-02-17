@@ -9,13 +9,13 @@ import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
-import com.lukakordzaia.streamflow.network.RetrofitCall
+import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 
-class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): RetrofitCall() {
-    private val service = retrofitBuilder.buildService()
+class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): ImoviesCall() {
+    private val service = retrofitBuilder.buildImoviesService()
 
     suspend fun getSingleTitleData(titleId: Int): Result<SingleTitleData> {
-        return retrofitCall { service.getSingleTitle(titleId) }
+        return imoviesCall { service.getSingleTitle(titleId) }
     }
 
     fun checkTitleInDb(watchedDao: WatchedDao, titleId: Int): LiveData<Boolean> {
@@ -27,15 +27,15 @@ class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): Retrofi
     }
 
     suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<TitleFiles> {
-        return retrofitCall { service.getSingleFiles(titleId, season_number) }
+        return imoviesCall { service.getSingleFiles(titleId, season_number) }
     }
 
     suspend fun getSingleTitleCast(titleId: Int, role: String) : Result<TitleCast> {
-        return retrofitCall { service.getSingleTitleCast(titleId, role) }
+        return imoviesCall { service.getSingleTitleCast(titleId, role) }
     }
 
     suspend fun getSingleTitleRelated(titleId: Int): Result<TitleList> {
-        return retrofitCall { service.getSingleTitleRelated(titleId) }
+        return imoviesCall { service.getSingleTitleRelated(titleId) }
     }
 
     suspend fun deleteTitleFromDb(watchedDao: WatchedDao, titleId: Int) {

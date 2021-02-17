@@ -1,5 +1,7 @@
 package com.lukakordzaia.streamflow.network
 
+import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
+import com.lukakordzaia.streamflow.network.traktv.TraktvNetwork
 import com.lukakordzaia.streamflow.utils.AppConstants
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -26,7 +28,11 @@ class RetrofitBuilder(networkConnectionInterceptor: NetworkConnectionInterceptor
         return loggingInterceptor
     }
 
-    fun buildService(): TitlesNetwork {
-        return retrofit.create(TitlesNetwork::class.java)
+    fun buildImoviesService(): ImoviesNetwork {
+        return retrofit.create(ImoviesNetwork::class.java)
+    }
+
+    fun buildTraktvService(): TraktvNetwork {
+        return retrofit.create(TraktvNetwork::class.java)
     }
 }
