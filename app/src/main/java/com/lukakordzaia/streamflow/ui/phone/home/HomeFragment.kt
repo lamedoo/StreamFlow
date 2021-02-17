@@ -239,8 +239,8 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.settings_button -> {
-                navController(HomeFragmentDirections.actionHomeFragmentToSettingsFragment())
+            R.id.profile_button -> {
+                navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
             }
         }
         return super.onOptionsItemSelected(item)

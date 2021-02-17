@@ -2,14 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings_root"
+    android:id="@+id/profile_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/fragment_padding"
-    tools:context=".ui.phone.settings.SettingsFragment">
+    tools:context=".ui.phone.profile.ProfileFragment">
 
     <TextView
-        android:id="@+id/settings_connect_traktv"
+        android:id="@+id/profile_connect_traktv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/rv_genres_item_pressed"
@@ -22,7 +22,7 @@
         android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/settings_delete_history"
+        app:layout_constraintBottom_toTopOf="@+id/profile_delete_history"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/settings_delete_history"
+        android:id="@+id/profile_delete_history"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -48,7 +48,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_connect_traktv" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_connect_traktv" />
 
     <include
         android:id="@+id/connect_traktv_dialog"

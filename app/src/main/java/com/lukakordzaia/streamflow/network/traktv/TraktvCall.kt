@@ -14,14 +14,20 @@ open class TraktvCall {
                 Result.Success(response.body()!!)
             } else {
                 error = when {
-                    response.code() == 404 -> {
-                        AppConstants.NOT_FOUND_ERROR
+                    response.code() == 400 -> {
+                        AppConstants.TRAKTV_PENDING_AUTH
                     }
-                    response.code() == 500 -> {
-                        AppConstants.SERVER_ERROR
+                    response.code() == 404 -> {
+                        AppConstants.TRAKTV_NOT_FOUND
+                    }
+                    response.code() == 409 -> {
+                        AppConstants.TRAKTV_CODE_USED
+                    }
+                    response.code() == 410 -> {
+                        AppConstants.TRAKTV_CODE_EXPIRED
                     }
                     else -> {
-                        AppConstants.UNKNOWN_ERROR
+                        AppConstants.TRAKTV_UNKNOWN_ERROR
                     }
                 }
                 Result.Error(error)

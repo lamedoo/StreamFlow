@@ -17,7 +17,7 @@ import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.datamodels.TvSettingsList
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
-import com.lukakordzaia.streamflow.ui.phone.settings.SettingsViewModel
+import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
@@ -32,7 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class TvMainFragment : BrowseSupportFragment() {
     private val homeViewModel: HomeViewModel by viewModel()
     private val genresViewModel: CategoriesViewModel by viewModel()
-    private val settingsViewModel: SettingsViewModel by viewModel()
+    private val profileViewModel: ProfileViewModel by viewModel()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private val page = 1
     lateinit var metrics: DisplayMetrics
@@ -242,8 +242,8 @@ class TvMainFragment : BrowseSupportFragment() {
                 activity?.startActivity(intent)
             } else if (item is TvSettingsList) {
                 if (item.settingsId == 0) {
-                    settingsViewModel.deleteWatchedHistory(requireContext())
-                    settingsViewModel.onDeletePressedTv(requireContext())
+                    profileViewModel.deleteWatchedHistory(requireContext())
+                    profileViewModel.onDeletePressedTv(requireContext())
                 }
             } else if (item is TvCategoriesList) {
                 when (item.categoriesId) {

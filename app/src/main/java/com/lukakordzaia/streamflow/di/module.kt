@@ -9,8 +9,8 @@ import com.lukakordzaia.streamflow.repository.*
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
+import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
-import com.lukakordzaia.streamflow.ui.phone.settings.SettingsViewModel
 import com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesViewModel
@@ -29,7 +29,7 @@ val viewModelModule = module {
     viewModel { TvDetailsViewModel(get()) }
     viewModel { TvCategoriesViewModel(get()) }
     viewModel { ChooseTitleDetailsViewModel(get()) }
-    viewModel { SettingsViewModel(get()) }
+    viewModel { ProfileViewModel(get()) }
     viewModel { TvTitleFilesViewModel(get()) }
 }
 

@@ -30,8 +30,8 @@
                 app:argType="com.lukakordzaia.streamflow.datamodels.VideoPlayerData" />
         </action>
         <action
-            android:id="@+id/action_homeFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
             app:enterAnim="@anim/slide_from_down" />
         <action
             android:id="@+id/action_homeFragment_to_topMoviesFragment"
@@ -47,10 +47,10 @@
     <include app:graph="@navigation/single_title_fragment_nav" />
     <include app:graph="@navigation/video_player_fragment_nav" />
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.settings.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/phone_settings_framgent" />
+        android:id="@+id/profileFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/phone_profile_framgent" />
     <fragment
         android:id="@+id/topMoviesFragment"
         android:name="com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment"

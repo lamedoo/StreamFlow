@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/fragment_padding"
     android:background="@color/secondary_color"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -58,6 +59,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="https://api.traktv"/>
 
+    <TextView
+        android:id="@+id/connect_traktv_expire_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="კოდს ვადა გასდის"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:textColor="@color/general_text_color"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@id/connect_traktv_url"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/connect_traktv_expire_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@color/red"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/connect_traktv_expire_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="600"/>
+
+    <Button
+        android:id="@+id/connect_traktv_dialog_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="გათიშვა"
+        android:letterSpacing="0"
+        app:layout_constraintTop_toBottomOf="@id/connect_traktv_expire_timer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

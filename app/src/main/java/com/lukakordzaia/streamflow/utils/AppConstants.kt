@@ -36,6 +36,12 @@ class AppConstants {
         const val SERVER_ERROR = "500 სერვერთან დაკავშირება ვერ მოხერხდა"
         const val UNKNOWN_ERROR = "410 გაურკვეველი პრობლემა"
 
+        const val TRAKTV_PENDING_AUTH = "400 ავტორიზაცია არ მომხდარა"
+        const val TRAKTV_NOT_FOUND = "404 არასწორი კოდი"
+        const val TRAKTV_CODE_USED = "409 კოდი უკვე გამოყენებულია"
+        const val TRAKTV_CODE_EXPIRED = "410 კოდის გამოყენების დრო ამოიწურა"
+        const val TRAKTV_UNKNOWN_ERROR = "გაუკრვეველი პრობლემა"
+
         const val NO_INTERNET = "შეამოწმეთ ინტერნეტთან კავშირი"
     }
 }
