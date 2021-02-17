@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.lukakordzaia.streamflow.R
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_settings_framgent.*
@@ -15,6 +14,10 @@ class SettingsFragment : Fragment(R.layout.phone_settings_framgent) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        settings_connect_traktv.setOnClickListener {
+
+        }
 
         settings_delete_history.setOnClickListener {
             val clearDbDialog = Dialog(requireContext())
