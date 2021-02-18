@@ -40,7 +40,7 @@ val repositoryModule = module {
     single { CategoriesRepository(get()) }
     single { SearchTitleRepository(get()) }
     single { TvDetailsRepository(get()) }
-    single { TraktvRepository(get()) }
+    single { TraktRepository(get()) }
 }
 
 val generalModule = module {

@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.datamodels
 
 import com.google.gson.annotations.SerializedName
 
-data class TraktvNewList(
+data class TraktNewList(
     @SerializedName("allow_comments")
     val allowComments: Boolean?,
     @SerializedName("description")

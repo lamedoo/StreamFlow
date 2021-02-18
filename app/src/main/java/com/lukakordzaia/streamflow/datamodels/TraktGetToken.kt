@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.datamodels
 
 import com.google.gson.annotations.SerializedName
 
-data class TraktvGetToken(
+data class TraktGetToken(
     @SerializedName("access_token")
     val accessToken: String,
     @SerializedName("created_at")

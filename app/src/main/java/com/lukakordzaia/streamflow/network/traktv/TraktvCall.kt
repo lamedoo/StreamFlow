@@ -15,19 +15,22 @@ open class TraktvCall {
             } else {
                 error = when {
                     response.code() == 400 -> {
-                        AppConstants.TRAKTV_PENDING_AUTH
+                        AppConstants.TRAKT_PENDING_AUTH
+                    }
+                    response.code() == 401 -> {
+                        "401"
                     }
                     response.code() == 404 -> {
-                        AppConstants.TRAKTV_NOT_FOUND
+                        AppConstants.TRAKT_NOT_FOUND
                     }
                     response.code() == 409 -> {
-                        AppConstants.TRAKTV_CODE_USED
+                        AppConstants.TRAKT_CODE_USED
                     }
                     response.code() == 410 -> {
-                        AppConstants.TRAKTV_CODE_EXPIRED
+                        AppConstants.TRAKT_CODE_EXPIRED
                     }
                     else -> {
-                        AppConstants.TRAKTV_UNKNOWN_ERROR
+                        AppConstants.TRAKT_UNKNOWN_ERROR
                     }
                 }
                 Result.Error(error)
