@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.TraktvDeviceCode
 import com.lukakordzaia.streamflow.datamodels.TraktvGetToken
+import com.lukakordzaia.streamflow.datamodels.TraktvNewList
 import com.lukakordzaia.streamflow.datamodels.TraktvRequestToken
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.TraktvRepository
@@ -50,6 +51,17 @@ class ProfileViewModel(private val repository: TraktvRepository) : BaseViewModel
 
                     _traktvUserToken.value = data
                     Log.d("traktvtoken", data.toString())
+                    createNewList(TraktvNewList(
+                            null,
+                            null,
+                            null,
+                            "StreamFlow List",
+                            null,
+                            null,
+                            null
+                    ),
+                    "Bearer ${data.accessToken}"
+                    )
                 }
                 is Result.Error -> {
                     when (token.exception) {
@@ -65,6 +77,16 @@ class ProfileViewModel(private val repository: TraktvRepository) : BaseViewModel
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    fun createNewList(newList: TraktvNewList, accessToken: String) {
+        viewModelScope.launch {
+            when (val list = repository.createNewList(newList, accessToken)) {
+                is Result.Success -> {
+                    Log.d("traktvlist", "წარმატებულია")
                 }
             }
         }

@@ -6,6 +6,7 @@ import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.network.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.repository.*
+import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
@@ -47,4 +48,5 @@ val generalModule = module {
     single { NetworkConnectionInterceptor(get()) }
     single { SpinnerClass(get()) }
     single { BuildMediaSource(get()) }
+    single { AuthSharedPreferences(get()) }
 }

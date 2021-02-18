@@ -4,51 +4,121 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profile_root"
     android:layout_width="match_parent"
+    tools:background="@color/primaryColor"
     android:layout_height="match_parent"
     android:padding="@dimen/fragment_padding"
     tools:context=".ui.phone.profile.ProfileFragment">
 
-    <TextView
+    <LinearLayout
         android:id="@+id/profile_connect_traktv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/rv_genres_item_pressed"
-        android:fontFamily="@font/georgian_uppercase"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
-        android:text="დაუკავშირდით TRAK.TV-ს "
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:orientation="vertical"
+        android:background="@drawable/phone_profile_item"
+        android:padding="15dp"
         app:layout_constraintBottom_toTopOf="@+id/profile_delete_history"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintVertical_chainStyle="packed">
 
-    <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/traktv_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/traktv_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:id="@+id/profile_connect_traktv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="დაუკავშირდით TRAK.TV-ს"
+                android:fontFamily="@font/georgian_uppercase"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/traktv_icon"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="დაასიქრონირეთ ფავორიტები, დაუკავშირეთ ისინი აპლიკაციის კალენდარს"
+                android:textColor="@color/general_text_color"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/traktv_icon"
+                app:layout_constraintTop_toBottomOf="@id/profile_connect_traktv_title"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/profile_delete_history"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/rv_genres_item_pressed"
-        android:fontFamily="@font/georgian_uppercase"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
-        android:text="ნახვების ისტორიის წაშლა"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:orientation="vertical"
+        android:background="@drawable/phone_profile_item"
+        android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_connect_traktv" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_connect_traktv" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/clear_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/clear_db_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/profile_delete_history_title"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="განაგრძეთ ყურების წაშლა"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/georgian_uppercase"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/clear_icon"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="წაშალეთ განაგრძეთ ყურების სია"
+                android:textColor="@color/general_text_color"
+                android:textSize="12sp"
+                app:layout_constraintTop_toBottomOf="@id/profile_delete_history_title"
+                app:layout_constraintStart_toEndOf="@id/clear_icon"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 
     <include
         android:id="@+id/connect_traktv_dialog"
