@@ -13,7 +13,10 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TraktNewList
 import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
-import com.lukakordzaia.streamflow.utils.*
+import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.createToast
+import com.lukakordzaia.streamflow.utils.setInvisible
+import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.connect_traktv_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_profile_framgent.*
@@ -38,6 +41,7 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
         traktDialog = Dialog(requireContext())
 
         if (!authSharedPreferences.getAccessToken().isNullOrBlank()) {
+            profile_connect_traktv.isClickable = false
             profile_connect_traktv_title.text = "TRAKT.TV დაკავშირებულია"
             profile_connect_traktv_title.setTextColor(resources.getColor(R.color.green_dark))
             profile_connect_traktv.setOnClickListener {
@@ -56,10 +60,6 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
             }
         }
 
-        profileViewModel.traktUserProfile.observe(viewLifecycleOwner, {
-                profile_username.text = it.name
-        })
-
         profile_connect_traktv.setOnClickListener {
             traktDialog.setContentView(layoutInflater.inflate(R.layout.connect_traktv_alert_dialog, null))
             traktDialog.show()
@@ -70,9 +70,9 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
                 traktDialog.connect_traktv_url.text = it.verificationUrl
                 countdown.start()
 
-                traktDialog.connect_traktv_user_code.setOnClickListener {
+                traktDialog.connect_traktv_user_code.setOnClickListener { _ ->
                     val clipboard: ClipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val clip = ClipData.newPlainText("Copied Code", connect_traktv_user_code.text)
+                    val clip = ClipData.newPlainText("Copied Code", it.userCode)
                     clipboard.setPrimaryClip(clip)
                     requireContext().createToast("კოდი კოპირებულია")
                 }
@@ -94,11 +94,10 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
                 traktDialog.hide()
                 countdown.cancel()
             }
-
         }
 
-        profileViewModel.traktUserToken.observe(viewLifecycleOwner, {
-            if (it.accessToken.isNotEmpty()) {
+        profileViewModel.traktUserToken.observe(viewLifecycleOwner, { userToken ->
+            if (userToken.accessToken.isNotEmpty()) {
                 traktDialog.hide()
                 profile_connect_traktv_title.text = "TRAK.TV დაკავშირებულია"
                 profile_connect_traktv_title.setTextColor(resources.getColor(R.color.green_dark))
@@ -107,8 +106,12 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
                 profile_delete_history.isClickable = true
                 countdown.cancel()
 
-                authSharedPreferences.saveAccessToken(it.accessToken)
-                authSharedPreferences.saveRefreshToken(it.refreshToken)
+                authSharedPreferences.saveAccessToken(userToken.accessToken)
+                authSharedPreferences.saveRefreshToken(userToken.refreshToken)
+
+                profileViewModel.traktUserProfile.observe(viewLifecycleOwner, {
+                    profile_username.text = it.name
+                })
             }
         })
 

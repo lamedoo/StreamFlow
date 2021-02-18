@@ -22,7 +22,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
-    viewModel { SingleTitleViewModel(get()) }
+    viewModel { SingleTitleViewModel(get(), get()) }
     viewModel { VideoPlayerViewModel(get()) }
     viewModel { CategoriesViewModel(get()) }
     viewModel { SingleCategoryViewModel(get()) }

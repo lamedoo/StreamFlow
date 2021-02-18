@@ -7,13 +7,15 @@ import android.text.TextUtils
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.animations.PlayButtonAnimations
+import com.lukakordzaia.streamflow.datamodels.AddMovieToTraktList
+import com.lukakordzaia.streamflow.datamodels.AddTvShowToTraktList
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.phone_single_title_details.*
@@ -21,7 +23,7 @@ import kotlinx.android.synthetic.main.phone_single_title_fragment.*
 import kotlinx.android.synthetic.main.phone_single_title_info.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
+class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
     private val singleTitleViewModel by viewModel<SingleTitleViewModel>()
     private lateinit var singleTitleCastAdapter: SingleTitleCastAdapter
     private lateinit var singleTitleRelatedAdapter: SingleTitleRelatedAdapter
@@ -62,10 +64,6 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
             }
         })
 
-        single_title_favorite.setOnClickListener {
-            requireContext().createToast("ფუნქცია ჯერ-ჯერობით არ არის დამატებული")
-        }
-
         singleTitleViewModel.singleSingleTitleData.observe(viewLifecycleOwner, {
             if (it.primaryName.isNotBlank()) {
                 single_title_name_geo.text = it.primaryName
@@ -104,6 +102,28 @@ class SingleTitleFragment : Fragment(R.layout.phone_single_title_fragment) {
             tv_single_title_duration.text = "${it.duration} წ."
             if (it.countries.data.isNotEmpty()) {
                 tv_single_title_country.text = it.countries.data[0].secondaryName
+            }
+
+            val imdbId = it.imdbUrl?.subSequence(27, it.imdbUrl.length)
+
+            single_title_favorite.setOnClickListener { _ ->
+                if (it.isTvShow) {
+                    singleTitleViewModel.addTvShowToTraktList(AddTvShowToTraktList(
+                            tvShows = listOf(AddTvShowToTraktList.Showy(
+                                    ids = AddTvShowToTraktList.Showy.Ids(
+                                            imdb = imdbId.toString()
+                                    )
+                            ))
+                    ), "Bearer ${authSharedPreferences.getAccessToken()}")
+                } else {
+                    singleTitleViewModel.addMovieToTraktList(AddMovieToTraktList(
+                            movies = listOf(AddMovieToTraktList.Movy(
+                                    ids = AddMovieToTraktList.Movy.Ids(
+                                            imdb = imdbId.toString()
+                                    )
+                            ))
+                    ), "Bearer ${authSharedPreferences.getAccessToken()}")
+                }
             }
         })
 

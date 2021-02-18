@@ -38,4 +38,20 @@ interface TraktvNetwork {
     )
     @GET("https://api.trakt.tv/users/me")
     suspend fun getUserProfile(@Header("Authorization") accessToken: String) : Response<TraktUserProfile>
+
+    @Headers(
+            "Content-Type: application/json",
+            "trakt-api-version: 2",
+            "trakt-api-key: ${AppConstants.TRAKTV_CLIENT_ID}"
+    )
+    @POST("https://api.trakt.tv/users/me/lists/streamflow-list/items")
+    suspend fun addMovieToList(@Body movieToTraktList: AddMovieToTraktList, @Header("Authorization") accessToken: String) : Response<AddToTraktListResponse>
+
+    @Headers(
+            "Content-Type: application/json",
+            "trakt-api-version: 2",
+            "trakt-api-key: ${AppConstants.TRAKTV_CLIENT_ID}"
+    )
+    @POST("https://api.trakt.tv/users/me/lists/streamflow-list/items")
+    suspend fun addTvShowToList(@Body tvShowToTraktList: AddTvShowToTraktList, @Header("Authorization") accessToken: String) : Response<AddToTraktListResponse>
 }

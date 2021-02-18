@@ -7,11 +7,12 @@ import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
+import com.lukakordzaia.streamflow.repository.TraktRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-class SingleTitleViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
+class SingleTitleViewModel(private val repository: SingleTitleRepository, private val traktRepo: TraktRepository) : BaseViewModel() {
     val singleTitleLoader = MutableLiveData<LoadingState>()
 
     private val _singleTitleData = MutableLiveData<SingleTitleData.Data>()
@@ -146,6 +147,26 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository) : Base
                             setNoInternet()
                         }
                     }
+                }
+            }
+        }
+    }
+
+    fun addMovieToTraktList(movieToTraktList: AddMovieToTraktList, accessToken: String) {
+        viewModelScope.launch {
+            when (val addToList = traktRepo.addMovieToTraktList(movieToTraktList, accessToken)) {
+                is Result.Success -> {
+                    newToastMessage("ფილმი დაემატა ფავორიტებში")
+                }
+            }
+        }
+    }
+
+    fun addTvShowToTraktList(tvShowToTraktList: AddTvShowToTraktList, accessToken: String) {
+        viewModelScope.launch {
+            when (val addToList = traktRepo.addTvShowToTraktList(tvShowToTraktList, accessToken)) {
+                is Result.Success -> {
+                    newToastMessage("სერიალი დაემატა ფავორიტებში")
                 }
             }
         }

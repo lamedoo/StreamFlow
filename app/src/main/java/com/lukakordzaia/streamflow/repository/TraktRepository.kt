@@ -28,4 +28,12 @@ class TraktRepository(retrofitBuilder: RetrofitBuilder): TraktvCall() {
     suspend fun getUserProfile(accessToken: String): Result<TraktUserProfile> {
         return traktvCall { service.getUserProfile(accessToken) }
     }
+
+    suspend fun addMovieToTraktList(movieToTraktList: AddMovieToTraktList, accessToken: String): Result<AddToTraktListResponse> {
+        return traktvCall { service.addMovieToList(movieToTraktList, accessToken) }
+    }
+
+    suspend fun addTvShowToTraktList(tvShowToTraktList: AddTvShowToTraktList, accessToken: String): Result<AddToTraktListResponse> {
+        return traktvCall { service.addTvShowToList(tvShowToTraktList, accessToken) }
+    }
 }
