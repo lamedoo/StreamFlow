@@ -40,4 +40,8 @@ class TraktRepository(retrofitBuilder: RetrofitBuilder): TraktvCall() {
     suspend fun getSfListByType(type: String, accessToken: String): Result<GetTraktSfListByType> {
         return traktvCall { service.getStreamFlowListByType(type, accessToken) }
     }
+
+    suspend fun removeMovieFromTraktList(movieFromTraktList: AddMovieToTraktList, accessToken: String): Result<RemoveFromTraktListResponse> {
+        return traktvCall { service.removeMovieFromList(movieFromTraktList, accessToken) }
+    }
 }

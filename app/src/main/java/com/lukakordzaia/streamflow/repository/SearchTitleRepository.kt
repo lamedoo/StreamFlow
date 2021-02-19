@@ -6,7 +6,7 @@ import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 
-class SearchTitleRepository(private val retrofitBuilder: RetrofitBuilder): ImoviesCall() {
+class SearchTitleRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
     private val service = retrofitBuilder.buildImoviesService()
 
     suspend fun getSearchTitles(keywords: String, page: Int): Result<TitleList> {

@@ -14,9 +14,9 @@ import kotlinx.android.synthetic.main.rv_favorite_item.view.*
 
 class FavoritesAdapter(
     private val context: Context,
-    private val onTitleClick: (titleId: Int) -> Unit
+    private val onTitleClick: (titleId: Int) -> Unit,
 //    private val onInfoClick: (titleId: Int) -> Unit,
-//    private val onMoreMenuClick: (titleId: Int, view: View) -> Unit
+    private val onMoreMenuClick: (titleId: Int, view: View) -> Unit
 ) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
 
@@ -44,12 +44,9 @@ class FavoritesAdapter(
 //            onInfoClick(listModel.id)
 //        }
 //
-//        holder.dbTitleMore.setOnClickListener {
-//            onMoreMenuClick(listModel.id, holder.dbTitleMore)
-//        }
-//
-//        holder.dbTitleSeekBar.max = listModel.titleDuration.toInt()
-//        holder.dbTitleSeekBar.progress = listModel.watchedDuration.toInt()
+        holder.favoriteTitleMore.setOnClickListener {
+            onMoreMenuClick(listModel.id, holder.favoriteTitleMore)
+        }
     }
 
     override fun getItemCount(): Int {

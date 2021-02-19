@@ -1,15 +1,15 @@
 package com.lukakordzaia.streamflow.ui.phone.favorites
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
-import com.lukakordzaia.streamflow.utils.EventObserver
-import com.lukakordzaia.streamflow.utils.navController
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.*
+import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_favorites_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -22,8 +22,8 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         if (!authSharedPreferences.getAccessToken().isNullOrBlank()) {
-            favoritesViewModel.getSfListByMovies("Bearer ${authSharedPreferences.getAccessToken()}")
-            favoritesViewModel.getSfListByTvShows("Bearer ${authSharedPreferences.getAccessToken()}")
+            favoritesViewModel.getTraktListByMovies("Bearer ${authSharedPreferences.getAccessToken()}")
+            favoritesViewModel.getTraktListByTvShows("Bearer ${authSharedPreferences.getAccessToken()}")
         } else {
             favorite_movies_title.setGone()
             favorite_tvshows_title.setGone()
@@ -40,9 +40,41 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
         })
 
         val moviesLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        favoritesMoviesAdapter = FavoritesAdapter(requireContext()) {
-            favoritesViewModel.onSingleTitlePressed(it)
-        }
+        favoritesMoviesAdapter = FavoritesAdapter(requireContext(),
+                {
+                    favoritesViewModel.onSingleTitlePressed(it)
+                },
+                { titleId: Int, buttonView: View ->
+                    val popUp = PopupMenu(context, buttonView)
+                    popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
+
+                    popUp.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.delete_from_db -> {
+                                val clearDbDialog = Dialog(requireContext())
+                                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
+                                clearDbDialog.clear_db_alert_yes.setOnClickListener {
+//                                    viewModel.deleteSingleTitleFromDb(requireContext(), titleId)
+                                    clearDbDialog.dismiss()
+                                }
+                                clearDbDialog.clear_db_alert_no.setOnClickListener {
+                                    clearDbDialog.dismiss()
+                                }
+                                clearDbDialog.show()
+                                return@setOnMenuItemClickListener true
+                            }
+                            R.id.watched_check_info -> {
+                                favoritesViewModel.onSingleTitlePressed(titleId)
+                                return@setOnMenuItemClickListener true
+                            }
+                            else -> {
+                                requireContext().createToast("nothing else")
+                                return@setOnMenuItemClickListener true
+                            }
+                        }
+                    }
+                    popUp.show()
+                })
         rv_favorites_movies.layoutManager = moviesLayout
         rv_favorites_movies.adapter = favoritesMoviesAdapter
 
@@ -61,9 +93,40 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
         })
 
         val tvShowsLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        favoriteTvShowsAdapter = FavoritesAdapter(requireContext()) {
-            favoritesViewModel.onSingleTitlePressed(it)
-        }
+        favoriteTvShowsAdapter = FavoritesAdapter(requireContext(),
+                {
+                    favoritesViewModel.onSingleTitlePressed(it)
+                },
+                { titleId: Int, buttonView: View ->
+                    val popUp = PopupMenu(context, buttonView)
+                    popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
+
+                    popUp.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.delete_from_db -> {
+                                val clearDbDialog = Dialog(requireContext())
+                                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
+                                clearDbDialog.clear_db_alert_yes.setOnClickListener {
+                                    clearDbDialog.dismiss()
+                                }
+                                clearDbDialog.clear_db_alert_no.setOnClickListener {
+                                    clearDbDialog.dismiss()
+                                }
+                                clearDbDialog.show()
+                                return@setOnMenuItemClickListener true
+                            }
+                            R.id.watched_check_info -> {
+                                favoritesViewModel.onSingleTitlePressed(titleId)
+                                return@setOnMenuItemClickListener true
+                            }
+                            else -> {
+                                requireContext().createToast("nothing else")
+                                return@setOnMenuItemClickListener true
+                            }
+                        }
+                    }
+                    popUp.show()
+                })
         rv_favorites_tvshows.layoutManager = tvShowsLayout
         rv_favorites_tvshows.adapter = favoriteTvShowsAdapter
 
@@ -73,7 +136,7 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
 
 
 
-        favoritesViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver{
+        favoritesViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
     }

@@ -1,9 +1,9 @@
 package com.lukakordzaia.streamflow.ui.phone.favorites
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.lukakordzaia.streamflow.datamodels.AddMovieToTraktList
 import com.lukakordzaia.streamflow.datamodels.GetTraktSfListByType
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -35,7 +35,7 @@ class FavoritesViewModel(private val repository: SearchTitleRepository, private 
         navigateToNewFragment(FavoritesFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
     }
 
-    fun getSfListByMovies(accessToken: String) {
+    fun getTraktListByMovies(accessToken: String) {
         viewModelScope.launch {
             when (val traktMovies = traktRepository.getSfListByType("movie", accessToken)) {
                 is Result.Success -> {
@@ -72,7 +72,7 @@ class FavoritesViewModel(private val repository: SearchTitleRepository, private 
         }
     }
 
-    fun getSfListByTvShows(accessToken: String) {
+    fun getTraktListByTvShows(accessToken: String) {
         viewModelScope.launch {
             when (val traktTvShows = traktRepository.getSfListByType("show", accessToken)) {
                 is Result.Success -> {
@@ -104,6 +104,16 @@ class FavoritesViewModel(private val repository: SearchTitleRepository, private 
                         _tvShowSearchResult.value = fetchTvShowSearchResult
                         favoriteTvShowsLoader.value = LoadingState.LOADED
                     }
+                }
+            }
+        }
+    }
+
+    fun removeMovieFromTraktList(movieFromTraktList: AddMovieToTraktList, accessToken: String) {
+        viewModelScope.launch {
+            when (val removeMovie = traktRepository.removeMovieFromTraktList(movieFromTraktList, accessToken)) {
+                is Result.Success -> {
+                    newToastMessage("ფილმი წაიშალა ფავორიტებიდან")
                 }
             }
         }
