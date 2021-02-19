@@ -17,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesFragment
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleGenreFragment
+import com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragment
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                         showBottomNavigation()
                         app_main_toolbar.setVisible()
                     }
-                    is ProfileFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment -> {
+                    is ProfileFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment, is FavoritesFragment -> {
                         app_main_toolbar.setVisible()
                         hideBottomNavigation()
                     }

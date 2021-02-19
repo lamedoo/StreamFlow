@@ -54,4 +54,12 @@ interface TraktvNetwork {
     )
     @POST("https://api.trakt.tv/users/me/lists/streamflow-list/items")
     suspend fun addTvShowToList(@Body tvShowToTraktList: AddTvShowToTraktList, @Header("Authorization") accessToken: String) : Response<AddToTraktListResponse>
+
+    @Headers(
+            "Content-Type: application/json",
+            "trakt-api-version: 2",
+            "trakt-api-key: ${AppConstants.TRAKTV_CLIENT_ID}"
+    )
+    @GET("https://api.trakt.tv/users/me/lists/streamflow-list/items/{type}")
+    suspend fun getStreamFlowListByType(@Path("type") type: String, @Header("Authorization") accessToken: String) : Response<GetTraktSfListByType>
 }

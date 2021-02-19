@@ -69,4 +69,8 @@ interface ImoviesNetwork {
     @Headers("User-Agent: imovies")
     @GET ("movies/{id}/season-files/{season_number}")
     suspend fun getSingleFiles(@Path("id") id: Int, @Path("season_number") season_number: Int) : Response<TitleFiles>
+
+    @Headers("User-Agent: imovies")
+    @GET ("search-advanced?filters%5Btype%5D=movie&per_page=1&movie_filters%5Bgenres_related%5D=no&movie_filters%5Bcountries_related%5D=no")
+    suspend fun getSearchFavoriteTitles(@Query("keywords") keywords: String, @Query("page") page: Int, @Query("movie_filters[year_range]") year: String) : Response<TitleList>
 }

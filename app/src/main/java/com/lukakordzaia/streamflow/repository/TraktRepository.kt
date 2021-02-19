@@ -36,4 +36,8 @@ class TraktRepository(retrofitBuilder: RetrofitBuilder): TraktvCall() {
     suspend fun addTvShowToTraktList(tvShowToTraktList: AddTvShowToTraktList, accessToken: String): Result<AddToTraktListResponse> {
         return traktvCall { service.addTvShowToList(tvShowToTraktList, accessToken) }
     }
+
+    suspend fun getSfListByType(type: String, accessToken: String): Result<GetTraktSfListByType> {
+        return traktvCall { service.getStreamFlowListByType(type, accessToken) }
+    }
 }

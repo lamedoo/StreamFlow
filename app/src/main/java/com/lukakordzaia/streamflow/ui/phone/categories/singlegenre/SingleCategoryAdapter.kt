@@ -36,15 +36,8 @@ class SingleCategoryAdapter(private val context: Context, private val onTitleCli
             it.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in))
         }
 
-        if (listModel.posters != null) {
-            if (listModel.posters.data != null) {
-                if (!listModel.posters.data.x240.isNullOrEmpty()) {
-                    Picasso.get().load(listModel.posters.data.x240).into(holder.titlePosterImageView)
-                } else {
-                    Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.titlePosterImageView)
-                }
-            }
-        }
+
+                    Picasso.get().load(listModel.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.titlePosterImageView)
 
         if (!listModel.primaryName.isNullOrEmpty()) {
             holder.titleNameGeoTextView.text = listModel.primaryName

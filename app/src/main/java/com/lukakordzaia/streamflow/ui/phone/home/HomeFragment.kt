@@ -242,6 +242,9 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
             R.id.profile_button -> {
                 navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
             }
+            R.id.favorite_button -> {
+                navController(HomeFragmentDirections.actionHomeFragmentToFavoritesFragment())
+            }
         }
         return super.onOptionsItemSelected(item)
     }
