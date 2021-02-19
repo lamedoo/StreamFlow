@@ -28,6 +28,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/favorite_movies_title" />
 
+        <ProgressBar
+            android:id="@+id/favorite_movies_progressBar"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/accent_color"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/favorite_movies_title"
+            android:visibility="visible"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_favorites_movies"
             android:layout_width="match_parent"
@@ -53,6 +65,18 @@
             android:background="@color/accent_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/favorite_tvshows_title" />
+
+        <ProgressBar
+            android:id="@+id/favorite_tvshows_progressBar"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/accent_color"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/favorite_tvshows_title"
+            android:visibility="visible"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_favorites_tvshows"

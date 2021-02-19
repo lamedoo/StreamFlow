@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.GetTraktSfListByType
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SearchTitleRepository
 import com.lukakordzaia.streamflow.repository.TraktRepository
@@ -15,6 +16,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class FavoritesViewModel(private val repository: SearchTitleRepository, private val traktRepository: TraktRepository) : BaseViewModel() {
+
+    val favoriteMoviesLoader = MutableLiveData<LoadingState>()
+    val favoriteTvShowsLoader = MutableLiveData<LoadingState>()
 
     private val traktMoviesList = MutableLiveData<GetTraktSfListByType>()
     private val traktTvShowsList = MutableLiveData<GetTraktSfListByType>()
@@ -45,6 +49,7 @@ class FavoritesViewModel(private val repository: SearchTitleRepository, private 
 
     private fun searchMoviesInImovies(traktMovieList: GetTraktSfListByType) {
         fetchMovieSearchResult.clear()
+        favoriteMoviesLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             traktMovieList.forEach { traktMovie ->
                 when (val search = repository.getSearchFavoriteTitles(traktMovie.movie.title.toLowerCase(Locale.ROOT), 1, "${traktMovie.movie.year},${traktMovie.movie.year}")) {
@@ -60,7 +65,7 @@ class FavoritesViewModel(private val repository: SearchTitleRepository, private 
                         }
 
                         _movieSearchResult.value = fetchMovieSearchResult
-                        Log.d("moviesfromimovies", fetchMovieSearchResult.toString())
+                        favoriteMoviesLoader.value = LoadingState.LOADED
                     }
                 }
             }
@@ -81,6 +86,7 @@ class FavoritesViewModel(private val repository: SearchTitleRepository, private 
 
     private fun searchTvShowsInImovies(traktTvShowList: GetTraktSfListByType) {
         fetchTvShowSearchResult.clear()
+        favoriteTvShowsLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             traktTvShowList.forEach { traktMovie ->
                 when (val search = repository.getSearchFavoriteTitles(traktMovie.show.title.toLowerCase(Locale.ROOT), 1, "${traktMovie.show.year},${traktMovie.show.year}")) {
@@ -96,7 +102,7 @@ class FavoritesViewModel(private val repository: SearchTitleRepository, private 
                         }
 
                         _tvShowSearchResult.value = fetchTvShowSearchResult
-                        Log.d("tvshowsfromimovies", fetchMovieSearchResult.toString())
+                        favoriteTvShowsLoader.value = LoadingState.LOADED
                     }
                 }
             }
