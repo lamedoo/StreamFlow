@@ -8,6 +8,14 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/fragment_padding">
 
+        <TextView
+            android:id="@+id/favorite_no_auth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ფავორიტების სანახავად, გთხოვ გაიაროთ ავტორიზაცია"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:id="@+id/favorite_movies_container"
             android:layout_width="match_parent"

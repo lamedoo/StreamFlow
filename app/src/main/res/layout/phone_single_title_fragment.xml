@@ -96,6 +96,7 @@
                     app:layout_constraintStart_toStartOf="parent">
 
                     <ImageView
+                        android:id="@+id/single_title_favorite_icon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:src="@drawable/title_favorite_icon_full"

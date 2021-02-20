@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.navArgs
@@ -64,7 +65,20 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
             }
         })
 
+        singleTitleViewModel.addToFavorites.observe(viewLifecycleOwner, {
+            if (it) {
+                single_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
+            }
+        })
+
         singleTitleViewModel.singleSingleTitleData.observe(viewLifecycleOwner, {
+            val imdbId = it.imdbUrl?.subSequence(27, it.imdbUrl.length)
+            if (it.isTvShow) {
+                singleTitleViewModel.checkTitleInTraktlist("show", "Bearer ${authSharedPreferences.getAccessToken()}", imdbId.toString())
+            } else {
+                singleTitleViewModel.checkTitleInTraktlist("movie", "Bearer ${authSharedPreferences.getAccessToken()}", imdbId.toString())
+            }
+
             if (it.primaryName.isNotBlank()) {
                 single_title_name_geo.text = it.primaryName
             }
@@ -104,25 +118,27 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
                 tv_single_title_country.text = it.countries.data[0].secondaryName
             }
 
-            val imdbId = it.imdbUrl?.subSequence(27, it.imdbUrl.length)
-
             single_title_favorite.setOnClickListener { _ ->
-                if (it.isTvShow) {
-                    singleTitleViewModel.addTvShowToTraktList(AddTvShowToTraktList(
-                            tvShows = listOf(AddTvShowToTraktList.Showy(
-                                    ids = AddTvShowToTraktList.Showy.Ids(
-                                            imdb = imdbId.toString()
-                                    )
-                            ))
-                    ), "Bearer ${authSharedPreferences.getAccessToken()}")
+                if (!authSharedPreferences.getAccessToken().isNullOrBlank()) {
+                    if (it.isTvShow) {
+                        singleTitleViewModel.addTvShowToTraktList(AddTvShowToTraktList(
+                                tvShows = listOf(AddTvShowToTraktList.Showy(
+                                        ids = AddTvShowToTraktList.Showy.Ids(
+                                                imdb = imdbId.toString()
+                                        )
+                                ))
+                        ), "Bearer ${authSharedPreferences.getAccessToken()}")
+                    } else {
+                        singleTitleViewModel.addMovieToTraktList(AddMovieToTraktList(
+                                movies = listOf(AddMovieToTraktList.Movy(
+                                        ids = AddMovieToTraktList.Movy.Ids(
+                                                imdb = imdbId.toString()
+                                        )
+                                ))
+                        ), "Bearer ${authSharedPreferences.getAccessToken()}")
+                    }
                 } else {
-                    singleTitleViewModel.addMovieToTraktList(AddMovieToTraktList(
-                            movies = listOf(AddMovieToTraktList.Movy(
-                                    ids = AddMovieToTraktList.Movy.Ids(
-                                            imdb = imdbId.toString()
-                                    )
-                            ))
-                    ), "Bearer ${authSharedPreferences.getAccessToken()}")
+                    requireContext().createToast("ფავორიტების დასამატებლად, გთხოვთ გაიაროთ ავტორიზაცია", Toast.LENGTH_LONG)
                 }
             }
         })

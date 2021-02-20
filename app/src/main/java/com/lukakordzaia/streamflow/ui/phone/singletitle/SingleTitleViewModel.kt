@@ -33,6 +33,9 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
     private val _singleTitleRelated = MutableLiveData<List<TitleList.Data>>()
     val singleTitleRelated: LiveData<List<TitleList.Data>> = _singleTitleRelated
 
+    private val _addToFavorites = MutableLiveData<Boolean>()
+    val addToFavorites: LiveData<Boolean> = _addToFavorites
+
     fun onPlayButtonPressed(titleId: Int) {
         navigateToNewFragment(
             SingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
@@ -152,11 +155,37 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
         }
     }
 
+    fun checkTitleInTraktlist(type: String, accessToken: String, titleImdb: String) {
+        viewModelScope.launch {
+            when (val list = traktRepo.getSfListByType(type, accessToken)) {
+                is Result.Success -> {
+                    when (type) {
+                        "movie" -> {
+                            list.data.forEach {
+                                if (titleImdb == it.movie.ids.imdb) {
+                                    _addToFavorites.value = true
+                                }
+                            }
+                        }
+                        "show" -> {
+                            list.data.forEach {
+                                if (titleImdb == it.show.ids.imdb) {
+                                    _addToFavorites.value = true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun addMovieToTraktList(movieToTraktList: AddMovieToTraktList, accessToken: String) {
         viewModelScope.launch {
             when (val addToList = traktRepo.addMovieToTraktList(movieToTraktList, accessToken)) {
                 is Result.Success -> {
                     newToastMessage("ფილმი დაემატა ფავორიტებში")
+                    _addToFavorites.value = true
                 }
             }
         }
@@ -167,6 +196,7 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
             when (val addToList = traktRepo.addTvShowToTraktList(tvShowToTraktList, accessToken)) {
                 is Result.Success -> {
                     newToastMessage("სერიალი დაემატა ფავორიტებში")
+                    _addToFavorites.value = true
                 }
             }
         }

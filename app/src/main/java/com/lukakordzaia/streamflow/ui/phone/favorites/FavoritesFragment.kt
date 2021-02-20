@@ -26,6 +26,7 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
         } else {
             favorite_movies_container.setGone()
             favorite_tvshows_container.setGone()
+            favorite_no_auth.setVisible()
         }
 
         // Favorite Movies
