@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.animations.PlayButtonAnimations
-import com.lukakordzaia.streamflow.datamodels.AddMovieToTraktList
-import com.lukakordzaia.streamflow.datamodels.AddTvShowToTraktList
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
@@ -42,12 +40,12 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    singleTitleViewModel.getSingleTitleData(args.titleId)
+                    singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
                 }, 5000)
             }
         })
 
-        singleTitleViewModel.getSingleTitleData(args.titleId)
+        singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
 
         single_title_back_button.setOnClickListener {
             requireActivity().onBackPressed()
@@ -65,20 +63,38 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
             }
         })
 
-        singleTitleViewModel.addToFavorites.observe(viewLifecycleOwner, {
-            if (it) {
-                single_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
+        singleTitleViewModel.traktFavoriteLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> {
+                    single_title_favorite_progressBar.setVisible()
+                    single_title_favorite_icon.setGone()
+                }
+                LoadingState.Status.SUCCESS -> {
+                    single_title_favorite_progressBar.setGone()
+                    single_title_favorite_icon.setVisible()
+                }
             }
         })
 
-        singleTitleViewModel.singleSingleTitleData.observe(viewLifecycleOwner, {
-            val imdbId = it.imdbUrl?.subSequence(27, it.imdbUrl.length)
-            if (it.isTvShow) {
-                singleTitleViewModel.checkTitleInTraktlist("show", "Bearer ${authSharedPreferences.getAccessToken()}", imdbId.toString())
+        singleTitleViewModel.addToFavorites.observe(viewLifecycleOwner, {
+            if (it) {
+                single_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
+                single_title_favorite.setOnClickListener {
+                    singleTitleViewModel.removeMovieFromTraktList("Bearer ${authSharedPreferences.getAccessToken()}")
+                }
             } else {
-                singleTitleViewModel.checkTitleInTraktlist("movie", "Bearer ${authSharedPreferences.getAccessToken()}", imdbId.toString())
+                single_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
+                single_title_favorite.setOnClickListener {
+                    if (!authSharedPreferences.getAccessToken().isNullOrBlank()) {
+                        singleTitleViewModel.addToFavorites("Bearer ${authSharedPreferences.getAccessToken()}")
+                    } else {
+                        requireContext().createToast("ფავორიტების დასამატებლად, გთხaოვთ გაიაროთ ავტორიზაცია", Toast.LENGTH_LONG)
+                    }
+                }
             }
+        })
 
+        singleTitleViewModel.singleTitleData.observe(viewLifecycleOwner, {
             if (it.primaryName.isNotBlank()) {
                 single_title_name_geo.text = it.primaryName
             }
@@ -91,9 +107,9 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
                     it.trailers.data.forEach { trailer ->
                         if (trailer.language == "ENG") {
                             singleTitleViewModel.onTrailerPressed(
-                                args.titleId,
-                                it.isTvShow,
-                                trailer.fileUrl
+                                    args.titleId,
+                                    it.isTvShow,
+                                    trailer.fileUrl
                             )
                         } else {
                             requireContext().createToast("other trailer")
@@ -117,37 +133,13 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
             if (it.countries.data.isNotEmpty()) {
                 tv_single_title_country.text = it.countries.data[0].secondaryName
             }
-
-            single_title_favorite.setOnClickListener { _ ->
-                if (!authSharedPreferences.getAccessToken().isNullOrBlank()) {
-                    if (it.isTvShow) {
-                        singleTitleViewModel.addTvShowToTraktList(AddTvShowToTraktList(
-                                tvShows = listOf(AddTvShowToTraktList.Showy(
-                                        ids = AddTvShowToTraktList.Showy.Ids(
-                                                imdb = imdbId.toString()
-                                        )
-                                ))
-                        ), "Bearer ${authSharedPreferences.getAccessToken()}")
-                    } else {
-                        singleTitleViewModel.addMovieToTraktList(AddMovieToTraktList(
-                                movies = listOf(AddMovieToTraktList.Movy(
-                                        ids = AddMovieToTraktList.Movy.Ids(
-                                                imdb = imdbId.toString()
-                                        )
-                                ))
-                        ), "Bearer ${authSharedPreferences.getAccessToken()}")
-                    }
-                } else {
-                    requireContext().createToast("ფავორიტების დასამატებლად, გთხოვთ გაიაროთ ავტორიზაცია", Toast.LENGTH_LONG)
-                }
-            }
         })
 
         singleTitleViewModel.titleGenres.observe(viewLifecycleOwner, {
             single_title_genre_names.text = TextUtils.join(", ", it)
         })
 
-        single_post_to_files_button.setOnClickListener { _ ->
+        single_post_to_files_button.setOnClickListener {
             singleTitleViewModel.onPlayButtonPressed(args.titleId)
 
             PlayButtonAnimations().rotatePlayButton(single_post_to_files_button, 1000)

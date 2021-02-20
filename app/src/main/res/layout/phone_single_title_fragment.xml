@@ -90,17 +90,29 @@
                     android:orientation="vertical"
                     android:layout_marginTop="30dp"
                     android:padding="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:background="@drawable/secondary_button_background"
                     android:layout_marginEnd="10dp"
                     android:layout_alignParentEnd="true"
                     app:layout_constraintStart_toStartOf="parent">
+
+                    <ProgressBar
+                        android:id="@+id/single_title_favorite_progressBar"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:indeterminateTint="@color/accent_color"
+                        android:visibility="visible"
+                        tools:visibility="gone"/>
 
                     <ImageView
                         android:id="@+id/single_title_favorite_icon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:src="@drawable/title_favorite_icon_full"
-                        app:tint="@color/general_text_color" />
+                        app:tint="@color/general_text_color"
+                        android:visibility="gone"
+                        tools:visibility="visible"/>
 
                 </LinearLayout>
 
