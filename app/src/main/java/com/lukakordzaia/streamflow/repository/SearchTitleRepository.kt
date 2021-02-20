@@ -16,8 +16,4 @@ class SearchTitleRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
     suspend fun getTopFranchises(): Result<FranchiseList> {
         return imoviesCall { service.getTopFranchises() }
     }
-
-    suspend fun getSearchFavoriteTitles(keywords: String, page: Int, year: String): Result<TitleList> {
-        return imoviesCall { service.getSearchFavoriteTitles(keywords, page, year) }
-    }
 }

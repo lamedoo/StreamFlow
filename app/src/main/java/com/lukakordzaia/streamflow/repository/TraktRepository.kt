@@ -44,4 +44,8 @@ class TraktRepository(retrofitBuilder: RetrofitBuilder): TraktvCall() {
     suspend fun removeMovieFromTraktList(movieFromTraktList: AddMovieToTraktList, accessToken: String): Result<RemoveFromTraktListResponse> {
         return traktvCall { service.removeMovieFromList(movieFromTraktList, accessToken) }
     }
+
+    suspend fun removeTvShowFromTraktList(tvShowToTraktList: AddTvShowToTraktList, accessToken: String): Result<RemoveFromTraktListResponse> {
+        return traktvCall { service.removeTvShowFromList(tvShowToTraktList, accessToken) }
+    }
 }

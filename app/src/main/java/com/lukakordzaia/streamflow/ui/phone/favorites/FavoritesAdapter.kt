@@ -15,8 +15,7 @@ import kotlinx.android.synthetic.main.rv_favorite_item.view.*
 class FavoritesAdapter(
     private val context: Context,
     private val onTitleClick: (titleId: Int) -> Unit,
-//    private val onInfoClick: (titleId: Int) -> Unit,
-    private val onMoreMenuClick: (titleId: Int, view: View) -> Unit
+    private val onMoreMenuClick: (titleId: Int) -> Unit
 ) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
 
@@ -40,12 +39,8 @@ class FavoritesAdapter(
 
         Picasso.get().load(listModel.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.favoriteTitlePosterImageView)
 
-//        holder.dbTitleInfo.setOnClickListener {
-//            onInfoClick(listModel.id)
-//        }
-//
-        holder.favoriteTitleMore.setOnClickListener {
-            onMoreMenuClick(listModel.id, holder.favoriteTitleMore)
+        holder.favoriteTitleRemove.setOnClickListener {
+            onMoreMenuClick(listModel.id)
         }
     }
 
@@ -56,7 +51,6 @@ class FavoritesAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val favoriteTitleRoot: ConstraintLayout = view.rv_favorite_item_root
         val favoriteTitlePosterImageView: ImageView = view.rv_favorite_item_poster
-        val favoriteTitleMore: ImageView = view.rv_favorite_item_more
-        val favoriteTitleInfo: ImageView = view.rv_favorite_item_info
+        val favoriteTitleRemove: ImageView = view.rv_favorite_item_remove
     }
 }

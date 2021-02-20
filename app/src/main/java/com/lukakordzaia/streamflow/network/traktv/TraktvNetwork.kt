@@ -60,8 +60,16 @@ interface TraktvNetwork {
             "trakt-api-version: 2",
             "trakt-api-key: ${AppConstants.TRAKTV_CLIENT_ID}"
     )
-    @POST("https://api.trakt.tv/users/me/lists/list_id/items/remove")
+    @POST("https://api.trakt.tv/users/me/lists/streamflow-list/items/remove")
     suspend fun removeMovieFromList(@Body movieToTraktList: AddMovieToTraktList, @Header("Authorization") accessToken: String) : Response<RemoveFromTraktListResponse>
+
+    @Headers(
+            "Content-Type: application/json",
+            "trakt-api-version: 2",
+            "trakt-api-key: ${AppConstants.TRAKTV_CLIENT_ID}"
+    )
+    @POST("https://api.trakt.tv/users/me/lists/streamflow-list/items/remove")
+    suspend fun removeTvShowFromList(@Body tvShowToTraktList: AddTvShowToTraktList, @Header("Authorization") accessToken: String) : Response<RemoveFromTraktListResponse>
 
     @Headers(
             "Content-Type: application/json",

@@ -3,7 +3,6 @@ package com.lukakordzaia.streamflow.ui.phone.favorites
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import android.widget.PopupMenu
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -25,10 +24,8 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
             favoritesViewModel.getTraktListByMovies("Bearer ${authSharedPreferences.getAccessToken()}")
             favoritesViewModel.getTraktListByTvShows("Bearer ${authSharedPreferences.getAccessToken()}")
         } else {
-            favorite_movies_title.setGone()
-            favorite_tvshows_title.setGone()
-            favorite_movies_progressBar.setGone()
-            favorite_tvshows_progressBar.setGone()
+            favorite_movies_container.setGone()
+            favorite_tvshows_container.setGone()
         }
 
         // Favorite Movies
@@ -39,41 +36,28 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
             }
         })
 
+        favoritesViewModel.favoriteNoMovies.observe(viewLifecycleOwner, {
+            if (it) {
+                favorite_no_movies.setVisible()
+            }
+        })
+
         val moviesLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         favoritesMoviesAdapter = FavoritesAdapter(requireContext(),
                 {
                     favoritesViewModel.onSingleTitlePressed(it)
                 },
-                { titleId: Int, buttonView: View ->
-                    val popUp = PopupMenu(context, buttonView)
-                    popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
-
-                    popUp.setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.delete_from_db -> {
-                                val clearDbDialog = Dialog(requireContext())
-                                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
-                                clearDbDialog.clear_db_alert_yes.setOnClickListener {
-//                                    viewModel.deleteSingleTitleFromDb(requireContext(), titleId)
-                                    clearDbDialog.dismiss()
-                                }
-                                clearDbDialog.clear_db_alert_no.setOnClickListener {
-                                    clearDbDialog.dismiss()
-                                }
-                                clearDbDialog.show()
-                                return@setOnMenuItemClickListener true
-                            }
-                            R.id.watched_check_info -> {
-                                favoritesViewModel.onSingleTitlePressed(titleId)
-                                return@setOnMenuItemClickListener true
-                            }
-                            else -> {
-                                requireContext().createToast("nothing else")
-                                return@setOnMenuItemClickListener true
-                            }
-                        }
+                { titleId: Int ->
+                    val clearDbDialog = Dialog(requireContext())
+                    clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
+                    clearDbDialog.clear_db_alert_yes.setOnClickListener {
+                        favoritesViewModel.getSingleTitleImdb(titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+                        clearDbDialog.dismiss()
                     }
-                    popUp.show()
+                    clearDbDialog.clear_db_alert_no.setOnClickListener {
+                        clearDbDialog.dismiss()
+                    }
+                    clearDbDialog.show()
                 })
         rv_favorites_movies.layoutManager = moviesLayout
         rv_favorites_movies.adapter = favoritesMoviesAdapter
@@ -92,40 +76,28 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
             }
         })
 
+        favoritesViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, {
+            if (it) {
+                favorite_no_tvshows.setVisible()
+            }
+        })
+
         val tvShowsLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         favoriteTvShowsAdapter = FavoritesAdapter(requireContext(),
                 {
                     favoritesViewModel.onSingleTitlePressed(it)
                 },
-                { titleId: Int, buttonView: View ->
-                    val popUp = PopupMenu(context, buttonView)
-                    popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
-
-                    popUp.setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.delete_from_db -> {
-                                val clearDbDialog = Dialog(requireContext())
-                                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
-                                clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                                    clearDbDialog.dismiss()
-                                }
-                                clearDbDialog.clear_db_alert_no.setOnClickListener {
-                                    clearDbDialog.dismiss()
-                                }
-                                clearDbDialog.show()
-                                return@setOnMenuItemClickListener true
-                            }
-                            R.id.watched_check_info -> {
-                                favoritesViewModel.onSingleTitlePressed(titleId)
-                                return@setOnMenuItemClickListener true
-                            }
-                            else -> {
-                                requireContext().createToast("nothing else")
-                                return@setOnMenuItemClickListener true
-                            }
-                        }
+                { titleId: Int ->
+                    val clearDbDialog = Dialog(requireContext())
+                    clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
+                    clearDbDialog.clear_db_alert_yes.setOnClickListener {
+                        favoritesViewModel.getSingleTitleImdb(titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+                        clearDbDialog.dismiss()
                     }
-                    popUp.show()
+                    clearDbDialog.clear_db_alert_no.setOnClickListener {
+                        clearDbDialog.dismiss()
+                    }
+                    clearDbDialog.show()
                 })
         rv_favorites_tvshows.layoutManager = tvShowsLayout
         rv_favorites_tvshows.adapter = favoriteTvShowsAdapter
@@ -135,6 +107,9 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
         })
 
 
+        favoritesViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
+        })
 
         favoritesViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)

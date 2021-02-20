@@ -43,6 +43,7 @@ val repositoryModule = module {
     single { SearchTitleRepository(get()) }
     single { TvDetailsRepository(get()) }
     single { TraktRepository(get()) }
+    single { FavoritesRepository(get()) }
 }
 
 val generalModule = module {
