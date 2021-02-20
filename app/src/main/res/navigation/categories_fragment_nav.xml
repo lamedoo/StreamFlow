@@ -26,6 +26,13 @@
                 android:name="videoPlayerData"
                 app:argType="com.lukakordzaia.streamflow.datamodels.VideoPlayerData" />
         </action>
+        <action
+            android:id="@+id/action_categoriesFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/singleGenreFragment"

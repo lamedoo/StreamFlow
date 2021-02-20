@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.phone.categories
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,6 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.CategoriesRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class CategoriesViewModel(private val repository: CategoriesRepository) : BaseViewModel() {
@@ -50,6 +48,10 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
                         trailerUrl
                 )
         ))
+    }
+
+    fun onSingleTrailerInfoPressed(titleId: Int) {
+        navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleTitleFragmentNav(titleId))
     }
 
     fun getAllGenres() {

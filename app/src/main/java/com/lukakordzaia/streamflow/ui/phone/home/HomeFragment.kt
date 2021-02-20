@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.ui.phone.home
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -117,34 +118,34 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
         rv_main_watched_titles.adapter = homeDbTitlesAdapter
         rv_main_watched_titles.layoutManager = dbLayout
 
-        viewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) {
-                main_watched_titles_none.setGone()
-                val newMoviesTitleConstraint = main_new_movies_title.layoutParams as ConstraintLayout.LayoutParams
-                newMoviesTitleConstraint.topToBottom = rv_main_watched_titles.id
-                main_new_movies_title.requestLayout()
-
-                val newMoviesMoreConstraint = new_movies_more.layoutParams as ConstraintLayout.LayoutParams
-                newMoviesMoreConstraint.topToBottom = rv_main_watched_titles.id
-                new_movies_more.requestLayout()
-
+        if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            viewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
                 viewModel.clearWatchedTitleList()
+                if (!it.isNullOrEmpty()) {
+                    main_watched_titles_none.setGone()
+                    val newMoviesTitleConstraint = main_new_movies_title.layoutParams as ConstraintLayout.LayoutParams
+                    newMoviesTitleConstraint.topToBottom = rv_main_watched_titles.id
+                    main_new_movies_title.requestLayout()
 
-                viewModel.getDbTitlesFromApi(it)
-            } else {
-                main_watched_titles_none.setVisible()
-                viewModel.clearWatchedTitleList()
+                    val newMoviesMoreConstraint = new_movies_more.layoutParams as ConstraintLayout.LayoutParams
+                    newMoviesMoreConstraint.topToBottom = rv_main_watched_titles.id
+                    new_movies_more.requestLayout()
 
-                val newMoviesTitleConstraint = main_new_movies_title.layoutParams as ConstraintLayout.LayoutParams
-                newMoviesTitleConstraint.topToBottom = main_watched_titles_none.id
-                main_new_movies_title.requestLayout()
+                    viewModel.getDbTitlesFromApi(it)
+                } else {
+                    main_watched_titles_none.setVisible()
 
-                val newMoviesMoreConstraint = new_movies_more.layoutParams as ConstraintLayout.LayoutParams
-                newMoviesMoreConstraint.topToBottom = main_watched_titles_none.id
-                new_movies_more.requestLayout()
-            }
-            viewModel.getDbTitles(requireContext()).removeObservers(viewLifecycleOwner)
-        })
+                    val newMoviesTitleConstraint = main_new_movies_title.layoutParams as ConstraintLayout.LayoutParams
+                    newMoviesTitleConstraint.topToBottom = main_watched_titles_none.id
+                    main_new_movies_title.requestLayout()
+
+                    val newMoviesMoreConstraint = new_movies_more.layoutParams as ConstraintLayout.LayoutParams
+                    newMoviesMoreConstraint.topToBottom = main_watched_titles_none.id
+                    new_movies_more.requestLayout()
+                }
+                viewModel.getDbTitles(requireContext()).removeObservers(viewLifecycleOwner)
+            })
+        }
 
         viewModel.dbList.observe(viewLifecycleOwner, {
             homeDbTitlesAdapter.setWatchedTitlesList(it)

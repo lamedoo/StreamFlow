@@ -13,7 +13,9 @@ import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_trailer_item.view.*
 
-class TrailersAdapter(private val context: Context, private val onTrailerClick: (trailerId: Int, trailerUrl: String) -> Unit) : RecyclerView.Adapter<TrailersAdapter.ViewHolder>() {
+class TrailersAdapter(private val context: Context,
+                      private val onTrailerClick: (trailerId: Int, trailerUrl: String) -> Unit,
+                      private val onTrailerInfoClick: (trailerId: Int) -> Unit) : RecyclerView.Adapter<TrailersAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
 
     fun setTrailerList(list: List<TitleList.Data>) {
@@ -30,7 +32,7 @@ class TrailersAdapter(private val context: Context, private val onTrailerClick: 
 
         Picasso.get().load(trailerModel.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.trailerPosterImageView)
 
-        if (!trailerModel.primaryName.isNullOrEmpty()) {
+        if (trailerModel.primaryName.isNotEmpty()) {
             holder.trailerNameTextView.text = trailerModel.primaryName
         } else {
             holder.trailerNameTextView.text = trailerModel.secondaryName
@@ -38,6 +40,10 @@ class TrailersAdapter(private val context: Context, private val onTrailerClick: 
 
         holder.trailerRoot.setOnClickListener {
             onTrailerClick(trailerModel.id, trailerModel.trailers!!.data!![0]!!.fileUrl)
+        }
+
+        holder.trailerInfoImageView.setOnClickListener {
+            onTrailerInfoClick(trailerModel.id)
         }
     }
 
@@ -49,5 +55,6 @@ class TrailersAdapter(private val context: Context, private val onTrailerClick: 
         val trailerRoot: ConstraintLayout = view.rv_trailer_root
         val trailerPosterImageView: ImageView = view.rv_trailer_poster
         val trailerNameTextView: TextView = view.rv_trailer_name
+        val trailerInfoImageView: ImageView = view.rv_trailer_info
     }
 }

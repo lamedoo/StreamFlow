@@ -7,7 +7,6 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.lukakordzaia.streamflow.R
@@ -15,7 +14,6 @@ import com.lukakordzaia.streamflow.helpers.DotsIndicatorDecoration
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_categories_framgent.*
-import kotlinx.android.synthetic.main.phone_home_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
@@ -47,9 +45,14 @@ class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
         })
 
         val trailerLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        trailersAdapter = TrailersAdapter(requireContext()) { titleId, trailerUrl ->
-            categoriesViewModel.onSingleTrailerPressed(titleId, trailerUrl)
-        }
+        trailersAdapter = TrailersAdapter(requireContext(),
+                { titleId, trailerUrl ->
+                    categoriesViewModel.onSingleTrailerPressed(titleId, trailerUrl)
+                },
+                {
+                    categoriesViewModel.onSingleTrailerInfoPressed(it)
+                }
+        )
         rv_trailers.layoutManager = trailerLayout
         rv_trailers.adapter = trailersAdapter
 

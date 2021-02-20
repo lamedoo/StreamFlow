@@ -12,7 +12,6 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.ui.SubtitleView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
@@ -80,19 +79,20 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             }
         })
 
-        videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
-            if (it.titleFileUri.size == 1) {
-                mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
-            } else if (it.titleFileUri.size > 1) {
-                mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
-            }
-
-            if (it.titleSubUri[0] == "0") {
-                subtitleFunctions(false)
-            } else {
-                subtitleFunctions(true)
-            }
-        })
+//        videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
+//            Log.d("mediasubtitles", it.toString())
+//            if (it.titleFileUri.size == 1) {
+//                mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
+//            } else if (it.titleFileUri.size > 1) {
+//                mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
+//            }
+//
+//            if (it.titleSubUri[0] == "0") {
+//                subtitleFunctions(false)
+//            } else {
+//                subtitleFunctions(true)
+//            }
+//        })
 
         videoPlayerViewModel.playBackOptions.observe(viewLifecycleOwner, {
             mediaPlayer.initPlayer(playerView, it)
@@ -210,6 +210,21 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     fun initPlayer(isTvShow: Boolean, watchedTime: Long, chosenEpisode: Int, trailerUrl: String?) {
         if (trailerUrl != null) {
             mediaPlayer.setMediaItems(listOf(MediaItem.fromUri(Uri.parse(trailerUrl))))
+        } else {
+            videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
+                if (it.titleFileUri.size == 1) {
+                    mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
+                } else if (it.titleFileUri.size > 1) {
+                    mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
+                }
+
+                if (it.titleSubUri[0] == "0") {
+                    subtitleFunctions(false)
+                } else {
+                    subtitleFunctions(true)
+                }
+            })
+
         }
         videoPlayerViewModel.initPlayer(isTvShow, watchedTime, chosenEpisode)
     }
