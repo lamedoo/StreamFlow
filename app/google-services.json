@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "700559852856",
+    "project_id": "streamflowapp",
+    "storage_bucket": "streamflowapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700559852856:android:e387ec3aeede1b02706dcd",
+        "android_client_info": {
+          "package_name": "com.lukakordzaia.streamflow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700559852856-68iooe5pueka6q1k3oejuc46h4fh9dai.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lukakordzaia.streamflow",
+            "certificate_hash": "399ddb73db4d72940c148b022a388b90ff870667"
+          }
+        },
+        {
+          "client_id": "700559852856-suob7pjchrh4hl697po2l625e9p1pg21.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDETDcRFsu6WZH2aQvxaZ9Xj-sMa1o3pro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700559852856-suob7pjchrh4hl697po2l625e9p1pg21.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,12 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
-import com.lukakordzaia.streamflow.datamodels.*
+import com.lukakordzaia.streamflow.datamodels.TraktGetToken
+import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
+import com.lukakordzaia.streamflow.datamodels.TraktvDeviceCode
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.TraktRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -27,12 +28,6 @@ class ProfileViewModel(private val repository: TraktRepository) : BaseViewModel(
 
     private val _traktUserToken = MutableLiveData<TraktGetToken>()
     val traktUserToken: LiveData<TraktGetToken> = _traktUserToken
-
-    private val _traktSfListExists = MutableLiveData<Boolean>()
-    val traktSfListExists: LiveData<Boolean> = _traktSfListExists
-
-    private val _traktUserProfile = MutableLiveData<TraktUserProfile>()
-    val traktUserProfile: LiveData<TraktUserProfile> = _traktUserProfile
 
     fun getDeviceCode() {
         viewModelScope.launch {
@@ -53,9 +48,6 @@ class ProfileViewModel(private val repository: TraktRepository) : BaseViewModel(
                     val data = token.data
 
                     _traktUserToken.value = data
-
-                    getSfList("Bearer ${data.accessToken}")
-                    getUserProfile("Bearer ${data.accessToken}")
                 }
                 is Result.Error -> {
                     when (token.exception) {
@@ -75,43 +67,7 @@ class ProfileViewModel(private val repository: TraktRepository) : BaseViewModel(
         }
     }
 
-    fun createNewList(newList: TraktNewList, accessToken: String) {
-        viewModelScope.launch {
-            when (val list = repository.createNewList(newList, accessToken)) {
-                is Result.Success -> {
-                    Log.d("traktvlist", "წარმატებულია")
-                }
-            }
-        }
-    }
 
-    private fun getSfList(accessToken: String) {
-        viewModelScope.launch {
-            when (val sfList = repository.getSfList(accessToken)) {
-                is Result.Success -> {
-                    _traktSfListExists.value = true
-                    Log.d("traktvlist", sfList.data.toString())
-                }
-                is Result.Error -> {
-                    when (sfList.exception) {
-                        AppConstants.TRAKT_NOT_FOUND -> {
-                            _traktSfListExists.value = false
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun getUserProfile(accessToken: String) {
-        viewModelScope.launch {
-            when (val user = repository.getUserProfile(accessToken)) {
-                is Result.Success -> {
-                    _traktUserProfile.value = user.data
-                }
-            }
-        }
-    }
 
     fun deleteWatchedHistory(context: Context) {
         viewModelScope.launch {
