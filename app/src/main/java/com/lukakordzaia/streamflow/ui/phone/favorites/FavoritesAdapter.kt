@@ -8,6 +8,7 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.SingleTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_favorite_item.view.*
@@ -17,9 +18,9 @@ class FavoritesAdapter(
     private val onTitleClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int) -> Unit
 ) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
-    private var list: List<TitleList.Data> = ArrayList()
+    private var list: List<SingleTitleData.Data> = ArrayList()
 
-    fun setFavoritesTitleList(list: List<TitleList.Data>) {
+    fun setFavoritesTitleList(list: List<SingleTitleData.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -37,7 +38,7 @@ class FavoritesAdapter(
             onTitleClick(listModel.id)
         }
 
-        Picasso.get().load(listModel.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.favoriteTitlePosterImageView)
+        Picasso.get().load(listModel.posters.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.favoriteTitlePosterImageView)
 
         holder.favoriteTitleRemove.setOnClickListener {
             onMoreMenuClick(listModel.id)

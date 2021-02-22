@@ -20,9 +20,8 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!authSharedPreferences.getAccessToken().isNullOrBlank()) {
-            favoritesViewModel.getTraktListByMovies("Bearer ${authSharedPreferences.getAccessToken()}")
-            favoritesViewModel.getTraktListByTvShows("Bearer ${authSharedPreferences.getAccessToken()}")
+        if (auth.currentUser != null) {
+            favoritesViewModel.getFavTitlesFromFirestore()
         } else {
             favorite_movies_container.setGone()
             favorite_tvshows_container.setGone()
@@ -52,7 +51,7 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
                     val clearDbDialog = Dialog(requireContext())
                     clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
                     clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                        favoritesViewModel.getSingleTitleImdb(titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+                        favoritesViewModel.removeTitleFromFirestore(titleId)
                         clearDbDialog.dismiss()
                     }
                     clearDbDialog.clear_db_alert_no.setOnClickListener {
@@ -64,9 +63,10 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
         rv_favorites_movies.adapter = favoritesMoviesAdapter
 
 
-        favoritesViewModel.movieSearchResult.observe(viewLifecycleOwner, {
+        favoritesViewModel.movieResult.observe(viewLifecycleOwner, {
             favoritesMoviesAdapter.setFavoritesTitleList(it)
         })
+
 
 
         // Favorite TV Shows
@@ -92,7 +92,7 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
                     val clearDbDialog = Dialog(requireContext())
                     clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
                     clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                        favoritesViewModel.getSingleTitleImdb(titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+                        favoritesViewModel.removeTitleFromFirestore(titleId)
                         clearDbDialog.dismiss()
                     }
                     clearDbDialog.clear_db_alert_no.setOnClickListener {
@@ -103,7 +103,7 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
         rv_favorites_tvshows.layoutManager = tvShowsLayout
         rv_favorites_tvshows.adapter = favoriteTvShowsAdapter
 
-        favoritesViewModel.tvShowSearchResult.observe(viewLifecycleOwner, {
+        favoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
             favoriteTvShowsAdapter.setFavoritesTitleList(it)
         })
 
