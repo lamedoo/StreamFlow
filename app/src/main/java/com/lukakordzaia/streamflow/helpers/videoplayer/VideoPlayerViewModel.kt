@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInit
@@ -48,8 +47,8 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
             this.isTvShow.value = isTvShow
         }
         playBackOptions.value = VideoPlayerInit(
-            if (isTvShow) chosenEpisode-1 else 0,
-            watchTime
+                if (isTvShow) chosenEpisode - 1 else 0,
+                watchTime
         )
     }
 
@@ -60,20 +59,24 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     }
 
     fun saveTitleToDb(context: Context, titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
-        val database = ImoviesDatabase.getDatabase(context)?.getDao()
-        viewModelScope.launch {
-            if (playbackPositionForDb.value!! > 0) {
-                database?.insertWatchedTitle(
-                    DbDetails(
-                        titleId,
-                        chosenLanguage,
-                        playbackPositionForDb.value!!,
-                        titleDurationForDb.value!!,
-                        isTvShow,
-                        seasonForDb.value!!,
-                        episodeForDb.value!! + 1
-                    )
-                )
+        val dbDetails = DbDetails(
+                titleId,
+                chosenLanguage,
+                playbackPositionForDb.value!!,
+                titleDurationForDb.value!!,
+                isTvShow,
+                seasonForDb.value!!,
+                episodeForDb.value!! + 1
+        )
+        if (playbackPositionForDb.value!! > 0) {
+            if (currentUser() != null) {
+                viewModelScope.launch {
+                    repository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, dbDetails)
+                }
+            } else {
+                viewModelScope.launch {
+                    roomDb(context)?.insertWatchedTitle(dbDetails)
+                }
             }
         }
     }
@@ -101,15 +104,15 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     }
 
                     if (getSeasonEpisodes.size < season.size) {
-                        newToastMessage("${getSeasonEpisodes.size+1} ეპიზოდიდან ავტომატურად გადაირთვება ინგლისურ ენაზე")
+                        newToastMessage("${getSeasonEpisodes.size + 1} ეპიზოდიდან ავტომატურად გადაირთვება ინგლისურ ენაზე")
                         val restOfSeason = season.subList(getSeasonEpisodes.size, season.size)
-                        restOfSeason.forEach {singleEpisode ->
+                        restOfSeason.forEach { singleEpisode ->
                             singleEpisode.files.forEach { singleEpisodeFiles ->
                                 checkAvailability(singleEpisodeFiles, "ENG")
                             }
                         }
                     }
-                    
+
                     getSeasonEpisodes.forEach {
                         val items = MediaItem.fromUri(Uri.parse(it))
                         seasonEpisodesIntoUri.add(items)
@@ -129,7 +132,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     private fun checkAvailability(singleEpisodeFiles: TitleFiles.Data.File, chosenLanguage: String) {
         if (singleEpisodeFiles.lang == chosenLanguage) {
             if (singleEpisodeFiles.files.size == 1) {
-                    getSeasonEpisodes.add(singleEpisodeFiles.files[0].src)
+                getSeasonEpisodes.add(singleEpisodeFiles.files[0].src)
             } else if (singleEpisodeFiles.files.size > 1) {
                 singleEpisodeFiles.files.forEach {
                     if (it.quality == "HIGH") {

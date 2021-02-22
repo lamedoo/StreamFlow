@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.baseclasses
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,8 @@ import androidx.navigation.NavDirections
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.lukakordzaia.streamflow.database.ImoviesDatabase
+import com.lukakordzaia.streamflow.database.WatchedDao
 import com.lukakordzaia.streamflow.utils.Event
 
 abstract class BaseViewModel : ViewModel() {
@@ -34,5 +37,9 @@ abstract class BaseViewModel : ViewModel() {
 
     fun currentUser(): FirebaseUser? {
         return Firebase.auth.currentUser
+    }
+
+    fun roomDb(context: Context): WatchedDao? {
+        return ImoviesDatabase.getDatabase(context)?.getDao()
     }
 }

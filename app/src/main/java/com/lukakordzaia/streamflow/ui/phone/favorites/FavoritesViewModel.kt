@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.ui.phone.favorites
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.*
+import com.lukakordzaia.streamflow.datamodels.SingleTitleData
 import com.lukakordzaia.streamflow.network.FirebaseCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
@@ -11,7 +11,6 @@ import com.lukakordzaia.streamflow.repository.FavoritesRepository
 import com.lukakordzaia.streamflow.repository.TraktRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
-import kotlin.collections.ArrayList
 
 class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, private val traktRepository: TraktRepository) : BaseViewModel() {
 
@@ -32,6 +31,24 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(FavoritesFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
     }
+
+//    fun getFavMoviesFromFirestore() {
+//        viewModelScope.launch {
+//            val data = favoritesRepository.getFavMoviesFromFirestore(currentUser()!!.uid)
+//
+//            if (data != null) {
+//                for (title in data.documents) {
+//                    if (title.data!!["isTvShow"] == true) {
+//                        tvShows.add(title.data["id"].toString().toInt())
+//                    } else {
+//                        movies.add(title.data["id"].toString().toInt())
+//                    }
+//                }
+//            }
+//
+//            Log.d("moviesfirebase", data!!.documents[0].data!!["id"].toString())
+//        }
+//    }
 
 
     fun getFavTitlesFromFirestore() {

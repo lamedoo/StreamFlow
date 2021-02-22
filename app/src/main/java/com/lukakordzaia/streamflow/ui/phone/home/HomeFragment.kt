@@ -10,12 +10,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
@@ -23,7 +22,7 @@ import kotlinx.android.synthetic.main.phone_home_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class HomeFragment : Fragment(R.layout.phone_home_framgent) {
+class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
     private val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var homeDbTitlesAdapter: HomeDbTitlesAdapter
@@ -119,36 +118,33 @@ class HomeFragment : Fragment(R.layout.phone_home_framgent) {
         rv_main_watched_titles.layoutManager = dbLayout
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            viewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
+            if (auth.currentUser != null) {
                 viewModel.clearWatchedTitleList()
-                if (!it.isNullOrEmpty()) {
-                    main_watched_titles_none.setGone()
-                    val newMoviesTitleConstraint = main_new_movies_title.layoutParams as ConstraintLayout.LayoutParams
-                    newMoviesTitleConstraint.topToBottom = rv_main_watched_titles.id
-                    main_new_movies_title.requestLayout()
+                viewModel.getContinueWatchingFromFirestore()
+            } else {
+                viewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
+                    viewModel.clearWatchedTitleList()
+                    if (!it.isNullOrEmpty()) {
+                        main_watched_titles_none.setGone()
 
-                    val newMoviesMoreConstraint = new_movies_more.layoutParams as ConstraintLayout.LayoutParams
-                    newMoviesMoreConstraint.topToBottom = rv_main_watched_titles.id
-                    new_movies_more.requestLayout()
-
-                    viewModel.getDbTitlesFromApi(it)
-                } else {
-                    main_watched_titles_none.setVisible()
-
-                    val newMoviesTitleConstraint = main_new_movies_title.layoutParams as ConstraintLayout.LayoutParams
-                    newMoviesTitleConstraint.topToBottom = main_watched_titles_none.id
-                    main_new_movies_title.requestLayout()
-
-                    val newMoviesMoreConstraint = new_movies_more.layoutParams as ConstraintLayout.LayoutParams
-                    newMoviesMoreConstraint.topToBottom = main_watched_titles_none.id
-                    new_movies_more.requestLayout()
-                }
-                viewModel.getDbTitles(requireContext()).removeObservers(viewLifecycleOwner)
-            })
+                        viewModel.getDbTitlesFromApi(it)
+                    } else {
+                        main_watched_titles_none.setVisible()
+                    }
+                    viewModel.getDbTitles(requireContext()).removeObservers(viewLifecycleOwner)
+                })
+            }
         }
 
         viewModel.dbList.observe(viewLifecycleOwner, {
-            homeDbTitlesAdapter.setWatchedTitlesList(it)
+            if (it.isNullOrEmpty()) {
+                main_watched_titles_none.setVisible()
+                rv_main_watched_titles.setGone()
+            } else {
+                main_watched_titles_none.setGone()
+                rv_main_watched_titles.setVisible()
+                homeDbTitlesAdapter.setWatchedTitlesList(it)
+            }
         })
 
 

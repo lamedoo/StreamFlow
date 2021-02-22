@@ -44,6 +44,8 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 super.onPlaybackStateChanged(state)
                 if ((player.currentWindowIndex + 1) == player.mediaItemCount) {
                     if (state == Player.STATE_READY) {
+
+
                         playerView.keepScreenOn = true
                         videoPlayerViewModel.isTvShow.observe(viewLifecycleOwner, {
                             if (it) {

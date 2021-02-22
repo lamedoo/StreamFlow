@@ -1,7 +1,6 @@
 package com.lukakordzaia.streamflow.repository
 
 import androidx.lifecycle.LiveData
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -12,7 +11,6 @@ import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): ImoviesCall() {
     private val service = retrofitBuilder.buildImoviesService()
@@ -91,6 +89,31 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
             data
         } catch (e: Exception) {
             null
+        }
+    }
+
+    suspend fun addContinueWatchingTitleToFirestore(currentUserUid: String, dbDetails: DbDetails): Boolean {
+        return try {
+            Firebase.firestore
+                    .collection("users")
+                    .document(currentUserUid)
+                    .collection("continueWatching")
+                    .document(dbDetails.titleId.toString())
+                    .set(
+                            mapOf(
+                                    "id" to dbDetails.titleId,
+                                    "language" to dbDetails.language,
+                                    "isTvShow" to dbDetails.isTvShow,
+                                    "continueFrom" to dbDetails.watchedDuration,
+                                    "titleDuration" to dbDetails.titleDuration,
+                                    "season" to dbDetails.season,
+                                    "episode" to dbDetails.episode
+                            )
+                    )
+                    .await()
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 }

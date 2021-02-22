@@ -123,6 +123,13 @@
                 app:spanCount="2"
                 tools:visibility="gone" />
 
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/main_continue_watching_barrier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="main_watched_titles_none, rv_main_watched_titles"/>
+
             <TextView
                 android:id="@+id/main_new_movies_title"
                 android:layout_width="wrap_content"
@@ -132,7 +139,7 @@
                 android:text="ახალი დამატებული"
                 android:textColor="@color/general_text_color"
                 android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/main_watched_titles_none"
+                app:layout_constraintTop_toBottomOf="@id/main_continue_watching_barrier"
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <ImageView
@@ -142,7 +149,7 @@
                 android:layout_marginTop="20dp"
                 android:src="@drawable/ic_arrow_right"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_watched_titles_none"/>
+                app:layout_constraintTop_toBottomOf="@id/main_continue_watching_barrier"/>
 
             <View
                 android:layout_width="80dp"

@@ -2,6 +2,7 @@ package com.lukakordzaia.streamflow.repository
 
 import android.content.ContentValues
 import android.util.Log
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.datamodels.SingleTitleData
@@ -11,7 +12,6 @@ import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 class FavoritesRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
     private val service = retrofitBuilder.buildImoviesService()
@@ -47,6 +47,20 @@ class FavoritesRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
             } else {
                 Log.d(ContentValues.TAG, "Current data: null")
             }
+        }
+    }
+
+    suspend fun getFavMoviesFromFirestore(currentUserUid: String) : QuerySnapshot? {
+        return try {
+            val data = Firebase.firestore
+                    .collection("users")
+                    .document(currentUserUid)
+                    .collection("favMovies")
+                    .get()
+                    .await()
+            data
+        } catch (e: Exception) {
+            null
         }
     }
 

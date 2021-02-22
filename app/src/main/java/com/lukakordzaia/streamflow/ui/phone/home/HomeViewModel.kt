@@ -48,6 +48,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     val dbList: LiveData<List<DbTitleData>> = _dbList
 
     private val dbTitles: MutableList<DbTitleData> = mutableListOf()
+    private val continueWatchingTitlesFirestore: MutableList<DbDetails> = mutableListOf()
 
     fun onSingleTitlePressed(start: Int, titleId: Int) {
         when (start) {
@@ -91,6 +92,29 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         )
     }
 
+    fun getContinueWatchingFromFirestore() {
+        viewModelScope.launch {
+            val data = repository.getContinueWatchingFromFirestore(currentUser()!!.uid)
+
+            if (data != null) {
+                for (title in data.documents) {
+                    continueWatchingTitlesFirestore.add(
+                            DbDetails(
+                                    title.data!!["id"].toString().toInt(),
+                                    title.data!!["language"].toString(),
+                                    title.data!!["continueFrom"] as Long,
+                                    title.data!!["titleDuration"] as Long,
+                                    title.data!!["isTvShow"] as Boolean,
+                                    title.data!!["season"].toString().toInt(),
+                                    title.data!!["episode"].toString().toInt()
+                            )
+                    )
+                }
+                getDbTitlesFromApi(continueWatchingTitlesFirestore)
+            }
+        }
+    }
+
     fun getDbTitles(context: Context): LiveData<List<DbDetails>> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         return repository.getDbTitles(database!!)
@@ -104,6 +128,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     }
 
     fun clearWatchedTitleList() {
+        continueWatchingTitlesFirestore.clear()
         dbTitles.clear()
         _dbList.value = mutableListOf()
     }
