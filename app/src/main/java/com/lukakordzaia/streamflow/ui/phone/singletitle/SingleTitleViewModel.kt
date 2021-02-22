@@ -167,99 +167,99 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
         }
     }
 
-    private fun checkTitleInTraktList(type: String, accessToken: String) {
-        _addToFavorites.value = false
-        traktFavoriteLoader.value = LoadingState.LOADING
-        viewModelScope.launch {
-            when (val list = traktRepo.getSfListByType(type, accessToken)) {
-                is Result.Success -> {
-                    when (type) {
-                        "movie" -> {
-                            list.data.forEach {
-                                if (imdbId.value == it.movie.ids.imdb) {
-                                    _addToFavorites.value = true
-                                }
-                            }
-                        }
-                        "show" -> {
-                            list.data.forEach {
-                                _addToFavorites.value = imdbId.value == it.show.ids.imdb
-                            }
-                        }
-                    }
-                    traktFavoriteLoader.value = LoadingState.LOADED
-                }
-            }
-        }
-    }
+//    private fun checkTitleInTraktList(type: String, accessToken: String) {
+//        _addToFavorites.value = false
+//        traktFavoriteLoader.value = LoadingState.LOADING
+//        viewModelScope.launch {
+//            when (val list = traktRepo.getSfListByType(type, accessToken)) {
+//                is Result.Success -> {
+//                    when (type) {
+//                        "movie" -> {
+//                            list.data.forEach {
+//                                if (imdbId.value == it.movie.ids.imdb) {
+//                                    _addToFavorites.value = true
+//                                }
+//                            }
+//                        }
+//                        "show" -> {
+//                            list.data.forEach {
+//                                _addToFavorites.value = imdbId.value == it.show.ids.imdb
+//                            }
+//                        }
+//                    }
+//                    traktFavoriteLoader.value = LoadingState.LOADED
+//                }
+//            }
+//        }
+//    }
+//
+//    fun addToFavorites(accessToken: String) {
+//        if (singleTitleData.value!!.isTvShow) {
+//            addTvShowToTraktList(accessToken)
+//        } else {
+//            addMovieToTraktList(accessToken)
+//        }
+//    }
+//
+//    private fun addMovieToTraktList(accessToken: String) {
+//        val movieToTraktList = AddMovieToTraktList(
+//                movies = listOf(AddMovieToTraktList.Movy(
+//                        ids = AddMovieToTraktList.Movy.Ids(
+//                                imdb = imdbId.value!!
+//                        )
+//                ))
+//        )
+//        traktFavoriteLoader.value = LoadingState.LOADING
+//        viewModelScope.launch {
+//            when (val addToList = traktRepo.addMovieToTraktList(movieToTraktList, accessToken)) {
+//                is Result.Success -> {
+//                    newToastMessage("ფილმი დაემატა ფავორიტებში")
+//                    _addToFavorites.value = true
+//                    traktFavoriteLoader.value = LoadingState.LOADED
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun addTvShowToTraktList(accessToken: String) {
+//        val tvShowToTraktList = AddTvShowToTraktList(
+//                tvShows = listOf(AddTvShowToTraktList.Showy(
+//                        ids = AddTvShowToTraktList.Showy.Ids(
+//                                imdb = imdbId.value!!
+//                        )
+//                ))
+//        )
+//        traktFavoriteLoader.value = LoadingState.LOADING
+//        viewModelScope.launch {
+//            when (val addToList = traktRepo.addTvShowToTraktList(tvShowToTraktList, accessToken)) {
+//                is Result.Success -> {
+//                    newToastMessage("სერიალი დაემატა ფავორიტებში")
+//                    _addToFavorites.value = true
+//                    traktFavoriteLoader.value = LoadingState.LOADED
+//                }
+//            }
+//        }
+//    }
 
-    fun addToFavorites(accessToken: String) {
-        if (singleTitleData.value!!.isTvShow) {
-            addTvShowToTraktList(accessToken)
-        } else {
-            addMovieToTraktList(accessToken)
-        }
-    }
-
-    private fun addMovieToTraktList(accessToken: String) {
-        val movieToTraktList = AddMovieToTraktList(
-                movies = listOf(AddMovieToTraktList.Movy(
-                        ids = AddMovieToTraktList.Movy.Ids(
-                                imdb = imdbId.value!!
-                        )
-                ))
-        )
-        traktFavoriteLoader.value = LoadingState.LOADING
-        viewModelScope.launch {
-            when (val addToList = traktRepo.addMovieToTraktList(movieToTraktList, accessToken)) {
-                is Result.Success -> {
-                    newToastMessage("ფილმი დაემატა ფავორიტებში")
-                    _addToFavorites.value = true
-                    traktFavoriteLoader.value = LoadingState.LOADED
-                }
-            }
-        }
-    }
-
-    private fun addTvShowToTraktList(accessToken: String) {
-        val tvShowToTraktList = AddTvShowToTraktList(
-                tvShows = listOf(AddTvShowToTraktList.Showy(
-                        ids = AddTvShowToTraktList.Showy.Ids(
-                                imdb = imdbId.value!!
-                        )
-                ))
-        )
-        traktFavoriteLoader.value = LoadingState.LOADING
-        viewModelScope.launch {
-            when (val addToList = traktRepo.addTvShowToTraktList(tvShowToTraktList, accessToken)) {
-                is Result.Success -> {
-                    newToastMessage("სერიალი დაემატა ფავორიტებში")
-                    _addToFavorites.value = true
-                    traktFavoriteLoader.value = LoadingState.LOADED
-                }
-            }
-        }
-    }
-
-    fun removeMovieFromTraktList(accessToken: String) {
-        val movieFromTraktList = AddMovieToTraktList(
-                movies = listOf(AddMovieToTraktList.Movy(
-                        ids = AddMovieToTraktList.Movy.Ids(
-                                imdb = imdbId.value!!
-                        )
-                ))
-        )
-        traktFavoriteLoader.value = LoadingState.LOADING
-        viewModelScope.launch {
-            when (val removeFromList = traktRepo.removeMovieFromTraktList(movieFromTraktList, accessToken)) {
-                is Result.Success -> {
-                    newToastMessage("ფილმი წაიშალა ფავორიტებიდან")
-                    _addToFavorites.value = false
-                    traktFavoriteLoader.value = LoadingState.LOADED
-                }
-            }
-        }
-    }
+//    fun removeMovieFromTraktList(accessToken: String) {
+//        val movieFromTraktList = AddMovieToTraktList(
+//                movies = listOf(AddMovieToTraktList.Movy(
+//                        ids = AddMovieToTraktList.Movy.Ids(
+//                                imdb = imdbId.value!!
+//                        )
+//                ))
+//        )
+//        traktFavoriteLoader.value = LoadingState.LOADING
+//        viewModelScope.launch {
+//            when (val removeFromList = traktRepo.removeMovieFromTraktList(movieFromTraktList, accessToken)) {
+//                is Result.Success -> {
+//                    newToastMessage("ფილმი წაიშალა ფავორიტებიდან")
+//                    _addToFavorites.value = false
+//                    traktFavoriteLoader.value = LoadingState.LOADED
+//                }
+//            }
+//        }
+//    }
 
     fun addTitleToFirestore() {
         if (currentUser() != null) {

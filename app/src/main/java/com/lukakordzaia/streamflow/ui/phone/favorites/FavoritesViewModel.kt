@@ -104,23 +104,23 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
     }
 
 
-    private fun removeMovieFromTraktList(movieFromTraktList: AddMovieToTraktList, accessToken: String) {
-        viewModelScope.launch {
-            when (val removeMovie = traktRepository.removeMovieFromTraktList(movieFromTraktList, accessToken)) {
-                is Result.Success -> {
-                    newToastMessage("ფილმი წაიშალა ფავორიტებიდან")
-                }
-            }
-        }
-    }
-
-    private fun removeTvShowFromTraktList(tvShowFromTraktList: AddTvShowToTraktList, accessToken: String) {
-        viewModelScope.launch {
-            when (val removeTvShow = traktRepository.removeTvShowFromTraktList(tvShowFromTraktList, accessToken)) {
-                is Result.Success -> {
-                    newToastMessage("სერიალი წაიშალა ფავორიტებიდან")
-                }
-            }
-        }
-    }
+//    private fun removeMovieFromTraktList(movieFromTraktList: AddMovieToTraktList, accessToken: String) {
+//        viewModelScope.launch {
+//            when (val removeMovie = traktRepository.removeMovieFromTraktList(movieFromTraktList, accessToken)) {
+//                is Result.Success -> {
+//                    newToastMessage("ფილმი წაიშალა ფავორიტებიდან")
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun removeTvShowFromTraktList(tvShowFromTraktList: AddTvShowToTraktList, accessToken: String) {
+//        viewModelScope.launch {
+//            when (val removeTvShow = traktRepository.removeTvShowFromTraktList(tvShowFromTraktList, accessToken)) {
+//                is Result.Success -> {
+//                    newToastMessage("სერიალი წაიშალა ფავორიტებიდან")
+//                }
+//            }
+//        }
+//    }
 }
