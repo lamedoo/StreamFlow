@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -79,13 +80,13 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
                         is Result.Success -> {
                             val data = titleData.data.data
                             _singleTitleData.value = data
-                            _imdbId.value = data.imdbUrl!!.substring(27, data.imdbUrl.length)
+                            _imdbId.value = data.imdbUrl.substring(27, data.imdbUrl.length)
 
-                            if (data.isTvShow) {
-                                checkTitleInTraktList("show", accessToken)
-                            } else {
-                                checkTitleInTraktList("movie", accessToken)
-                            }
+//                            if (data.isTvShow) {
+//                                checkTitleInTraktList("show", accessToken)
+//                            } else {
+//                                checkTitleInTraktList("movie", accessToken)
+//                            }
 
                             if (data.seasons != null) {
                                 if (data.seasons.data.isNotEmpty()) {
@@ -166,7 +167,7 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
         }
     }
 
-    fun checkTitleInTraktList(type: String, accessToken: String) {
+    private fun checkTitleInTraktList(type: String, accessToken: String) {
         _addToFavorites.value = false
         traktFavoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
@@ -259,4 +260,68 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
             }
         }
     }
+
+    fun addTitleToFirestore() {
+        if (currentUser() != null) {
+            traktFavoriteLoader.value = LoadingState.LOADING
+            viewModelScope.launch {
+                val addToFavorites = repository.addFavTitleToFirestore(currentUser()!!.uid, AddTitleToFirestore(
+                    singleTitleData.value!!.secondaryName,
+                    singleTitleData.value!!.isTvShow,
+                    singleTitleData.value!!.id,
+                    imdbId.value!!
+                ))
+                if (addToFavorites) {
+                    newToastMessage("ფილმი დაემატა ფავორიტებში")
+                    _addToFavorites.value = true
+                    traktFavoriteLoader.value = LoadingState.LOADED
+                } else {
+                    newToastMessage("სამწუხაროდ ვერ მოხერხდა ფავორიტებში დამატება")
+                    _addToFavorites.value = false
+                    traktFavoriteLoader.value = LoadingState.LOADED
+                }
+            }
+        } else {
+            newToastMessage("ფავორიტებში დასამატებლად, გაიარეთ ავტორიზაცია")
+        }
+    }
+
+    fun removeTitleFromFirestore(titleId: Int) {
+        traktFavoriteLoader.value = LoadingState.LOADING
+        viewModelScope.launch {
+            val removeFromFavorites = repository.removeFavTitleFromFirestore(currentUser()!!.uid, titleId)
+            if (removeFromFavorites) {
+                _addToFavorites.value = false
+                traktFavoriteLoader.value = LoadingState.LOADED
+                newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
+            } else {
+                _addToFavorites.value = true
+                traktFavoriteLoader.value = LoadingState.LOADED
+            }
+        }
+    }
+
+    fun checkTitleInFirestore(titleId: Int) {
+        if (currentUser() != null) {
+            traktFavoriteLoader.value = LoadingState.LOADING
+            viewModelScope.launch {
+                val checkTitle = repository.checkTitleInFirestore(currentUser()!!.uid, titleId)
+                _addToFavorites.value = checkTitle!!.data != null
+                traktFavoriteLoader.value = LoadingState.LOADED
+            }
+        } else {
+            _addToFavorites.value = false
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+

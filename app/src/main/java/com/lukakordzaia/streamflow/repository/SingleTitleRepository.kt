@@ -1,15 +1,18 @@
 package com.lukakordzaia.streamflow.repository
 
 import androidx.lifecycle.LiveData
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.WatchedDao
-import com.lukakordzaia.streamflow.datamodels.TitleCast
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
-import com.lukakordzaia.streamflow.datamodels.TitleFiles
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): ImoviesCall() {
     private val service = retrofitBuilder.buildImoviesService()
@@ -38,7 +41,56 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
         return imoviesCall { service.getSingleTitleRelated(titleId) }
     }
 
-    suspend fun deleteTitleFromDb(watchedDao: WatchedDao, titleId: Int) {
-        watchedDao.deleteSingleTitle(titleId)
+    suspend fun addFavTitleToFirestore(currentUserUid: String, addTitleToFirestore: AddTitleToFirestore): Boolean {
+        return try {
+            Firebase.firestore
+                .collection("users")
+                .document(currentUserUid)
+                .collection("favMovies")
+                .document(addTitleToFirestore.id.toString())
+                .set(
+                    mapOf(
+                        "name" to addTitleToFirestore.name,
+                        "isTvShow" to addTitleToFirestore.isTvShow,
+                        "id" to addTitleToFirestore.id,
+                        "imdbId" to addTitleToFirestore.imdbId
+                    )
+                )
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun removeFavTitleFromFirestore(currentUserUid: String, titleId: Int): Boolean {
+        return try {
+            Firebase.firestore
+                .collection("users")
+                .document(currentUserUid)
+                .collection("favMovies")
+                .document(titleId.toString())
+                .delete()
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun checkTitleInFirestore(currentUserUid: String, titleId: Int) : DocumentSnapshot? {
+        return try {
+            val data = Firebase.firestore
+                .collection("users")
+                .document(currentUserUid)
+                .collection("favMovies")
+                .document(titleId.toString())
+                .get()
+                .await()
+
+            data
+        } catch (e: Exception) {
+            null
+        }
     }
 }

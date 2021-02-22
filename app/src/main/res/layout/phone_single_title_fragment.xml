@@ -102,7 +102,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:indeterminateTint="@color/accent_color"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         tools:visibility="gone"/>
 
                     <ImageView
@@ -111,7 +111,7 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/title_favorite_icon_full"
                         app:tint="@color/general_text_color"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         tools:visibility="visible"/>
 
                 </LinearLayout>

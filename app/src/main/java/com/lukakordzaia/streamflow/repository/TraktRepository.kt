@@ -1,10 +1,17 @@
 package com.lukakordzaia.streamflow.repository
 
+import android.util.Log
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.traktv.TraktvCall
 import com.lukakordzaia.streamflow.utils.AppConstants
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class TraktRepository(retrofitBuilder: RetrofitBuilder): TraktvCall() {
     private val service = retrofitBuilder.buildTraktvService()
@@ -47,5 +54,20 @@ class TraktRepository(retrofitBuilder: RetrofitBuilder): TraktvCall() {
 
     suspend fun removeTvShowFromTraktList(tvShowToTraktList: AddTvShowToTraktList, accessToken: String): Result<RemoveFromTraktListResponse> {
         return traktvCall { service.removeTvShowFromList(tvShowToTraktList, accessToken) }
+    }
+
+    suspend fun createUserFirestore(user: FirebaseUser?): Boolean {
+        return try {
+            val db = Firebase.firestore
+
+            db.collection("users").document(user!!.uid).set(
+                mapOf(
+                    "email" to user.email!!
+                )
+            ).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }

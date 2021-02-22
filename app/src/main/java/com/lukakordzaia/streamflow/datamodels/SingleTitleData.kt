@@ -33,7 +33,7 @@ data class SingleTitleData(
         @SerializedName("id")
         val id: Int,
         @SerializedName("imdbUrl")
-        val imdbUrl: String?,
+        val imdbUrl: String,
         @SerializedName("income")
         val income: String?,
         @SerializedName("isTvShow")
@@ -65,7 +65,7 @@ data class SingleTitleData(
         @SerializedName("seasons")
         val seasons: Seasons?,
         @SerializedName("secondaryName")
-        val secondaryName: String?,
+        val secondaryName: String,
         @SerializedName("studios")
         val studios: Studios?,
         @SerializedName("tertiaryName")

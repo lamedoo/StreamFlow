@@ -35,6 +35,7 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        singleTitleViewModel.checkTitleInFirestore(args.titleId)
 
         singleTitleViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
@@ -80,16 +81,12 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
             if (it) {
                 single_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
                 single_title_favorite.setOnClickListener {
-                    singleTitleViewModel.removeMovieFromTraktList("Bearer ${authSharedPreferences.getAccessToken()}")
+                    singleTitleViewModel.removeTitleFromFirestore(args.titleId)
                 }
             } else {
                 single_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
                 single_title_favorite.setOnClickListener {
-                    if (!authSharedPreferences.getAccessToken().isNullOrBlank()) {
-                        singleTitleViewModel.addToFavorites("Bearer ${authSharedPreferences.getAccessToken()}")
-                    } else {
-                        requireContext().createToast("ფავორიტების დასამატებლად, გთხaოვთ გაიაროთ ავტორიზაცია", Toast.LENGTH_LONG)
-                    }
+                    singleTitleViewModel.addTitleToFirestore()
                 }
             }
         })
