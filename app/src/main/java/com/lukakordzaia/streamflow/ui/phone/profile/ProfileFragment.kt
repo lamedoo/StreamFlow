@@ -22,14 +22,12 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TraktNewList
 import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
-import com.lukakordzaia.streamflow.utils.AppConstants
-import com.lukakordzaia.streamflow.utils.createToast
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.connect_traktv_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_profile_framgent.*
+import kotlinx.android.synthetic.main.sync_continue_watching_alert_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -74,15 +72,9 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
 
         profile_delete_history.setOnClickListener {
             val clearDbDialog = Dialog(requireContext())
-            clearDbDialog.setContentView(
-                layoutInflater.inflate(
-                    R.layout.clear_db_alert_dialog,
-                    null
-                )
-            )
+            clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog,null))
             clearDbDialog.clear_db_alert_yes.setOnClickListener {
                 profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
-                profileViewModel.onDeletePressedPhone(requireContext())
             }
             clearDbDialog.clear_db_alert_no.setOnClickListener {
                 clearDbDialog.dismiss()
@@ -169,6 +161,10 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
             }
         })
 
+        profileViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
+        })
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -196,6 +192,8 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
                     updateGoogleUI(user)
                     Snackbar.make(profile_root,"წარმატებით გაიარეთ ავტორიზაცია", Snackbar.LENGTH_SHORT).show()
                     profileViewModel.createUserFirestore()
+
+                    showSyncDialog()
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     Snackbar.make(profile_root, "ავტორიზაცია ვერ მოხერხდა", Snackbar.LENGTH_SHORT)
@@ -203,6 +201,23 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
                     updateGoogleUI(null)
                 }
             }
+    }
+
+    private fun showSyncDialog() {
+        profileViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
+            if (!it.isNullOrEmpty()) {
+                val syncDialog = Dialog(requireContext())
+                syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog,null))
+                syncDialog.sync_continue_watching_alert_yes.setOnClickListener { _ ->
+                    profileViewModel.addContinueWatchingToFirestore(requireContext(), it)
+                    syncDialog.dismiss()
+                }
+                syncDialog.sync_continue_watching_alert_no.setOnClickListener {
+                    syncDialog.dismiss()
+                }
+                syncDialog.show()
+            }
+        })
     }
 
     override fun onStart() {
@@ -225,10 +240,10 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
 
     private fun updateGoogleUI(user: FirebaseUser?) {
         if (user != null) {
+            profile_photo.setVisible()
 
             if (googleAccount != null) {
                 profile_username.text = "${googleAccount!!.givenName} ${googleAccount!!.familyName}"
-                profile_photo.setVisible()
                 Picasso.get().load(googleAccount!!.photoUrl).into(profile_photo)
             }
 

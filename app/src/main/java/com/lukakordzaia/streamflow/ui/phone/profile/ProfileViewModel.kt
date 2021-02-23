@@ -8,16 +8,20 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.*
+import com.lukakordzaia.streamflow.database.DbDetails
+import com.lukakordzaia.streamflow.datamodels.TraktGetToken
+import com.lukakordzaia.streamflow.datamodels.TraktNewList
+import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
+import com.lukakordzaia.streamflow.datamodels.TraktvDeviceCode
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.repository.ProfileRepository
 import com.lukakordzaia.streamflow.repository.TraktRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.streamflow.ui.phone.MainActivity
 import com.lukakordzaia.streamflow.ui.tv.TvActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(private val repository: TraktRepository) : BaseViewModel() {
+class ProfileViewModel(private val profileRepository: ProfileRepository, private val repository: TraktRepository) : BaseViewModel() {
     private val _traktDeviceCode = MutableLiveData<TraktvDeviceCode>()
     val traktDeviceCode: LiveData<TraktvDeviceCode> = _traktDeviceCode
 
@@ -104,12 +108,6 @@ class ProfileViewModel(private val repository: TraktRepository) : BaseViewModel(
         }
     }
 
-    fun onDeletePressedPhone(context: Context) {
-        val intent = Intent(context, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-    }
-
     fun onDeletePressedTv(context: Context) {
         val intent = Intent(context, TvActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -119,6 +117,24 @@ class ProfileViewModel(private val repository: TraktRepository) : BaseViewModel(
     fun createUserFirestore() {
         viewModelScope.launch {
             repository.createUserFirestore(currentUser())
+        }
+    }
+
+    fun getContinueWatchingFromRoom(context: Context): LiveData<List<DbDetails>> {
+        return profileRepository.getContinueWatchingFromRoom(roomDb(context)!!)
+    }
+
+    fun addContinueWatchingToFirestore(context: Context, dbDetailsList: List<DbDetails>) {
+        viewModelScope.launch {
+            dbDetailsList.forEach {
+                val addToFirestore = profileRepository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, it)
+                if (addToFirestore) {
+                    newToastMessage("სინქრონიზაცია წარმატებით დასრულდა")
+                    deleteContinueWatchingFromRoomFull(context)
+                } else {
+                    newToastMessage("სამწუხაროდ, ვერ მოხერხდა სინქრონიზაცია")
+                }
+            }
         }
     }
 }

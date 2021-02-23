@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/sync_continue_watching_alert_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/sync_continue_watching_alert_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="გსურთ მოწყობილობის 'განაგრძეთ ყურების' სინქრონიზაცია თქვენს ანგარიშთან?"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:padding="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/sync_continue_watching_alert_icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/sync_continue_watching_icon"
+        app:layout_constraintTop_toBottomOf="@id/sync_continue_watching_alert_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/sync_continue_watching_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="*სინქრონიზაციის შემდეგ, მოწოყობილობის ისტორია წაიშლება"
+        android:textColor="@color/red"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/sync_continue_watching_alert_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/sync_continue_watching_alert_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="არა"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@id/sync_continue_watching_warning"
+        app:layout_constraintEnd_toStartOf="@id/sync_continue_watching_alert_yes"/>
+
+    <TextView
+        android:id="@+id/sync_continue_watching_alert_yes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="დიახ"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@id/sync_continue_watching_warning"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

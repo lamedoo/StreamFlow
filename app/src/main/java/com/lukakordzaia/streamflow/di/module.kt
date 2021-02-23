@@ -31,7 +31,7 @@ val viewModelModule = module {
     viewModel { TvDetailsViewModel(get()) }
     viewModel { TvCategoriesViewModel(get()) }
     viewModel { ChooseTitleDetailsViewModel(get()) }
-    viewModel { ProfileViewModel(get()) }
+    viewModel { ProfileViewModel(get(), get()) }
     viewModel { TvTitleFilesViewModel(get()) }
     viewModel { FavoritesViewModel(get(), get()) }
 }
@@ -44,6 +44,7 @@ val repositoryModule = module {
     single { TvDetailsRepository(get()) }
     single { TraktRepository(get()) }
     single { FavoritesRepository(get()) }
+    single { ProfileRepository() }
 }
 
 val generalModule = module {

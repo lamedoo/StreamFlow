@@ -13,7 +13,7 @@ import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 import kotlinx.coroutines.tasks.await
 
-class HomeRepository(private val retrofitBuilder: RetrofitBuilder): ImoviesCall() {
+class HomeRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
     private val service = retrofitBuilder.buildImoviesService()
 
     suspend fun getMovieDay(): Result<TitleList> {
