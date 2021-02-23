@@ -1,16 +1,20 @@
 package com.lukakordzaia.streamflow.ui.baseclasses
 
 import android.content.pm.ActivityInfo
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.text.CaptionStyleCompat
+import com.google.android.exoplayer2.text.CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
@@ -23,6 +27,7 @@ import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     protected val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
@@ -158,6 +163,26 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         player.addTextOutput {
             subtitle?.onCues(it)
             tv_subtitle?.onCues(it)
+
+            subtitle?.setStyle(CaptionStyleCompat(
+                    ContextCompat.getColor(requireContext(), R.color.white),
+                    ContextCompat.getColor(requireContext(), R.color.transparent),
+                    ContextCompat.getColor(requireContext(), R.color.transparent),
+                    EDGE_TYPE_DROP_SHADOW,
+                    ContextCompat.getColor(requireContext(), R.color.black),
+                    Typeface.DEFAULT_BOLD,
+            ))
+            subtitle?.setFixedTextSize(2, 25F)
+
+            tv_subtitle?.setStyle(CaptionStyleCompat(
+                    ContextCompat.getColor(requireContext(), R.color.white),
+                    ContextCompat.getColor(requireContext(), R.color.transparent),
+                    ContextCompat.getColor(requireContext(), R.color.transparent),
+                    EDGE_TYPE_DROP_SHADOW,
+                    ContextCompat.getColor(requireContext(), R.color.black),
+                    Typeface.DEFAULT_BOLD,
+            ))
+            tv_subtitle?.setFixedTextSize(2, 25F)
         }
 
         if (hasSubs) {
