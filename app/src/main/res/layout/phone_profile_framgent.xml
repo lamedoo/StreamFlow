@@ -13,7 +13,7 @@
         android:id="@+id/profile_photo"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/friends_poster"
+        android:src="@drawable/no_profile_picture"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/profile_username"
         app:layout_constraintHorizontal_bias="0.5"

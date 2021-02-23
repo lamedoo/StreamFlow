@@ -37,7 +37,7 @@ class SingleTitleCastAdapter(private val context: Context, private val onCastCli
         if (listModel.poster.isNotEmpty()) {
             Picasso.get().load(listModel.poster).into(holder.castPosterImageView)
         } else {
-            Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.castPosterImageView)
+            Picasso.get().load(R.drawable.no_profile_picture).into(holder.castPosterImageView)
         }
 
         if (listModel.primaryName.isNotEmpty()) {
