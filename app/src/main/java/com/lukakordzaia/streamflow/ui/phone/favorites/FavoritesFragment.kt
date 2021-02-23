@@ -26,6 +26,10 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
             favorite_movies_container.setGone()
             favorite_tvshows_container.setGone()
             favorite_no_auth.setVisible()
+
+            favorite_go_to_profile.setOnClickListener {
+                favoritesViewModel.onProfileButtonPressed()
+            }
         }
 
         // Favorite Movies

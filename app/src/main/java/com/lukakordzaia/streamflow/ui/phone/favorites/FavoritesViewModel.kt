@@ -32,6 +32,10 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
         navigateToNewFragment(FavoritesFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
     }
 
+    fun onProfileButtonPressed() {
+        navigateToNewFragment(FavoritesFragmentDirections.actionFavoritesFragmentToProfileFragment())
+    }
+
     fun getFavTitlesFromFirestore() {
         fetchMovieResult.clear()
         fetchTvShowResult.clear()

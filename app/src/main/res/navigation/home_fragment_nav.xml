@@ -99,5 +99,8 @@
                 android:name="titleId"
                 app:argType="integer" />
         </action>
+        <action
+            android:id="@+id/action_favoritesFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 </navigation>
