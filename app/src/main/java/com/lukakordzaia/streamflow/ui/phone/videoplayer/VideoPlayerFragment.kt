@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.videoplayer
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -7,10 +8,8 @@ import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
 import kotlinx.android.synthetic.main.phone_fragment_video_player.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment_video_player) {
@@ -24,7 +23,10 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getPlayListFiles(args.videoPlayerData.titleId, args.videoPlayerData.chosenSeason, args.videoPlayerData.chosenLanguage)
         }
+    }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(false)
         } else {
