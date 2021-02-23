@@ -81,21 +81,6 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             }
         })
 
-//        videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
-//            Log.d("mediasubtitles", it.toString())
-//            if (it.titleFileUri.size == 1) {
-//                mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
-//            } else if (it.titleFileUri.size > 1) {
-//                mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
-//            }
-//
-//            if (it.titleSubUri[0] == "0") {
-//                subtitleFunctions(false)
-//            } else {
-//                subtitleFunctions(true)
-//            }
-//        })
-
         videoPlayerViewModel.playBackOptions.observe(viewLifecycleOwner, {
             mediaPlayer.initPlayer(playerView, it)
         })

@@ -108,6 +108,29 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
         }
     }
 
+    fun deleteContinueWatchingFromFirestoreFull() {
+        viewModelScope.launch {
+            val getTitles = profileRepository.getContinueWatchingFromFirestore(currentUser()!!.uid)
+            if (getTitles!!.documents.isNotEmpty()) {
+                for (title in getTitles.documents) {
+                    deleteContinueWatchingTitleFromFirestore(title.data!!["id"].toString().toInt())
+                }
+            } else {
+                newToastMessage("ბაზა უკვე ცარიელია")
+            }
+        }
+    }
+
+    private fun deleteContinueWatchingTitleFromFirestore(titleId: Int) {
+        viewModelScope.launch {
+            val deleteTitles = profileRepository.deleteContinueWatchingFullFromFirestore(currentUser()!!.uid, titleId)
+
+            if (deleteTitles) {
+                newToastMessage("ბაზა წარმატებით წაშლილია")
+            }
+        }
+    }
+
     fun onDeletePressedTv(context: Context) {
         val intent = Intent(context, TvActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

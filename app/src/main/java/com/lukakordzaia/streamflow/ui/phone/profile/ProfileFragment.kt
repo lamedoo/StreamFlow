@@ -74,7 +74,12 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
             val clearDbDialog = Dialog(requireContext())
             clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog,null))
             clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
+                if (auth.currentUser == null) {
+                    profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
+                } else {
+                    profileViewModel.deleteContinueWatchingFromFirestoreFull()
+                }
+                clearDbDialog.dismiss()
             }
             clearDbDialog.clear_db_alert_no.setOnClickListener {
                 clearDbDialog.dismiss()
