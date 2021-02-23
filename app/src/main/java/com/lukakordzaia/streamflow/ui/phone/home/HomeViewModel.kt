@@ -132,6 +132,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                 clearContinueWatchingTitleList()
                 getContinueWatchingFromFirestore()
             } else {
+                newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
             }
         }
     }

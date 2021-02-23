@@ -54,7 +54,6 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
         googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
         traktDialog = Dialog(requireContext())
         traktToken = authSharedPreferences.getAccessToken()
-        Log.d("trakttoken", traktToken!!)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
