@@ -19,7 +19,7 @@ class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): Imovies
     }
 
     fun checkTitleInDb(watchedDao: WatchedDao, titleId: Int): LiveData<Boolean> {
-        return watchedDao.titleExists(titleId)
+        return watchedDao.checkContinueWatchingTitleInRoom(titleId)
     }
 
     fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): LiveData<DbDetails> {
@@ -39,6 +39,6 @@ class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): Imovies
     }
 
     suspend fun deleteTitleFromDb(watchedDao: WatchedDao, titleId: Int) {
-        watchedDao.deleteSingleTitle(titleId)
+        watchedDao.deleteSingleContinueWatchingFromRoom(titleId)
     }
 }

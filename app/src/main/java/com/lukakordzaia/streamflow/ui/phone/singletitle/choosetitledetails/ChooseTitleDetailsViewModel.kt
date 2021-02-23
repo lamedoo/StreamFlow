@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -84,14 +83,14 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
                 ))
     }
 
-    fun checkTitleInDb(context: Context, titleId: Int): LiveData<Boolean> {
-        return repository.checkTitleInDb(roomDb(context)!!, titleId)
+    fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
+        return repository.checkContinueWatchingTitleInRoom(roomDb(context)!!, titleId)
     }
 
-    fun getTitleDbDetails(context: Context, titleId: Int){
+    fun getSingleContinueWatchingFromRoom(context: Context, titleId: Int){
 
         viewModelScope.launch {
-            _continueWatchingDetails.value = repository.getSingleWatchedTitles(roomDb(context)!!, titleId)
+            _continueWatchingDetails.value = repository.getSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
         }
 
     }

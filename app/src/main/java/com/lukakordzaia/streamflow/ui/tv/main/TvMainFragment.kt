@@ -70,10 +70,10 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         })
 
-        homeViewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
-            homeViewModel.clearWatchedTitleList()
+        homeViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
+            homeViewModel.clearContinueWatchingTitleList()
             if (!it.isNullOrEmpty()) {
-                homeViewModel.getDbTitlesFromApi(it)
+                homeViewModel.getContinueWatchingTitlesFromApi(it)
             }
         })
 
@@ -242,7 +242,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 activity?.startActivity(intent)
             } else if (item is TvSettingsList) {
                 if (item.settingsId == 0) {
-                    profileViewModel.deleteWatchedHistory(requireContext())
+                    profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
                     profileViewModel.onDeletePressedTv(requireContext())
                 }
             } else if (item is TvCategoriesList) {

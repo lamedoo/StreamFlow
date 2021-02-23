@@ -51,7 +51,7 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
                     val clearDbDialog = Dialog(requireContext())
                     clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
                     clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                        favoritesViewModel.removeTitleFromFirestore(titleId)
+                        favoritesViewModel.removeFavTitleFromFirestore(titleId)
                         clearDbDialog.dismiss()
                     }
                     clearDbDialog.clear_db_alert_no.setOnClickListener {
@@ -92,7 +92,7 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
                     val clearDbDialog = Dialog(requireContext())
                     clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
                     clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                        favoritesViewModel.removeTitleFromFirestore(titleId)
+                        favoritesViewModel.removeFavTitleFromFirestore(titleId)
                         clearDbDialog.dismiss()
                     }
                     clearDbDialog.clear_db_alert_no.setOnClickListener {

@@ -24,7 +24,7 @@ class FavoritesRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
         return imoviesCall { service.getSingleTitle(titleId) }
     }
 
-    fun getUserFavTitles(currentUserUid: String, firebaseCallBack: FirebaseCallBack) {
+    fun getFavTitlesFromFirestore(currentUserUid: String, firebaseCallBack: FirebaseCallBack) {
         val docRef = Firebase.firestore.collection("users").document(currentUserUid).collection("favMovies")
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -47,20 +47,6 @@ class FavoritesRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
             } else {
                 Log.d(ContentValues.TAG, "Current data: null")
             }
-        }
-    }
-
-    suspend fun getFavMoviesFromFirestore(currentUserUid: String) : QuerySnapshot? {
-        return try {
-            val data = Firebase.firestore
-                    .collection("users")
-                    .document(currentUserUid)
-                    .collection("favMovies")
-                    .get()
-                    .await()
-            data
-        } catch (e: Exception) {
-            null
         }
     }
 

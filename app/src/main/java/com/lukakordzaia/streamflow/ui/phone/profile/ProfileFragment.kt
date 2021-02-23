@@ -82,7 +82,7 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
                 )
             )
             clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                profileViewModel.deleteWatchedHistory(requireContext())
+                profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
                 profileViewModel.onDeletePressedPhone(requireContext())
             }
             clearDbDialog.clear_db_alert_no.setOnClickListener {

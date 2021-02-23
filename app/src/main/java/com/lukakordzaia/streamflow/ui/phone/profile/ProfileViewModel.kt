@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.TraktRepository
@@ -99,9 +98,9 @@ class ProfileViewModel(private val repository: TraktRepository) : BaseViewModel(
         }
     }
 
-    fun deleteWatchedHistory(context: Context) {
+    fun deleteContinueWatchingFromRoomFull(context: Context) {
         viewModelScope.launch {
-            ImoviesDatabase.getDatabase(context)?.getDao()?.deleteDBContent()
+            roomDb(context)!!.deleteContinueWatchingFullFromRoom()
         }
     }
 

@@ -9,26 +9,26 @@ import androidx.room.Query
 @Dao
 interface WatchedDao {
     @Query("SELECT * FROM dbdetails")
-    fun getDbTitles(): LiveData<List<DbDetails>>
+    fun getContinueWatchingFromRoom(): LiveData<List<DbDetails>>
 
     @Query("SELECT * FROM dbdetails WHERE titleId = :titleId")
-    suspend fun getSingleWatchedTitles(titleId: Int) : DbDetails
+    suspend fun getSingleContinueWatchingFromRoom(titleId: Int) : DbDetails
 
     @Query("SELECT * FROM dbdetails WHERE titleId = :titleId")
     fun getTvSingleWatchedTitles(titleId: Int) : LiveData<DbDetails>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWatchedTitle(dbDetails: DbDetails)
+    suspend fun insertContinueWatchingInRoom(dbDetails: DbDetails)
 
     @Query("SELECT EXISTS (SELECT 1 FROM dbdetails WHERE titleId = :titleId)")
-    fun titleExists(titleId: Int): LiveData<Boolean>
+    fun checkContinueWatchingTitleInRoom(titleId: Int): LiveData<Boolean>
 
     @Query("UPDATE dbdetails SET watchedDuration = (:watchedTime) WHERE titleId = (:titleId)")
     suspend fun updateTitleInDb(watchedTime: Long, titleId: Int)
 
     @Query("DELETE FROM dbdetails WHERE titleId = (:titleId)")
-    suspend fun deleteSingleTitle(titleId: Int)
+    suspend fun deleteSingleContinueWatchingFromRoom(titleId: Int)
 
     @Query("DELETE FROM dbdetails")
-    suspend fun deleteDBContent()
+    suspend fun deleteContinueWatchingFullFromRoom()
 }

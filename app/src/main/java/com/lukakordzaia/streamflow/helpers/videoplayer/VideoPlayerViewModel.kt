@@ -75,7 +75,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                 }
             } else {
                 viewModelScope.launch {
-                    roomDb(context)?.insertWatchedTitle(dbDetails)
+                    roomDb(context)?.insertContinueWatchingInRoom(dbDetails)
                 }
             }
         }

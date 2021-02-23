@@ -19,12 +19,12 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
         return imoviesCall { service.getSingleTitle(titleId) }
     }
 
-    fun checkTitleInDb(watchedDao: WatchedDao, titleId: Int): LiveData<Boolean> {
-        return watchedDao.titleExists(titleId)
+    fun checkContinueWatchingTitleInRoom(watchedDao: WatchedDao, titleId: Int): LiveData<Boolean> {
+        return watchedDao.checkContinueWatchingTitleInRoom(titleId)
     }
 
-    suspend fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): DbDetails {
-        return watchedDao.getSingleWatchedTitles(titleId)
+    suspend fun getSingleContinueWatchingFromRoom(watchedDao: WatchedDao, titleId: Int): DbDetails {
+        return watchedDao.getSingleContinueWatchingFromRoom(titleId)
     }
 
     suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<TitleFiles> {

@@ -37,7 +37,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
         fetchTvShowResult.clear()
         favoriteMoviesLoader.value = LoadingState.LOADING
         favoriteTvShowsLoader.value = LoadingState.LOADING
-        favoritesRepository.getUserFavTitles(currentUser()!!.uid, object : FirebaseCallBack {
+        favoritesRepository.getFavTitlesFromFirestore(currentUser()!!.uid, object : FirebaseCallBack {
             override fun moviesList(movies: MutableList<Int>) {
                 if (movies.isNullOrEmpty()) {
                     favoriteMoviesLoader.value = LoadingState.LOADED
@@ -85,7 +85,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
         })
     }
 
-    fun removeTitleFromFirestore(titleId: Int) {
+    fun removeFavTitleFromFirestore(titleId: Int) {
         fetchMovieResult.clear()
         fetchTvShowResult.clear()
         viewModelScope.launch {

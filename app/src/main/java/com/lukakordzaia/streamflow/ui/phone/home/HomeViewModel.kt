@@ -76,7 +76,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToTopTvShowsFragment())
     }
 
-    fun onDbTitlePressed(dbTitleData: DbTitleData) {
+    fun onContinueWatchingPressed(dbTitleData: DbTitleData) {
         navigateToNewFragment(
                 HomeFragmentDirections.actionHomeFragmentToVideoPlayerFragmentNav(
                         VideoPlayerData(
@@ -110,30 +110,39 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                             )
                     )
                 }
-                getDbTitlesFromApi(continueWatchingTitlesFirestore)
+                getContinueWatchingTitlesFromApi(continueWatchingTitlesFirestore)
             }
         }
     }
 
-    fun getDbTitles(context: Context): LiveData<List<DbDetails>> {
-        val database = ImoviesDatabase.getDatabase(context)?.getDao()
-        return repository.getDbTitles(database!!)
+    fun getContinueWatchingFromRoom(context: Context): LiveData<List<DbDetails>> {
+        return repository.getContinueWatchingFromRoom(roomDb(context)!!)
     }
 
-    fun deleteSingleTitleFromDb(context: Context, titleId: Int) {
-        val database = ImoviesDatabase.getDatabase(context)?.getDao()
+    fun deleteSingleContinueWatchingFromRoom(context: Context, titleId: Int) {
         viewModelScope.launch {
-            repository.deleteSingleTitleFromDb(database!!, titleId)
+            repository.deleteSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
         }
     }
 
-    fun clearWatchedTitleList() {
+    fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
+        viewModelScope.launch {
+            val deleteTitle = repository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
+            if (deleteTitle) {
+                clearContinueWatchingTitleList()
+                getContinueWatchingFromFirestore()
+            } else {
+            }
+        }
+    }
+
+    fun clearContinueWatchingTitleList() {
         continueWatchingTitlesFirestore.clear()
         dbTitles.clear()
         _dbList.value = mutableListOf()
     }
 
-    fun getDbTitlesFromApi(dbDetails: List<DbDetails>) {
+    fun getContinueWatchingTitlesFromApi(dbDetails: List<DbDetails>) {
         viewModelScope.launch {
             dbDetails.forEach {
                 when (val databaseTitles = repository.getSingleTitleData(it.titleId)) {

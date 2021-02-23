@@ -78,7 +78,7 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
         val dbLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeDbTitlesAdapter = HomeDbTitlesAdapter(requireContext(),
                 {
-                    viewModel.onDbTitlePressed(it)
+                    viewModel.onContinueWatchingPressed(it)
                 },
                 {
                     viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
@@ -93,7 +93,8 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
                                 val clearDbDialog = Dialog(requireContext())
                                 clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
                                 clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                                    viewModel.deleteSingleTitleFromDb(requireContext(), titleId)
+                                    viewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
+                                    viewModel.deleteSingleContinueWatchingFromFirestore(titleId)
                                     clearDbDialog.dismiss()
                                 }
                                 clearDbDialog.clear_db_alert_no.setOnClickListener {
@@ -119,19 +120,19 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (auth.currentUser != null) {
-                viewModel.clearWatchedTitleList()
+                viewModel.clearContinueWatchingTitleList()
                 viewModel.getContinueWatchingFromFirestore()
             } else {
-                viewModel.getDbTitles(requireContext()).observe(viewLifecycleOwner, {
-                    viewModel.clearWatchedTitleList()
+                viewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
+                    viewModel.clearContinueWatchingTitleList()
                     if (!it.isNullOrEmpty()) {
                         main_watched_titles_none.setGone()
 
-                        viewModel.getDbTitlesFromApi(it)
+                        viewModel.getContinueWatchingTitlesFromApi(it)
                     } else {
                         main_watched_titles_none.setVisible()
                     }
-                    viewModel.getDbTitles(requireContext()).removeObservers(viewLifecycleOwner)
+                    viewModel.getContinueWatchingFromRoom(requireContext()).removeObservers(viewLifecycleOwner)
                 })
             }
         }

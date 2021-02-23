@@ -36,12 +36,12 @@ class HomeRepository(private val retrofitBuilder: RetrofitBuilder): ImoviesCall(
         return imoviesCall { service.getSingleTitle(movieId) }
     }
 
-    fun getDbTitles(watchedDao: WatchedDao): LiveData<List<DbDetails>> {
-        return watchedDao.getDbTitles()
+    fun getContinueWatchingFromRoom(watchedDao: WatchedDao): LiveData<List<DbDetails>> {
+        return watchedDao.getContinueWatchingFromRoom()
     }
 
-    suspend fun deleteSingleTitleFromDb(watchedDao: WatchedDao, titleId: Int) {
-        return watchedDao.deleteSingleTitle(titleId)
+    suspend fun deleteSingleContinueWatchingFromRoom(watchedDao: WatchedDao, titleId: Int) {
+        return watchedDao.deleteSingleContinueWatchingFromRoom(titleId)
     }
 
     suspend fun getContinueWatchingFromFirestore(currentUserUid: String) : QuerySnapshot? {
@@ -55,6 +55,21 @@ class HomeRepository(private val retrofitBuilder: RetrofitBuilder): ImoviesCall(
             data
         } catch (e: Exception) {
             null
+        }
+    }
+
+    suspend fun deleteSingleContinueWatchingFromFirestore(currentUserUid: String, titleId: Int): Boolean {
+        return try {
+            Firebase.firestore
+                    .collection("users")
+                    .document(currentUserUid)
+                    .collection("continueWatching")
+                    .document(titleId.toString())
+                    .delete()
+                    .await()
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 }
