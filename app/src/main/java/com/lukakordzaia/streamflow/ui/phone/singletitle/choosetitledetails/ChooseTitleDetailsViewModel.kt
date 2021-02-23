@@ -33,6 +33,9 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
     private val _episodeNames = MutableLiveData<List<TitleEpisodes>>()
     val episodeNames: LiveData<List<TitleEpisodes>> = _episodeNames
 
+    private val _continueWatchingDetails = MutableLiveData<DbDetails>()
+    val continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
+
 
     fun onPlayButtonPressed(titleId: Int, isTvShow: Boolean) {
         navigateToNewFragment(
@@ -82,13 +85,35 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
     }
 
     fun checkTitleInDb(context: Context, titleId: Int): LiveData<Boolean> {
-        val database = ImoviesDatabase.getDatabase(context)?.getDao()
-        return repository.checkTitleInDb(database!!, titleId)
+        return repository.checkTitleInDb(roomDb(context)!!, titleId)
     }
 
-    fun getTitleDbDetails(context: Context, titleId: Int): LiveData<DbDetails> {
-        val database = ImoviesDatabase.getDatabase(context)?.getDao()
-        return repository.getSingleWatchedTitles(database!!, titleId)
+    fun getTitleDbDetails(context: Context, titleId: Int){
+
+        viewModelScope.launch {
+            _continueWatchingDetails.value = repository.getSingleWatchedTitles(roomDb(context)!!, titleId)
+        }
+
+    }
+
+    fun checkContinueWatchingInFirestore(titleId: Int) {
+        viewModelScope.launch {
+            val checkContinueWatching = repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId)
+
+            if (checkContinueWatching!!.data != null) {
+                _continueWatchingDetails.value = DbDetails(
+                        checkContinueWatching.data!!["id"].toString().toInt(),
+                        checkContinueWatching.data!!["language"].toString(),
+                        checkContinueWatching.data!!["continueFrom"] as Long,
+                        checkContinueWatching.data!!["titleDuration"] as Long,
+                        checkContinueWatching.data!!["isTvShow"] as Boolean,
+                        checkContinueWatching.data!!["season"].toString().toInt(),
+                        checkContinueWatching.data!!["episode"].toString().toInt()
+                )
+            } else {
+                _continueWatchingDetails.value = null
+            }
+        }
     }
 
     fun setFileLanguage(language: String) {

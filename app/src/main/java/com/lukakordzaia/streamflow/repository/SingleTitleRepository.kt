@@ -23,7 +23,7 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
         return watchedDao.titleExists(titleId)
     }
 
-    fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): LiveData<DbDetails> {
+    suspend fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): DbDetails {
         return watchedDao.getSingleWatchedTitles(titleId)
     }
 
@@ -31,7 +31,7 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
         return imoviesCall { service.getSingleFiles(titleId, season_number) }
     }
 
-    suspend fun getSingleTitleCast(titleId: Int, role: String) : Result<TitleCast> {
+    suspend fun getSingleTitleCast(titleId: Int, role: String): Result<TitleCast> {
         return imoviesCall { service.getSingleTitleCast(titleId, role) }
     }
 
@@ -42,19 +42,19 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
     suspend fun addFavTitleToFirestore(currentUserUid: String, addTitleToFirestore: AddTitleToFirestore): Boolean {
         return try {
             Firebase.firestore
-                .collection("users")
-                .document(currentUserUid)
-                .collection("favMovies")
-                .document(addTitleToFirestore.id.toString())
-                .set(
-                    mapOf(
-                        "name" to addTitleToFirestore.name,
-                        "isTvShow" to addTitleToFirestore.isTvShow,
-                        "id" to addTitleToFirestore.id,
-                        "imdbId" to addTitleToFirestore.imdbId
+                    .collection("users")
+                    .document(currentUserUid)
+                    .collection("favMovies")
+                    .document(addTitleToFirestore.id.toString())
+                    .set(
+                            mapOf(
+                                    "name" to addTitleToFirestore.name,
+                                    "isTvShow" to addTitleToFirestore.isTvShow,
+                                    "id" to addTitleToFirestore.id,
+                                    "imdbId" to addTitleToFirestore.imdbId
+                            )
                     )
-                )
-                .await()
+                    .await()
             true
         } catch (e: Exception) {
             false
@@ -64,27 +64,27 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
     suspend fun removeFavTitleFromFirestore(currentUserUid: String, titleId: Int): Boolean {
         return try {
             Firebase.firestore
-                .collection("users")
-                .document(currentUserUid)
-                .collection("favMovies")
-                .document(titleId.toString())
-                .delete()
-                .await()
+                    .collection("users")
+                    .document(currentUserUid)
+                    .collection("favMovies")
+                    .document(titleId.toString())
+                    .delete()
+                    .await()
             true
         } catch (e: Exception) {
             false
         }
     }
 
-    suspend fun checkTitleInFirestore(currentUserUid: String, titleId: Int) : DocumentSnapshot? {
+    suspend fun checkTitleInFirestore(currentUserUid: String, titleId: Int): DocumentSnapshot? {
         return try {
             val data = Firebase.firestore
-                .collection("users")
-                .document(currentUserUid)
-                .collection("favMovies")
-                .document(titleId.toString())
-                .get()
-                .await()
+                    .collection("users")
+                    .document(currentUserUid)
+                    .collection("favMovies")
+                    .document(titleId.toString())
+                    .get()
+                    .await()
 
             data
         } catch (e: Exception) {
@@ -114,6 +114,22 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
             true
         } catch (e: Exception) {
             false
+        }
+    }
+
+    suspend fun checkContinueWatchingInFirestore(currentUserUid: String, titleId: Int): DocumentSnapshot? {
+        return try {
+            val data = Firebase.firestore
+                    .collection("users")
+                    .document(currentUserUid)
+                    .collection("continueWatching")
+                    .document(titleId.toString())
+                    .get()
+                    .await()
+
+            data
+        } catch (e: Exception) {
+            null
         }
     }
 }

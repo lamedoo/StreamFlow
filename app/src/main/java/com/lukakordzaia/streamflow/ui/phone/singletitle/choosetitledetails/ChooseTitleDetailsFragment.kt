@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -102,28 +104,91 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         }
         rv_episodes.adapter = chooseTitleDetailsEpisodesAdapter
 
-        chooseTitleDetailsViewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, { exists ->
-            if (exists) {
-                chooseTitleDetailsViewModel.getTitleDbDetails(requireContext(), args.titleId).observe(viewLifecycleOwner, {
-                    choose_movie_details_continue.setOnClickListener { _ ->
-                        chooseTitleDetailsViewModel.onContinueWatchingPressed(it)
-                    }
+        if (Firebase.auth.currentUser == null) {
+            chooseTitleDetailsViewModel.checkTitleInDb(requireContext(), args.titleId).observe(viewLifecycleOwner, { exists ->
+                if (exists) {
+                    chooseTitleDetailsViewModel.getTitleDbDetails(requireContext(), args.titleId)
+//                    chooseTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+//                        choose_movie_details_continue.setOnClickListener { _ ->
+//                            chooseTitleDetailsViewModel.onContinueWatchingPressed(it)
+//                        }
+//
+//                        if (args.isTvShow) {
+//                            choose_movie_details_continue.text = String.format("გააგრძელეთ: \nს:${it.season} ე:${it.episode} / %02d:%02d",
+//                                    TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+//                                    TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+//                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+//                            )
+//                        } else {
+//                            choose_movie_details_continue.text = String.format("გააგრძელეთ: \n%02d:%02d",
+//                                    TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+//                                    TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+//                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+//                            )
+//                        }
+//                    })
+//
+//                    choose_movie_details_continue.setVisible()
+//                    choose_movie_details_continue.backgroundTintList = ColorStateList.valueOf(requireContext().resources.getColor(R.color.accent_color))
+//                    choose_movie_details_continue.setTextColor(Color.parseColor("#FFFFFF"))
+//
+//                    choose_movie_details_play.text = "თავიდან ყურება"
+//                    choose_movie_details_play.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
+//                    choose_movie_details_play.setTextColor(requireContext().resources.getColor(R.color.accent_color))
 
-                    if (args.isTvShow) {
-                        choose_movie_details_continue.text = String.format("გააგრძელეთ: \nს:${it.season} ე:${it.episode} / %02d:%02d",
-                                TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                                TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                        )
-                    } else {
-                        choose_movie_details_continue.text = String.format("გააგრძელეთ: \n%02d:%02d",
-                                TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                                TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                        )
-                    }
-                })
+                }
+            })
+        } else {
+            chooseTitleDetailsViewModel.checkContinueWatchingInFirestore(args.titleId)
+//            chooseTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+//                if (it != null) {
+//                    choose_movie_details_continue.setOnClickListener { _ ->
+//                        chooseTitleDetailsViewModel.onContinueWatchingPressed(it)
+//                    }
+//
+//                    if (args.isTvShow) {
+//                        choose_movie_details_continue.text = String.format("გააგრძელეთ: \nს:${it.season} ე:${it.episode} / %02d:%02d",
+//                                TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+//                                TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+//                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+//                        )
+//                    } else {
+//                        choose_movie_details_continue.text = String.format("გააგრძელეთ: \n%02d:%02d",
+//                                TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+//                                TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+//                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+//                        )
+//                    }
+//                    choose_movie_details_continue.setVisible()
+//                    choose_movie_details_continue.backgroundTintList = ColorStateList.valueOf(requireContext().resources.getColor(R.color.accent_color))
+//                    choose_movie_details_continue.setTextColor(Color.parseColor("#FFFFFF"))
+//
+//                    choose_movie_details_play.text = "თავიდან ყურება"
+//                    choose_movie_details_play.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
+//                    choose_movie_details_play.setTextColor(requireContext().resources.getColor(R.color.accent_color))
+//                }
+//            })
+        }
 
+        chooseTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            if (it != null) {
+                choose_movie_details_continue.setOnClickListener { _ ->
+                    chooseTitleDetailsViewModel.onContinueWatchingPressed(it)
+                }
+
+                if (args.isTvShow) {
+                    choose_movie_details_continue.text = String.format("გააგრძელეთ: \nს:${it.season} ე:${it.episode} / %02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    )
+                } else {
+                    choose_movie_details_continue.text = String.format("გააგრძელეთ: \n%02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    )
+                }
                 choose_movie_details_continue.setVisible()
                 choose_movie_details_continue.backgroundTintList = ColorStateList.valueOf(requireContext().resources.getColor(R.color.accent_color))
                 choose_movie_details_continue.setTextColor(Color.parseColor("#FFFFFF"))
@@ -131,7 +196,6 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
                 choose_movie_details_play.text = "თავიდან ყურება"
                 choose_movie_details_play.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
                 choose_movie_details_play.setTextColor(requireContext().resources.getColor(R.color.accent_color))
-
             }
         })
 

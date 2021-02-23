@@ -12,7 +12,10 @@ interface WatchedDao {
     fun getDbTitles(): LiveData<List<DbDetails>>
 
     @Query("SELECT * FROM dbdetails WHERE titleId = :titleId")
-    fun getSingleWatchedTitles(titleId: Int) : LiveData<DbDetails>
+    suspend fun getSingleWatchedTitles(titleId: Int) : DbDetails
+
+    @Query("SELECT * FROM dbdetails WHERE titleId = :titleId")
+    fun getTvSingleWatchedTitles(titleId: Int) : LiveData<DbDetails>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWatchedTitle(dbDetails: DbDetails)

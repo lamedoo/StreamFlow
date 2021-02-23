@@ -32,25 +32,6 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
         navigateToNewFragment(FavoritesFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
     }
 
-//    fun getFavMoviesFromFirestore() {
-//        viewModelScope.launch {
-//            val data = favoritesRepository.getFavMoviesFromFirestore(currentUser()!!.uid)
-//
-//            if (data != null) {
-//                for (title in data.documents) {
-//                    if (title.data!!["isTvShow"] == true) {
-//                        tvShows.add(title.data["id"].toString().toInt())
-//                    } else {
-//                        movies.add(title.data["id"].toString().toInt())
-//                    }
-//                }
-//            }
-//
-//            Log.d("moviesfirebase", data!!.documents[0].data!!["id"].toString())
-//        }
-//    }
-
-
     fun getFavTitlesFromFirestore() {
         fetchMovieResult.clear()
         fetchTvShowResult.clear()

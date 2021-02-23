@@ -23,7 +23,7 @@ class TvDetailsRepository(private val retrofitBuilder: RetrofitBuilder): Imovies
     }
 
     fun getSingleWatchedTitles(watchedDao: WatchedDao, titleId: Int): LiveData<DbDetails> {
-        return watchedDao.getSingleWatchedTitles(titleId)
+        return watchedDao.getTvSingleWatchedTitles(titleId)
     }
 
     suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<TitleFiles> {
