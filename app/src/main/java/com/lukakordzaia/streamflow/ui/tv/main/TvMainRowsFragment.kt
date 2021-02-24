@@ -1,16 +1,15 @@
 package com.lukakordzaia.streamflow.ui.tv.main
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
@@ -20,7 +19,6 @@ import com.lukakordzaia.streamflow.datamodels.TvSettingsList
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflow.ui.tv.CheckFirstItem
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
@@ -32,7 +30,7 @@ import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvMainFragment : BrowseSupportFragment() {
+class TvMainRowsFragment: RowsSupportFragment() {
     private val homeViewModel: HomeViewModel by viewModel()
     private val genresViewModel: CategoriesViewModel by viewModel()
     private val profileViewModel: ProfileViewModel by viewModel()
@@ -41,32 +39,17 @@ class TvMainFragment : BrowseSupportFragment() {
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
 
-    private var isFirstItem = false
-    var onFirstItem: CheckFirstItem? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        onFirstItem = context as? CheckFirstItem
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        onFirstItem = null
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            prepareEntranceTransition()
+//            prepareEntranceTransition()
         }
 
-        headersState = HEADERS_DISABLED
-
-        setHeaderPresenterSelector(object : PresenterSelector() {
-            override fun getPresenter(item: Any?): Presenter {
-                return TvHeaderItemPresenter()
-            }
-        })
+//        setHeaderPresenterSelector(object : PresenterSelector() {
+//            override fun getPresenter(item: Any?): Presenter {
+//                return TvHeaderItemPresenter()
+//            }
+//        })
 
         val listRowPresenter = ListRowPresenter().apply {
             shadowEnabled = false
@@ -99,7 +82,7 @@ class TvMainFragment : BrowseSupportFragment() {
             homeViewModel.getTopMovies(page)
             homeViewModel.getTopTvShows(page)
             homeViewModel.getNewMovies(page)
-            startEntranceTransition()
+//            startEntranceTransition()
         }, 2000)
 
         homeViewModel.dbList.observe(viewLifecycleOwner, {
@@ -123,7 +106,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
         prepareBackgroundManager()
         setupUIElements()
-        setupEventListeners()
+//        setupEventListeners()
     }
 
     private fun initRowsAdapter() {
@@ -217,22 +200,22 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun setupUIElements() {
-        badgeDrawable = resources.getDrawable(R.drawable.streamflowlogo)
-        title = "StreamFlow"
-        isHeadersTransitionOnBackEnabled = true
-        brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
-        searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.default_background_color) }!!
+//        badgeDrawable = resources.getDrawable(R.drawable.streamflowlogo)
+//        title = "StreamFlow"
+//        headersState = BrowseSupportFragment.HEADERS_ENABLED
+//        isHeadersTransitionOnBackEnabled = true
+//        brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
+//        searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.default_background_color) }!!
         adapter = rowsAdapter
 
     }
 
     private fun setupEventListeners() {
-        setOnSearchClickedListener {
-            startActivity(Intent(context, TvSearchActivity::class.java))
-        }
+//        setOnSearchClickedListener {
+//            startActivity(Intent(context, TvSearchActivity::class.java))
+//        }
 
         onItemViewClickedListener = ItemViewClickedListener()
-        onItemViewSelectedListener = ItemViewSelectedListener()
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
@@ -285,19 +268,6 @@ class TvMainFragment : BrowseSupportFragment() {
                         activity?.startActivity(intent)
                     }
                 }
-            }
-        }
-    }
-
-    private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
-        override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            val indexOfRow = rowsAdapter.indexOf(row)
-            val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
-
-            if (indexOfItem == 0) {
-                onFirstItem?.isFirstItem(true)
-            } else {
-                onFirstItem?.isFirstItem(false)
             }
         }
     }

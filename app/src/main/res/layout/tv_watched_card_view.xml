@@ -47,6 +47,8 @@
         android:thumb="@color/accent_color"
         android:progressTint="@color/accent_color"
         tools:progress="50"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:progressBackgroundTint="@color/general_text_color"
         app:layout_constraintStart_toStartOf="@id/tv_watched_card_poster"
         app:layout_constraintEnd_toEndOf="@id/tv_watched_card_poster"

@@ -7,6 +7,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.tv.TvActivity">
 
+    <include
+        layout="@layout/tv_sidebar"/>
+
     <fragment
         android:name="com.lukakordzaia.streamflow.ui.tv.main.TvMainFragment"
         android:id="@+id/tv_main_fragment"
