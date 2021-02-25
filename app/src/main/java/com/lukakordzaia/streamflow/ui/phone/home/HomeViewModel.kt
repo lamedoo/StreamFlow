@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
+import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.HomeRepository
@@ -92,7 +92,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         )
     }
 
-    fun getContinueWatchingFromFirestore() {
+    fun getContinueWatchingFromFirestorePHONE() {
         viewModelScope.launch {
             val data = repository.getContinueWatchingFromFirestore(currentUser()!!.uid)
 
@@ -115,6 +115,21 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         }
     }
 
+    fun getContinueWatchingFromFirestoreTV() {
+        repository.getContinueWatchingFromFirestore1(currentUser()!!.uid, object : FirebaseContinueWatchingListCallBack {
+            override fun continueWatchingList(titleList: MutableList<DbDetails>) {
+                if (!titleList.isNullOrEmpty()) {
+                    clearContinueWatchingTitleList()
+                    for (title in titleList) {
+                        continueWatchingTitlesFirestore.add(title)
+                    }
+                    getContinueWatchingTitlesFromApi(continueWatchingTitlesFirestore)
+                }
+            }
+
+        })
+    }
+
     fun getContinueWatchingFromRoom(context: Context): LiveData<List<DbDetails>> {
         return repository.getContinueWatchingFromRoom(roomDb(context)!!)
     }
@@ -130,7 +145,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             val deleteTitle = repository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
             if (deleteTitle) {
                 clearContinueWatchingTitleList()
-                getContinueWatchingFromFirestore()
+//                getContinueWatchingFromFirestore()
             } else {
                 newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
             }

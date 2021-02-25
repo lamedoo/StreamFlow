@@ -1,5 +1,7 @@
 package com.lukakordzaia.streamflow.repository
 
+import android.content.ContentValues
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -7,12 +9,11 @@ import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.WatchedDao
 import com.lukakordzaia.streamflow.datamodels.*
-import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.network.RetrofitBuilder
+import com.lukakordzaia.streamflow.network.*
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 import kotlinx.coroutines.tasks.await
 
-class TvDetailsRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
+class TvDetailsRepository(retrofitBuilder: RetrofitBuilder) : ImoviesCall() {
     private val service = retrofitBuilder.buildImoviesService()
 
     suspend fun getSingleTitleData(titleId: Int): Result<SingleTitleData> {
@@ -23,15 +24,15 @@ class TvDetailsRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
         return watchedDao.checkContinueWatchingTitleInRoom(titleId)
     }
 
-    fun getSingleContinueWatchingFromRoom(watchedDao: WatchedDao, titleId: Int): LiveData<DbDetails> {
-        return watchedDao.getTvSingleWatchedTitles(titleId)
+    suspend fun getSingleContinueWatchingFromRoom(watchedDao: WatchedDao, titleId: Int): DbDetails {
+        return watchedDao.getSingleContinueWatchingFromRoom(titleId)
     }
 
     suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<TitleFiles> {
         return imoviesCall { service.getSingleFiles(titleId, season_number) }
     }
 
-    suspend fun getSingleTitleCast(titleId: Int, role: String) : Result<TitleCast> {
+    suspend fun getSingleTitleCast(titleId: Int, role: String): Result<TitleCast> {
         return imoviesCall { service.getSingleTitleCast(titleId, role) }
     }
 
@@ -96,19 +97,27 @@ class TvDetailsRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
         }
     }
 
-    suspend fun checkContinueWatchingInFirestore(currentUserUid: String, titleId: Int): DocumentSnapshot? {
-        return try {
-            val data = Firebase.firestore
-                    .collection("users")
-                    .document(currentUserUid)
-                    .collection("continueWatching")
-                    .document(titleId.toString())
-                    .get()
-                    .await()
-
-            data
-        } catch (e: Exception) {
-            null
+    fun checkContinueWatchingInFirestore(currentUserUid: String, titleId: Int, continueWatchingCallBack: FirebaseContinueWatchingCallBack) {
+        val docRef = Firebase.firestore.collection("users").document(currentUserUid).collection("continueWatching").document(titleId.toString())
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(ContentValues.TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+            if (snapshot!!.data != null) {
+                val title = DbDetails(
+                        snapshot.data!!["id"].toString().toInt(),
+                        snapshot.data!!["language"].toString(),
+                        snapshot.data!!["continueFrom"] as Long,
+                        snapshot.data!!["titleDuration"] as Long,
+                        snapshot.data!!["isTvShow"] as Boolean,
+                        snapshot.data!!["season"].toString().toInt(),
+                        snapshot.data!!["episode"].toString().toInt()
+                )
+                continueWatchingCallBack.continueWatchingTitle(title)
+            } else {
+                Log.d(ContentValues.TAG, "Current data: null")
+            }
         }
     }
 }

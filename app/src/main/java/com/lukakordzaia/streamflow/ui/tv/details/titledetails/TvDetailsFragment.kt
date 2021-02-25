@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
@@ -116,33 +117,42 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
         })
 
-        tvDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
-            if (exists) {
-                tv_files_title_delete.setOnClickListener {
-                    tvDetailsViewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
+        if (Firebase.auth.currentUser == null) {
+            tvDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
+                if (exists) {
+                    tvDetailsViewModel.getSingleContinueWatchingFromRoom(requireContext(), titleId)
+                }
+            })
+        } else {
+            tvDetailsViewModel.checkContinueWatchingInFirestore(titleId)
+        }
+
+
+        tv_files_title_delete.setOnClickListener {
+            tvDetailsViewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
+        }
+
+        tvDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            if (it != null) {
+                tv_continue_play_button.setOnClickListener { _ ->
+                    continueTitlePlay(it)
                 }
 
-                tvDetailsViewModel.getSingleContinueWatchingFromRoom(requireContext(), titleId).observe(viewLifecycleOwner, {
-                    tv_continue_play_button.setOnClickListener { _ ->
-                        continueTitlePlay(it)
-                    }
 
-                    if (tv_continue_play_button.isVisible) {
-                        if (isTvShow) {
-                            tv_continue_play_button?.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d - ${it.language}",
-                                    TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                                    TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                            )
-                        } else {
-                            tv_continue_play_button?.text = String.format("განაგრძეთ - %02d:%02d - ${it.language}",
-                                    TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                                    TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                            )
-                        }
-                    }
-                })
+                if (isTvShow) {
+                    tv_continue_play_button?.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    )
+                } else {
+                    tv_continue_play_button?.text = String.format("განაგრძეთ - %02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    )
+                }
+
                 tv_continue_play_button.setVisible()
                 tv_continue_play_button.requestFocus()
                 tv_play_button.text = "თავიდან ყურება"
@@ -153,6 +163,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                 tv_continue_play_button.setGone()
             }
         })
+
 
         tv_play_button.setOnClickListener {
             playTitleFromStart(titleId, isTvShow)

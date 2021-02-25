@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.KeyEvent
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
@@ -16,6 +17,7 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.tv_sidebar.*
+import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
 
 class TvActivity : BaseFragmentActivity(), TvCheckFirstItem {
     private var doubleBackToExitPressedOnce = false
@@ -24,6 +26,8 @@ class TvActivity : BaseFragmentActivity(), TvCheckFirstItem {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv)
+
+        tv_sidebar_collapsed_home_icon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
         googleSignIn(tv_sidebar_signin)
         googleSignOut(tv_sidebar_signout)
@@ -58,7 +62,11 @@ class TvActivity : BaseFragmentActivity(), TvCheckFirstItem {
                 if (isFirstItem) {
                     tv_sidebar.setVisible()
                     val currentUser = auth.currentUser
-                    updateGoogleUI(currentUser)
+                    if (currentUser == null) {
+                        updateGoogleUI(null)
+                    } else {
+                        updateGoogleUI(currentUser)
+                    }
                     tv_sidebar_home.requestFocus()
                 }
             }
@@ -76,6 +84,12 @@ class TvActivity : BaseFragmentActivity(), TvCheckFirstItem {
             tv_sidebar.setGone()
         } else {
             tv_sidebar.setVisible()
+            val currentUser = auth.currentUser
+            if (currentUser == null) {
+                updateGoogleUI(null)
+            } else {
+                updateGoogleUI(currentUser)
+            }
             tv_sidebar_home.requestFocus()
         }
 

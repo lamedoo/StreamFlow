@@ -86,7 +86,8 @@ class TvMainFragment : BrowseSupportFragment() {
         })
 
         if (Firebase.auth.currentUser != null) {
-            homeViewModel.getContinueWatchingFromFirestore()
+            homeViewModel.clearContinueWatchingTitleList()
+            homeViewModel.getContinueWatchingFromFirestoreTV()
         } else {
             homeViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
                 homeViewModel.clearContinueWatchingTitleList()

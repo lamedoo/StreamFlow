@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.SingleTitleData
+import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.TvDetailsRepository
@@ -57,9 +58,10 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         return repository.checkContinueWatchingTitleInRoom(database!!, titleId)
     }
 
-    fun getSingleContinueWatchingFromRoom(context: Context, titleId: Int): LiveData<DbDetails> {
-        val database = ImoviesDatabase.getDatabase(context)?.getDao()
-        return repository.getSingleContinueWatchingFromRoom(database!!, titleId)
+    fun getSingleContinueWatchingFromRoom(context: Context, titleId: Int){
+        viewModelScope.launch {
+            _continueWatchingDetails.value = repository.getSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
+        }
     }
 
     fun deleteSingleContinueWatchingFromRoom(context: Context, titleId: Int) {
@@ -70,23 +72,12 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     }
 
     fun checkContinueWatchingInFirestore(titleId: Int) {
-        viewModelScope.launch {
-            val checkContinueWatching = repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId)
-
-            if (checkContinueWatching!!.data != null) {
-                _continueWatchingDetails.value = DbDetails(
-                        checkContinueWatching.data!!["id"].toString().toInt(),
-                        checkContinueWatching.data!!["language"].toString(),
-                        checkContinueWatching.data!!["continueFrom"] as Long,
-                        checkContinueWatching.data!!["titleDuration"] as Long,
-                        checkContinueWatching.data!!["isTvShow"] as Boolean,
-                        checkContinueWatching.data!!["season"].toString().toInt(),
-                        checkContinueWatching.data!!["episode"].toString().toInt()
-                )
-            } else {
-                _continueWatchingDetails.value = null
+        repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
+            override fun continueWatchingTitle(title: DbDetails) {
+                _continueWatchingDetails.value = title
             }
-        }
+
+        })
     }
 
     fun getSingleTitleFiles(movieId: Int) {

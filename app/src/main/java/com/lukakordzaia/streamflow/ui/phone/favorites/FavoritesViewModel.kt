@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleData
-import com.lukakordzaia.streamflow.network.FirebaseCallBack
+import com.lukakordzaia.streamflow.network.FavoritesCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.FavoritesRepository
@@ -41,7 +41,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
         fetchTvShowResult.clear()
         favoriteMoviesLoader.value = LoadingState.LOADING
         favoriteTvShowsLoader.value = LoadingState.LOADING
-        favoritesRepository.getFavTitlesFromFirestore(currentUser()!!.uid, object : FirebaseCallBack {
+        favoritesRepository.getFavTitlesFromFirestore(currentUser()!!.uid, object : FavoritesCallBack {
             override fun moviesList(movies: MutableList<Int>) {
                 if (movies.isNullOrEmpty()) {
                     favoriteMoviesLoader.value = LoadingState.LOADED

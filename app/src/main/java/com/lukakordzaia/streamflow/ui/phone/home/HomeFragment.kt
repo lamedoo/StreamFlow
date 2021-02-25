@@ -121,7 +121,7 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (auth.currentUser != null) {
                 viewModel.clearContinueWatchingTitleList()
-                viewModel.getContinueWatchingFromFirestore()
+                viewModel.getContinueWatchingFromFirestorePHONE()
             } else {
                 viewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
                     viewModel.clearContinueWatchingTitleList()
@@ -132,7 +132,6 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
                     } else {
                         main_watched_titles_none.setVisible()
                     }
-                    viewModel.getContinueWatchingFromRoom(requireContext()).removeObservers(viewLifecycleOwner)
                 })
             }
         }
