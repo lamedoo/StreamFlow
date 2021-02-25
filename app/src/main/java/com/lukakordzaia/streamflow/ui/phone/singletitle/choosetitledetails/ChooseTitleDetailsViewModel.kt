@@ -88,11 +88,9 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
     }
 
     fun getSingleContinueWatchingFromRoom(context: Context, titleId: Int){
-
         viewModelScope.launch {
             _continueWatchingDetails.value = repository.getSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
         }
-
     }
 
     fun checkContinueWatchingInFirestore(titleId: Int) {

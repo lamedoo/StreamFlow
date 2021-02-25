@@ -2,12 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tv_sidebar_sidebar"
+    android:id="@+id/tv_sidebar"
     android:layout_width="300dp"
     android:layout_height="match_parent"
     android:background="@color/secondary_color"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="@dimen/fragment_padding"
@@ -16,93 +14,329 @@
     app:layout_constraintStart_toStartOf="parent"
     tools:visibility="visible">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/tv_sidebar_profile_photo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/no_profile_picture"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <TextView
+        android:id="@+id/tv_sidebar_profile_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textAllCaps="true"
+        android:textColor="@color/general_text_color"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/tv_sidebar_profile_photo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/tv_sidebar_profile_photo"
+        tools:text="Luka Kordzaia" />
+
+    <LinearLayout
+        android:id="@+id/tv_sidebar_signout"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:padding="10dp"
+        android:background="@drawable/tv_google_button_background"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:nextFocusDown="@id/tv_sidebar_search"
+        app:layout_constraintStart_toEndOf="@id/tv_sidebar_profile_username"
+        app:layout_constraintTop_toTopOf="@id/tv_sidebar_profile_photo"
+        app:layout_constraintBottom_toBottomOf="@id/tv_sidebar_profile_photo">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:src="@drawable/logout_icon"
+            android:tint="@color/red"
+            tools:ignore="UseAppTint" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_sidebar_profile_photo">
+
+        <LinearLayout
+            android:id="@+id/tv_sidebar_signin"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:padding="10dp"
+            android:background="@drawable/tv_google_button_background"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusDown="@id/tv_sidebar_search">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:src="@drawable/google_login_logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="ავტორიზაცია"
+                android:textColor="@color/white"
+                android:textSize="13.5sp" />
+
+        </LinearLayout>
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/tv_sidebar_signout"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="45dp"-->
+<!--            android:padding="10dp"-->
+<!--            android:background="@drawable/tv_google_button_background"-->
+<!--            android:focusable="true"-->
+<!--            android:focusableInTouchMode="true"-->
+<!--            android:nextFocusDown="@id/tv_sidebar_search">-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="start|center_vertical"-->
+<!--                android:src="@drawable/google_login_logo" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginStart="5dp"-->
+<!--                android:gravity="center"-->
+<!--                android:includeFontPadding="false"-->
+<!--                android:text="ანგარიშიდან გასვლა"-->
+<!--                android:textColor="@color/red"-->
+<!--                android:textSize="13.5sp" />-->
+
+<!--        </LinearLayout>-->
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/tv_sidebar_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="7dp"
         android:background="@drawable/rv_tv_default_card_view_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:fontFamily="@font/georgian_uppercase"
-        android:nextFocusUp="@id/tv_sidebar_search"
-        android:nextFocusDown="@id/tv_sidebar_home"
-        android:padding="5dp"
-        android:text="ძიება"
-        android:textColor="@color/text_on_accent_color"
-        android:textStyle="bold"
+        android:nextFocusUp="@id/tv_sidebar_signin"
         app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_home"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:layout_editor_absoluteX="25dp" />
+        tools:layout_editor_absoluteX="25dp">
 
-    <TextView
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/search_icon_bottom"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:fontFamily="@font/georgian_uppercase"
+            android:nextFocusUp="@id/tv_sidebar_search"
+            android:nextFocusDown="@id/tv_sidebar_home"
+            android:text="ძიება"
+            android:textColor="@color/text_on_accent_color"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/tv_sidebar_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="7dp"
         android:background="@drawable/rv_tv_default_card_view_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:fontFamily="@font/georgian_uppercase"
-        android:padding="5dp"
-        android:text="მთავარი"
-        android:textColor="@color/text_on_accent_color"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_movies"
+        app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_favorites"
         app:layout_constraintTop_toBottomOf="@+id/tv_sidebar_search"
-        tools:layout_editor_absoluteX="25dp" />
+        tools:layout_editor_absoluteX="25dp">
 
-    <TextView
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/home_icon_bottom"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:fontFamily="@font/georgian_uppercase"
+            android:text="მთავარი"
+            android:textColor="@color/text_on_accent_color"
+            android:textStyle="bold"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tv_sidebar_favorites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="7dp"
+        android:background="@drawable/rv_tv_default_card_view_background"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_movies"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sidebar_home"
+        tools:layout_editor_absoluteX="25dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/title_favorite_icon"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:fontFamily="@font/georgian_uppercase"
+            android:text="ფავორიტები"
+            android:textColor="@color/text_on_accent_color"
+            android:textStyle="bold"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/tv_sidebar_movies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="7dp"
         android:background="@drawable/rv_tv_default_card_view_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:fontFamily="@font/georgian_uppercase"
-        android:padding="5dp"
-        android:text="ტოპ ფილმები"
-        android:textColor="@color/text_on_accent_color"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_tvshows"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sidebar_home"
-        tools:layout_editor_absoluteX="25dp" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_genres"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sidebar_favorites"
+        tools:layout_editor_absoluteX="25dp">
 
-    <TextView
-        android:id="@+id/tv_sidebar_tvshows"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/tv_new_movies_icon"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:fontFamily="@font/georgian_uppercase"
+            android:text="ახალი ფილმები"
+            android:textColor="@color/text_on_accent_color"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tv_sidebar_genres"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="7dp"
         android:background="@drawable/rv_tv_default_card_view_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:fontFamily="@font/georgian_uppercase"
-        android:padding="5dp"
-        android:text="ტოპ სერიალები"
-        android:textColor="@color/text_on_accent_color"
-        android:textStyle="bold"
         android:nextFocusDown="@id/tv_sidebar_settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_sidebar_movies"
-        tools:layout_editor_absoluteX="25dp" />
+        tools:layout_editor_absoluteX="25dp">
 
-    <TextView
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/genre_icon_bottom"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:fontFamily="@font/georgian_uppercase"
+            android:text="ჟანრის მიხედვით"
+            android:textColor="@color/text_on_accent_color"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/tv_sidebar_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="15dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="7dp"
         android:background="@drawable/rv_tv_default_card_view_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:fontFamily="@font/georgian_uppercase"
-        android:nextFocusUp="@id/tv_sidebar_tvshows"
+        android:nextFocusUp="@id/tv_sidebar_genres"
         android:nextFocusDown="@id/tv_sidebar_settings"
-        android:padding="5dp"
-        android:text="პარამეტრები"
-        android:textColor="@color/text_on_accent_color"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/settings_icon_home"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:fontFamily="@font/georgian_uppercase"
+            android:text="პარამეტრები"
+            android:textColor="@color/text_on_accent_color"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

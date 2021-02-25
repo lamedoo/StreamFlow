@@ -7,25 +7,23 @@ import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.datamodels.TvSettingsList
-import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
+import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflow.ui.tv.CheckFirstItem
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.*
-import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
@@ -34,7 +32,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvMainFragment : BrowseSupportFragment() {
     private val homeViewModel: HomeViewModel by viewModel()
-    private val genresViewModel: CategoriesViewModel by viewModel()
     private val profileViewModel: ProfileViewModel by viewModel()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private val page = 1
@@ -42,11 +39,11 @@ class TvMainFragment : BrowseSupportFragment() {
     lateinit var backgroundManager: BackgroundManager
 
     private var isFirstItem = false
-    var onFirstItem: CheckFirstItem? = null
+    var onFirstItem: TvCheckFirstItem? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onFirstItem = context as? CheckFirstItem
+        onFirstItem = context as? TvCheckFirstItem
     }
 
     override fun onDetach() {
@@ -88,12 +85,16 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         })
 
-        homeViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
-            homeViewModel.clearContinueWatchingTitleList()
-            if (!it.isNullOrEmpty()) {
-                homeViewModel.getContinueWatchingTitlesFromApi(it)
-            }
-        })
+        if (Firebase.auth.currentUser != null) {
+            homeViewModel.getContinueWatchingFromFirestore()
+        } else {
+            homeViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
+                homeViewModel.clearContinueWatchingTitleList()
+                if (!it.isNullOrEmpty()) {
+                    homeViewModel.getContinueWatchingTitlesFromApi(it)
+                }
+            })
+        }
 
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
             homeViewModel.getTopMovies(page)
@@ -187,10 +188,8 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun categoriesRowsAdapter() {
         val listRowAdapter = ArrayObjectAdapter(TvCategoriesPresenter()).apply {
-            add(TvCategoriesList(0, "ჟანრის მიხედვით", R.drawable.genre_icon_bottom))
-            add(TvCategoriesList(1, "ახალი ფილები", R.drawable.tv_new_movies_icon))
-            add(TvCategoriesList(2, "ტოპ ფილები", R.drawable.tv_top_titles_icon))
-            add(TvCategoriesList(3, "ტოპ სერიალები", R.drawable.tv_top_titles_icon))
+            add(TvCategoriesList(0, "ტოპ ფილები", R.drawable.tv_top_titles_icon))
+            add(TvCategoriesList(1, "ტოპ სერიალები", R.drawable.tv_top_titles_icon))
         }
 
         HeaderItem(4, AppConstants.TV_GENRES).also { header ->
@@ -221,15 +220,15 @@ class TvMainFragment : BrowseSupportFragment() {
         title = "StreamFlow"
         isHeadersTransitionOnBackEnabled = true
         brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
-        searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.default_background_color) }!!
+//        searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.default_background_color) }!!
         adapter = rowsAdapter
 
     }
 
     private fun setupEventListeners() {
-        setOnSearchClickedListener {
-            startActivity(Intent(context, TvSearchActivity::class.java))
-        }
+//        setOnSearchClickedListener {
+//            startActivity(Intent(context, TvSearchActivity::class.java))
+//        }
 
         onItemViewClickedListener = ItemViewClickedListener()
         onItemViewSelectedListener = ItemViewSelectedListener()
@@ -266,20 +265,11 @@ class TvMainFragment : BrowseSupportFragment() {
             } else if (item is TvCategoriesList) {
                 when (item.categoriesId) {
                     0 -> {
-                        val intent = Intent(context, TvSingleGenreActivity::class.java)
-                        activity?.startActivity(intent)
-                    }
-                    1 -> {
-                        val intent = Intent(context, TvCategoriesActivity::class.java)
-                        intent.putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
-                        activity?.startActivity(intent)
-                    }
-                    2 -> {
                         val intent = Intent(context, TvCategoriesActivity::class.java)
                         intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_MOVIES)
                         activity?.startActivity(intent)
                     }
-                    3 -> {
+                    1 -> {
                         val intent = Intent(context, TvCategoriesActivity::class.java)
                         intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_TV_SHOWS)
                         activity?.startActivity(intent)

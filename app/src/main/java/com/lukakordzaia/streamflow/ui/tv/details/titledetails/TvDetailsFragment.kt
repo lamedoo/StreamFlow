@@ -53,7 +53,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                     tv_details_progressBar.setGone()
                     tv_details_top.setVisible()
                 }
-        }
+            }
         })
 
         tvDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
@@ -116,13 +116,13 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
         })
 
-        tvDetailsViewModel.checkTitleInDb(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
+        tvDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
             if (exists) {
                 tv_files_title_delete.setOnClickListener {
-                    tvDetailsViewModel.deleteTitleFromDb(requireContext(), titleId)
+                    tvDetailsViewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
                 }
 
-                tvDetailsViewModel.getTitleDbDetails(requireContext(), titleId).observe(viewLifecycleOwner, {
+                tvDetailsViewModel.getSingleContinueWatchingFromRoom(requireContext(), titleId).observe(viewLifecycleOwner, {
                     tv_continue_play_button.setOnClickListener { _ ->
                         continueTitlePlay(it)
                     }
@@ -130,15 +130,15 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                     if (tv_continue_play_button.isVisible) {
                         if (isTvShow) {
                             tv_continue_play_button?.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d - ${it.language}",
-                                TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                                TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                                    TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                                    TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
                             )
                         } else {
                             tv_continue_play_button?.text = String.format("განაგრძეთ - %02d:%02d - ${it.language}",
-                                TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                                TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                                    TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                                    TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
                             )
                         }
                     }

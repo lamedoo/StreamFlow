@@ -30,6 +30,9 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     private val _chosenLanguage = MutableLiveData<String>()
     val chosenLanguage: LiveData<String> = _chosenLanguage
 
+    private val _continueWatchingDetails = MutableLiveData<DbDetails>()
+    val continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
+
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
             _dataLoader.value = LoadingState.LOADING
@@ -49,20 +52,40 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         }
     }
 
-    fun checkTitleInDb(context: Context, titleId: Int): LiveData<Boolean> {
+    fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
-        return repository.checkTitleInDb(database!!, titleId)
+        return repository.checkContinueWatchingTitleInRoom(database!!, titleId)
     }
 
-    fun getTitleDbDetails(context: Context, titleId: Int): LiveData<DbDetails> {
+    fun getSingleContinueWatchingFromRoom(context: Context, titleId: Int): LiveData<DbDetails> {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
-        return repository.getSingleWatchedTitles(database!!, titleId)
+        return repository.getSingleContinueWatchingFromRoom(database!!, titleId)
     }
 
-    fun deleteTitleFromDb(context: Context, titleId: Int) {
+    fun deleteSingleContinueWatchingFromRoom(context: Context, titleId: Int) {
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         viewModelScope.launch {
-            repository.deleteTitleFromDb(database!!, titleId)
+            repository.deleteSingleContinueWatchingFromRoom(database!!, titleId)
+        }
+    }
+
+    fun checkContinueWatchingInFirestore(titleId: Int) {
+        viewModelScope.launch {
+            val checkContinueWatching = repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId)
+
+            if (checkContinueWatching!!.data != null) {
+                _continueWatchingDetails.value = DbDetails(
+                        checkContinueWatching.data!!["id"].toString().toInt(),
+                        checkContinueWatching.data!!["language"].toString(),
+                        checkContinueWatching.data!!["continueFrom"] as Long,
+                        checkContinueWatching.data!!["titleDuration"] as Long,
+                        checkContinueWatching.data!!["isTvShow"] as Boolean,
+                        checkContinueWatching.data!!["season"].toString().toInt(),
+                        checkContinueWatching.data!!["episode"].toString().toInt()
+                )
+            } else {
+                _continueWatchingDetails.value = null
+            }
         }
     }
 
