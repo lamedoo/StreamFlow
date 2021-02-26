@@ -1,24 +1,30 @@
 package com.lukakordzaia.streamflow.ui.tv.details.titledetails
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.TvTitleFilesFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.tv_details_fragment.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
+
 
 class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
     private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
@@ -42,9 +48,37 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
         })
 
         tvDetailsViewModel.getSingleTitleData(titleId)
+        tvDetailsViewModel.checkTitleInFirestore(titleId)
 
         // For Languages
         tvDetailsViewModel.getSingleTitleFiles(titleId)
+
+        tvDetailsViewModel.traktFavoriteLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> {
+                    tv_files_title_favorite_progressBar.setVisible()
+                    tv_files_title_favorite_icon.setGone()
+                }
+                LoadingState.Status.SUCCESS -> {
+                    tv_files_title_favorite_progressBar.setGone()
+                    tv_files_title_favorite_icon.setVisible()
+                }
+            }
+        })
+
+        tvDetailsViewModel.addToFavorites.observe(viewLifecycleOwner, {
+            if (it) {
+                tv_files_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
+                tv_files_title_favorite.setOnClickListener {
+                    tvDetailsViewModel.removeTitleFromFirestore(titleId)
+                }
+            } else {
+                tv_files_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
+                tv_files_title_favorite.setOnClickListener {
+                    tvDetailsViewModel.addTitleToFirestore()
+                }
+            }
+        })
 
         tvDetailsViewModel.dataLoader.observe(viewLifecycleOwner, {
             when (it) {
@@ -53,7 +87,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                     tv_details_progressBar.setGone()
                     tv_details_top.setVisible()
                 }
-        }
+            }
         })
 
         tvDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
@@ -116,33 +150,57 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
         })
 
-        tvDetailsViewModel.checkTitleInDb(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
-            if (exists) {
+        if (Firebase.auth.currentUser == null) {
+            tvDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
+                if (exists) {
+                    tvDetailsViewModel.getSingleContinueWatchingFromRoom(requireContext(), titleId)
+                }
+            })
+        } else {
+            tvDetailsViewModel.checkContinueWatchingInFirestore(titleId)
+        }
+
+        tvDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            if (it != null) {
                 tv_files_title_delete.setOnClickListener {
-                    tvDetailsViewModel.deleteTitleFromDb(requireContext(), titleId)
+                    val clearDbDialog = Dialog(requireContext())
+                    clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
+                    clearDbDialog.clear_db_alert_yes.setOnClickListener {
+                        tvDetailsViewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
+                        tvDetailsViewModel.deleteSingleContinueWatchingFromFirestore(titleId)
+
+                        val intent = Intent(requireContext(), TvDetailsActivity::class.java)
+                        intent.putExtra("titleId", titleId)
+                        intent.putExtra("isTvShow", isTvShow)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
+                    clearDbDialog.clear_db_alert_no.setOnClickListener {
+                        clearDbDialog.dismiss()
+                    }
+                    clearDbDialog.show()
+                    clearDbDialog.clear_db_alert_yes.requestFocus()
                 }
 
-                tvDetailsViewModel.getTitleDbDetails(requireContext(), titleId).observe(viewLifecycleOwner, {
-                    tv_continue_play_button.setOnClickListener { _ ->
-                        continueTitlePlay(it)
-                    }
+                tv_continue_play_button.setOnClickListener { _ ->
+                    continueTitlePlay(it)
+                }
 
-                    if (tv_continue_play_button.isVisible) {
-                        if (isTvShow) {
-                            tv_continue_play_button?.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d - ${it.language}",
-                                TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                                TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                            )
-                        } else {
-                            tv_continue_play_button?.text = String.format("განაგრძეთ - %02d:%02d - ${it.language}",
-                                TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                                TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                            )
-                        }
-                    }
-                })
+
+                if (isTvShow) {
+                    tv_continue_play_button?.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    )
+                } else {
+                    tv_continue_play_button?.text = String.format("განაგრძეთ - %02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    )
+                }
+
                 tv_continue_play_button.setVisible()
                 tv_continue_play_button.requestFocus()
                 tv_play_button.text = "თავიდან ყურება"
@@ -153,6 +211,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                 tv_continue_play_button.setGone()
             }
         })
+
 
         tv_play_button.setOnClickListener {
             playTitleFromStart(titleId, isTvShow)
@@ -181,6 +240,10 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
             this.hasFocus = hasFocus
         }
+
+        tvDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
+        })
     }
 
     private fun playTitleTrailer(titleId: Int, isTvShow: Boolean, trailerUrl: String) {

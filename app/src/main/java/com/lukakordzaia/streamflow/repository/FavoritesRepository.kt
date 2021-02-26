@@ -2,12 +2,11 @@ package com.lukakordzaia.streamflow.repository
 
 import android.content.ContentValues
 import android.util.Log
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.datamodels.SingleTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleList
-import com.lukakordzaia.streamflow.network.FirebaseCallBack
+import com.lukakordzaia.streamflow.network.FavoritesCallBack
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
@@ -24,7 +23,7 @@ class FavoritesRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
         return imoviesCall { service.getSingleTitle(titleId) }
     }
 
-    fun getFavTitlesFromFirestore(currentUserUid: String, firebaseCallBack: FirebaseCallBack) {
+    fun getFavTitlesFromFirestore(currentUserUid: String, favoritesCallBack: FavoritesCallBack) {
         val docRef = Firebase.firestore.collection("users").document(currentUserUid).collection("favMovies")
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -42,8 +41,8 @@ class FavoritesRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
                     }
 
                 }
-                firebaseCallBack.moviesList(movies)
-                firebaseCallBack.tvShowsList(tvShows)
+                favoritesCallBack.moviesList(movies)
+                favoritesCallBack.tvShowsList(tvShows)
             } else {
                 Log.d(ContentValues.TAG, "Current data: null")
             }

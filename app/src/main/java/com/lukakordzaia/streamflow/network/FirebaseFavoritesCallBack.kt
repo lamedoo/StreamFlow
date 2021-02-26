@@ -1,8 +1,6 @@
 package com.lukakordzaia.streamflow.network
 
-import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
-
-interface FirebaseCallBack {
+interface FavoritesCallBack {
     fun moviesList(movies: MutableList<Int>)
     fun tvShowsList(tvShows: MutableList<Int>)
 }

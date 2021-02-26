@@ -23,7 +23,7 @@ class TvSingleGenreActivity: FragmentActivity(), TvSingleGenreFragment.OnTitleSe
 
         tvDetailsViewModel.singleTitleData.observe(this, {
             single_genre_top_name.text = it.secondaryName
-            Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder_landscape).error(R.drawable.movie_image_placeholder_landscape).into(single_genre_top_poster)
+            Picasso.get().load(it.covers?.data?.x1050).error(R.drawable.movie_image_placeholder_landscape).into(single_genre_top_poster)
             if (it.plot.data.description.isNotEmpty()) {
                 single_genre_top_plot.text = it.plot.data.description
             } else {

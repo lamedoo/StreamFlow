@@ -47,6 +47,7 @@
         android:textStyle="bold"
         android:textSize="18sp"
         android:padding="20dp"
+        android:background="@drawable/alert_dialog_button_background"
         app:layout_constraintTop_toBottomOf="@id/sync_continue_watching_warning"
         app:layout_constraintEnd_toStartOf="@id/sync_continue_watching_alert_yes"/>
 
@@ -59,6 +60,7 @@
         android:textStyle="bold"
         android:textSize="18sp"
         android:padding="20dp"
+        android:background="@drawable/alert_dialog_button_background"
         app:layout_constraintTop_toBottomOf="@id/sync_continue_watching_warning"
         app:layout_constraintEnd_toEndOf="parent"/>
 

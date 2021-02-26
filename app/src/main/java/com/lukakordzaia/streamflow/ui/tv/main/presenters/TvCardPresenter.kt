@@ -28,7 +28,6 @@ class TvCardPresenter : Presenter() {
         } else {
             cardView.tv_default_card_name.text = movie.secondaryName
         }
-//        cardView.setMainImageDimensions(250, 330)
 
         if (movie.posters != null) {
             if (movie.posters.data != null) {
