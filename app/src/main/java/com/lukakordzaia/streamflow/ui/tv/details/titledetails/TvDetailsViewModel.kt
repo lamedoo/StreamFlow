@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
+import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
 import com.lukakordzaia.streamflow.datamodels.SingleTitleData
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -16,6 +17,8 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseViewModel() {
+    val traktFavoriteLoader = MutableLiveData<LoadingState>()
+
     private val _singleTitleData = MutableLiveData<SingleTitleData.Data>()
     val singleTitleData: LiveData<SingleTitleData.Data> = _singleTitleData
 
@@ -31,8 +34,14 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     private val _chosenLanguage = MutableLiveData<String>()
     val chosenLanguage: LiveData<String> = _chosenLanguage
 
-    private val _continueWatchingDetails = MutableLiveData<DbDetails>()
+    private val _continueWatchingDetails = MutableLiveData<DbDetails>(null)
     val continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
+
+    private val _addToFavorites = MutableLiveData<Boolean>()
+    val addToFavorites: LiveData<Boolean> = _addToFavorites
+
+    private val _imdbId = MutableLiveData<String>()
+    private val imdbId: LiveData<String> = _imdbId
 
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
@@ -40,7 +49,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
             when (val data = repository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
                     _singleTitleData.value = data.data.data
-
+                    _imdbId.value = data.data.data.imdbUrl.substring(27, data.data.data.imdbUrl.length)
                     _dataLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -68,6 +77,15 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         val database = ImoviesDatabase.getDatabase(context)?.getDao()
         viewModelScope.launch {
             repository.deleteSingleContinueWatchingFromRoom(database!!, titleId)
+        }
+    }
+
+    fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
+        viewModelScope.launch {
+            val deleteTitle = repository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
+            if (!deleteTitle) {
+                newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
+            }
         }
     }
 
@@ -113,5 +131,58 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
 
     fun getTitleLanguageFiles(language: String) {
         _chosenLanguage.value = language
+    }
+
+    fun addTitleToFirestore() {
+        if (currentUser() != null) {
+            traktFavoriteLoader.value = LoadingState.LOADING
+            viewModelScope.launch {
+                val addToFavorites = repository.addFavTitleToFirestore(currentUser()!!.uid, AddTitleToFirestore(
+                        singleTitleData.value!!.secondaryName,
+                        singleTitleData.value!!.isTvShow,
+                        singleTitleData.value!!.id,
+                        imdbId.value!!
+                ))
+                if (addToFavorites) {
+                    newToastMessage("ფილმი დაემატა ფავორიტებში")
+                    _addToFavorites.value = true
+                    traktFavoriteLoader.value = LoadingState.LOADED
+                } else {
+                    newToastMessage("სამწუხაროდ ვერ მოხერხდა ფავორიტებში დამატება")
+                    _addToFavorites.value = false
+                    traktFavoriteLoader.value = LoadingState.LOADED
+                }
+            }
+        } else {
+            newToastMessage("ფავორიტებში დასამატებლად, გაიარეთ ავტორიზაცია")
+        }
+    }
+
+    fun removeTitleFromFirestore(titleId: Int) {
+        traktFavoriteLoader.value = LoadingState.LOADING
+        viewModelScope.launch {
+            val removeFromFavorites = repository.removeFavTitleFromFirestore(currentUser()!!.uid, titleId)
+            if (removeFromFavorites) {
+                _addToFavorites.value = false
+                traktFavoriteLoader.value = LoadingState.LOADED
+                newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
+            } else {
+                _addToFavorites.value = true
+                traktFavoriteLoader.value = LoadingState.LOADED
+            }
+        }
+    }
+
+    fun checkTitleInFirestore(titleId: Int) {
+        if (currentUser() != null) {
+            traktFavoriteLoader.value = LoadingState.LOADING
+            viewModelScope.launch {
+                val checkTitle = repository.checkTitleInFirestore(currentUser()!!.uid, titleId)
+                _addToFavorites.value = checkTitle!!.data != null
+                traktFavoriteLoader.value = LoadingState.LOADED
+            }
+        } else {
+            _addToFavorites.value = false
+        }
     }
 }

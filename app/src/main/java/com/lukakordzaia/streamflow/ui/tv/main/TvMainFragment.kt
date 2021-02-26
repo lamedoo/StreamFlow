@@ -38,7 +38,6 @@ class TvMainFragment : BrowseSupportFragment() {
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
 
-    private var isFirstItem = false
     var onFirstItem: TvCheckFirstItem? = null
 
     override fun onAttach(context: Context) {

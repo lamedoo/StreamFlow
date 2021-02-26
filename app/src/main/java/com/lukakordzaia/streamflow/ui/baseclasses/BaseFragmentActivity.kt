@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.baseclasses
 
+import android.app.Dialog
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
@@ -25,6 +26,7 @@ import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.sync_continue_watching_alert_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class BaseFragmentActivity : FragmentActivity() {
@@ -95,20 +97,41 @@ open class BaseFragmentActivity : FragmentActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Log.d(ContentValues.TAG, "signInWithCredential:success")
-                        val intent = Intent(this, TvActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        this.startActivity(intent)
                         val user = auth.currentUser
 //                        updateGoogleUI(user)
                         this.createToast("წარმატებით გაიარეთ ავტორიზაცია")
                         profileViewModel.createUserFirestore()
 
-//                        showSyncDialog()
+                        showSyncDialog()
                     } else {
                         Log.w(ContentValues.TAG, "signInWithCredential:failure", task.exception)
                         updateGoogleUI(null)
                     }
                 }
+    }
+
+    private fun showSyncDialog() {
+        profileViewModel.getContinueWatchingFromRoom(this).observe(this, {
+            if (!it.isNullOrEmpty()) {
+                val syncDialog = Dialog(this)
+                syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog,null))
+                syncDialog.sync_continue_watching_alert_yes.setOnClickListener { _ ->
+                    profileViewModel.addContinueWatchingToFirestore(this, it)
+                        val intent = Intent(this, TvActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        this.startActivity(intent)
+
+                }
+                syncDialog.sync_continue_watching_alert_no.setOnClickListener {
+                    syncDialog.dismiss()
+                }
+                syncDialog.show()
+            } else {
+                val intent = Intent(this, TvActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                this.startActivity(intent)
+            }
+        })
     }
 
     fun updateGoogleUI(user: FirebaseUser?) {

@@ -49,7 +49,7 @@
             android:layout_marginTop="50dp"
             android:focusable="false"
             android:textColor="@color/white"
-            android:textSize="45sp"
+            android:textSize="35sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -193,7 +193,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_files_info_details"
             app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintWidth_percent="0.7"
             tools:text="მეგობრები" />
 
         <TextView
@@ -215,7 +215,7 @@
 
         <LinearLayout
             android:id="@+id/tv_details_buttons_row"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="20dp"
@@ -231,6 +231,7 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/tv_details_button_background"
                 android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_marginStart="10dp"
                 android:fontFamily="@font/georgian_uppercase"
                 android:letterSpacing="0"
@@ -239,8 +240,6 @@
                 android:textStyle="bold"
                 android:textColor="@color/secondary_text_color"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc"
                 tools:visibility="visible" />
 
             <TextView
@@ -251,27 +250,26 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/tv_details_button_background"
                 android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:fontFamily="@font/georgian_uppercase"
                 android:textStyle="bold"
                 android:letterSpacing="0"
                 android:textColor="@color/secondary_text_color"
                 android:padding="15dp"
                 android:text="ყურება"
-                android:nextFocusDown="@id/tv_details_spinner_language"
-                app:layout_constraintStart_toEndOf="@id/tv_continue_play_button"
-                app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc" />
+                android:nextFocusDown="@id/tv_details_spinner_language" />
 
             <LinearLayout
                 android:id="@+id/tv_files_trailer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:padding="13dp"
                 android:background="@drawable/tv_details_button_background"
-                android:nextFocusDown="@id/tv_details_spinner_language"
-                app:layout_constraintStart_toEndOf="@id/tv_play_button"
-                app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc">
+                android:nextFocusDown="@id/tv_details_spinner_language">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -291,35 +289,61 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
             <LinearLayout
                 android:id="@+id/tv_files_title_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:padding="13dp"
                 android:nextFocusDown="@id/tv_details_spinner_language"
-                android:background="@drawable/tv_details_button_background"
-                app:layout_constraintStart_toEndOf="@id/tv_files_trailer"
-                app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:paddingTop="3dp"
-                    android:layout_marginRight="5dp"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/georgian_uppercase"
-                    android:textStyle="bold"
-                    android:text="წაშლა"
-                    android:textColor="@color/red"/>
+                android:nextFocusRight="@id/tv_files_title_favorite"
+                android:background="@drawable/tv_details_button_background">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/remove_db_title_icon"
+                    android:src="@drawable/clear_db_icon"
                     android:tint="@color/red"
+                    tools:ignore="UseAppTint" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tv_files_title_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
+                android:padding="13dp"
+                android:nextFocusDown="@id/tv_details_spinner_language"
+                android:nextFocusRight="@id/tv_files_title_favorite"
+                android:background="@drawable/tv_details_favorite_button_background">
+
+                <ProgressBar
+                    android:id="@+id/tv_files_title_favorite_progressBar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:indeterminateTint="@color/accent_color"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <ImageView
+                    android:id="@+id/tv_files_title_favorite_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/title_favorite_icon_full"
+                    android:tint="@color/white"
                     tools:ignore="UseAppTint" />
 
             </LinearLayout>

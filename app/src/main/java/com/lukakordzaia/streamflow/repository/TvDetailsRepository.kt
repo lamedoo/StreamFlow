@@ -120,4 +120,19 @@ class TvDetailsRepository(retrofitBuilder: RetrofitBuilder) : ImoviesCall() {
             }
         }
     }
+
+    suspend fun deleteSingleContinueWatchingFromFirestore(currentUserUid: String, titleId: Int): Boolean {
+        return try {
+            Firebase.firestore
+                    .collection("users")
+                    .document(currentUserUid)
+                    .collection("continueWatching")
+                    .document(titleId.toString())
+                    .delete()
+                    .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }
