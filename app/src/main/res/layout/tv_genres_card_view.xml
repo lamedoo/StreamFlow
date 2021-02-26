@@ -13,8 +13,8 @@
 
     <ImageView
         android:id="@+id/tv_genres_card_poster"
-        android:layout_width="150dp"
-        android:layout_height="200dp"
+        android:layout_width="130dp"
+        android:layout_height="180dp"
         android:scaleType="fitXY"
         tools:src="@drawable/friends_poster"
         app:layout_constraintTop_toTopOf="parent"
