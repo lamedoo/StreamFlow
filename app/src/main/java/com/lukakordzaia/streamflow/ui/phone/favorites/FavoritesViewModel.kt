@@ -20,11 +20,9 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
     val favoriteNoMovies = MutableLiveData<Boolean>()
     val favoriteNoTvShows = MutableLiveData<Boolean>()
 
-    private val fetchMovieResult: MutableList<SingleTitleData.Data> = ArrayList()
     private val _movieResult = MutableLiveData<List<SingleTitleData.Data>>()
     val movieResult: LiveData<List<SingleTitleData.Data>> = _movieResult
 
-    private val fetchTvShowResult: MutableList<SingleTitleData.Data> = ArrayList()
     private val _tvShowResult = MutableLiveData<List<SingleTitleData.Data>>()
     val tvShowResult: LiveData<List<SingleTitleData.Data>> = _tvShowResult
 
@@ -37,8 +35,6 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
     }
 
     fun getFavTitlesFromFirestore() {
-        fetchMovieResult.clear()
-        fetchTvShowResult.clear()
         favoriteMoviesLoader.value = LoadingState.LOADING
         favoriteTvShowsLoader.value = LoadingState.LOADING
         favoritesRepository.getFavTitlesFromFirestore(currentUser()!!.uid, object : FavoritesCallBack {
@@ -48,6 +44,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
                     favoriteNoMovies.value = true
                 } else {
                     favoriteNoMovies.value = false
+                    val fetchMovieResult: MutableList<SingleTitleData.Data> = ArrayList()
                     viewModelScope.launch {
                         movies.forEach {
                             when (val moviesData = favoritesRepository.getSingleTitleData(it)) {
@@ -70,6 +67,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
                     favoriteNoTvShows.value = true
                 } else {
                     favoriteNoTvShows.value = false
+                    val fetchTvShowResult: MutableList<SingleTitleData.Data> = ArrayList()
                     viewModelScope.launch {
                         tvShows.forEach {
                             when (val tvShowsData = favoritesRepository.getSingleTitleData(it)) {
@@ -90,17 +88,10 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
     }
 
     fun removeFavTitleFromFirestore(titleId: Int) {
-        fetchMovieResult.clear()
-        fetchTvShowResult.clear()
         viewModelScope.launch {
             val removeFromFavorites = favoritesRepository.removeFavTitleFromFirestore(currentUser()!!.uid, titleId)
             if (removeFromFavorites) {
-                fetchMovieResult.clear()
-                fetchTvShowResult.clear()
                 newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
-            } else {
-                fetchMovieResult.clear()
-                fetchTvShowResult.clear()
             }
         }
     }
