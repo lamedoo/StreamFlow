@@ -73,6 +73,11 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                 viewModelScope.launch {
                     repository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, dbDetails)
                 }
+                if (isTvShow) {
+                    viewModelScope.launch {
+                        repository.addWatchedEpisodeToFirestore(currentUser()!!.uid, dbDetails)
+                    }
+                }
             } else {
                 viewModelScope.launch {
                     roomDb(context)?.insertContinueWatchingInRoom(dbDetails)

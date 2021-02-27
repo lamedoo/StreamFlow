@@ -132,4 +132,28 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
             null
         }
     }
+
+    suspend fun addWatchedEpisodeToFirestore(currentUserUid: String, dbDetails: DbDetails): Boolean {
+        return try {
+            Firebase.firestore
+                .collection("users")
+                .document(currentUserUid)
+                .collection("watchedEpisodes")
+                .document(dbDetails.titleId.toString())
+                .collection("season ${dbDetails.season}")
+                .document("episode ${dbDetails.episode}")
+                .set(
+                    mapOf(
+                        "continueFrom" to dbDetails.watchedDuration,
+                        "titleDuration" to dbDetails.titleDuration,
+                        "season" to dbDetails.season,
+                        "episode" to dbDetails.episode
+                    )
+                )
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }
