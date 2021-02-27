@@ -63,7 +63,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
-                    android:indeterminateTint="@color/accent_color" />
+                    android:indeterminateTint="@color/accent_color"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

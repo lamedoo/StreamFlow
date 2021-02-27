@@ -1,14 +1,10 @@
 package com.lukakordzaia.streamflow.ui.phone.searchtitles
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.animation.AccelerateInterpolator
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -20,7 +16,6 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.customviews.SearchEditText
 import com.lukakordzaia.streamflow.utils.*
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
-import kotlinx.android.synthetic.main.phone_categories_framgent.*
 import kotlinx.android.synthetic.main.phone_search_titles_framgent_new.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -127,6 +122,7 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent_new)
         page++
         Log.d("currentpage", page.toString())
         searchTitlesViewModel.getSearchTitles(search_title_text.text.toString(), page)
+        search_progressBar.setVisible()
     }
 
     private fun onFranchiseAnimationEnd(titleName: String) {
