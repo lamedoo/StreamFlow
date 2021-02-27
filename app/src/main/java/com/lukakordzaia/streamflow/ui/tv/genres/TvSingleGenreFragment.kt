@@ -19,6 +19,7 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
@@ -35,14 +36,18 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
 
+    var onFirstItem: TvCheckFirstItem? = null
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onTitleSelected = context as? OnTitleSelected
+        onFirstItem = context as? TvCheckFirstItem
     }
 
     override fun onDetach() {
         super.onDetach()
         onTitleSelected = null
+        onFirstItem = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -245,6 +250,14 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             if (item is TitleList.Data) {
                 onTitleSelected?.getTitleId(item.id)
+            }
+
+            val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
+
+            if (indexOfItem == 0) {
+                onFirstItem?.isFirstItem(true)
+            } else {
+                onFirstItem?.isFirstItem(false)
             }
         }
     }

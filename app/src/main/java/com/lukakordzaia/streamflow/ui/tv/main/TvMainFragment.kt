@@ -281,7 +281,6 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            val indexOfRow = rowsAdapter.indexOf(row)
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
             if (indexOfItem == 0) {

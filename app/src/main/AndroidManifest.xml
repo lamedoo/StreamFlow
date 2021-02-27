@@ -56,6 +56,9 @@
         <activity
             android:name="com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity"
             android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name="com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesActivity"
+            android:theme="@style/Theme.Leanback"/>
     </application>
 
 </manifest>

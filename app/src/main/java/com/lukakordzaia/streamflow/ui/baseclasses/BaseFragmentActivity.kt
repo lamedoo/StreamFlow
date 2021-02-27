@@ -4,10 +4,14 @@ import android.app.Dialog
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -19,17 +23,24 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.tv.TvActivity
+import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
+import com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesActivity
+import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
+import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
+import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.sync_continue_watching_alert_dialog.*
+import kotlinx.android.synthetic.main.tv_sidebar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-open class BaseFragmentActivity : FragmentActivity() {
+open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
     private val profileViewModel: ProfileViewModel by viewModel()
     private var googleAccount: GoogleSignInAccount? = null
     private var googleSignInClient: GoogleSignInClient? = null
@@ -38,6 +49,9 @@ open class BaseFragmentActivity : FragmentActivity() {
     private lateinit var signOutButton: View
     private lateinit var profilePhoto: ImageView
     private lateinit var profileUsername: TextView
+
+    private var doubleBackToExitPressedOnce = false
+    private var isFirstItem = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +62,37 @@ open class BaseFragmentActivity : FragmentActivity() {
                 .requestEmail()
                 .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+    }
+
+    fun setSidebarClickListeners(search: View, home: View, favorites: View, movies: View, genres: View) {
+        search.setOnClickListener {
+            startActivity(Intent(this, TvSearchActivity::class.java))
+            tv_sidebar.setGone()
+        }
+        home.setOnClickListener {
+            startActivity(Intent(this, TvActivity::class.java))
+            tv_sidebar.setGone()
+        }
+        favorites.setOnClickListener {
+            if (auth.currentUser != null) {
+                startActivity(Intent(this, TvFavoritesActivity::class.java))
+            } else {
+                this.createToast("ფავორიტების სანახავად, გაიარეთ ავტორიზაცია")
+            }
+            tv_sidebar.setGone()
+        }
+        movies.setOnClickListener {
+            val intent = Intent(this, TvCategoriesActivity::class.java)
+            intent.putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
+            this.startActivity(intent)
+            tv_sidebar.setGone()
+        }
+        genres.setOnClickListener {
+            val intent = Intent(this, TvSingleGenreActivity::class.java)
+            this.startActivity(intent)
+            tv_sidebar.setGone()
+        }
     }
 
     fun googleSignIn(view: View) {
@@ -74,6 +119,12 @@ open class BaseFragmentActivity : FragmentActivity() {
     fun googleProfileDetails(photo: ImageView, username: TextView) {
         profilePhoto = photo
         profileUsername = username
+
+        if (auth.currentUser == null) {
+            updateGoogleUI(null)
+        } else {
+            updateGoogleUI(auth.currentUser)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -158,5 +209,47 @@ open class BaseFragmentActivity : FragmentActivity() {
 
             signInButton.requestFocus()
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                if (isFirstItem) {
+                    tv_sidebar.setVisible()
+                    tv_sidebar_home.requestFocus()
+                }
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                if (tv_sidebar.isVisible) {
+                    tv_sidebar.setGone()
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onBackPressed() {
+        if (tv_sidebar.isVisible) {
+            tv_sidebar.setGone()
+        } else {
+            tv_sidebar.setVisible()
+            tv_sidebar_home.requestFocus()
+        }
+
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+
+        if (this is TvActivity) {
+            this.createToast("გასავლელად, კიდევ ერთხელ დააჭირეთ")
+        }
+    }
+
+    override fun isFirstItem(boolean: Boolean) {
+        isFirstItem = boolean
     }
 }

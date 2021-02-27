@@ -55,8 +55,6 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
             }
             rowsAdapter.add(ListRow(listRowAdapter))
         })
-
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

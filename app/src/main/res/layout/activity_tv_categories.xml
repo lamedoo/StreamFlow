@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        layout="@layout/tv_sidebar"/>
+
+    <include
+        layout="@layout/tv_sidebar_collapsed"/>
+
     <fragment
         android:name="com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesFragment"
         android:id="@+id/tv_details_left_fragment"

@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.tv.categories
+package com.lukakordzaia.streamflow.ui.tv.favorites
 
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -8,10 +8,11 @@ import com.lukakordzaia.streamflow.utils.setGone
 import kotlinx.android.synthetic.main.tv_sidebar.*
 import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
 
-class TvCategoriesActivity : BaseFragmentActivity() {
+class TvFavoritesActivity: BaseFragmentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tv_categories)
+        setContentView(R.layout.activity_tv_favorites)
 
         setSidebarClickListeners(
                 tv_sidebar_search,
@@ -21,11 +22,11 @@ class TvCategoriesActivity : BaseFragmentActivity() {
                 tv_sidebar_genres
         )
 
-        tv_sidebar_movies.setOnClickListener {
+        tv_sidebar_favorites.setOnClickListener {
             tv_sidebar.setGone()
         }
 
-        tv_sidebar_collapsed_movies_icon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
+        tv_sidebar_collapsed_favorites_icon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
         googleSignIn(tv_sidebar_signin)
         googleSignOut(tv_sidebar_signout)
