@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.tv.categories
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -8,6 +9,7 @@ import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.utils.AppConstants
@@ -18,6 +20,18 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
     private val gridAdapter = ArrayObjectAdapter(TvCardPresenter())
     private val tvCategoriesViewModel: TvCategoriesViewModel by viewModel()
     private var page = 1
+
+    var onFirstItem: TvCheckFirstItem? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        onFirstItem = context as? TvCheckFirstItem
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        onFirstItem = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,9 +105,15 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
+
+            if (indexOfItem == 0 || indexOfItem == 6) {
+                onFirstItem?.isFirstItem(true)
+            } else {
+                onFirstItem?.isFirstItem(false)
+            }
+
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
                 when (activity?.intent?.getSerializableExtra("type") as Int) {

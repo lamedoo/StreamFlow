@@ -230,10 +230,14 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
                 }
 
-                if (it.titleSubUri[0] == "0") {
-                    subtitleFunctions(false)
+                if (!it.titleSubUri.isNullOrEmpty()) {
+                    if (it.titleSubUri[0] == "0") {
+                        subtitleFunctions(false)
+                    } else {
+                        subtitleFunctions(true)
+                    }
                 } else {
-                    subtitleFunctions(true)
+                    subtitleFunctions(false)
                 }
             })
 

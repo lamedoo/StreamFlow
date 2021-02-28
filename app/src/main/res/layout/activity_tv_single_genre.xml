@@ -8,14 +8,16 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/tv_sidebar"/>
+        layout="@layout/tv_sidebar"
+        tools:visibility="gone"/>
 
     <include
         android:id="@+id/tv_sidebar_genre"
         layout="@layout/tv_sidebar_collapsed"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="gone"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -24,7 +26,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_sidebar_genre"
         app:layout_constraintWidth_default="percent"
-        app:layout_constraintHeight_percent="0.4">
+        app:layout_constraintHeight_percent="0.6">
 
         <ImageView
             android:id="@+id/single_genre_top_poster"
@@ -45,12 +47,13 @@
             android:id="@+id/single_genre_top_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="Title Name"
-            android:textSize="25sp"
+            android:textSize="35sp"
+            android:textStyle="bold"
             android:textColor="@color/white"
             app:layout_constraintTop_toTopOf="@id/single_genre_top_poster"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/single_genre_top_poster"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/single_genre_top_plot"
