@@ -3,7 +3,6 @@ package com.lukakordzaia.streamflow.ui.tv.categories
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
@@ -37,9 +36,9 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
         super.onCreate(savedInstanceState)
         title = ""
         setupFragment()
-            if (savedInstanceState == null) {
-                prepareEntranceTransition()
-            }
+//            if (savedInstanceState == null) {
+//                prepareEntranceTransition()
+//            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,10 +60,10 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
             }
         }
 
-        Handler().postDelayed(Runnable {
-            loadData()
-            startEntranceTransition()
-        }, 2000)
+        loadData()
+
+
+        adapter = gridAdapter
     }
 
     private fun loadData() {
@@ -86,11 +85,9 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
     }
 
     private fun setupFragment() {
-        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_LARGE, false).apply {
-            numberOfColumns = 6
-        }
+        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_LARGE, false)
+        gridPresenter.numberOfColumns = 6
         setGridPresenter(gridPresenter)
-        adapter = gridAdapter
 
         onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
             if (item is TitleList.Data) {
@@ -108,7 +105,8 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
 
-            if (indexOfItem == 0 || indexOfItem == 6) {
+            if (indexOfItem == 0) {
+                itemViewHolder!!.view.requestFocus()
                 onFirstItem?.isFirstItem(true)
             } else {
                 onFirstItem?.isFirstItem(false)

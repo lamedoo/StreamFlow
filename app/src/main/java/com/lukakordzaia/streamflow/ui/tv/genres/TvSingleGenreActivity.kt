@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.ui.tv.genres
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
@@ -28,6 +29,8 @@ class TvSingleGenreActivity: BaseFragmentActivity(), TvSingleGenreFragment.OnTit
                 tv_sidebar_genres
         )
 
+        setCurrentButton(tv_sidebar_genres)
+
         tv_sidebar_genres.setOnClickListener {
             tv_sidebar.setGone()
         }
@@ -45,12 +48,21 @@ class TvSingleGenreActivity: BaseFragmentActivity(), TvSingleGenreFragment.OnTit
 
         tvDetailsViewModel.singleTitleData.observe(this, {
             single_genre_top_name.text = it.secondaryName
-            Picasso.get().load(it.covers?.data?.x1050).error(R.drawable.movie_image_placeholder_landscape).into(single_genre_top_poster)
-            if (it.plot.data.description.isNotEmpty()) {
-                single_genre_top_plot.text = it.plot.data.description
+            Picasso.get().load(it.covers?.data?.x1050)
+                .error(R.drawable.movie_image_placeholder_landscape).into(single_genre_top_poster)
+            single_genre_top_year.text = "${it.year}   ·"
+            if (it.isTvShow) {
+                single_genre_top_duration.text = "${it.seasons?.data?.size} სეზონი   ·"
             } else {
-                single_genre_top_plot.text = "აღწერა არ მოიძებნა"
+                single_genre_top_duration.text = "${it.duration.toString()} წთ   ·"
             }
+            if (it.rating.imdb?.score != null) {
+                single_genre_top_rating.text = "IMDB ${it.rating.imdb.score.toString()}"
+            }
+        })
+
+        tvDetailsViewModel.titleGenres.observe(this, {
+            single_genre_top_genres.text = TextUtils.join(", ", it)
         })
     }
 

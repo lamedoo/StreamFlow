@@ -50,6 +50,8 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
     private lateinit var profilePhoto: ImageView
     private lateinit var profileUsername: TextView
 
+    private lateinit var currentButton: View
+
     private var doubleBackToExitPressedOnce = false
     private var isFirstItem = false
 
@@ -93,6 +95,10 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             this.startActivity(intent)
             tv_sidebar.setGone()
         }
+    }
+
+    fun setCurrentButton(currentButton: View) {
+        this.currentButton = currentButton
     }
 
     fun googleSignIn(view: View) {
@@ -185,7 +191,7 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
         })
     }
 
-    fun updateGoogleUI(user: FirebaseUser?) {
+    private fun updateGoogleUI(user: FirebaseUser?) {
         if (user != null) {
             profilePhoto.setVisible()
 
@@ -216,7 +222,7 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (isFirstItem) {
                     tv_sidebar.setVisible()
-                    tv_sidebar_home.requestFocus()
+                    currentButton.requestFocus()
                 }
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
@@ -233,7 +239,7 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             tv_sidebar.setGone()
         } else {
             tv_sidebar.setVisible()
-            tv_sidebar_home.requestFocus()
+            currentButton.requestFocus()
         }
 
         if (doubleBackToExitPressedOnce) {

@@ -47,7 +47,7 @@
             android:id="@+id/single_genre_top_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="5dp"
             android:text="Title Name"
             android:textSize="35sp"
             android:textStyle="bold"
@@ -56,16 +56,46 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/single_genre_top_plot"
-            android:layout_width="0dp"
+            android:id="@+id/single_genre_top_year"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="აღწერა"
+            android:padding="5dp"
+            android:text="2015"
             android:textColor="@color/general_text_color"
             app:layout_constraintTop_toBottomOf="@id/single_genre_top_name"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/single_genre_top_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="1:37:43"
+            android:textColor="@color/general_text_color"
+            app:layout_constraintTop_toBottomOf="@id/single_genre_top_name"
+            app:layout_constraintStart_toEndOf="@id/single_genre_top_year" />
+
+        <TextView
+            android:id="@+id/single_genre_top_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="8.6"
+            android:textColor="@color/general_text_color"
+            app:layout_constraintTop_toBottomOf="@id/single_genre_top_name"
+            app:layout_constraintStart_toEndOf="@id/single_genre_top_duration" />
+
+        <TextView
+            android:id="@+id/single_genre_top_genres"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="დრამა, კომედია, აზარტული"
+            android:textColor="@color/general_text_color"
+            app:layout_constraintTop_toBottomOf="@id/single_genre_top_year"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.7"/>
+            app:layout_constraintWidth_percent="0.5"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

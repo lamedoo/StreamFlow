@@ -12,6 +12,23 @@
     app:layout_constraintStart_toStartOf="parent">
 
     <LinearLayout
+        android:id="@+id/tv_sidebar_collapsed_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/rv_tv_default_card_view_background"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/user_profile_icon"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/tv_sidebar_collapsed_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

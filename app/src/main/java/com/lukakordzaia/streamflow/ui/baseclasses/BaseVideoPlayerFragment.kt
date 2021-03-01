@@ -257,16 +257,6 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 } else if (it.size > 1) {
                     mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
                 }
-
-//                if (it[player.currentWindowIndex].titleSubUri.isNotEmpty()) {
-//                    if (it[player.currentWindowIndex].titleSubUri == "0") {
-//                        subtitleFunctions(false)
-//                    } else {
-//                        subtitleFunctions(true)
-//                    }
-//                } else {
-//                    subtitleFunctions(false)
-//                }
             })
 
         }

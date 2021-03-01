@@ -19,8 +19,10 @@ class TvActivity : BaseFragmentActivity() {
                 tv_sidebar_home,
                 tv_sidebar_favorites,
                 tv_sidebar_movies,
-                tv_sidebar_genres
+                tv_sidebar_genres,
         )
+
+        setCurrentButton(tv_sidebar_home)
 
         tv_sidebar_home.setOnClickListener {
             tv_sidebar.setGone()

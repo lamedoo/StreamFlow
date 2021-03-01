@@ -40,10 +40,15 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     private val _addToFavorites = MutableLiveData<Boolean>()
     val addToFavorites: LiveData<Boolean> = _addToFavorites
 
+    private val _titleGenres = MutableLiveData<List<String>>()
+    val titleGenres: LiveData<List<String>> = _titleGenres
+    private val fetchTitleGenres: MutableList<String> = ArrayList()
+
     private val _imdbId = MutableLiveData<String>()
     private val imdbId: LiveData<String> = _imdbId
 
     fun getSingleTitleData(titleId: Int) {
+        fetchTitleGenres.clear()
         viewModelScope.launch {
             _dataLoader.value = LoadingState.LOADING
             when (val data = repository.getSingleTitleData(titleId)) {
@@ -51,6 +56,11 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
                     _singleTitleData.value = data.data.data
                     _imdbId.value = data.data.data.imdbUrl.substring(27, data.data.data.imdbUrl.length)
                     _dataLoader.value = LoadingState.LOADED
+
+                    data.data.data.genres.data.forEach {
+                        fetchTitleGenres.add(it.primaryName!!)
+                    }
+                    _titleGenres.value = fetchTitleGenres
                 }
                 is Result.Error -> {
                     newToastMessage(data.exception)
