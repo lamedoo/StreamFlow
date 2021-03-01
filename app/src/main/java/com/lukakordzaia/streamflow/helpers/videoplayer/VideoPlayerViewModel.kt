@@ -23,6 +23,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
 
     val playBackOptions = MutableLiveData<VideoPlayerInit>()
 
+    private val getSubtitles: MutableList<String> = ArrayList()
     private val getSeasonEpisodes: MutableList<String> = ArrayList()
     private val seasonEpisodesIntoUri: MutableList<MediaItem> = ArrayList()
 
@@ -38,9 +39,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     private val _setTitleNameList = MutableLiveData<List<String>>()
     val setTitleName: LiveData<List<String>> = _setTitleNameList
 
-    private val getMovieSubtitles: MutableList<String> = ArrayList()
-
-    val mediaAndSubtitle = MutableLiveData<TitleMediaItemsUri>()
+    val mediaAndSubtitle = MutableLiveData<List<TitleMediaItemsUri>>()
 
     fun initPlayer(isTvShow: Boolean, watchTime: Long, chosenEpisode: Int) {
         if (isTvShow) {
@@ -73,11 +72,11 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                 viewModelScope.launch {
                     repository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, dbDetails)
                 }
-                if (isTvShow) {
-                    viewModelScope.launch {
-                        repository.addWatchedEpisodeToFirestore(currentUser()!!.uid, dbDetails)
-                    }
-                }
+//                if (isTvShow) {
+//                    viewModelScope.launch {
+//                        repository.addWatchedEpisodeToFirestore(currentUser()!!.uid, dbDetails)
+//                    }
+//                }
             } else {
                 viewModelScope.launch {
                     roomDb(context)?.insertContinueWatchingInRoom(dbDetails)
@@ -124,7 +123,24 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     }
 
                     _setTitleNameList.value = getTitleNameList
-                    mediaAndSubtitle.value = TitleMediaItemsUri(seasonEpisodesIntoUri, getMovieSubtitles)
+
+                    val mediaItemsList: MutableList<TitleMediaItemsUri> = ArrayList()
+
+                    var i = 0
+                    while (i < getSubtitles.size) {
+                        mediaItemsList.add(TitleMediaItemsUri(seasonEpisodesIntoUri[i], getSubtitles[i]))
+//                        seasonEpisodesIntoUri.forEach {
+//                            mediaItemsList.add(TitleMediaItemsUri(it, getSubtitles[i]))
+//                        }
+                        i++
+                    }
+
+//                    seasonEpisodesIntoUri.forEach {
+//                        var i = 0
+//                        mediaItemsList.add(TitleMediaItemsUri(it, getSubtitles[]))
+//                    }
+
+                    mediaAndSubtitle.value = mediaItemsList
                 }
                 is Result.Error -> {
                     Log.d("errornextepisode", files.exception)
@@ -148,11 +164,11 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
             if (!singleEpisodeFiles.subtitles.isNullOrEmpty()) {
                 singleEpisodeFiles.subtitles.forEach {
                     if (it!!.lang.equals(chosenLanguage, true)) {
-                        getMovieSubtitles.add(it.url)
+                        getSubtitles.add(it.url)
                     }
                 }
             } else {
-                getMovieSubtitles.add("0")
+                getSubtitles.add("0")
             }
         }
     }

@@ -21,7 +21,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         setExoPlayer(phone_title_player)
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getPlayListFiles(args.videoPlayerData.titleId, args.videoPlayerData.chosenSeason, args.videoPlayerData.chosenLanguage)
+            getPlayListFiles(args.videoPlayerData.titleId, args.videoPlayerData.chosenSeason, args.videoPlayerData.chosenLanguage, args.videoPlayerData.isTvShow)
         }
     }
 

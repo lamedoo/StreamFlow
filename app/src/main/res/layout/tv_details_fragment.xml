@@ -41,160 +41,172 @@
             android:background="@drawable/tv_details_poster_background"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_files_title_name_eng"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="50dp"
-            android:focusable="false"
-            android:textColor="@color/white"
-            android:textSize="35sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.8"
-            tools:text="Friends" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/tv_files_info_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_files_title_name_eng">
+            android:id="@+id/tv_details_top_info"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.6">
 
-            <LinearLayout
-                android:id="@+id/tv_files_score_container"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tv_files_title_name_eng"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/tv_files_year_container"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="50dp"
+                android:focusable="false"
+                android:textColor="@color/white"
+                android:textSize="35sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteY="9dp">
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.8"
+                tools:text="Friends" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/phone_imdb_logo" />
-
-                <TextView
-                    android:id="@+id/tv_files_title_imdb_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/default_data"
-                    android:textStyle="bold"
-                    tools:text="9.0" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/tv_files_year_container"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tv_files_info_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/tv_files_duration_container"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tv_files_score_container"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteY="9dp">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_files_title_name_eng">
 
-                <ImageView
+                <LinearLayout
+                    android:id="@+id/tv_files_score_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/info_calendar_icon" />
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_files_year_container"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="9dp">
 
-                <TextView
-                    android:id="@+id/tv_files_title_year"
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/phone_imdb_logo" />
+
+                    <TextView
+                        android:id="@+id/tv_files_title_imdb_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_data"
+                        android:textStyle="bold"
+                        tools:text="9.0" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tv_files_year_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/default_data"
-                    android:textStyle="bold"
-                    tools:text="1987" />
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_files_duration_container"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_files_score_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="9dp">
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/info_calendar_icon" />
 
-            <LinearLayout
-                android:id="@+id/tv_files_duration_container"
-                android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/tv_files_title_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_data"
+                        android:textStyle="bold"
+                        tools:text="1987" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tv_files_duration_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_files_country_container"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_files_year_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="9dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/info_duration_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_files_title_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_data"
+                        android:textStyle="bold"
+                        tools:text="99" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tv_files_country_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_files_year_container"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_files_duration_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="9dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/info_country_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_files_title_country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_data"
+                        android:textStyle="bold"
+                        tools:text="USA" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_files_title_desc"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
+                android:focusable="false"
+                android:maxLines="5"
                 android:padding="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/tv_files_country_container"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tv_files_year_container"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteY="9dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/info_duration_icon" />
-
-                <TextView
-                    android:id="@+id/tv_files_title_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/default_data"
-                    android:textStyle="bold"
-                    tools:text="99" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/tv_files_country_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/tv_files_year_container"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tv_files_duration_container"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteY="9dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/info_country_icon" />
-
-                <TextView
-                    android:id="@+id/tv_files_title_country"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/default_data"
-                    android:textStyle="bold"
-                    tools:text="USA" />
-
-            </LinearLayout>
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_files_info_details"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.7"
+                tools:text="Upon witnessing a man's head cracked open with an axe, 16-year-old Yuri Honjou trembles in fear and confusion as she flees from the masked assailant, only to find out she's trapped in an abandoned building where every door is mysteriously locked. Desperately searching for a way out, Yuri runs to the rooftop, but a world with no signs of life stands before her, surrounded by high-rise buildings. Though filled with despair, once she learns that her brother is also in this strange place, Yuri is determined to find him and escape. However, she soon finds that there are more masked murderers in the area, anxious to terrorize their newfound victims and satiate their sickest desires, leaving Yuri to question if they will be able to make it out alive." />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/tv_files_title_desc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:maxLines="5"
-            android:padding="10dp"
-            android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_files_info_details"
-            app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.7"
-            tools:text="მეგობრები" />
+
 
         <TextView
             android:id="@+id/tv_details_no_files"
@@ -210,7 +222,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc"
+            app:layout_constraintTop_toBottomOf="@id/tv_details_top_info"
             tools:visibility="gone"/>
 
         <LinearLayout
@@ -220,7 +232,7 @@
             android:orientation="horizontal"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_files_title_desc"
+            app:layout_constraintTop_toBottomOf="@id/tv_details_top_info"
             android:visibility="gone"
             tools:visibility="visible">
 

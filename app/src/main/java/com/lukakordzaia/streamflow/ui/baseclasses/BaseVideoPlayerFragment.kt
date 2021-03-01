@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -37,6 +38,10 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     private lateinit var player: SimpleExoPlayer
     private lateinit var playerView: PlayerView
 
+    private var titleId = 0
+    private var isTvShow = false
+    private var chosenLanguage = ""
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,8 +54,6 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 super.onPlaybackStateChanged(state)
                 if ((player.currentWindowIndex + 1) == player.mediaItemCount) {
                     if (state == Player.STATE_READY) {
-
-
                         playerView.keepScreenOn = true
                         videoPlayerViewModel.isTvShow.observe(viewLifecycleOwner, {
                             if (it) {
@@ -71,7 +74,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                super.onMediaItemTransition(mediaItem, reason)
+                setControllerVisible()
                 videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
                     if (videoPlayerViewModel.isTvShow.value == true) {
                         setEpisodeName(name)
@@ -82,6 +85,19 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                             setMovieName(name[player.currentWindowIndex])
                         }
                     }
+                })
+
+                videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
+                    if (it[player.currentWindowIndex].titleSubUri.isNotEmpty()) {
+                        if (it[player.currentWindowIndex].titleSubUri == "0") {
+                            subtitleFunctions(false)
+                        } else {
+                            subtitleFunctions(true)
+                        }
+                    } else {
+                        subtitleFunctions(false)
+                    }
+
                 })
             }
         })
@@ -159,10 +175,16 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         }
     }
 
+    private fun setControllerVisible() {
+        tv_title_player?.showController()
+        phone_title_player?.showController()
+    }
+
     private fun subtitleFunctions(hasSubs: Boolean) {
+        Log.d("subtitles", hasSubs.toString())
         player.addTextOutput {
-            subtitle?.onCues(it)
-            tv_subtitle?.onCues(it)
+                subtitle?.onCues(it)
+                tv_subtitle?.onCues(it)
 
             subtitle?.setStyle(CaptionStyleCompat(
                     ContextCompat.getColor(requireContext(), R.color.white),
@@ -186,6 +208,8 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         }
 
         if (hasSubs) {
+            subtitle_toggle?.setVisible()
+            tv_subtitle_toggle?.setVisible()
             subtitle_toggle?.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
             tv_subtitle_toggle?.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
         } else {
@@ -214,31 +238,35 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         }
     }
 
-    fun getPlayListFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
+    fun getPlayListFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String, isTvShow: Boolean) {
         videoPlayerViewModel.getPlaylistFiles(titleId, chosenSeason, chosenLanguage)
         videoPlayerViewModel.getSingleTitleData(titleId)
+
+        this.titleId = titleId
+        this.isTvShow = isTvShow
+        this.chosenLanguage = chosenLanguage
     }
 
     fun initPlayer(isTvShow: Boolean, watchedTime: Long, chosenEpisode: Int, trailerUrl: String?) {
         if (trailerUrl != null) {
             mediaPlayer.setMediaItems(listOf(MediaItem.fromUri(Uri.parse(trailerUrl))))
         } else {
-            videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
-                if (it.titleFileUri.size == 1) {
-                    mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
-                } else if (it.titleFileUri.size > 1) {
+            videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, { it ->
+                if (it.size == 1) {
+                    mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it[0]))
+                } else if (it.size > 1) {
                     mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
                 }
 
-                if (!it.titleSubUri.isNullOrEmpty()) {
-                    if (it.titleSubUri[0] == "0") {
-                        subtitleFunctions(false)
-                    } else {
-                        subtitleFunctions(true)
-                    }
-                } else {
-                    subtitleFunctions(false)
-                }
+//                if (it[player.currentWindowIndex].titleSubUri.isNotEmpty()) {
+//                    if (it[player.currentWindowIndex].titleSubUri == "0") {
+//                        subtitleFunctions(false)
+//                    } else {
+//                        subtitleFunctions(true)
+//                    }
+//                } else {
+//                    subtitleFunctions(false)
+//                }
             })
 
         }

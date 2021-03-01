@@ -139,7 +139,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
             tv_files_title_name_eng.text = it.secondaryName
             if (it.isTvShow) {
-                tv_files_title_duration.text = "${it.seasons!!.data.size} სეზონი"
+                tv_files_title_duration.text = "${it.seasons?.data?.size} სეზონი"
             } else {
                 tv_files_title_duration.text = "${it.duration.toString()} წთ."
             }
