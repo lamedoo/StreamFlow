@@ -5,7 +5,7 @@ data class VideoPlayerInit(
         var playbackPosition: Long,
 )
 
-data class VideoPlayerRelease(
+data class VideoPlayerInfo(
         var currentWindow: Int,
         var playbackPosition: Long,
         var titleDuration: Long

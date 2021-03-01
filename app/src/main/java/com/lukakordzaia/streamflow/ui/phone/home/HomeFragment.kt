@@ -5,10 +5,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.PopupMenu
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -74,7 +71,7 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
             }
         })
 
-        //Watched Titles List
+        //Continue Watching Titles List
         val dbLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeDbTitlesAdapter = HomeDbTitlesAdapter(requireContext(),
                 {

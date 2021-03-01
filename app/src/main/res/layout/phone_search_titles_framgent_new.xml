@@ -31,10 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/phone_search_result_background"
-        android:padding="@dimen/fragment_padding"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="@id/search_title_text"
-        tools:context=".ui.phone.categories.singlegenre.SingleGenreFragment"
         tools:visibility="visible">
 
         <androidx.core.widget.NestedScrollView

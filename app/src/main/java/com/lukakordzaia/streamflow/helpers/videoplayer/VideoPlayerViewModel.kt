@@ -10,8 +10,8 @@ import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInit
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerRelease
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -51,13 +51,13 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
         )
     }
 
-    fun releasePlayer(videoPlayerRelease: VideoPlayerRelease) {
-        playbackPositionForDb.value = videoPlayerRelease.playbackPosition
-        episodeForDb.value = videoPlayerRelease.currentWindow
-        titleDurationForDb.value = videoPlayerRelease.titleDuration
+    fun setVideoPlayerInfo(videoPlayerInfo: VideoPlayerInfo) {
+        playbackPositionForDb.value = videoPlayerInfo.playbackPosition
+        episodeForDb.value = videoPlayerInfo.currentWindow
+        titleDurationForDb.value = videoPlayerInfo.titleDuration
     }
 
-    fun saveTitleToDb(context: Context, titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
+    fun addContinueWatching(context: Context, titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
         val dbDetails = DbDetails(
                 titleId,
                 chosenLanguage,
@@ -89,6 +89,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
         getSeasonEpisodes.clear()
         seasonEpisodesIntoUri.clear()
         getTitleNameList.clear()
+        getSubtitles.clear()
     }
 
     fun getPlaylistFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
@@ -129,9 +130,6 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     var i = 0
                     while (i < getSubtitles.size) {
                         mediaItemsList.add(TitleMediaItemsUri(seasonEpisodesIntoUri[i], getSubtitles[i]))
-//                        seasonEpisodesIntoUri.forEach {
-//                            mediaItemsList.add(TitleMediaItemsUri(it, getSubtitles[i]))
-//                        }
                         i++
                     }
 

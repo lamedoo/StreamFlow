@@ -115,7 +115,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         }
     }
 
-    fun getContinueWatchingFromFirestoreTV() {
+    fun getContinueWatchingFromFirestore() {
         repository.getContinueWatchingFromFirestore1(currentUser()!!.uid, object : FirebaseContinueWatchingListCallBack {
             override fun continueWatchingList(titleList: MutableList<DbDetails>) {
                 if (!titleList.isNullOrEmpty()) {
@@ -145,7 +145,8 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             val deleteTitle = repository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
             if (deleteTitle) {
                 clearContinueWatchingTitleList()
-//                getContinueWatchingFromFirestore()
+                getContinueWatchingFromFirestorePHONE()
+                newToastMessage("წაიშალა განაგრძეთ ყურებიდან")
             } else {
                 newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
             }
@@ -245,9 +246,6 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     topMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    when (topMovies.exception) {
-                        
-                    }
                     newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
                 }
                 is Result.Internet -> {

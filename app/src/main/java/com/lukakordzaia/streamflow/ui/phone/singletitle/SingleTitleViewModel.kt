@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -27,7 +26,7 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
 
     private val _titleGenres = MutableLiveData<List<String>>()
     val titleGenres: LiveData<List<String>> = _titleGenres
-    private val fetchTitleGenres: MutableList<String> = ArrayList()
+//    private val fetchTitleGenres: MutableList<String> = ArrayList()
 
     private val _titleDirector = MutableLiveData<TitleCast.Data>()
     val titleDirector: LiveData<TitleCast.Data> = _titleDirector
@@ -72,6 +71,7 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
     }
 
     fun getSingleTitleData(titleId: Int, accessToken: String) {
+        val fetchTitleGenres: MutableList<String> = ArrayList()
         viewModelScope.launch {
             singleTitleLoader.value = LoadingState.LOADING
             coroutineScope {

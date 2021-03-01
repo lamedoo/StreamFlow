@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.FranchiseList
-import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SearchTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
@@ -29,6 +29,7 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
 
     fun clearSearchResults() {
         fetchSearchTitleList.clear()
+        _searchList.value = mutableListOf()
     }
 
     fun getSearchTitles(keywords: String, page: Int) {

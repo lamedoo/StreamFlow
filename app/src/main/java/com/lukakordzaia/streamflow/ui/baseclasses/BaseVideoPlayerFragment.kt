@@ -5,7 +5,6 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -18,6 +17,7 @@ import com.google.android.exoplayer2.text.CaptionStyleCompat
 import com.google.android.exoplayer2.text.CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
@@ -97,8 +97,16 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     } else {
                         subtitleFunctions(false)
                     }
-
                 })
+
+                videoPlayerViewModel.setVideoPlayerInfo(
+                        VideoPlayerInfo(
+                                player.currentWindowIndex,
+                                player.currentPosition,
+                                player.duration
+                        )
+                )
+                videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
             }
         })
 
@@ -181,7 +189,6 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {
-        Log.d("subtitles", hasSubs.toString())
         player.addTextOutput {
                 subtitle?.onCues(it)
                 tv_subtitle?.onCues(it)
@@ -265,10 +272,10 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
 
     fun releasePlayer(titleId: Int, isTvShow: Boolean, chosenLanguage: String, trailerUrl: String?) {
         mediaPlayer.releasePlayer {
-            videoPlayerViewModel.releasePlayer(it)
+            videoPlayerViewModel.setVideoPlayerInfo(it)
         }
         if (trailerUrl == null) {
-            videoPlayerViewModel.saveTitleToDb(requireContext(), titleId, isTvShow, chosenLanguage)
+            videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
         }
     }
 }
