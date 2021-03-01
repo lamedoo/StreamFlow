@@ -3,6 +3,8 @@ package com.lukakordzaia.streamflow.ui.tv.categories
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
@@ -105,12 +107,15 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
 
-            if (indexOfItem == 0) {
-                itemViewHolder!!.view.requestFocus()
-                onFirstItem?.isFirstItem(true)
-            } else {
-                onFirstItem?.isFirstItem(false)
-            }
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (indexOfItem == 0) {
+                    itemViewHolder!!.view.requestFocus()
+                    onFirstItem?.isFirstItem(true)
+                } else {
+                    onFirstItem?.isFirstItem(false)
+                }
+            }, 1000)
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
