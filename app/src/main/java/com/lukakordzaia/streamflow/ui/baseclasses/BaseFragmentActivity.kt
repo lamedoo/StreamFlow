@@ -202,7 +202,7 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             profilePhoto.setVisible()
 
             if (googleAccount != null) {
-                profileUsername.text = "${googleAccount!!.givenName} ${googleAccount!!.familyName}"
+                profileUsername.text = "გამარჯობა, ${googleAccount!!.givenName!!.toUpperCase()}"
                 Picasso.get().load(googleAccount!!.photoUrl).into(profilePhoto)
             }
 

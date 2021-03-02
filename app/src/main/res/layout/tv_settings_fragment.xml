@@ -4,28 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primaryColor"
+    android:background="@color/secondary_color"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/tv_settings_back"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="დააჭირეთ "
+            android:textSize="10sp"
+            android:textColor="@color/general_text_color"/>
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_arrow_back"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=" უკან გასასვლელად"
+            android:textSize="10sp"
+            android:textColor="@color/general_text_color"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_settings_name"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:text="პარამეტრები"
         android:fontFamily="@font/georgian_uppercase"
-        android:textColor="@color/general_text_color"
+        android:textColor="@color/secondary_text_color"
         android:textStyle="bold"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tv_settings_back"/>
 
     <LinearLayout
         android:id="@+id/tv_settings_trakt"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:orientation="horizontal"
         android:paddingTop="10dp"
         android:paddingStart="10dp"
@@ -44,7 +77,7 @@
             android:layout_height="25dp"
             android:layout_marginRight="10dp"
             android:src="@drawable/traktv_icon"
-            android:tint="@color/white"
+            android:tint="@color/secondary_text_color"
             tools:ignore="UseAppTint" />
 
         <TextView
@@ -56,7 +89,7 @@
             android:nextFocusUp="@id/tv_sidebar_search"
             android:nextFocusDown="@id/tv_sidebar_home"
             android:text="დაუკავშირდით TRAKT.TV-ს"
-            android:textColor="@color/text_on_accent_color"
+            android:textColor="@color/secondary_text_color"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -83,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:src="@drawable/info_icon"
-            android:tint="@color/white"
+            android:tint="@color/secondary_text_color"
             tools:ignore="UseAppTint" />
 
         <TextView
@@ -95,10 +128,89 @@
             android:nextFocusUp="@id/tv_sidebar_search"
             android:nextFocusDown="@id/tv_sidebar_home"
             android:text="STREAMFLOW-ს შესახებ"
-            android:textColor="@color/text_on_accent_color"
+            android:textColor="@color/secondary_text_color"
             android:textStyle="bold" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/tv_settings_delete"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="7dp"
+        android:background="@drawable/tv_sidebar_button_background"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:nextFocusUp="@id/tv_sidebar_signin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_settings_info">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center"
+            android:src="@drawable/clear_db_icon"
+            android:tint="@color/secondary_text_color"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="2dp"
+            android:fontFamily="@font/georgian_uppercase"
+            android:nextFocusUp="@id/tv_sidebar_search"
+            android:nextFocusDown="@id/tv_sidebar_home"
+            android:text="განაგრძეთ ყურების გასუფთავება"
+            android:textColor="@color/secondary_text_color"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tv_settings_signin"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="7dp"
+        android:background="@drawable/tv_sidebar_button_background"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:nextFocusUp="@id/tv_sidebar_signin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_settings_delete">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center"
+            android:src="@drawable/user_profile_icon"
+            android:tint="@color/secondary_text_color"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="2dp"
+            android:fontFamily="@font/georgian_uppercase"
+            android:nextFocusUp="@id/tv_sidebar_search"
+            android:nextFocusDown="@id/tv_sidebar_home"
+            android:text="ანგარიშიდან გასვლა"
+            android:textColor="@color/secondary_text_color"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

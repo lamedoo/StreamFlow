@@ -23,9 +23,24 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:padding="@dimen/fragment_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_default="percent"
         app:layout_constraintWidth_percent="0.65">
+        
+        <LinearLayout
+            android:id="@+id/tv_settings_trakt_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="დაუკავშირდით TRAKT.TV-ს"
+            
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

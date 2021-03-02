@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tv_sidebar"
-    android:layout_width="300dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondary_color"
+    android:background="@drawable/tv_sidebar_background"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="@dimen/fragment_padding"
@@ -26,36 +26,33 @@
         android:id="@+id/tv_sidebar_profile_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textAllCaps="true"
+        android:layout_marginStart="10dp"
         android:textColor="@color/general_text_color"
-        android:textSize="16sp"
+        android:fontFamily="@font/georgian_uppercase"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/tv_sidebar_profile_photo"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/tv_sidebar_profile_photo"
-        tools:text="Luka Kordzaia" />
+        tools:text="გამარჯობა, LUKA" />
 
     <LinearLayout
         android:id="@+id/tv_sidebar_signout"
         android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:padding="10dp"
-        android:background="@drawable/tv_google_button_background"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:padding="5dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusDown="@id/tv_sidebar_search"
-        app:layout_constraintStart_toEndOf="@id/tv_sidebar_profile_username"
-        app:layout_constraintTop_toTopOf="@id/tv_sidebar_profile_photo"
-        app:layout_constraintBottom_toBottomOf="@id/tv_sidebar_profile_photo">
+        app:layout_constraintStart_toEndOf="@id/tv_sidebar_profile_photo"
+        app:layout_constraintTop_toBottomOf="@id/tv_sidebar_profile_username">
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:src="@drawable/logout_icon"
-            android:tint="@color/red"
-            tools:ignore="UseAppTint" />
+            android:text="პროფილიდან გასვლა"
+            android:textColor="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"/>
 
     </LinearLayout>
 
@@ -96,35 +93,6 @@
 
         </LinearLayout>
 
-<!--        <LinearLayout-->
-<!--            android:id="@+id/tv_sidebar_signout"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="45dp"-->
-<!--            android:padding="10dp"-->
-<!--            android:background="@drawable/tv_google_button_background"-->
-<!--            android:focusable="true"-->
-<!--            android:focusableInTouchMode="true"-->
-<!--            android:nextFocusDown="@id/tv_sidebar_search">-->
-
-<!--            <ImageView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="start|center_vertical"-->
-<!--                android:src="@drawable/google_login_logo" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginStart="5dp"-->
-<!--                android:gravity="center"-->
-<!--                android:includeFontPadding="false"-->
-<!--                android:text="ანგარიშიდან გასვლა"-->
-<!--                android:textColor="@color/red"-->
-<!--                android:textSize="13.5sp" />-->
-
-<!--        </LinearLayout>-->
-
     </LinearLayout>
 
     <LinearLayout
@@ -136,9 +104,6 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="7dp"
-        android:background="@drawable/tv_sidebar_button_background"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:nextFocusUp="@id/tv_sidebar_signin"
         app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_home"
         app:layout_constraintTop_toTopOf="parent"
@@ -150,18 +115,19 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:src="@drawable/search_icon_bottom"
-            android:tint="@color/white"
+            android:tint="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
 
         <TextView
+            android:id="@+id/tv_sidebar_search_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="2dp"
+            android:duplicateParentState="true"
             android:fontFamily="@font/georgian_uppercase"
-            android:nextFocusUp="@id/tv_sidebar_search"
-            android:nextFocusDown="@id/tv_sidebar_home"
             android:text="ძიება"
-            android:textColor="@color/text_on_accent_color"
+            android:textColor="@color/tv_sidebar_text_focused"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -174,7 +140,6 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="7dp"
-        android:background="@drawable/tv_sidebar_button_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
         app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_favorites"
@@ -186,16 +151,18 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:src="@drawable/home_icon_bottom"
-            android:tint="@color/white"
+            android:tint="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="3dp"
+            android:paddingTop="4dp"
             android:fontFamily="@font/georgian_uppercase"
             android:text="მთავარი"
-            android:textColor="@color/text_on_accent_color"
+            android:textColor="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             android:textStyle="bold"/>
 
 
@@ -209,7 +176,6 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="7dp"
-        android:background="@drawable/tv_sidebar_button_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
         app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_movies"
@@ -221,7 +187,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:src="@drawable/title_favorite_icon"
-            android:tint="@color/white"
+            android:tint="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
 
         <TextView
@@ -230,7 +197,8 @@
             android:paddingTop="3dp"
             android:fontFamily="@font/georgian_uppercase"
             android:text="ფავორიტები"
-            android:textColor="@color/text_on_accent_color"
+            android:textColor="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             android:textStyle="bold"/>
 
 
@@ -244,7 +212,6 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="7dp"
-        android:background="@drawable/tv_sidebar_button_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
         app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_genres"
@@ -256,7 +223,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:src="@drawable/tv_new_movies_icon"
-            android:tint="@color/white"
+            android:tint="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
 
         <TextView
@@ -265,7 +233,8 @@
             android:paddingTop="2dp"
             android:fontFamily="@font/georgian_uppercase"
             android:text="ახალი ფილმები"
-            android:textColor="@color/text_on_accent_color"
+            android:textColor="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             android:textStyle="bold"/>
 
     </LinearLayout>
@@ -278,7 +247,6 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="7dp"
-        android:background="@drawable/tv_sidebar_button_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusDown="@id/tv_sidebar_settings"
@@ -291,7 +259,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:src="@drawable/genre_icon_bottom"
-            android:tint="@color/white"
+            android:tint="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
 
         <TextView
@@ -300,7 +269,8 @@
             android:paddingTop="2dp"
             android:fontFamily="@font/georgian_uppercase"
             android:text="ჟანრის მიხედვით"
-            android:textColor="@color/text_on_accent_color"
+            android:textColor="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             android:textStyle="bold"/>
 
     </LinearLayout>
@@ -313,7 +283,6 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="7dp"
-        android:background="@drawable/tv_sidebar_button_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusUp="@id/tv_sidebar_genres"
@@ -325,16 +294,18 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:src="@drawable/settings_icon_home"
-            android:tint="@color/white"
+            android:tint="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
+            android:paddingTop="3dp"
             android:fontFamily="@font/georgian_uppercase"
             android:text="პარამეტრები"
-            android:textColor="@color/text_on_accent_color"
+            android:textColor="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
             android:textStyle="bold" />
 
     </LinearLayout>
