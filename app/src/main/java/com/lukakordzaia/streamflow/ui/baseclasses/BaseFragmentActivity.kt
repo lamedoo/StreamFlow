@@ -31,6 +31,7 @@ import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesActivity
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
 import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
+import com.lukakordzaia.streamflow.ui.tv.settings.TvSettingsActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
@@ -67,7 +68,7 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
 
     }
 
-    fun setSidebarClickListeners(search: View, home: View, favorites: View, movies: View, genres: View) {
+    fun setSidebarClickListeners(search: View, home: View, favorites: View, movies: View, genres: View, settings: View) {
         search.setOnClickListener {
             startActivity(Intent(this, TvSearchActivity::class.java))
             tv_sidebar.setGone()
@@ -92,6 +93,11 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
         }
         genres.setOnClickListener {
             val intent = Intent(this, TvSingleGenreActivity::class.java)
+            this.startActivity(intent)
+            tv_sidebar.setGone()
+        }
+        settings.setOnClickListener {
+            val intent = Intent(this, TvSettingsActivity::class.java)
             this.startActivity(intent)
             tv_sidebar.setGone()
         }

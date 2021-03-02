@@ -15,11 +15,12 @@ class TvSearchActivity : BaseFragmentActivity() {
         setContentView(R.layout.activity_tv_search)
 
         setSidebarClickListeners(
-            tv_sidebar_search,
-            tv_sidebar_home,
-            tv_sidebar_favorites,
-            tv_sidebar_movies,
-            tv_sidebar_genres
+                tv_sidebar_search,
+                tv_sidebar_home,
+                tv_sidebar_favorites,
+                tv_sidebar_movies,
+                tv_sidebar_genres,
+                tv_sidebar_settings
         )
 
         setCurrentButton(tv_sidebar_search)
@@ -29,10 +30,10 @@ class TvSearchActivity : BaseFragmentActivity() {
         }
 
         tv_sidebar_collapsed_search_icon.setColorFilter(
-            ContextCompat.getColor(
-                this,
-                R.color.accent_color
-            )
+                ContextCompat.getColor(
+                        this,
+                        R.color.accent_color
+                )
         )
 
         googleSignIn(tv_sidebar_signin)

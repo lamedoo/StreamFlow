@@ -20,6 +20,7 @@ class TvActivity : BaseFragmentActivity() {
                 tv_sidebar_favorites,
                 tv_sidebar_movies,
                 tv_sidebar_genres,
+                tv_sidebar_settings
         )
 
         setCurrentButton(tv_sidebar_home)
