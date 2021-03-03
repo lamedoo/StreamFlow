@@ -17,13 +17,14 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
-import com.lukakordzaia.streamflow.datamodels.TvSettingsList
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
-import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.*
+import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
+import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
+import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
+import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvWatchedCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
@@ -32,7 +33,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvMainFragment : BrowseSupportFragment() {
     private val homeViewModel: HomeViewModel by viewModel()
-    private val profileViewModel: ProfileViewModel by viewModel()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private val page = 1
     lateinit var metrics: DisplayMetrics
@@ -120,7 +120,6 @@ class TvMainFragment : BrowseSupportFragment() {
         })
 
         categoriesRowsAdapter()
-        settingsRowsAdapter()
 
         prepareBackgroundManager()
         setupUIElements()
@@ -132,9 +131,8 @@ class TvMainFragment : BrowseSupportFragment() {
         val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TV_TOP_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
         val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TV_TOP_TV_SHOWS), ArrayObjectAdapter(TvCardPresenter()))
         val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvCardPresenter()))
-        val fifthHeaderItem = ListRow(HeaderItem(4, AppConstants.TV_SETTINGS), ArrayObjectAdapter(TvCardPresenter()))
         val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
-        val initListRows = mutableListOf(firstHeaderItem, sixthHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem, fifthHeaderItem)
+        val initListRows = mutableListOf(firstHeaderItem, sixthHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }
 
@@ -197,16 +195,6 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun settingsRowsAdapter() {
-        val listRowAdapter = ArrayObjectAdapter(TvSettingsPresenter(requireContext())).apply {
-            add(TvSettingsList(0, "ნახვების ისტორიის წაშლა"))
-        }
-
-        HeaderItem(5, AppConstants.TV_SETTINGS).also { header ->
-            rowsAdapter.replace(5, ListRow(header, listRowAdapter))
-        }
-    }
-
     private fun prepareBackgroundManager() {
         backgroundManager = BackgroundManager.getInstance(activity).apply {
             attach(activity?.window)
@@ -220,16 +208,10 @@ class TvMainFragment : BrowseSupportFragment() {
         title = "StreamFlow"
         isHeadersTransitionOnBackEnabled = true
         brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
-//        searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.default_background_color) }!!
         adapter = rowsAdapter
-
     }
 
     private fun setupEventListeners() {
-//        setOnSearchClickedListener {
-//            startActivity(Intent(context, TvSearchActivity::class.java))
-//        }
-
         onItemViewClickedListener = ItemViewClickedListener()
         onItemViewSelectedListener = ItemViewSelectedListener()
     }
@@ -257,11 +239,6 @@ class TvMainFragment : BrowseSupportFragment() {
                 intent.putExtra("watchedTime", item.watchedDuration)
                 intent.putExtra("trailerUrl", trailerUrl)
                 activity?.startActivity(intent)
-            } else if (item is TvSettingsList) {
-                if (item.settingsId == 0) {
-                    profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
-                    profileViewModel.onDeletePressedTv(requireContext())
-                }
             } else if (item is TvCategoriesList) {
                 when (item.categoriesId) {
                     0 -> {

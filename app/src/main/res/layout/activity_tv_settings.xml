@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/primaryColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-<!--    <include-->
-<!--        layout="@layout/tv_sidebar"/>-->
-
-<!--    <include-->
-<!--        layout="@layout/tv_sidebar_collapsed"/>-->
 
     <fragment
         android:name="com.lukakordzaia.streamflow.ui.tv.settings.TvSettingsFragment"
@@ -23,6 +18,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginTop="95dp"
         android:padding="@dimen/fragment_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_default="percent"
@@ -30,16 +26,131 @@
         
         <LinearLayout
             android:id="@+id/tv_settings_trakt_container"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="gone">
             
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="დაუკავშირდით TRAKT.TV-ს"/>
+                android:text="დაუკავშირდით TRAKT.TV-ს"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="20sp"
+                android:fontFamily="@font/georgian_uppercase"/>
+
+            <TextView
+                android:layout_width="440dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="Trakt.tv-ს სერვისებთან დაკავშირების შემდეგ, შეძლებთ კალენდრის ფუნქციის ჩართვას აპლიკაციაში და ახალი სერიების თარიღების ნახვას."
+                android:textColor="@color/secondary_text_color"
+                android:textSize="17sp" />
             
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tv_settings_info_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STREAMFLOW-ს შესახებ"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="20sp"
+                android:fontFamily="@font/georgian_uppercase"/>
+
+            <TextView
+                android:layout_width="440dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="Streamflow შეიქმნა იმ მიზნით, რომ ყველამ შეძლოს უფასოდ ფილმების და სერიალების ყურება ანდროიდის მოწყობილობებზე. არ ელოდოთ ამ აპლიკაციას iPhone-ზე"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tv_settings_delete_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="განაგრძეთ ყურების გასუფთავება"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="20sp"
+                android:fontFamily="@font/georgian_uppercase"/>
+
+            <TextView
+                android:layout_width="440dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="გაასუფთავეთ 'განაგრძეთ ყურების' სია და დაიწყეთ ყველაფრის ყურება თავიდან"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tv_settings_signout_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ანგარიშიდან გასვლა"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="20sp"
+                android:fontFamily="@font/georgian_uppercase"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/tv_settings_profile_photo"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/no_profile_picture"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_settings_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:text="შესული ხართ, როგორც Luka Kordzaia"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:id="@+id/tv_settings_profile_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="ელ-ფოსტა: kordzaialuka@gmail.com"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="17sp"/>
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
