@@ -5,6 +5,8 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -50,27 +52,25 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         mediaPlayer = MediaPlayerClass(player)
 
         mediaPlayer.setPlayerListener(object : Player.EventListener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                super.onIsPlayingChanged(isPlaying)
+
+                if (!isPlaying) {
+                    tv_subtitle_toggle?.nextFocusDownId = R.id.exo_play
+                } else {
+                    tv_subtitle_toggle?.nextFocusDownId = R.id.exo_pause
+
+                    checkForNextSeasonButton().start()
+                }
+            }
+
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
-                if ((player.currentWindowIndex + 1) == player.mediaItemCount) {
-                    if (state == Player.STATE_READY) {
-                        playerView.keepScreenOn = true
-                        videoPlayerViewModel.isTvShow.observe(viewLifecycleOwner, {
-                            if (it) {
-                                val nextSeasonNum = videoPlayerViewModel.seasonForDb.value!! + 1
-                                videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
-                                    if (nextSeasonNum <= numOfSeasons) {
-                                        nextSeasonButtonShow(nextSeasonNum, it)
-                                    } else {
-                                        nextSeasonButtonGone()
-                                    }
-                                })
-                            }
-                        })
-                    } else playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
-                } else {
-                    nextSeasonButtonGone()
-                }
+
+                if (state == Player.STATE_READY) {
+                    playerView.keepScreenOn = true
+                } else playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
+
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
@@ -123,6 +123,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
 
     override fun onDetach() {
         super.onDetach()
+        checkForNextSeasonButton().cancel()
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(true)
@@ -131,24 +132,44 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         }
     }
 
-    private fun nextSeasonButtonShow(nextSeasonNum: Int, isTvShow: Boolean) {
-        when (playerView) {
-            phone_title_player -> {
-                next_season_button.setVisible()
-                next_season_button.text = "სეზონი: $nextSeasonNum"
-                next_season_button.setOnClickListener {
-                    player.clearMediaItems()
-                    videoPlayerViewModel.getPlaylistFiles(
-                            videoPlayerViewModel.titleIdForDb.value!!,
-                            nextSeasonNum,
-                            videoPlayerViewModel.languageForDb.value!!
-                    )
-                    videoPlayerViewModel.initPlayer(isTvShow, 0L, 1)
+    private fun checkForNextSeasonButton() : CountDownTimer {
+        return object : CountDownTimer(player.duration, 2000) {
+            override fun onTick(millisUntilFinished: Long) {
+                Log.d("nextseasonbuttonshow", "true")
+                if (player.currentPosition >= player.duration - 50000L) {
+                    if ((player.currentWindowIndex + 1) == player.mediaItemCount) {
+                        videoPlayerViewModel.isTvShow.observe(viewLifecycleOwner, {
+                            if (it) {
+                                val nextSeasonNum = videoPlayerViewModel.seasonForDb.value!! + 1
+                                videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+                                    if (nextSeasonNum <= numOfSeasons) {
+                                        nextSeasonButtonShow(nextSeasonNum, it)
+                                    } else {
+                                        nextSeasonButtonGone()
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        nextSeasonButtonGone()
+                    }
+                } else {
+                    nextSeasonButtonGone()
                 }
             }
+
+            override fun onFinish() {
+            }
+        }
+    }
+
+    private fun nextSeasonButtonShow(nextSeasonNum: Int, isTvShow: Boolean) {
+        when (playerView) {
             tv_title_player -> {
+                tv_next_season_button_controller.setGone()
                 tv_next_season_button.setVisible()
-                tv_next_season_button.text = "სეზონი: $nextSeasonNum"
+                tv_next_season_button.requestFocus()
+                tv_next_season_button.text = "შემდეგი სეზონი: $nextSeasonNum"
                 tv_next_season_button.setOnClickListener {
                     player.clearMediaItems()
                     videoPlayerViewModel.getPlaylistFiles(
@@ -163,7 +184,6 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     }
 
     private fun nextSeasonButtonGone() {
-        next_season_button?.setGone()
         tv_next_season_button?.setGone()
     }
 
