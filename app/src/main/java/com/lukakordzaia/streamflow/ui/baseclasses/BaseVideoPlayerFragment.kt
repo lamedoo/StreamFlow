@@ -88,14 +88,16 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 })
 
                 videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
-                    if (it[player.currentWindowIndex].titleSubUri.isNotEmpty()) {
-                        if (it[player.currentWindowIndex].titleSubUri == "0") {
-                            subtitleFunctions(false)
+                    if (!it.isNullOrEmpty()) {
+                        if (it[player.currentWindowIndex].titleSubUri.isNotEmpty()) {
+                            if (it[player.currentWindowIndex].titleSubUri == "0") {
+                                subtitleFunctions(false)
+                            } else {
+                                subtitleFunctions(true)
+                            }
                         } else {
-                            subtitleFunctions(true)
+                            subtitleFunctions(false)
                         }
-                    } else {
-                        subtitleFunctions(false)
                     }
                 })
 
