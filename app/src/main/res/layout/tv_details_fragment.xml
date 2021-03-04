@@ -269,7 +269,7 @@
                 android:textColor="@color/secondary_text_color"
                 android:padding="15dp"
                 android:text="ყურება"
-                android:nextFocusDown="@id/tv_details_spinner_language" />
+                android:nextFocusDown="@id/tv_details_go_bottom" />
 
             <LinearLayout
                 android:id="@+id/tv_files_trailer"
@@ -281,7 +281,7 @@
                 android:layout_marginTop="20dp"
                 android:padding="13dp"
                 android:background="@drawable/tv_details_button_background"
-                android:nextFocusDown="@id/tv_details_spinner_language">
+                android:nextFocusDown="@id/tv_details_go_bottom">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -315,7 +315,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:padding="13dp"
-                android:nextFocusDown="@id/tv_details_spinner_language"
+                android:nextFocusDown="@id/tv_details_go_bottom"
                 android:nextFocusRight="@id/tv_files_title_favorite"
                 android:background="@drawable/tv_details_button_background">
 
@@ -338,7 +338,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="20dp"
                 android:padding="13dp"
-                android:nextFocusDown="@id/tv_details_spinner_language"
+                android:nextFocusDown="@id/tv_details_go_bottom"
                 android:nextFocusRight="@id/tv_files_title_favorite"
                 android:background="@drawable/tv_details_favorite_button_background">
 
@@ -361,29 +361,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_details_language_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="17dp"
-            android:fontFamily="@font/georgian_uppercase"
-            android:text="ენა"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_details_buttons_row"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
-        <Spinner
-            android:id="@+id/tv_details_spinner_language"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dialog"
-            app:layout_constraintStart_toEndOf="@id/tv_details_language_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_details_buttons_row"
-            android:visibility="gone"
-            tools:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/tv_details_go_bottom"

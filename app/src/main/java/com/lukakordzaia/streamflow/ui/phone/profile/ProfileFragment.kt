@@ -6,6 +6,8 @@ import android.content.ClipboardManager
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -72,6 +74,7 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
 
         profile_delete_history.setOnClickListener {
             val clearDbDialog = Dialog(requireContext())
+            clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog,null))
             clearDbDialog.clear_db_alert_yes.setOnClickListener {
                 if (auth.currentUser == null) {

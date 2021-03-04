@@ -1,6 +1,8 @@
 package com.lukakordzaia.streamflow.ui.phone.favorites
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
@@ -53,6 +55,7 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
                 },
                 { titleId: Int ->
                     val clearDbDialog = Dialog(requireContext())
+                    clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
                     clearDbDialog.clear_db_alert_yes.setOnClickListener {
                         favoritesViewModel.removeFavTitleFromFirestore(titleId)
@@ -94,6 +97,7 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
                 },
                 { titleId: Int ->
                     val clearDbDialog = Dialog(requireContext())
+                    clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
                     clearDbDialog.clear_db_alert_yes.setOnClickListener {
                         favoritesViewModel.removeFavTitleFromFirestore(titleId)

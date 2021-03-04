@@ -2,6 +2,8 @@ package com.lukakordzaia.streamflow.ui.phone.home
 
 import android.app.Dialog
 import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -88,6 +90,7 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
                         when (it.itemId) {
                             R.id.delete_from_db -> {
                                 val clearDbDialog = Dialog(requireContext())
+                                clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                                 clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
                                 clearDbDialog.clear_db_alert_yes.setOnClickListener {
                                     viewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)

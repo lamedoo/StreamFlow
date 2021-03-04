@@ -31,9 +31,6 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
-    private val _chosenLanguage = MutableLiveData<String>()
-    val chosenLanguage: LiveData<String> = _chosenLanguage
-
     private val _continueWatchingDetails = MutableLiveData<DbDetails>(null)
     val continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
 
@@ -137,10 +134,6 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
                 }
             }
         }
-    }
-
-    fun getTitleLanguageFiles(language: String) {
-        _chosenLanguage.value = language
     }
 
     fun addTitleToFirestore() {

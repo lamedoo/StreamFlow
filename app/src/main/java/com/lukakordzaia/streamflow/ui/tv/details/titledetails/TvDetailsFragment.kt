@@ -2,17 +2,19 @@ package com.lukakordzaia.streamflow.ui.tv.details.titledetails
 
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.TvTitleFilesFragment
@@ -20,15 +22,15 @@ import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
+import kotlinx.android.synthetic.main.tv_choose_language_dialog.*
 import kotlinx.android.synthetic.main.tv_details_fragment.*
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
 class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
     private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
-    private val spinnerClass: SpinnerClass by inject()
+    private lateinit var tvChooseLanguageAdapter: TvChooseLanguageAdapter
     private var trailerUrl: String? = null
     private var hasFocus: Boolean = false
 
@@ -94,8 +96,6 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             if (!it) {
                 tv_details_no_files.setGone()
                 tv_details_buttons_row.setVisible()
-                tv_details_language_title.setVisible()
-                tv_details_spinner_language.setVisible()
             }
         })
 
@@ -103,22 +103,8 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
 
             tv_files_trailer.setOnClickListener { _ ->
                 if (!it.trailers.data.isNullOrEmpty()) {
-                    it.trailers.data.forEach { trailer ->
-                        when (tvDetailsViewModel.chosenLanguage.value) {
-                            "ENG" -> {
-                                if (trailer.language == tvDetailsViewModel.chosenLanguage.value) {
-                                    trailerUrl = trailer.fileUrl
-                                    playTitleTrailer(titleId, isTvShow, trailerUrl!!)
-                                }
-                            }
-                            else -> {
-                                if (trailer.language == "RUS") {
-                                    trailerUrl = trailer.fileUrl
-                                    playTitleTrailer(titleId, isTvShow, trailerUrl!!)
-                                }
-                            }
-                        }
-                    }
+                    trailerUrl = it.trailers.data.last().fileUrl
+                    playTitleTrailer(titleId, isTvShow, trailerUrl!!)
                 } else {
                     requireContext().createToast("no trailer")
                 }
@@ -164,6 +150,7 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             if (it != null) {
                 tv_files_title_delete.setOnClickListener {
                     val clearDbDialog = Dialog(requireContext())
+                    clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
                     clearDbDialog.clear_db_alert_yes.setOnClickListener {
                         tvDetailsViewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
@@ -214,15 +201,23 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
 
 
         tv_play_button.setOnClickListener {
-            playTitleFromStart(titleId, isTvShow)
-        }
+            val chooseLanguageDialog = Dialog(requireContext())
+            chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            chooseLanguageDialog.setContentView(layoutInflater.inflate(R.layout.tv_choose_language_dialog, null))
+            chooseLanguageDialog.show()
 
-        tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
-            val languages = it.reversed()
-            spinnerClass.createSpinner(tv_details_spinner_language, languages) { language ->
-                tvDetailsViewModel.getTitleLanguageFiles(language)
+            val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+            tvChooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) {
+                playTitleFromStart(titleId, isTvShow, it)
             }
-        })
+            chooseLanguageDialog.rv_tv_choose_language.layoutManager = chooseLanguageLayout
+            chooseLanguageDialog.rv_tv_choose_language.adapter = tvChooseLanguageAdapter
+
+            tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
+                val languages = it.reversed()
+                tvChooseLanguageAdapter.setLanguageList(languages)
+            })
+        }
 
         if (isTvShow) {
             tv_details_go_bottom_title.text = "ეპიზოდები და მეტი"
@@ -258,12 +253,12 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
         activity?.startActivity(intent)
     }
 
-    private fun playTitleFromStart(titleId: Int, isTvShow: Boolean) {
+    private fun playTitleFromStart(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
         trailerUrl = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra("titleId", titleId)
         intent.putExtra("isTvShow", isTvShow)
-        intent.putExtra("chosenLanguage", tvDetailsViewModel.chosenLanguage.value)
+        intent.putExtra("chosenLanguage", chosenLanguage)
         intent.putExtra("chosenSeason", if (isTvShow) 1 else 0)
         intent.putExtra("chosenEpisode", if (isTvShow) 1 else 0)
         intent.putExtra("watchedTime", 0L)

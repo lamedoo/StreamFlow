@@ -53,7 +53,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 tv_title_player.exo_rew.callOnClick()
 
                 tv_title_player.setRewindIncrementMs(rewIncrement)
-                timerHandler.postDelayed(rewTimerRunnable, 2000)
+//                timerHandler.postDelayed(rewTimerRunnable, 2000)
                 return true
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
@@ -64,7 +64,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 tv_title_player.exo_ffwd.callOnClick()
 
                 tv_title_player.setFastForwardIncrementMs(ffIncrement)
-                timerHandler.postDelayed(ffTimerRunnable, 2000)
+//                timerHandler.postDelayed(ffTimerRunnable, 2000)
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
@@ -98,11 +98,12 @@ class TvVideoPlayerActivity : FragmentActivity() {
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                timerHandler.removeCallbacks(rewTimerRunnable)
+//                timerHandler.removeCallbacks(rewTimerRunnable)
+                rewIncrement = 10000
                 return true
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                timerHandler.removeCallbacks(ffTimerRunnable)
+//                timerHandler.removeCallbacks(ffTimerRunnable)
                 ffIncrement = 10000
                 return true
             }
