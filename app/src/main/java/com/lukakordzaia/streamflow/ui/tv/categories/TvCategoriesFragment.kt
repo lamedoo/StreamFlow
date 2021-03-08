@@ -111,9 +111,9 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
             Handler(Looper.getMainLooper()).postDelayed({
                 if (indexOfItem == 0) {
                     itemViewHolder!!.view.requestFocus()
-                    onFirstItem?.isFirstItem(true)
+                    onFirstItem?.isFirstItem(true, null, null)
                 } else {
-                    onFirstItem?.isFirstItem(false)
+                    onFirstItem?.isFirstItem(false, null, null)
                 }
             }, 1000)
 

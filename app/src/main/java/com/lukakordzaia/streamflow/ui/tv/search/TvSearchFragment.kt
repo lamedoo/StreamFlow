@@ -112,9 +112,9 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
             val selectedIndex = currentRowAdapter.indexOf(item)
 
             if (selectedIndex <= 0) {
-                onFirstItem?.isFirstItem(true)
+                onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment.selectedPosition)
             } else {
-                onFirstItem?.isFirstItem(false)
+                onFirstItem?.isFirstItem(false, null, null)
             }
 
             if (selectedIndex != -1 && currentRowAdapter.size() - 1 == selectedIndex) {

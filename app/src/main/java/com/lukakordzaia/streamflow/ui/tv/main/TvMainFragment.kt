@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
@@ -105,6 +106,12 @@ class TvMainFragment : BrowseSupportFragment() {
 
         homeViewModel.dbList.observe(viewLifecycleOwner, {
             watchedListRowsAdapter(it)
+
+            if (it.isNullOrEmpty()) {
+                setSelectedPosition(1, true)
+            } else {
+                setSelectedPosition(0, true)
+            }
         })
 
         homeViewModel.topMovieList.observe(viewLifecycleOwner, { movies ->
@@ -261,9 +268,10 @@ class TvMainFragment : BrowseSupportFragment() {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
             if (indexOfItem == 0) {
-                onFirstItem?.isFirstItem(true)
+                onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment.selectedPosition)
+                Log.d("savedfocus1", rowsSupportFragment.selectedPosition.toString())
             } else {
-                onFirstItem?.isFirstItem(false)
+                onFirstItem?.isFirstItem(false, null, null)
             }
         }
     }

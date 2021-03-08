@@ -255,9 +255,9 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
             if (indexOfItem == 0) {
-                onFirstItem?.isFirstItem(true)
+                onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment.selectedPosition)
             } else {
-                onFirstItem?.isFirstItem(false)
+                onFirstItem?.isFirstItem(false, null, null)
             }
         }
     }

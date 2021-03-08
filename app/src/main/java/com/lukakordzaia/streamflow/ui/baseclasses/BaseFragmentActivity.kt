@@ -13,6 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
+import androidx.leanback.app.RowsSupportFragment
+import androidx.leanback.widget.ListRowPresenter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -55,6 +57,8 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
 
     private var doubleBackToExitPressedOnce = false
     private var isFirstItem = false
+    private var rowsSupportFragment: RowsSupportFragment? = null
+    private var rowsPosition: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,8 +164,6 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Log.d(ContentValues.TAG, "signInWithCredential:success")
-                        val user = auth.currentUser
-//                        updateGoogleUI(user)
                         this.createToast("წარმატებით გაიარეთ ავტორიზაცია")
                         profileViewModel.createUserFirestore()
 
@@ -234,6 +236,9 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (tv_sidebar.isVisible) {
                     tv_sidebar.setGone()
+                    if (rowsSupportFragment != null && rowsPosition != null) {
+                        rowsSupportFragment!!.setSelectedPosition(rowsPosition!!, true, ListRowPresenter.SelectItemViewHolderTask(0))
+                    }
                 }
             }
         }
@@ -261,7 +266,9 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
         }
     }
 
-    override fun isFirstItem(boolean: Boolean) {
+    override fun isFirstItem(boolean: Boolean, rowsSupportFragment: RowsSupportFragment?, rowsPosition: Int?) {
         isFirstItem = boolean
+        this.rowsSupportFragment = rowsSupportFragment
+        this.rowsPosition = rowsPosition
     }
 }
