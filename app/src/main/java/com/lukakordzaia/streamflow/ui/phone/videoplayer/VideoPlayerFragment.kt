@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.google.android.exoplayer2.util.Util
@@ -43,6 +44,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         super.onStart()
         if (Util.SDK_INT >= 24) {
             initPlayer(args.videoPlayerData.isTvShow, args.videoPlayerData.watchedTime, args.videoPlayerData.chosenEpisode, args.videoPlayerData.trailerUrl)
+            Log.d("videoplaying", "started")
         }
     }
 
@@ -50,6 +52,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         super.onResume()
         if (Util.SDK_INT < 24) {
             initPlayer(args.videoPlayerData.isTvShow, args.videoPlayerData.watchedTime, args.videoPlayerData.chosenEpisode, args.videoPlayerData.trailerUrl)
+            Log.d("videoplaying", "resumed")
         }
     }
 
@@ -57,6 +60,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         super.onPause()
         if (Util.SDK_INT < 24) {
             releasePlayer(args.videoPlayerData.titleId, args.videoPlayerData.isTvShow, args.videoPlayerData.chosenLanguage, args.videoPlayerData.trailerUrl)
+            Log.d("videoplaying", "paused")
         }
     }
 
@@ -64,6 +68,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         super.onStop()
         if (Util.SDK_INT >= 24) {
             releasePlayer(args.videoPlayerData.titleId, args.videoPlayerData.isTvShow, args.videoPlayerData.chosenLanguage, args.videoPlayerData.trailerUrl)
+            Log.d("videoplaying", "stopped")
         }
     }
 }

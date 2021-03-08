@@ -11,17 +11,13 @@ import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerInit
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
 class VideoPlayerViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
-    val isTvShow = MutableLiveData<Boolean>()
     val numOfSeasons = MutableLiveData<Int>()
-
-    val playBackOptions = MutableLiveData<VideoPlayerInit>()
 
     private val getSubtitles: MutableList<String> = ArrayList()
     private val getSeasonEpisodes: MutableList<String> = ArrayList()
@@ -40,16 +36,6 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     val setTitleName: LiveData<List<String>> = _setTitleNameList
 
     val mediaAndSubtitle = MutableLiveData<List<TitleMediaItemsUri>>()
-
-    fun initPlayer(isTvShow: Boolean, watchTime: Long, chosenEpisode: Int) {
-        if (isTvShow) {
-            this.isTvShow.value = isTvShow
-        }
-        playBackOptions.value = VideoPlayerInit(
-                if (isTvShow) chosenEpisode - 1 else 0,
-                watchTime
-        )
-    }
 
     fun setVideoPlayerInfo(videoPlayerInfo: VideoPlayerInfo) {
         playbackPositionForDb.value = videoPlayerInfo.playbackPosition

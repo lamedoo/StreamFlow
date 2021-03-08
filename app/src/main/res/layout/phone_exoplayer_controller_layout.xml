@@ -124,7 +124,7 @@
         android:letterSpacing="0"
         android:textSize="14sp"
         android:padding="10dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:background="@drawable/exo_next_season_focused"
         app:layout_constraintBottom_toBottomOf="@id/exo_play"
         app:layout_constraintLeft_toRightOf="@+id/exo_ffwd"

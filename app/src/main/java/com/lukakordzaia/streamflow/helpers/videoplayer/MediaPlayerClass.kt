@@ -6,18 +6,18 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerInit
 
 
 class MediaPlayerClass(private val player: SimpleExoPlayer) {
 
-    fun initPlayer(playerView: PlayerView, playBackInit: VideoPlayerInit) {
+    fun initPlayer(playerView: PlayerView, currentWindow: Int, playbackPosition: Long) {
         playerView.player = player
-        val position = playBackInit.playbackPosition
+        val position = playbackPosition
         player.playWhenReady = true
-        player.seekTo(playBackInit.currentWindow, position)
+        player.seekTo(currentWindow, position)
         player.repeatMode = Player.REPEAT_MODE_OFF
         player.prepare()
+        player.playWhenReady
         player.play()
     }
 

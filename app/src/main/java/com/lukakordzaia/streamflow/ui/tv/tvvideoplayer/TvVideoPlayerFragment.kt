@@ -45,6 +45,7 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
         super.onResume()
         if (Util.SDK_INT < 24) {
             initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode, videoPlayerData.trailerUrl)
+            Log.d("videoplaying", "started")
         }
     }
 
