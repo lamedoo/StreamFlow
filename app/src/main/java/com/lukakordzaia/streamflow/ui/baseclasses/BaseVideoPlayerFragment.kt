@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -54,12 +53,8 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 super.onIsPlayingChanged(isPlaying)
 
-                if (!isPlaying) {
-                    tv_subtitle_toggle?.nextFocusDownId = R.id.exo_play
-                } else {
-                    tv_subtitle_toggle?.nextFocusDownId = R.id.exo_pause
-
-                    checkForNextSeasonButton().start()
+                if (isPlaying) {
+                    checkForNextSeasonOnEnd().start()
                 }
             }
 
@@ -67,6 +62,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 super.onPlaybackStateChanged(state)
 
                 if (state == Player.STATE_READY) {
+                    checkForNextSeason()
                     playerView.keepScreenOn = true
                 } else playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
 
@@ -118,7 +114,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
 
     override fun onDetach() {
         super.onDetach()
-        checkForNextSeasonButton().cancel()
+        checkForNextSeasonOnEnd().cancel()
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(true)
@@ -127,39 +123,55 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         }
     }
 
-    private fun checkForNextSeasonButton() : CountDownTimer {
+    private fun checkForNextSeason() {
+        if ((player.currentWindowIndex + 1) == player.mediaItemCount) {
+            if (isTvShow) {
+                val nextSeasonNum = videoPlayerViewModel.seasonForDb.value!! + 1
+                videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+                    if (nextSeasonNum <= numOfSeasons) {
+                        nextSeasonButtonShow(nextSeasonNum, isTvShow)
+                    } else {
+                        nextSeasonButtonGone()
+                    }
+                })
+            }
+        } else {
+            nextSeasonButtonGone()
+        }
+    }
+
+    private fun checkForNextSeasonOnEnd() : CountDownTimer {
         return object : CountDownTimer(player.duration, 2000) {
             override fun onTick(millisUntilFinished: Long) {
-                Log.d("nextseasonbuttonshow", "true")
                 if (player.currentPosition >= player.duration - 50000L) {
                     if ((player.currentWindowIndex + 1) == player.mediaItemCount) {
                         if (isTvShow) {
                             val nextSeasonNum = videoPlayerViewModel.seasonForDb.value!! + 1
-                            videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
-                                if (nextSeasonNum <= numOfSeasons) {
-                                    nextSeasonButtonShow(nextSeasonNum, isTvShow)
-                                } else {
-                                    nextSeasonButtonGone()
-                                }
-                            })
+                            if (view != null) {
+                                videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+                                    if (nextSeasonNum <= numOfSeasons) {
+                                        nextSeasonButtonShowOnEnd(nextSeasonNum, isTvShow)
+                                    } else {
+                                        nextSeasonButtonOnEndGone()
+                                    }
+                                })
+                            }
                         }
                     } else {
-                        nextSeasonButtonGone()
+                        nextSeasonButtonOnEndGone()
                     }
                 } else {
-                    nextSeasonButtonGone()
+                    nextSeasonButtonOnEndGone()
                 }
             }
-
             override fun onFinish() {
             }
         }
     }
 
-    private fun nextSeasonButtonShow(nextSeasonNum: Int, isTvShow: Boolean) {
+    private fun nextSeasonButtonShowOnEnd(nextSeasonNum: Int, isTvShow: Boolean) {
         when (playerView) {
             tv_title_player -> {
-                tv_next_season_button_controller.setGone()
                 tv_next_season_button.setVisible()
                 tv_next_season_button.requestFocus()
                 tv_next_season_button.text = "შემდეგი სეზონი: $nextSeasonNum"
@@ -170,28 +182,65 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                             nextSeasonNum,
                             videoPlayerViewModel.languageForDb.value!!
                     )
+                    mediaPlayer.initPlayer(playerView, 0, 0L)
+
                 }
             }
             phone_title_player -> {
-                next_season_button.setGone()
-                next_season_button.setVisible()
-                next_season_button.requestFocus()
-                next_season_button.text = "შემდეგი სეზონი: $nextSeasonNum"
-                next_season_button.setOnClickListener {
+                phone_next_season_button.setVisible()
+                phone_next_season_button.requestFocus()
+                phone_next_season_button.text = "შემდეგი სეზონი: $nextSeasonNum"
+                phone_next_season_button.setOnClickListener {
                     player.clearMediaItems()
                     videoPlayerViewModel.getPlaylistFiles(
                             videoPlayerViewModel.titleIdForDb.value!!,
                             nextSeasonNum,
                             videoPlayerViewModel.languageForDb.value!!
                     )
+                    mediaPlayer.initPlayer(playerView, 0, 0L)
                 }
             }
         }
     }
 
-    private fun nextSeasonButtonGone() {
+    private fun nextSeasonButtonShow(nextSeasonNum: Int, isTvShow: Boolean) {
+        when (playerView) {
+            tv_title_player -> {
+                tv_next_season_button_controller.setVisible()
+                tv_next_season_button_controller.setOnClickListener {
+                    player.clearMediaItems()
+                    videoPlayerViewModel.getPlaylistFiles(
+                            videoPlayerViewModel.titleIdForDb.value!!,
+                            nextSeasonNum,
+                            videoPlayerViewModel.languageForDb.value!!
+                    )
+                    mediaPlayer.initPlayer(playerView, 0, 0L)
+                }
+            }
+            phone_title_player -> {
+                phone_next_season_button_controller.setVisible()
+                phone_next_season_button_controller.requestFocus()
+                phone_next_season_button_controller.setOnClickListener {
+                    player.clearMediaItems()
+                    videoPlayerViewModel.getPlaylistFiles(
+                            videoPlayerViewModel.titleIdForDb.value!!,
+                            nextSeasonNum,
+                            videoPlayerViewModel.languageForDb.value!!
+                    )
+                    mediaPlayer.initPlayer(playerView, 0, 0L)
+                }
+            }
+        }
+    }
+
+    private fun nextSeasonButtonOnEndGone() {
         tv_next_season_button?.setGone()
-        next_season_button?.setGone()
+        phone_next_season_button?.setGone()
+    }
+
+    private fun nextSeasonButtonGone() {
+        tv_next_season_button_controller?.setGone()
+        phone_next_season_button_controller?.setGone()
     }
 
     private fun setEpisodeName(names: List<String>) {
@@ -295,7 +344,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
                 }
             })
-            mediaPlayer.initPlayer(playerView, if (isTvShow) chosenEpisode-1 else chosenEpisode, watchedTime)
+            mediaPlayer.initPlayer(playerView, if (isTvShow) chosenEpisode-1 else 0, watchedTime)
         }
     }
 

@@ -50,56 +50,52 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:nextFocusLeft="@id/tv_subtitle_toggle"
-            android:nextFocusRight="@id/tv_subtitle_toggle"
+            android:nextFocusRight="@id/exo_next"
             android:nextFocusDown="@id/exo_pause"
             android:background="@drawable/exo_buttons_focused"
             app:layout_constraintTop_toTopOf="@id/tv_header_tv"
             app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"
+            app:layout_constraintEnd_toStartOf="@id/exo_next"/>
+
+        <ImageButton
+            android:id="@+id/exo_next"
+            style="@style/ExoMediaButton.Next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/exo_buttons_focused"
+            android:src="@drawable/exo_next"
+            android:nextFocusLeft="@id/tv_subtitle_toggle"
+            android:nextFocusDown="@id/exo_pause"
+            app:layout_constraintTop_toTopOf="@id/tv_header_tv"
+            app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/tv_next_season_button_controller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nextFocusLeft="@id/tv_subtitle_toggle"
+            android:visibility="gone"
+            android:background="@drawable/exo_buttons_focused"
+            android:src="@drawable/exo_next"
+            app:layout_constraintTop_toTopOf="@id/tv_header_tv"
+            app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/tv_next_season_button_controller"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_gravity="center"
-        android:ellipsize="end"
-        android:letterSpacing="0"
-        android:maxLines="2"
-        android:padding="12dp"
-        android:textSize="14sp"
-        android:visibility="gone"
-        android:textColor="@color/black"
-        android:background="@drawable/exo_next_season_focused"
-        app:layout_constraintBottom_toTopOf="@id/barrier_top"
-        app:layout_constraintStart_toStartOf="@id/barrier_left"
-        tools:text="სეზონი: 2"
-        tools:visibility="visible" />
 
-
-    <ImageButton
-        android:id="@id/exo_prev"
-        style="@style/ExoMediaButton.Previous"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/exo_buttons_focused"
-        android:src="@drawable/exo_previous"
-        app:layout_constraintBottom_toTopOf="@id/exo_next"
-        app:layout_constraintStart_toStartOf="@id/barrier_left"
-        app:layout_constraintEnd_toEndOf="@id/barrier_right"/>
-
-    <ImageButton
-        android:id="@id/exo_next"
-        style="@style/ExoMediaButton.Next"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/exo_buttons_focused"
-        android:src="@drawable/exo_next"
-        app:layout_constraintBottom_toTopOf="@id/barrier_top"
-        app:layout_constraintStart_toStartOf="@id/barrier_left"
-        app:layout_constraintEnd_toEndOf="@id/barrier_right"/>
+<!--    <ImageButton-->
+<!--        android:id="@id/exo_prev"-->
+<!--        style="@style/ExoMediaButton.Previous"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:background="@drawable/exo_buttons_focused"-->
+<!--        android:src="@drawable/exo_previous"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/exo_next"-->
+<!--        app:layout_constraintStart_toStartOf="@id/barrier_left"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/barrier_right"/>-->
 
     <ImageButton
         android:id="@+id/exo_rew"
@@ -136,6 +132,7 @@
         android:layout_height="50dp"
         android:nextFocusRight="@id/exo_play"
         android:nextFocusLeft="@id/exo_play"
+        android:nextFocusUp="@id/exo_next"
         android:background="@drawable/exo_buttons_focused"
         android:src="@drawable/exo_play"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -149,6 +146,7 @@
         android:layout_height="50dp"
         android:nextFocusRight="@id/exo_pause"
         android:nextFocusLeft="@id/exo_pause"
+        android:nextFocusUp="@id/exo_next"
         android:background="@drawable/exo_buttons_focused"
         android:src="@drawable/exo_pause"
         app:layout_constraintBottom_toBottomOf="parent"

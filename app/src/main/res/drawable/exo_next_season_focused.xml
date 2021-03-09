@@ -21,11 +21,22 @@
             <corners android:radius="100dp"/>
         </shape>
     </item>
-
     <item android:state_focused="false" >
         <shape>
             <solid android:color="@color/white"/>
             <corners android:radius="100dp" />
+        </shape>
+    </item>
+    <item android:state_pressed="false" >
+        <shape>
+            <solid android:color="@color/white"/>
+            <corners android:radius="100dp"/>
+        </shape>
+    </item>
+    <item android:state_checked="false" >
+        <shape>
+            <solid android:color="@color/white"/>
+            <corners android:radius="100dp"/>
         </shape>
     </item>
 </selector>

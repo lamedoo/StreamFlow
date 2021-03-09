@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.KeyEvent
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
+import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.view.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 
@@ -30,6 +32,15 @@ class TvVideoPlayerActivity : FragmentActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                if (tv_next_season_button_controller.isVisible) {
+                    exo_pause.nextFocusUpId = R.id.tv_next_season_button_controller
+                    exo_play.nextFocusUpId = R.id.tv_next_season_button_controller
+                } else {
+                    exo_pause.nextFocusUpId = R.id.exo_next
+                    exo_play.nextFocusUpId = R.id.exo_next
+                }
+            }
             KeyEvent.KEYCODE_DPAD_CENTER -> {
                 if (!tv_title_player.isControllerVisible) {
                     tv_title_player.showController()
@@ -44,13 +55,27 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.showController()
                     tv_title_player.exo_pause.requestFocus()
                 }
+
+                if (tv_title_player.player!!.isPlaying) {
+                    tv_subtitle_toggle.nextFocusDownId = R.id.exo_pause
+                    exo_next.nextFocusDownId = R.id.exo_pause
+                    tv_next_season_button_controller?.nextFocusDownId = R.id.exo_pause
+                } else {
+                    tv_subtitle_toggle.nextFocusDownId = R.id.exo_play
+                    exo_next.nextFocusDownId = R.id.exo_play
+                    tv_next_season_button_controller?.nextFocusDownId = R.id.exo_play
+                }
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (!tv_title_player.isControllerVisible) {
                     tv_title_player.showController()
                 }
 
-                tv_title_player.exo_rew.callOnClick()
+                if (exo_next.isFocused || tv_next_season_button_controller.isFocused) {
+                    tv_subtitle_toggle.requestFocus()
+                } else {
+                    tv_title_player.exo_rew.callOnClick()
+                }
 
                 tv_title_player.setRewindIncrementMs(rewIncrement)
 //                timerHandler.postDelayed(rewTimerRunnable, 2000)
@@ -61,11 +86,13 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.showController()
                 }
 
-                tv_title_player.exo_ffwd.callOnClick()
+                if (!tv_subtitle_toggle.isFocused) {
+                    tv_title_player.exo_ffwd.callOnClick()
+                }
 
                 tv_title_player.setFastForwardIncrementMs(ffIncrement)
 //                timerHandler.postDelayed(ffTimerRunnable, 2000)
-                return true
+
             }
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
                 tv_title_player.dispatchMediaKeyEvent(event!!)
@@ -79,10 +106,10 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 tv_title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }
-//            KeyEvent.KEYCODE_MEDIA_NEXT -> {
-//                tv_title_player.dispatchMediaKeyEvent(event!!)
-//                return true
-//            }
+            KeyEvent.KEYCODE_MEDIA_NEXT -> {
+                tv_title_player.dispatchMediaKeyEvent(event!!)
+                return true
+            }
             KeyEvent.KEYCODE_MEDIA_REWIND -> {
                 tv_title_player.dispatchMediaKeyEvent(event!!)
                 return true

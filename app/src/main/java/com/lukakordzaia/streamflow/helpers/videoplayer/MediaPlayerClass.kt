@@ -12,12 +12,10 @@ class MediaPlayerClass(private val player: SimpleExoPlayer) {
 
     fun initPlayer(playerView: PlayerView, currentWindow: Int, playbackPosition: Long) {
         playerView.player = player
-        val position = playbackPosition
         player.playWhenReady = true
-        player.seekTo(currentWindow, position)
+        player.seekTo(currentWindow, playbackPosition)
         player.repeatMode = Player.REPEAT_MODE_OFF
         player.prepare()
-        player.playWhenReady
         player.play()
     }
 

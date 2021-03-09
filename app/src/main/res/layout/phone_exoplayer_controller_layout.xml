@@ -113,25 +113,39 @@
         app:layout_constraintLeft_toRightOf="@+id/exo_ffwd"
         app:layout_constraintTop_toTopOf="@id/exo_play"/>
 
-    <Button
-        android:id="@+id/next_season_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+    <ImageButton
+        android:id="@+id/phone_next_season_button_controller"
+        android:layout_height="55dp"
+        android:layout_width="55dp"
         android:layout_margin="10dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:letterSpacing="0"
-        android:textSize="14sp"
-        android:padding="10dp"
-        android:textColor="@color/white"
-        android:background="@drawable/exo_next_season_focused"
+        android:nextFocusLeft="@id/tv_subtitle_toggle"
+        android:visibility="gone"
+        android:background="@drawable/exo_buttons_focused"
+        android:src="@drawable/exo_next"
         app:layout_constraintBottom_toBottomOf="@id/exo_play"
         app:layout_constraintLeft_toRightOf="@+id/exo_ffwd"
         app:layout_constraintTop_toTopOf="@id/exo_play"
-        tools:text="სეზონი: 2"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
+
+<!--    <Button-->
+<!--        android:id="@+id/next_season_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:ellipsize="end"-->
+<!--        android:maxLines="2"-->
+<!--        android:letterSpacing="0"-->
+<!--        android:textSize="14sp"-->
+<!--        android:padding="10dp"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:background="@drawable/exo_next_season_focused"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/exo_play"-->
+<!--        app:layout_constraintLeft_toRightOf="@+id/exo_ffwd"-->
+<!--        app:layout_constraintTop_toTopOf="@id/exo_play"-->
+<!--        tools:text="სეზონი: 2"-->
+<!--        android:visibility="gone"-->
+<!--        tools:visibility="visible"/>-->
 
 
     <androidx.constraintlayout.widget.Barrier

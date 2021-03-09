@@ -157,7 +157,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
                     ColorStateList.valueOf(requireContext().resources.getColor(R.color.accent_color))
                 choose_movie_details_continue.setTextColor(Color.parseColor("#FFFFFF"))
 
-                choose_movie_details_play.text = "თავიდან ყურება"
+                choose_movie_details_play.text = "თავიდან \nყურება"
                 choose_movie_details_play.backgroundTintList =
                     ColorStateList.valueOf(requireContext().resources.getColor(R.color.secondary_color))
                 choose_movie_details_play.setTextColor(requireContext().resources.getColor(R.color.accent_color))
