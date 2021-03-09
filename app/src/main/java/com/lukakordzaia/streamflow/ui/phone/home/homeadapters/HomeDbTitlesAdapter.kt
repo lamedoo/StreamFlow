@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.home
+package com.lukakordzaia.streamflow.ui.phone.home.homeadapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -19,7 +19,7 @@ class HomeDbTitlesAdapter(
     private val context: Context,
     private val onWatchedTitleClick: (dbTitleData: DbTitleData) -> Unit,
     private val onInfoClick: (titleId: Int) -> Unit,
-    private val onMoreMenuClick: (titleId: Int, view: View) -> Unit
+    private val onMoreMenuClick: (titleId: Int, titleName: String) -> Unit
 ) : RecyclerView.Adapter<HomeDbTitlesAdapter.ViewHolder>() {
     private var list: List<DbTitleData> = ArrayList()
 
@@ -62,7 +62,7 @@ class HomeDbTitlesAdapter(
         }
 
         holder.dbTitleMore.setOnClickListener {
-            onMoreMenuClick(listModel.id, holder.dbTitleMore)
+            onMoreMenuClick(listModel.id, if (listModel.originalName.isNullOrEmpty()) listModel.primaryName!! else listModel.originalName)
         }
 
         holder.dbTitleSeekBar.max = listModel.titleDuration.toInt()

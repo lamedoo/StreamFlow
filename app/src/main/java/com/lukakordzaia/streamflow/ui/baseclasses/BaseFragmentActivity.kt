@@ -179,12 +179,12 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
         profileViewModel.getContinueWatchingFromRoom(this).observe(this, {
             if (!it.isNullOrEmpty()) {
                 val syncDialog = Dialog(this)
-                syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog,null))
+                syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog, null))
                 syncDialog.sync_continue_watching_alert_yes.setOnClickListener { _ ->
                     profileViewModel.addContinueWatchingToFirestore(this, it)
-                        val intent = Intent(this, TvActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        this.startActivity(intent)
+                    val intent = Intent(this, TvActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    this.startActivity(intent)
 
                 }
                 syncDialog.sync_continue_watching_alert_no.setOnClickListener {

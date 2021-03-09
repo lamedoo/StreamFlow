@@ -36,6 +36,9 @@
             android:name="titleId"
             app:argType="integer" />
         <argument
+            android:name="titleName"
+            app:argType="string" />
+        <argument
             android:name="numOfSeasons"
             app:argType="integer" />
         <argument

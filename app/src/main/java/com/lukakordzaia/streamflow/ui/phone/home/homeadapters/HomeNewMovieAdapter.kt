@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.home
+package com.lukakordzaia.streamflow.ui.phone.home.homeadapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_home_item.view.*
 
-class HomeTopMovieAdapter(private val context: Context, private val onMovieClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeTopMovieAdapter.ViewHolder>() {
+class HomeNewMovieAdapter(private val context: Context, private val onMovieClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeNewMovieAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
 
     fun setMoviesList(list: List<TitleList.Data>) {
@@ -51,7 +51,6 @@ class HomeTopMovieAdapter(private val context: Context, private val onMovieClick
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val movieRoot: ConstraintLayout = view.rv_home_item_root
         val moviePosterImageView: ImageView = view.rv_home_item_poster
-//        val movieTitleEngTextView: TextView = view.rv_home_item_name_eng
         val movieTitleGeoTextView: TextView = view.rv_home_item_name_geo
     }
 

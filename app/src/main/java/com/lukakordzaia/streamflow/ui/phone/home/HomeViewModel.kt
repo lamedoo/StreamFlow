@@ -53,17 +53,16 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     fun onSingleTitlePressed(start: Int, titleId: Int) {
         when (start) {
             AppConstants.NAV_HOME_TO_SINGLE -> navigateToNewFragment(
-                    HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(
-                            titleId
-                    )
+                    HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(titleId)
+            )
+            AppConstants.NAV_CONTINUE_WATCHING_TO_SINGLE -> navigateToNewFragment(
+                    ContinueWatchingInfoFragmentDirections.actionContinueWatchingInfoFragmentToSingleTitleFragmentNav(titleId)
             )
             AppConstants.NAV_TOP_MOVIES_TO_SINGLE -> navigateToNewFragment(
                     TopMoviesFragmentDirections.actionTopMoviesFragmentToSingleTitleFragmentNav(titleId)
             )
             AppConstants.NAV_TOP_TV_SHOWS_TO_SINGLE -> navigateToNewFragment(
-                    TopTvShowsFragmentDirections.actionTopTvShowsFragmentToSingleTitleFragmentNav(
-                            titleId
-                    )
+                    TopTvShowsFragmentDirections.actionTopTvShowsFragmentToSingleTitleFragmentNav(titleId)
             )
         }
     }
@@ -90,6 +89,10 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                         )
                 )
         )
+    }
+
+    fun onContinueWatchingInfoPressed(titleId: Int, titleName: String) {
+        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToContinueWatchingInfoFragment(titleId, titleName))
     }
 
     fun getContinueWatchingFromFirestorePHONE() {

@@ -14,6 +14,7 @@ import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.createToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -38,9 +39,6 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
         super.onCreate(savedInstanceState)
         title = ""
         setupFragment()
-//            if (savedInstanceState == null) {
-//                prepareEntranceTransition()
-//            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,8 +61,6 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
         }
 
         loadData()
-
-
         adapter = gridAdapter
     }
 
@@ -107,6 +103,17 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
 
+            val gridSize = Array(gridAdapter.size()) { i -> (i * 1) + 1 }.toList()
+
+
+            for (i in 0..gridAdapter.size()) {
+                if (i % 6 == 0) {
+                    if (indexOfItem == i) {
+                        onFirstItem?.isFirstItem(true, null, null)
+                        requireContext().createToast(i.toString())
+                    }
+                }
+            }
 
             Handler(Looper.getMainLooper()).postDelayed({
                 if (indexOfItem == 0) {

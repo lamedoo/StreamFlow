@@ -29,8 +29,8 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
     private val _chosenSeason = MutableLiveData<Int>()
     val chosenSeason: LiveData<Int> = _chosenSeason
 
-    private val _episodeNames = MutableLiveData<List<TitleEpisodes>>()
-    val episodeNames: LiveData<List<TitleEpisodes>> = _episodeNames
+    private val _episodeInfo = MutableLiveData<List<TitleEpisodes>>()
+    val episodeInfo: LiveData<List<TitleEpisodes>> = _episodeInfo
 
     private val _continueWatchingDetails = MutableLiveData<DbDetails>()
     val continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
@@ -136,7 +136,7 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
                         data.forEach {
                             getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
                         }
-                        _episodeNames.value = getEpisodeNames
+                        _episodeInfo.value = getEpisodeNames
 
                         _movieNotYetAdded.value = false
                     } else {

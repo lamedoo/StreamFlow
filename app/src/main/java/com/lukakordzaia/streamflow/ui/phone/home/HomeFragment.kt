@@ -1,22 +1,24 @@
 package com.lukakordzaia.streamflow.ui.phone.home
 
-import android.app.Dialog
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.*
-import android.widget.PopupMenu
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeDbTitlesAdapter
+import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeNewMovieAdapter
+import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTopMovieAdapter
+import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTvShowAdapter
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_home_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -82,38 +84,39 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
                 {
                     viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
                 },
-                { titleId: Int, buttonView: View ->
-                    val popUp = PopupMenu(context, buttonView)
-                    popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
-
-                    popUp.setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.delete_from_db -> {
-                                val clearDbDialog = Dialog(requireContext())
-                                clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
-                                clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                                    viewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
-                                    viewModel.deleteSingleContinueWatchingFromFirestore(titleId)
-                                    clearDbDialog.dismiss()
-                                }
-                                clearDbDialog.clear_db_alert_no.setOnClickListener {
-                                    clearDbDialog.dismiss()
-                                }
-                                clearDbDialog.show()
-                                return@setOnMenuItemClickListener true
-                            }
-                            R.id.watched_check_info -> {
-                                viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, titleId)
-                                return@setOnMenuItemClickListener true
-                            }
-                            else -> {
-                                requireContext().createToast("nothing else")
-                                return@setOnMenuItemClickListener true
-                            }
-                        }
-                    }
-                    popUp.show()
+                { titleId: Int, titleName: String ->
+                    viewModel.onContinueWatchingInfoPressed(titleId, titleName)
+//                    val popUp = PopupMenu(context, buttonView, Gravity.CENTER)
+//                    popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
+//
+//                    popUp.setOnMenuItemClickListener {
+//                        when (it.itemId) {
+//                            R.id.delete_from_db -> {
+//                                val clearDbDialog = Dialog(requireContext())
+//                                clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//                                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
+//                                clearDbDialog.clear_db_alert_yes.setOnClickListener {
+//                                    viewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
+//                                    viewModel.deleteSingleContinueWatchingFromFirestore(titleId)
+//                                    clearDbDialog.dismiss()
+//                                }
+//                                clearDbDialog.clear_db_alert_no.setOnClickListener {
+//                                    clearDbDialog.dismiss()
+//                                }
+//                                clearDbDialog.show()
+//                                return@setOnMenuItemClickListener true
+//                            }
+//                            R.id.watched_check_info -> {
+//                                viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, titleId)
+//                                return@setOnMenuItemClickListener true
+//                            }
+//                            else -> {
+//                                requireContext().createToast("nothing else")
+//                                return@setOnMenuItemClickListener true
+//                            }
+//                        }
+//                    }
+//                    popUp.show()
                 })
         rv_main_watched_titles.adapter = homeDbTitlesAdapter
         rv_main_watched_titles.layoutManager = dbLayout

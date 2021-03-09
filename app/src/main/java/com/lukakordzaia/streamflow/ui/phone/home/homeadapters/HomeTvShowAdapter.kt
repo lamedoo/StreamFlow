@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.home
+package com.lukakordzaia.streamflow.ui.phone.home.homeadapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,10 +13,10 @@ import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_home_item.view.*
 
-class HomeNewMovieAdapter(private val context: Context, private val onMovieClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeNewMovieAdapter.ViewHolder>() {
+class HomeTvShowAdapter(private val context: Context, private val onTvShowClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeTvShowAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
 
-    fun setMoviesList(list: List<TitleList.Data>) {
+    fun setTvShowsList(list: List<TitleList.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -30,16 +30,16 @@ class HomeNewMovieAdapter(private val context: Context, private val onMovieClick
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listModel = list[position]
 
-        holder.movieRoot.setOnClickListener {
-            onMovieClick(listModel.id)
+        holder.titleRoot.setOnClickListener {
+            onTvShowClick(listModel.id)
         }
 
-        Picasso.get().load(listModel.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.moviePosterImageView)
+        Picasso.get().load(listModel.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.titlePosterImageView)
 
         if (listModel.primaryName.isNotEmpty()) {
-            holder.movieTitleGeoTextView.text = listModel.primaryName
+            holder.titleNameGeoTextView.text = listModel.primaryName
         } else {
-            holder.movieTitleGeoTextView.text = listModel.secondaryName
+            holder.titleNameGeoTextView.text = listModel.secondaryName
         }
 
     }
@@ -49,9 +49,8 @@ class HomeNewMovieAdapter(private val context: Context, private val onMovieClick
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val movieRoot: ConstraintLayout = view.rv_home_item_root
-        val moviePosterImageView: ImageView = view.rv_home_item_poster
-        val movieTitleGeoTextView: TextView = view.rv_home_item_name_geo
+        val titleRoot: ConstraintLayout = view.rv_home_item_root
+        val titlePosterImageView: ImageView = view.rv_home_item_poster
+        val titleNameGeoTextView: TextView = view.rv_home_item_name_geo
     }
-
 }

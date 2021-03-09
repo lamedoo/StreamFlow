@@ -150,6 +150,12 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         HeaderItem(0, ""). also {
             rowsAdapter.replace(0, ListRow(it, listRowAdapter))
         }
+
+        tvTitleFilesViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            if (it != null) {
+                rowsSupportFragment.setSelectedPosition(0, true, ListRowPresenter.SelectItemViewHolderTask(it.season-1))
+            }
+        })
     }
 
     private fun episodesRowsAdapter(episodeList: List<TitleEpisodes>) {

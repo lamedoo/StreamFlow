@@ -34,6 +34,10 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
     private val _traktSfListExists = MutableLiveData<Boolean>()
     val traktSfListExists: LiveData<Boolean> = _traktSfListExists
 
+    fun refreshProfileOnLogin() {
+        navigateToNewFragment(ProfileFragmentDirections.actionProfileFragmentSelf())
+    }
+
     fun getDeviceCode() {
         viewModelScope.launch {
             when (val deviceCode = repository.getDeviceCode()) {

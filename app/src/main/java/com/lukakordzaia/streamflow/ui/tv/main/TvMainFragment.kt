@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
@@ -269,7 +268,6 @@ class TvMainFragment : BrowseSupportFragment() {
 
             if (indexOfItem == 0) {
                 onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment.selectedPosition)
-                Log.d("savedfocus1", rowsSupportFragment.selectedPosition.toString())
             } else {
                 onFirstItem?.isFirstItem(false, null, null)
             }

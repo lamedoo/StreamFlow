@@ -169,6 +169,10 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
             }
         })
 
+        profileViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+            navController(it)
+        })
+
         profileViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
@@ -197,7 +201,7 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
-                    updateGoogleUI(user)
+//                    updateGoogleUI(user)
                     Snackbar.make(profile_root,"წარმატებით გაიარეთ ავტორიზაცია", Snackbar.LENGTH_SHORT).show()
                     profileViewModel.createUserFirestore()
 
@@ -218,12 +222,14 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
                 syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog,null))
                 syncDialog.sync_continue_watching_alert_yes.setOnClickListener { _ ->
                     profileViewModel.addContinueWatchingToFirestore(requireContext(), it)
-                    syncDialog.dismiss()
+                    profileViewModel.refreshProfileOnLogin()
                 }
                 syncDialog.sync_continue_watching_alert_no.setOnClickListener {
                     syncDialog.dismiss()
                 }
                 syncDialog.show()
+            } else {
+                profileViewModel.refreshProfileOnLogin()
             }
         })
     }

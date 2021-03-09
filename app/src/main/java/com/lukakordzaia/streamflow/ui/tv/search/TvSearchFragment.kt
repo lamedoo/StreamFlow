@@ -72,30 +72,27 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
     }
 
     override fun onQueryTextChange(query: String): Boolean {
-        if (query.isNullOrBlank()) {
+        if (query.isBlank()) {
             searchTitlesViewModel.clearSearchResults()
+            rowsAdapter.clear()
         }
         return true
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
         rowsAdapter.clear()
-        if (!query.isNullOrBlank()) {
+        if (query.isNotBlank()) {
             searchQuery = query
             searchTitlesViewModel.getSearchTitlesTv(query, page)
         } else {
             searchTitlesViewModel.clearSearchResults()
+            rowsAdapter.clear()
         }
         return true
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
-        override fun onItemClicked(
-                itemViewHolder: Presenter.ViewHolder,
-                item: Any,
-                rowViewHolder: RowPresenter.ViewHolder,
-                row: Row
-        ) {
+        override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row) {
             if (item is TitleList.Data) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)

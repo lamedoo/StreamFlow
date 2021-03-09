@@ -15,20 +15,18 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_choose_title_details_fragment.*
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
 class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
-    private val chooseTitleDetailsViewModel by viewModel<ChooseTitleDetailsViewModel>()
-    private val spinnerClass: SpinnerClass by inject()
+    private val chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel by viewModel()
     private lateinit var chooseTitleDetailsEpisodesAdapter: ChooseTitleDetailsEpisodesAdapter
     private lateinit var chooseTitleDetailsSeasonAdapter: ChooseTitleDetailsSeasonAdapter
+    private lateinit var chooseTitleDetailsLanguageAdapter: ChooseTitleDetailsLanguageAdapter
     private val args: ChooseTitleDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
@@ -39,6 +37,7 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
+
         val seasonLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         chooseTitleDetailsSeasonAdapter = ChooseTitleDetailsSeasonAdapter(requireContext()) {
             chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it)
@@ -47,6 +46,15 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         rv_seasons.layoutManager = seasonLayout
         rv_seasons.adapter = chooseTitleDetailsSeasonAdapter
         ViewCompat.setNestedScrollingEnabled(rv_seasons, false)
+
+        val languageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        chooseTitleDetailsLanguageAdapter = ChooseTitleDetailsLanguageAdapter(requireContext()) {
+            chooseTitleDetailsViewModel.setFileLanguage(it)
+            chooseTitleDetailsLanguageAdapter.setChosenLanguage(it)
+        }
+        rv_languages.layoutManager = languageLayout
+        rv_languages.adapter = chooseTitleDetailsLanguageAdapter
+        ViewCompat.setNestedScrollingEnabled(rv_languages, false)
 
         chooseTitleDetailsViewModel.noInternet.observe(viewLifecycleOwner, EventObserver { noInternet ->
                 if (noInternet) {
@@ -93,12 +101,11 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
         chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
             val languages = it.reversed()
-            spinnerClass.createSpinner(spinner_language, languages) { language ->
-                chooseTitleDetailsViewModel.setFileLanguage(language)
-            }
+            chooseTitleDetailsLanguageAdapter.setLanguageList(languages)
+            chooseTitleDetailsViewModel.setFileLanguage(languages.first())
         })
 
-        chooseTitleDetailsViewModel.episodeNames.observe(viewLifecycleOwner, {
+        chooseTitleDetailsViewModel.episodeInfo.observe(viewLifecycleOwner, {
             chooseTitleDetailsEpisodesAdapter.setEpisodeList(it)
         })
 
@@ -152,14 +159,25 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
                 choose_movie_details_play.text = "თავიდან ყურება"
                 choose_movie_details_play.backgroundTintList =
-                    ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
+                    ColorStateList.valueOf(requireContext().resources.getColor(R.color.secondary_color))
                 choose_movie_details_play.setTextColor(requireContext().resources.getColor(R.color.accent_color))
+
+                chooseTitleDetailsSeasonAdapter.setChosenSeason(it.season)
+                chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it.season)
+
+                chooseTitleDetailsLanguageAdapter.setChosenLanguage(it.language)
+                chooseTitleDetailsViewModel.setFileLanguage(it.language)
             }
         })
 
+        choose_details_title.text = args.titleName
 
         choose_movie_details_play.setOnClickListener { _ ->
             chooseTitleDetailsViewModel.onPlayButtonPressed(args.titleId, args.isTvShow)
+        }
+
+        choose_details_close.setOnClickListener {
+            dismiss()
         }
 
 

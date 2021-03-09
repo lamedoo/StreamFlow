@@ -42,11 +42,12 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
 
     fun onPlayButtonPressed(titleId: Int) {
         navigateToNewFragment(
-            SingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
-                titleId,
-                numOfSeasons.value!!,
-                singleTitleData.value!!.isTvShow
-            )
+                SingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
+                        titleId,
+                        if (singleTitleData.value!!.originalName.isNullOrEmpty()) singleTitleData.value!!.primaryName else singleTitleData.value!!.originalName!!,
+                        numOfSeasons.value!!,
+                        singleTitleData.value!!.isTvShow
+                )
         )
     }
 
