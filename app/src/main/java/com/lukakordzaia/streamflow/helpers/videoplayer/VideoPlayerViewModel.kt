@@ -119,11 +119,6 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                         i++
                     }
 
-//                    seasonEpisodesIntoUri.forEach {
-//                        var i = 0
-//                        mediaItemsList.add(TitleMediaItemsUri(it, getSubtitles[]))
-//                    }
-
                     mediaAndSubtitle.value = mediaItemsList
                 }
                 is Result.Error -> {

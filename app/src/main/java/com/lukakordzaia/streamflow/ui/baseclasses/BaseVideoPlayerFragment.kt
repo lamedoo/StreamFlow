@@ -65,7 +65,6 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     checkForNextSeason()
                     playerView.keepScreenOn = true
                 } else playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
-
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
