@@ -45,17 +45,17 @@
 
         <ImageButton
             android:id="@+id/tv_subtitle_toggle"
-            android:src="@drawable/exo_subtitles_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:background="@drawable/exo_buttons_focused"
             android:nextFocusLeft="@id/tv_subtitle_toggle"
             android:nextFocusRight="@id/exo_next"
             android:nextFocusDown="@id/exo_pause"
-            android:background="@drawable/exo_buttons_focused"
-            app:layout_constraintTop_toTopOf="@id/tv_header_tv"
+            android:padding="5dp"
+            android:src="@drawable/exo_subtitles_off"
             app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"
-            app:layout_constraintEnd_toStartOf="@id/exo_next"/>
+            app:layout_constraintEnd_toStartOf="@id/exo_next"
+            app:layout_constraintTop_toTopOf="@id/tv_header_tv" />
 
         <ImageButton
             android:id="@+id/exo_next"
@@ -63,24 +63,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/exo_buttons_focused"
-            android:src="@drawable/exo_next"
             android:nextFocusLeft="@id/tv_subtitle_toggle"
             android:nextFocusDown="@id/exo_pause"
-            app:layout_constraintTop_toTopOf="@id/tv_header_tv"
+            android:src="@drawable/exo_next"
             app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_header_tv" />
 
         <ImageButton
             android:id="@+id/tv_next_season_button_controller"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:nextFocusLeft="@id/tv_subtitle_toggle"
-            android:visibility="gone"
             android:background="@drawable/exo_buttons_focused"
+            android:nextFocusLeft="@id/tv_subtitle_toggle"
             android:src="@drawable/exo_next"
-            app:layout_constraintTop_toTopOf="@id/tv_header_tv"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_header_tv"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

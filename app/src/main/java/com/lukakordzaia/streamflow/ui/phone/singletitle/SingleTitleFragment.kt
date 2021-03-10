@@ -1,11 +1,11 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.navArgs
@@ -28,14 +28,13 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
     private lateinit var singleTitleRelatedAdapter: SingleTitleRelatedAdapter
     private val args: SingleTitleFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         singleTitleViewModel.checkTitleInFirestore(args.titleId)
+
+        if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            single_title_appbar.setExpanded(true)
+        }
 
         singleTitleViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {

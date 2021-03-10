@@ -10,6 +10,7 @@ import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 
+
 open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_player_fragment) {
     private lateinit var videoPlayerData: VideoPlayerData
 
@@ -26,17 +27,35 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
         val watchedTime = activity?.intent?.getSerializableExtra("watchedTime") as Long
         val trailerUrl: String? = activity?.intent?.getSerializableExtra("trailerUrl") as String?
 
-        videoPlayerData = VideoPlayerData(titleId, isTvShow, chosenSeason, chosenLanguage, chosenEpisode, watchedTime, trailerUrl)
+        videoPlayerData = VideoPlayerData(
+            titleId,
+            isTvShow,
+            chosenSeason,
+            chosenLanguage,
+            chosenEpisode,
+            watchedTime,
+            trailerUrl
+        )
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenLanguage, videoPlayerData.isTvShow)
+            getPlayListFiles(
+                videoPlayerData.titleId,
+                videoPlayerData.chosenSeason,
+                videoPlayerData.chosenLanguage,
+                videoPlayerData.isTvShow
+            )
         }
     }
 
     override fun onStart() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
-            initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode, videoPlayerData.trailerUrl)
+            initPlayer(
+                videoPlayerData.isTvShow,
+                videoPlayerData.watchedTime,
+                videoPlayerData.chosenEpisode,
+                videoPlayerData.trailerUrl
+            )
             Log.d("videoplaying", "started")
         }
     }
@@ -44,7 +63,12 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
     override fun onResume() {
         super.onResume()
         if (Util.SDK_INT < 24) {
-            initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode, videoPlayerData.trailerUrl)
+            initPlayer(
+                videoPlayerData.isTvShow,
+                videoPlayerData.watchedTime,
+                videoPlayerData.chosenEpisode,
+                videoPlayerData.trailerUrl
+            )
             Log.d("videoplaying", "started")
         }
     }
@@ -52,7 +76,12 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
     override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
-            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage, videoPlayerData.trailerUrl)
+            releasePlayer(
+                videoPlayerData.titleId,
+                videoPlayerData.isTvShow,
+                videoPlayerData.chosenLanguage,
+                videoPlayerData.trailerUrl
+            )
             Log.d("videoplaying", "paused")
         }
     }
@@ -60,7 +89,12 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
     override fun onStop() {
         super.onStop()
         if (Util.SDK_INT >= 24) {
-            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage, videoPlayerData.trailerUrl)
+            releasePlayer(
+                videoPlayerData.titleId,
+                videoPlayerData.isTvShow,
+                videoPlayerData.chosenLanguage,
+                videoPlayerData.trailerUrl
+            )
             Log.d("videoplaying", "stopped")
         }
     }

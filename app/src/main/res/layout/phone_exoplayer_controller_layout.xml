@@ -18,10 +18,22 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
-        android:paddingTop="30dp"
+        android:paddingTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/phone_exo_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:src="@drawable/ic_arrow_back"
+            android:tint="@color/white"
+            android:background="@color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/header_tv"
+            app:layout_constraintBottom_toBottomOf="@id/header_tv"/>
 
         <TextView
             android:id="@+id/header_tv"
@@ -30,7 +42,7 @@
             android:layout_gravity="center"
             android:ellipsize="end"
             android:maxLines="2"
-            android:paddingStart="20dp"
+            android:paddingStart="10dp"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:shadowColor="@color/trueBlack"
@@ -38,7 +50,7 @@
             android:shadowDy="1"
             android:shadowRadius="3"
             android:fontFamily="@font/georgian_uppercase"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/phone_exo_back"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_max="wrap"
             app:layout_constraintWidth_percent="0.9"

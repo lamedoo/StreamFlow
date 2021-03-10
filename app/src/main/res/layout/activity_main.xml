@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/fragment_background"
     android:layout_height="match_parent"
     tools:context=".ui.phone.MainActivity">
@@ -13,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:contentInsetStart="0dp"
-        android:paddingTop="20dp"
         app:contentInsetStartWithNavigation="0dp"
         android:layout_marginStart="0dp"
         android:background="@color/transparent"
@@ -63,7 +61,6 @@
         android:layout_height="wrap_content"
         android:background="@color/secondary_color"
         app:elevation="0dp"
-        android:paddingBottom="5dp"
         app:itemBackground="@null"
         app:itemRippleColor="@null"
         app:layout_constraintBottom_toBottomOf="parent"
