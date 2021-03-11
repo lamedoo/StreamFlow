@@ -128,8 +128,8 @@
     <ImageButton
         android:id="@+id/exo_play"
         style="@style/ExoMediaButton.Play"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:nextFocusRight="@id/exo_play"
         android:nextFocusLeft="@id/exo_play"
         android:nextFocusUp="@id/exo_next"
@@ -142,8 +142,8 @@
     <ImageButton
         android:id="@+id/exo_pause"
         style="@style/ExoMediaButton.Pause"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:nextFocusRight="@id/exo_pause"
         android:nextFocusLeft="@id/exo_pause"
         android:nextFocusUp="@id/exo_next"
@@ -192,7 +192,7 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@id/exo_progress"
-        app:layout_constraintTop_toBottomOf="@id/exo_progress"
+        app:layout_constraintBottom_toBottomOf="@id/exo_play"
         tools:text="dssdd" />
 
     <TextView
@@ -209,7 +209,7 @@
         android:textSize="14sp"
         tools:text="dssdd"
         app:layout_constraintEnd_toEndOf="@id/exo_progress"
-        app:layout_constraintTop_toBottomOf="@id/exo_progress"/>
+        app:layout_constraintBottom_toBottomOf="@id/exo_play"/>
 
     <TextView
         android:id="@+id/exo_go_live"

@@ -65,6 +65,11 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     exo_next.nextFocusDownId = R.id.exo_play
                     tv_next_season_button_controller?.nextFocusDownId = R.id.exo_play
                 }
+
+                if (tv_next_season_button.isFocused) {
+                    exo_play?.requestFocus()
+                    exo_pause?.requestFocus()
+                }
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (!tv_title_player.isControllerVisible) {
