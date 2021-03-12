@@ -36,9 +36,12 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 if (tv_next_season_button_controller.isVisible) {
                     exo_pause.nextFocusUpId = R.id.tv_next_season_button_controller
                     exo_play.nextFocusUpId = R.id.tv_next_season_button_controller
-                } else {
+                } else if (tv_title_player.player?.mediaItemCount != 1) {
                     exo_pause.nextFocusUpId = R.id.exo_next
                     exo_play.nextFocusUpId = R.id.exo_next
+                } else {
+                    exo_pause.nextFocusUpId = R.id.tv_subtitle_toggle
+                    exo_play.nextFocusUpId = R.id.tv_subtitle_toggle
                 }
             }
             KeyEvent.KEYCODE_DPAD_CENTER -> {

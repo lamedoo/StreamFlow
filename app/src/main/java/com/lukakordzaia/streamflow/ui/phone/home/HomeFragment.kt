@@ -86,37 +86,6 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
                 },
                 { titleId: Int, titleName: String ->
                     viewModel.onContinueWatchingInfoPressed(titleId, titleName)
-//                    val popUp = PopupMenu(context, buttonView, Gravity.CENTER)
-//                    popUp.menuInflater.inflate(R.menu.watched_menu, popUp.menu)
-//
-//                    popUp.setOnMenuItemClickListener {
-//                        when (it.itemId) {
-//                            R.id.delete_from_db -> {
-//                                val clearDbDialog = Dialog(requireContext())
-//                                clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//                                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
-//                                clearDbDialog.clear_db_alert_yes.setOnClickListener {
-//                                    viewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
-//                                    viewModel.deleteSingleContinueWatchingFromFirestore(titleId)
-//                                    clearDbDialog.dismiss()
-//                                }
-//                                clearDbDialog.clear_db_alert_no.setOnClickListener {
-//                                    clearDbDialog.dismiss()
-//                                }
-//                                clearDbDialog.show()
-//                                return@setOnMenuItemClickListener true
-//                            }
-//                            R.id.watched_check_info -> {
-//                                viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, titleId)
-//                                return@setOnMenuItemClickListener true
-//                            }
-//                            else -> {
-//                                requireContext().createToast("nothing else")
-//                                return@setOnMenuItemClickListener true
-//                            }
-//                        }
-//                    }
-//                    popUp.show()
                 })
         rv_main_watched_titles.adapter = homeDbTitlesAdapter
         rv_main_watched_titles.layoutManager = dbLayout

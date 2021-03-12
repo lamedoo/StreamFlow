@@ -35,8 +35,10 @@ class TvWatchedCardPresenter : Presenter() {
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(dbTitle.watchedDuration))
             )
         } else {
-            cardView.tv_watched_card_season.text = String.format("%02d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(dbTitle.watchedDuration),
+            cardView.tv_watched_card_season.text = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(dbTitle.watchedDuration),
+                    TimeUnit.MILLISECONDS.toMinutes(dbTitle.watchedDuration) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(dbTitle.watchedDuration)),
                     TimeUnit.MILLISECONDS.toSeconds(dbTitle.watchedDuration) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(dbTitle.watchedDuration))
             )

@@ -17,6 +17,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
+import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
@@ -30,6 +31,7 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class TvMainFragment : BrowseSupportFragment() {
     private val homeViewModel: HomeViewModel by viewModel()
@@ -64,7 +66,7 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         })
 
-        val listRowPresenter = ListRowPresenter().apply {
+        val listRowPresenter = CustomListRowPresenter().apply {
             shadowEnabled = false
             selectEffectEnabled = false
         }

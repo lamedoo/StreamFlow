@@ -172,16 +172,39 @@
         android:focusableInTouchMode="false"
         android:focusedByDefault="false"
         app:buffered_color="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/exo_live_duration"
         app:layout_constraintStart_toEndOf="@id/barrier_right"
-        app:layout_constraintTop_toTopOf="@id/barrier_top"
+        app:layout_constraintTop_toBottomOf="@id/barrier_top"
+        app:layout_constraintBottom_toTopOf="@id/barrier_bottom"
         app:played_color="@color/accent_color"
         app:scrubber_color="@color/accent_color"
         app:unplayed_color="@color/lb_grey" />
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="exo_pause,exo_play" />
+
+
+<!--    <TextView-->
+<!--        android:id="@id/exo_position"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="7dp"-->
+<!--        android:layout_marginLeft="7dp"-->
+<!--        android:layout_marginEnd="7dp"-->
+<!--        android:layout_marginRight="7dp"-->
+<!--        android:minWidth="50dp"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="14sp"-->
+<!--        app:layout_constraintStart_toStartOf="@id/exo_progress"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/exo_play"-->
+<!--        tools:text="dssdd" />-->
 
     <TextView
-        android:id="@id/exo_position"
+        android:id="@+id/exo_live_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
@@ -191,25 +214,26 @@
         android:minWidth="50dp"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/exo_progress"
-        app:layout_constraintBottom_toBottomOf="@id/exo_play"
+        app:layout_constraintTop_toBottomOf="@id/barrier_top"
+        app:layout_constraintBottom_toTopOf="@id/barrier_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:text="dssdd" />
 
-    <TextView
-        android:id="@id/exo_duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginLeft="7dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        android:minWidth="50dp"
-        android:textAlignment="viewEnd"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        tools:text="dssdd"
-        app:layout_constraintEnd_toEndOf="@id/exo_progress"
-        app:layout_constraintBottom_toBottomOf="@id/exo_play"/>
+<!--    <TextView-->
+<!--        android:id="@id/exo_duration"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="7dp"-->
+<!--        android:layout_marginLeft="7dp"-->
+<!--        android:layout_marginEnd="7dp"-->
+<!--        android:layout_marginRight="7dp"-->
+<!--        android:minWidth="50dp"-->
+<!--        android:textAlignment="viewEnd"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="14sp"-->
+<!--        tools:text="dssdd"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/exo_progress"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/exo_play"/>-->
 
     <TextView
         android:id="@+id/exo_go_live"

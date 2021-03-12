@@ -211,7 +211,7 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             signInButton.setGone()
             signOutButton.setVisible()
 
-            signOutButton.requestFocus()
+//            signOutButton.requestFocus()
 
 
         } else {
@@ -221,7 +221,7 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             signInButton.setVisible()
             signOutButton.setGone()
 
-            signInButton.requestFocus()
+//            signInButton.requestFocus()
         }
     }
 

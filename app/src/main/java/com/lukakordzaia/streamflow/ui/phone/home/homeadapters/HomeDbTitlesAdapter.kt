@@ -48,8 +48,10 @@ class HomeDbTitlesAdapter(
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(listModel.watchedDuration))
             )
         } else {
-            holder.dbTitleSeason.text = String.format("%02d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(listModel.watchedDuration),
+            holder.dbTitleSeason.text = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(listModel.watchedDuration),
+                    TimeUnit.MILLISECONDS.toMinutes(listModel.watchedDuration) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(listModel.watchedDuration)),
                     TimeUnit.MILLISECONDS.toSeconds(listModel.watchedDuration) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(listModel.watchedDuration))
             )

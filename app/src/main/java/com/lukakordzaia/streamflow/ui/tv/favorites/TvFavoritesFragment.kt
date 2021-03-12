@@ -13,6 +13,7 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.SingleTitleData
+import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -52,7 +53,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
             }
         })
 
-        val listRowPresenter = ListRowPresenter().apply {
+        val listRowPresenter = CustomListRowPresenter().apply {
             shadowEnabled = false
             selectEffectEnabled = false
         }

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -29,6 +30,7 @@ import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 
 open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
@@ -38,6 +40,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     private lateinit var mediaPlayer: MediaPlayerClass
     private lateinit var player: SimpleExoPlayer
     private lateinit var playerView: PlayerView
+    private lateinit var tracker: ProgressTracker
 
     private var titleId = 0
     private var isTvShow = false
@@ -62,6 +65,18 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 super.onPlaybackStateChanged(state)
 
                 if (state == Player.STATE_READY) {
+                    tracker = ProgressTracker(player, object: ProgressTracker.PositionListener {
+                        override fun progress(position: Long) {
+                            exo_live_duration.text = String.format("%02d:%02d:%02d",
+                                    TimeUnit.MILLISECONDS.toHours(position),
+                                    TimeUnit.MILLISECONDS.toMinutes(position) -
+                                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(position)),
+                                    TimeUnit.MILLISECONDS.toSeconds(position) -
+                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
+                            )
+
+                        }
+                    })
                     checkForNextSeason()
                     playerView.keepScreenOn = true
                 } else playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
@@ -343,7 +358,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     mediaPlayer.setMultipleMediaSources(buildMediaSource.tvShowMediaSource(it))
                 }
             })
-            mediaPlayer.initPlayer(playerView, if (isTvShow) chosenEpisode-1 else 0, watchedTime)
+            mediaPlayer.initPlayer(playerView, if (isTvShow) chosenEpisode - 1 else 0, watchedTime)
         }
     }
 
@@ -351,8 +366,30 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         mediaPlayer.releasePlayer {
             videoPlayerViewModel.setVideoPlayerInfo(it)
         }
+        tracker.purgeHandler()
         if (trailerUrl == null) {
             videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
         }
+    }
+}
+
+class ProgressTracker(private val player: Player, private val positionListener: PositionListener) : Runnable {
+    interface PositionListener {
+        fun progress(position: Long)
+    }
+
+    private val handler: Handler = Handler()
+    override fun run() {
+        val position = player.duration - player.currentPosition
+        positionListener.progress(position)
+        handler.postDelayed(this, 1000)
+    }
+
+    fun purgeHandler() {
+        handler.removeCallbacks(this)
+    }
+
+    init {
+        handler.post(this)
     }
 }

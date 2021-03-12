@@ -19,6 +19,7 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -54,7 +55,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         super.onCreate(savedInstanceState)
         headersState = HEADERS_DISABLED
 
-        val listRowPresenter = ListRowPresenter().apply {
+        val listRowPresenter = CustomListRowPresenter().apply {
             shadowEnabled = false
             selectEffectEnabled = false
         }

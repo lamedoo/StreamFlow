@@ -18,6 +18,8 @@
         android:id="@+id/tv_sidebar_profile_photo"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:src="@drawable/no_profile_picture"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -27,6 +29,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:textColor="@color/general_text_color"
         android:fontFamily="@font/georgian_uppercase"
         android:textSize="14sp"

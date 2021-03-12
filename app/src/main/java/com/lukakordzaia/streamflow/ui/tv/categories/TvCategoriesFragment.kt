@@ -3,8 +3,6 @@ package com.lukakordzaia.streamflow.ui.tv.categories
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
@@ -14,7 +12,6 @@ import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.utils.AppConstants
-import com.lukakordzaia.streamflow.utils.createToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -59,7 +56,6 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
                 tvCategoriesViewModel.getTopTvShowsTv(page)
             }
         }
-
         loadData()
         adapter = gridAdapter
     }
@@ -83,7 +79,7 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
     }
 
     private fun setupFragment() {
-        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_LARGE, false)
+        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
         gridPresenter.numberOfColumns = 6
         setGridPresenter(gridPresenter)
 
@@ -105,24 +101,19 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
 
             val gridSize = Array(gridAdapter.size()) { i -> (i * 1) + 1 }.toList()
 
+            onFirstItem?.isFirstItem(false, null, null)
 
-            for (i in 0..gridAdapter.size()) {
-                if (i % 6 == 0) {
-                    if (indexOfItem == i) {
+            if (indexOfItem == 0) {
+                onFirstItem?.isFirstItem(true, null, null)
+            }
+
+            gridSize.forEach {
+                if (it % 6 == 0) {
+                    if (indexOfItem == it) {
                         onFirstItem?.isFirstItem(true, null, null)
-                        requireContext().createToast(i.toString())
                     }
                 }
             }
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (indexOfItem == 0) {
-                    itemViewHolder!!.view.requestFocus()
-                    onFirstItem?.isFirstItem(true, null, null)
-                } else {
-                    onFirstItem?.isFirstItem(false, null, null)
-                }
-            }, 1000)
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
