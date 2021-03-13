@@ -57,7 +57,7 @@
             tools:text="Funny Anim Videos" />
 
         <ImageButton
-            android:id="@+id/subtitle_toggle"
+            android:id="@+id/phone_subtitle_toggle"
             android:src="@drawable/exo_subtitles_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

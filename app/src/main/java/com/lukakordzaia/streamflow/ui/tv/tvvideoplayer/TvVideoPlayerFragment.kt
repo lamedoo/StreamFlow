@@ -45,6 +45,8 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
                 videoPlayerData.isTvShow
             )
         }
+
+
     }
 
     override fun onStart() {

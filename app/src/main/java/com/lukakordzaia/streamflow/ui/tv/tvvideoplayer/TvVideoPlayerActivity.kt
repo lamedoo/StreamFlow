@@ -43,6 +43,11 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     exo_pause.nextFocusUpId = R.id.tv_subtitle_toggle
                     exo_play.nextFocusUpId = R.id.tv_subtitle_toggle
                 }
+
+                if (!tv_title_player.isControllerVisible) {
+                    tv_title_player.showController()
+                    tv_title_player.exo_pause.requestFocus()
+                }
             }
             KeyEvent.KEYCODE_DPAD_CENTER -> {
                 if (!tv_title_player.isControllerVisible) {
@@ -122,10 +127,10 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 tv_title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }
-//            KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
-//                tv_title_player.dispatchMediaKeyEvent(event!!)
-//                return true
-//            }
+            KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
+                tv_title_player.dispatchMediaKeyEvent(event!!)
+                return true
+            }
         }
         return super.onKeyDown(keyCode, event)
     }

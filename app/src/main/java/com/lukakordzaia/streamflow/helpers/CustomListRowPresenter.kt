@@ -1,18 +1,29 @@
 package com.lukakordzaia.streamflow.helpers
 
 import android.text.TextUtils
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.leanback.widget.ListRowPresenter
-import androidx.leanback.widget.Presenter
-import androidx.leanback.widget.Row
-import androidx.leanback.widget.RowHeaderPresenter
+import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.utils.setMargin
 
-class CustomListRowPresenter : ListRowPresenter() {
+class CustomListRowPresenter : ListRowPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false) {
     init {
         headerPresenter = CustomRowHeaderPresenter()
+    }
+
+    override fun createRowViewHolder(parent: ViewGroup?): RowPresenter.ViewHolder {
+        val viewHolder = super.createRowViewHolder(parent)
+
+        with((viewHolder.view as ListRowView).gridView) {
+            windowAlignment = BaseGridView.WINDOW_ALIGN_LOW_EDGE
+            windowAlignmentOffsetPercent = 0f
+            windowAlignmentOffset = parent!!.resources.getDimensionPixelSize(R.dimen.lb_browse_padding_start)
+            itemAlignmentOffsetPercent = 0f
+        }
+
+        return viewHolder
     }
 
     internal class CustomRowHeaderPresenter : RowHeaderPresenter() {

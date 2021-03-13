@@ -79,7 +79,7 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
     }
 
     private fun setupFragment() {
-        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
+        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
         gridPresenter.numberOfColumns = 6
         setGridPresenter(gridPresenter)
 

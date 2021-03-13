@@ -12,6 +12,17 @@
     app:layout_constraintTop_toTopOf="parent">
 
 
+<!--    <ImageButton-->
+<!--        android:id="@id/exo_prev"-->
+<!--        style="@style/ExoMediaButton.Previous"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:background="@drawable/exo_buttons_focused"-->
+<!--        android:src="@drawable/exo_previous"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/exo_next"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/barrier_right"-->
+<!--        app:layout_constraintStart_toStartOf="@id/barrier_left" />-->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_header_view"
         android:layout_width="0dp"
@@ -19,6 +30,7 @@
         android:layout_marginRight="5dp"
         android:paddingTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -27,16 +39,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="5dp"
             android:ellipsize="end"
             android:fontFamily="@font/georgian_uppercase"
             android:maxLines="2"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+            android:padding="5dp"
             android:shadowColor="@color/trueBlack"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="3"
+            android:textColor="@color/white"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_max="wrap"
@@ -84,18 +96,6 @@
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-<!--    <ImageButton-->
-<!--        android:id="@id/exo_prev"-->
-<!--        style="@style/ExoMediaButton.Previous"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:background="@drawable/exo_buttons_focused"-->
-<!--        android:src="@drawable/exo_previous"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/exo_next"-->
-<!--        app:layout_constraintStart_toStartOf="@id/barrier_left"-->
-<!--        app:layout_constraintEnd_toEndOf="@id/barrier_right"/>-->
 
     <ImageButton
         android:id="@+id/exo_rew"
@@ -211,13 +211,13 @@
         android:layout_marginLeft="7dp"
         android:layout_marginEnd="7dp"
         android:layout_marginRight="7dp"
+        android:text="00:00"
         android:minWidth="50dp"
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/barrier_top"
         app:layout_constraintBottom_toTopOf="@id/barrier_bottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="dssdd" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 <!--    <TextView-->
 <!--        android:id="@id/exo_duration"-->

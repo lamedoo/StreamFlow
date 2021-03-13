@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.ui.baseclasses
 
 import android.content.pm.ActivityInfo
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
@@ -8,6 +9,8 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -18,7 +21,9 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.text.CaptionStyleCompat
 import com.google.android.exoplayer2.text.CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.SubtitleView
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.animations.VideoPlayerAnimations
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
@@ -65,18 +70,18 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 super.onPlaybackStateChanged(state)
 
                 if (state == Player.STATE_READY) {
-                    tracker = ProgressTracker(player, object: ProgressTracker.PositionListener {
-                        override fun progress(position: Long) {
-                            exo_live_duration.text = String.format("%02d:%02d:%02d",
-                                    TimeUnit.MILLISECONDS.toHours(position),
-                                    TimeUnit.MILLISECONDS.toMinutes(position) -
-                                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(position)),
-                                    TimeUnit.MILLISECONDS.toSeconds(position) -
-                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
-                            )
+                        tracker = ProgressTracker(player, object: ProgressTracker.PositionListener {
+                            override fun progress(position: Long) {
+                                exo_live_duration?.text = String.format("%02d:%02d:%02d",
+                                        TimeUnit.MILLISECONDS.toHours(position),
+                                        TimeUnit.MILLISECONDS.toMinutes(position) -
+                                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(position)),
+                                        TimeUnit.MILLISECONDS.toSeconds(position) -
+                                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
+                                )
 
-                        }
-                    })
+                            }
+                        })
                     checkForNextSeason()
                     playerView.keepScreenOn = true
                 } else playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
@@ -143,7 +148,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 val nextSeasonNum = videoPlayerViewModel.seasonForDb.value!! + 1
                 videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
                     if (nextSeasonNum <= numOfSeasons) {
-                        nextSeasonButtonShow(nextSeasonNum, isTvShow)
+                        nextSeasonButtonShow(nextSeasonNum)
                     } else {
                         nextSeasonButtonGone()
                     }
@@ -164,18 +169,18 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                             if (view != null) {
                                 videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
                                     if (nextSeasonNum <= numOfSeasons) {
-                                        nextSeasonButtonShowOnEnd(nextSeasonNum, isTvShow)
+                                        nextSeasonButtonShowOnEnd(nextSeasonNum)
                                     } else {
-                                        nextSeasonButtonOnEndGone()
+                                        nextSeasonButtonGoneOnEnd()
                                     }
                                 })
                             }
                         }
                     } else {
-                        nextSeasonButtonOnEndGone()
+                        nextSeasonButtonGoneOnEnd()
                     }
                 } else {
-                    nextSeasonButtonOnEndGone()
+                    nextSeasonButtonGoneOnEnd()
                 }
             }
             override fun onFinish() {
@@ -183,71 +188,79 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         }
     }
 
-    private fun nextSeasonButtonShowOnEnd(nextSeasonNum: Int, isTvShow: Boolean) {
+    private fun nextSeasonButtonShowOnEnd(nextSeasonNum: Int) {
+        var nextSeasonButton: Button? = null
         when (playerView) {
             tv_title_player -> {
-                tv_next_season_button.setVisible()
-                tv_next_season_button.requestFocus()
-                tv_next_season_button.text = "შემდეგი სეზონი: $nextSeasonNum"
-                tv_next_season_button.setOnClickListener {
-                    player.clearMediaItems()
-                    videoPlayerViewModel.getPlaylistFiles(
-                            videoPlayerViewModel.titleIdForDb.value!!,
-                            nextSeasonNum,
-                            videoPlayerViewModel.languageForDb.value!!
-                    )
-                    mediaPlayer.initPlayer(playerView, 0, 0L)
-
-                }
+                nextSeasonButton = tv_next_season_button
             }
             phone_title_player -> {
-                phone_next_season_button.setVisible()
-                phone_next_season_button.requestFocus()
-                phone_next_season_button.text = "შემდეგი სეზონი: $nextSeasonNum"
-                phone_next_season_button.setOnClickListener {
-                    player.clearMediaItems()
-                    videoPlayerViewModel.getPlaylistFiles(
-                            videoPlayerViewModel.titleIdForDb.value!!,
-                            nextSeasonNum,
-                            videoPlayerViewModel.languageForDb.value!!
-                    )
-                    mediaPlayer.initPlayer(playerView, 0, 0L)
-                }
+//                phone_next_season_button.setVisible()
+//                phone_next_season_button.requestFocus()
+//                phone_next_season_button.text = "შემდეგი სეზონი: $nextSeasonNum"
+//                phone_next_season_button.setOnClickListener {
+//                    player.clearMediaItems()
+//                    videoPlayerViewModel.getPlaylistFiles(
+//                            videoPlayerViewModel.titleIdForDb.value!!,
+//                            nextSeasonNum,
+//                            videoPlayerViewModel.languageForDb.value!!
+//                    )
+//                    mediaPlayer.initPlayer(playerView, 0, 0L)
+//                }
+                nextSeasonButton = phone_next_season_button
             }
+        }
+
+        nextSeasonButton?.setVisible()
+        nextSeasonButton?.requestFocus()
+        nextSeasonButton?.text = "შემდეგი სეზონი: $nextSeasonNum"
+        nextSeasonButton?.setOnClickListener {
+            player.clearMediaItems()
+            videoPlayerViewModel.getPlaylistFiles(
+                    videoPlayerViewModel.titleIdForDb.value!!,
+                    nextSeasonNum,
+                    videoPlayerViewModel.languageForDb.value!!
+            )
+            mediaPlayer.initPlayer(playerView, 0, 0L)
+
         }
     }
 
-    private fun nextSeasonButtonShow(nextSeasonNum: Int, isTvShow: Boolean) {
+    private fun nextSeasonButtonShow(nextSeasonNum: Int) {
+        var nextSeasonButtonInController: ImageButton? = null
         when (playerView) {
             tv_title_player -> {
-                tv_next_season_button_controller.setVisible()
-                tv_next_season_button_controller.setOnClickListener {
-                    player.clearMediaItems()
-                    videoPlayerViewModel.getPlaylistFiles(
-                            videoPlayerViewModel.titleIdForDb.value!!,
-                            nextSeasonNum,
-                            videoPlayerViewModel.languageForDb.value!!
-                    )
-                    mediaPlayer.initPlayer(playerView, 0, 0L)
-                }
+                nextSeasonButtonInController = tv_next_season_button_controller
             }
             phone_title_player -> {
-                phone_next_season_button_controller.setVisible()
-                phone_next_season_button_controller.requestFocus()
-                phone_next_season_button_controller.setOnClickListener {
-                    player.clearMediaItems()
-                    videoPlayerViewModel.getPlaylistFiles(
-                            videoPlayerViewModel.titleIdForDb.value!!,
-                            nextSeasonNum,
-                            videoPlayerViewModel.languageForDb.value!!
-                    )
-                    mediaPlayer.initPlayer(playerView, 0, 0L)
-                }
+                nextSeasonButtonInController = phone_next_season_button_controller
+//                phone_next_season_button_controller.setVisible()
+//                phone_next_season_button_controller.requestFocus()
+//                phone_next_season_button_controller.setOnClickListener {
+//                    player.clearMediaItems()
+//                    videoPlayerViewModel.getPlaylistFiles(
+//                            videoPlayerViewModel.titleIdForDb.value!!,
+//                            nextSeasonNum,
+//                            videoPlayerViewModel.languageForDb.value!!
+//                    )
+//                    mediaPlayer.initPlayer(playerView, 0, 0L)
+//                }
             }
+        }
+
+        nextSeasonButtonInController?.setVisible()
+        nextSeasonButtonInController?.setOnClickListener {
+            player.clearMediaItems()
+            videoPlayerViewModel.getPlaylistFiles(
+                    videoPlayerViewModel.titleIdForDb.value!!,
+                    nextSeasonNum,
+                    videoPlayerViewModel.languageForDb.value!!
+            )
+            mediaPlayer.initPlayer(playerView, 0, 0L)
         }
     }
 
-    private fun nextSeasonButtonOnEndGone() {
+    private fun nextSeasonButtonGoneOnEnd() {
         tv_next_season_button?.setGone()
         phone_next_season_button?.setGone()
     }
@@ -281,58 +294,74 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {
-        player.addTextOutput {
-                subtitle?.onCues(it)
-                tv_subtitle?.onCues(it)
-
-            subtitle?.setStyle(CaptionStyleCompat(
-                    ContextCompat.getColor(requireContext(), R.color.white),
-                    ContextCompat.getColor(requireContext(), R.color.transparent),
-                    ContextCompat.getColor(requireContext(), R.color.transparent),
-                    EDGE_TYPE_DROP_SHADOW,
-                    ContextCompat.getColor(requireContext(), R.color.black),
-                    Typeface.DEFAULT_BOLD,
-            ))
-            subtitle?.setFixedTextSize(2, 25F)
-
-            tv_subtitle?.setStyle(CaptionStyleCompat(
-                    ContextCompat.getColor(requireContext(), R.color.white),
-                    ContextCompat.getColor(requireContext(), R.color.transparent),
-                    ContextCompat.getColor(requireContext(), R.color.transparent),
-                    EDGE_TYPE_DROP_SHADOW,
-                    ContextCompat.getColor(requireContext(), R.color.black),
-                    Typeface.DEFAULT_BOLD,
-            ))
-            tv_subtitle?.setFixedTextSize(2, 25F)
-        }
-
-        if (hasSubs) {
-            subtitle_toggle?.setVisible()
-            tv_subtitle_toggle?.setVisible()
-            subtitle_toggle?.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
-            tv_subtitle_toggle?.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
-        } else {
-            subtitle_toggle?.setInvisible()
-            tv_subtitle_toggle?.setInvisible()
-        }
-
-        subtitle_toggle?.setOnClickListener {
-            if (subtitle.isVisible) {
-                subtitle.setInvisible()
-                subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_off, requireContext().theme))
-            } else {
-                subtitle.setVisible()
-                subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
+        var subtitleView: SubtitleView? = null
+        var subtitleToggle: ImageButton? = null
+        when (playerView) {
+            tv_title_player -> {
+                subtitleView = tv_subtitle
+                subtitleToggle = tv_subtitle_toggle
+            }
+            phone_title_player -> {
+                subtitleView = phone_subtitle
+                subtitleToggle = phone_subtitle_toggle
             }
         }
 
-        tv_subtitle_toggle?.setOnClickListener {
-            if (tv_subtitle.isVisible) {
-                tv_subtitle.setInvisible()
-                tv_subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_off, requireContext().theme))
+        player.addTextOutput {
+//                phone_subtitle?.onCues(it)
+//                tv_subtitle?.onCues(it)
+            subtitleView?.onCues(it)
+
+//            phone_subtitle?.setStyle(CaptionStyleCompat(
+//                    ContextCompat.getColor(requireContext(), R.color.white),
+//                    ContextCompat.getColor(requireContext(), R.color.transparent),
+//                    ContextCompat.getColor(requireContext(), R.color.transparent),
+//                    EDGE_TYPE_DROP_SHADOW,
+//                    ContextCompat.getColor(requireContext(), R.color.black),
+//                    Typeface.DEFAULT_BOLD,
+//            ))
+//            phone_subtitle?.setFixedTextSize(2, 25F)
+
+            if (view != null) {
+                subtitleView?.setStyle(CaptionStyleCompat(
+                        ContextCompat.getColor(requireContext(), R.color.white),
+                        ContextCompat.getColor(requireContext(), R.color.transparent),
+                        ContextCompat.getColor(requireContext(), R.color.transparent),
+                        EDGE_TYPE_DROP_SHADOW,
+                        ContextCompat.getColor(requireContext(), R.color.black),
+                        Typeface.DEFAULT_BOLD,
+                ))
+                subtitleView?.setFixedTextSize(2, 25F)
+            }
+        }
+
+        if (hasSubs) {
+//            phone_subtitle_toggle?.setVisible()
+            subtitleView?.setVisible()
+//            phone_subtitle_toggle?.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.accent_color))
+            subtitleToggle?.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.accent_color))
+        } else {
+//            phone_subtitle_toggle?.setInvisible()
+            subtitleView?.setInvisible()
+        }
+
+//        phone_subtitle_toggle?.setOnClickListener {
+//            if (phone_subtitle.isVisible) {
+//                phone_subtitle.setInvisible()
+//                VideoPlayerAnimations().setSubtitleOff(phone_subtitle_toggle, 200, requireContext())
+//            } else {
+//                phone_subtitle.setVisible()
+//                VideoPlayerAnimations().setSubtitleOn(phone_subtitle_toggle, 200, requireContext())
+//            }
+//        }
+
+        subtitleToggle?.setOnClickListener {
+            if (subtitleView?.isVisible == true) {
+                subtitleView.setInvisible()
+                VideoPlayerAnimations().setSubtitleOff(tv_subtitle_toggle, 200, requireContext())
             } else {
-                tv_subtitle.setVisible()
-                tv_subtitle_toggle.setImageDrawable(resources.getDrawable(R.drawable.exo_subtitles_on, requireContext().theme))
+                subtitleView?.setVisible()
+                VideoPlayerAnimations().setSubtitleOn(tv_subtitle_toggle, 200, requireContext())
             }
         }
     }
@@ -363,10 +392,10 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     }
 
     fun releasePlayer(titleId: Int, isTvShow: Boolean, chosenLanguage: String, trailerUrl: String?) {
+        tracker.purgeHandler()
         mediaPlayer.releasePlayer {
             videoPlayerViewModel.setVideoPlayerInfo(it)
         }
-        tracker.purgeHandler()
         if (trailerUrl == null) {
             videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
         }

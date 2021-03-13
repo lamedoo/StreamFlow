@@ -3,8 +3,6 @@ package com.lukakordzaia.streamflow.ui.tv.details.titlefiles
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -22,6 +20,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.*
+import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvCastPresenter
@@ -51,7 +50,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         super.onCreate(savedInstanceState)
         headersState = HEADERS_DISABLED
 
-        val listRowPresenter = ListRowPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false).apply {
+        val listRowPresenter = CustomListRowPresenter().apply {
             shadowEnabled = false
             selectEffectEnabled = false
         }
@@ -127,7 +126,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
 
     private fun initRowsAdapter(isTvShow: Boolean) {
         if (isTvShow) {
-            val secondHeaderItem = ListRow(HeaderItem(0, ""), ArrayObjectAdapter(TvCardPresenter()))
+            val secondHeaderItem = ListRow(HeaderItem(0, "სეზონები"), ArrayObjectAdapter(TvCardPresenter()))
             val firstHeaderItem = ListRow(HeaderItem(1, "ეპიზოდები"), ArrayObjectAdapter(TvCardPresenter()))
             val fourthItem = ListRow(HeaderItem(2, "მსახიობები"), ArrayObjectAdapter(TvCardPresenter()))
             val fifthItem = ListRow(HeaderItem(3, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter()))
@@ -147,7 +146,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                 add(it)
             }
         }
-        HeaderItem(0, ""). also {
+        HeaderItem(0, "სეზონები"). also {
             rowsAdapter.replace(0, ListRow(it, listRowAdapter))
         }
 
@@ -217,8 +216,9 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                     val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
 
                     val chooseLanguageDialog = Dialog(requireContext())
-                    chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//                    chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     chooseLanguageDialog.setContentView(layoutInflater.inflate(R.layout.tv_choose_language_dialog, null))
+                    chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                     chooseLanguageDialog.show()
 
                     val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
