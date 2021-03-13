@@ -45,7 +45,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     private lateinit var mediaPlayer: MediaPlayerClass
     private lateinit var player: SimpleExoPlayer
     private lateinit var playerView: PlayerView
-    private lateinit var tracker: ProgressTracker
+    private var tracker: ProgressTracker? = null
 
     private var titleId = 0
     private var isTvShow = false
@@ -358,10 +358,10 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         subtitleToggle?.setOnClickListener {
             if (subtitleView?.isVisible == true) {
                 subtitleView.setInvisible()
-                VideoPlayerAnimations().setSubtitleOff(tv_subtitle_toggle, 200, requireContext())
+                VideoPlayerAnimations().setSubtitleOff(subtitleToggle, 200, requireContext())
             } else {
                 subtitleView?.setVisible()
-                VideoPlayerAnimations().setSubtitleOn(tv_subtitle_toggle, 200, requireContext())
+                VideoPlayerAnimations().setSubtitleOn(subtitleToggle, 200, requireContext())
             }
         }
     }
@@ -392,10 +392,10 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     }
 
     fun releasePlayer(titleId: Int, isTvShow: Boolean, chosenLanguage: String, trailerUrl: String?) {
-        tracker.purgeHandler()
         mediaPlayer.releasePlayer {
             videoPlayerViewModel.setVideoPlayerInfo(it)
         }
+        tracker?.purgeHandler()
         if (trailerUrl == null) {
             videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
         }

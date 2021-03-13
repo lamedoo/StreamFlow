@@ -107,8 +107,6 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
                         checkContinueWatching.data!!["season"].toString().toInt(),
                         checkContinueWatching.data!!["episode"].toString().toInt()
                 )
-            } else {
-                _continueWatchingDetails.value = null
             }
         }
     }
