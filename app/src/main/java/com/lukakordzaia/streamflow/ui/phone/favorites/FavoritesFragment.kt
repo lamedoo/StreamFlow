@@ -4,7 +4,10 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -14,23 +17,31 @@ import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.phone_favorites_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
+class FavoritesFragment : BaseFragment() {
     private val favoritesViewModel: FavoritesViewModel by viewModel()
     private lateinit var favoritesMoviesAdapter: FavoritesAdapter
     private lateinit var favoriteTvShowsAdapter: FavoritesAdapter
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_favorites_fragment)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (auth.currentUser != null) {
-            favoritesViewModel.getFavTitlesFromFirestore()
-        } else {
-            favorite_movies_container.setGone()
-            favorite_tvshows_container.setGone()
-            favorite_no_auth.setVisible()
+        if (!hasInitializedRootView) {
+            Log.d("onviewcreated", "true")
+            hasInitializedRootView = true
+            if (auth.currentUser != null) {
+                favoritesViewModel.getFavTitlesFromFirestore()
+            } else {
+                favorite_movies_container.setGone()
+                favorite_tvshows_container.setGone()
+                favorite_no_auth.setVisible()
 
-            favorite_go_to_profile.setOnClickListener {
-                favoritesViewModel.onProfileButtonPressed()
+                favorite_go_to_profile.setOnClickListener {
+                    favoritesViewModel.onProfileButtonPressed()
+                }
             }
         }
 

@@ -11,6 +11,7 @@ import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
+import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.SingleTopListViewModel
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleViewModel
@@ -34,6 +35,7 @@ val viewModelModule = module {
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { TvTitleFilesViewModel(get()) }
     viewModel { FavoritesViewModel(get(), get()) }
+    viewModel { SingleTopListViewModel(get()) }
 }
 
 val repositoryModule = module {

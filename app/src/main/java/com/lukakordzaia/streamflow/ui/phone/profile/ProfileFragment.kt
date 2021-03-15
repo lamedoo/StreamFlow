@@ -12,7 +12,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -33,7 +35,7 @@ import kotlinx.android.synthetic.main.sync_continue_watching_alert_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
+class ProfileFragment : BaseFragment() {
     private val profileViewModel: ProfileViewModel by viewModel()
     private var googleAccount: GoogleSignInAccount? = null
     private var traktToken: String? = null
@@ -49,8 +51,18 @@ class ProfileFragment : BaseFragment(R.layout.phone_profile_framgent) {
         }
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_profile_framgent)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (!hasInitializedRootView) {
+            Log.d("onviewcreated", "true")
+            hasInitializedRootView = true
+        }
+
         googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
         traktDialog = Dialog(requireContext())
         traktToken = authSharedPreferences.getAccessToken()

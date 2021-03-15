@@ -4,7 +4,10 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -16,7 +19,7 @@ import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.tv_settings_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSettingsFragment : BaseFragment(R.layout.tv_settings_fragment) {
+class TvSettingsFragment : BaseFragment() {
     private val profileViewModel: ProfileViewModel by viewModel()
     private var googleSignInClient: GoogleSignInClient? = null
 
@@ -40,8 +43,17 @@ class TvSettingsFragment : BaseFragment(R.layout.tv_settings_fragment) {
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return getPersistentView(inflater, container, savedInstanceState, R.layout.tv_settings_fragment)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (!hasInitializedRootView) {
+            Log.d("onviewcreated", "true")
+            hasInitializedRootView = true
+        }
 
         tv_settings_trakt.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {

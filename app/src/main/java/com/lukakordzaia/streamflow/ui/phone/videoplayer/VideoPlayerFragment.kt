@@ -54,7 +54,9 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
     override fun onStart() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
-            initPlayer(args.videoPlayerData.isTvShow, args.videoPlayerData.watchedTime, args.videoPlayerData.chosenEpisode, args.videoPlayerData.trailerUrl)
+            if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                initPlayer(args.videoPlayerData.isTvShow, args.videoPlayerData.watchedTime, args.videoPlayerData.chosenEpisode, args.videoPlayerData.trailerUrl)
+            }
             Log.d("videoplaying", "started")
         }
     }
@@ -62,7 +64,9 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
     override fun onResume() {
         super.onResume()
         if (Util.SDK_INT < 24) {
-            initPlayer(args.videoPlayerData.isTvShow, args.videoPlayerData.watchedTime, args.videoPlayerData.chosenEpisode, args.videoPlayerData.trailerUrl)
+            if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                initPlayer(args.videoPlayerData.isTvShow, args.videoPlayerData.watchedTime, args.videoPlayerData.chosenEpisode, args.videoPlayerData.trailerUrl)
+            }
             Log.d("videoplaying", "resumed")
         }
     }

@@ -45,7 +45,7 @@ class HomeRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
         return watchedDao.deleteSingleContinueWatchingFromRoom(titleId)
     }
 
-    suspend fun getContinueWatchingFromFirestore(currentUserUid: String) : QuerySnapshot? {
+    suspend fun getContinueWatchingFromFirestore1(currentUserUid: String) : QuerySnapshot? {
         return try {
             val data = Firebase.firestore
                     .collection("users")
@@ -59,7 +59,7 @@ class HomeRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
         }
     }
 
-    fun getContinueWatchingFromFirestore1(currentUserUid: String, continueWatchingListCallBack: FirebaseContinueWatchingListCallBack) {
+    fun getContinueWatchingFromFirestore(currentUserUid: String, continueWatchingListCallBack: FirebaseContinueWatchingListCallBack) {
         val docRef = Firebase.firestore.collection("users").document(currentUserUid).collection("continueWatching")
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {

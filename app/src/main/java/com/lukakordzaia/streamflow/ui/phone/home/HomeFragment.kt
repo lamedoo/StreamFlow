@@ -4,11 +4,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import androidx.lifecycle.Observer
+import android.util.Log
+import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -24,7 +21,7 @@ import kotlinx.android.synthetic.main.phone_home_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
+class HomeFragment : BaseFragment() {
     private val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var homeDbTitlesAdapter: HomeDbTitlesAdapter
@@ -37,8 +34,17 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
         setHasOptionsMenu(true)
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_home_framgent)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (!hasInitializedRootView) {
+            Log.d("onviewcreated", "true")
+            hasInitializedRootView = true
+        }
 
         viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
@@ -67,8 +73,6 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
                 }
             }
         })
-
-        viewModel.getMovieDay()
 
         viewModel.movieDayData.observe(viewLifecycleOwner, { it ->
             main_movie_day_container.setOnClickListener { _ ->
@@ -100,24 +104,14 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
         rv_main_watched_titles.layoutManager = dbLayout
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if (auth.currentUser != null) {
-                viewModel.clearContinueWatchingTitleList()
-                viewModel.getContinueWatchingFromFirestorePHONE()
-            } else {
+            if (auth.currentUser == null) {
                 viewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
-                    viewModel.clearContinueWatchingTitleList()
-                    if (!it.isNullOrEmpty()) {
-                        main_watched_titles_none.setGone()
-
                         viewModel.getContinueWatchingTitlesFromApi(it)
-                    } else {
-                        main_watched_titles_none.setVisible()
-                    }
                 })
             }
         }
 
-        viewModel.dbList.observe(viewLifecycleOwner, {
+        viewModel.continueWatchingList.observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
                 main_watched_titles_none.setVisible()
                 rv_main_watched_titles.setGone()
@@ -148,7 +142,6 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
         rv_main_new_movies.adapter = homeNewMovieAdapter
         rv_main_new_movies.layoutManager = newMovieLayout
 
-        viewModel.getNewMovies(1)
         viewModel.newMovieList.observe(viewLifecycleOwner, {
             homeNewMovieAdapter.setMoviesList(it)
         })
@@ -168,11 +161,13 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
         rv_main_top_movies.adapter = homeTopMovieAdapter
         rv_main_top_movies.layoutManager = topMovieLayout
 
-        viewModel.getTopMovies(1)
-
-        viewModel.topMovieList.observe(viewLifecycleOwner, Observer {
+        viewModel.topMovieList.observe(viewLifecycleOwner, {
             homeTopMovieAdapter.setMoviesList(it)
         })
+
+        top_movies_more.setOnClickListener {
+            viewModel.topMoviesMorePressed()
+        }
 
 
         //Top TvShows List
@@ -190,15 +185,9 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
         rv_main_top_tvshows.adapter = homeTvShowAdapter
         rv_main_top_tvshows.layoutManager = tvShowLayout
 
-        viewModel.getTopTvShows(1)
-
-        viewModel.topTvShowList.observe(viewLifecycleOwner, Observer {
+        viewModel.topTvShowList.observe(viewLifecycleOwner, {
             homeTvShowAdapter.setTvShowsList(it)
         })
-
-        top_movies_more.setOnClickListener {
-            viewModel.topMoviesMorePressed()
-        }
 
         top_tvshows_more.setOnClickListener {
             viewModel.topTvShowsMorePressed()

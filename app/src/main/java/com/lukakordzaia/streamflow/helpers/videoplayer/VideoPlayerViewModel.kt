@@ -53,7 +53,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                 seasonForDb.value!!,
                 episodeForDb.value!! + 1
         )
-        if (playbackPositionForDb.value!! > 0) {
+        if (playbackPositionForDb.value!! > 0 && titleDurationForDb.value!! > 0) {
             if (currentUser() != null) {
                 viewModelScope.launch {
                     repository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, dbDetails)

@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +17,7 @@ import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_single_category_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleGenreFragment : BaseFragment(R.layout.phone_single_category_fragment) {
+class SingleGenreFragment : BaseFragment() {
     private val singleCategoryViewModel by viewModel<SingleCategoryViewModel>()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private val args: SingleGenreFragmentArgs by navArgs()
@@ -25,8 +27,18 @@ class SingleGenreFragment : BaseFragment(R.layout.phone_single_category_fragment
     private var totalItemCount: Int = 0
     private var loading = false
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_single_category_fragment)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (!hasInitializedRootView) {
+            Log.d("onviewcreated", "true")
+            hasInitializedRootView = true
+            singleCategoryViewModel.getSingleGenre(args.genreId, page)
+        }
 
         singleCategoryViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {

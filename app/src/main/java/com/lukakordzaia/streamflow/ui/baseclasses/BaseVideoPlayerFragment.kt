@@ -195,18 +195,6 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 nextSeasonButton = tv_next_season_button
             }
             phone_title_player -> {
-//                phone_next_season_button.setVisible()
-//                phone_next_season_button.requestFocus()
-//                phone_next_season_button.text = "შემდეგი სეზონი: $nextSeasonNum"
-//                phone_next_season_button.setOnClickListener {
-//                    player.clearMediaItems()
-//                    videoPlayerViewModel.getPlaylistFiles(
-//                            videoPlayerViewModel.titleIdForDb.value!!,
-//                            nextSeasonNum,
-//                            videoPlayerViewModel.languageForDb.value!!
-//                    )
-//                    mediaPlayer.initPlayer(playerView, 0, 0L)
-//                }
                 nextSeasonButton = phone_next_season_button
             }
         }
@@ -234,17 +222,6 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             }
             phone_title_player -> {
                 nextSeasonButtonInController = phone_next_season_button_controller
-//                phone_next_season_button_controller.setVisible()
-//                phone_next_season_button_controller.requestFocus()
-//                phone_next_season_button_controller.setOnClickListener {
-//                    player.clearMediaItems()
-//                    videoPlayerViewModel.getPlaylistFiles(
-//                            videoPlayerViewModel.titleIdForDb.value!!,
-//                            nextSeasonNum,
-//                            videoPlayerViewModel.languageForDb.value!!
-//                    )
-//                    mediaPlayer.initPlayer(playerView, 0, 0L)
-//                }
             }
         }
 
@@ -308,19 +285,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         }
 
         player.addTextOutput {
-//                phone_subtitle?.onCues(it)
-//                tv_subtitle?.onCues(it)
             subtitleView?.onCues(it)
-
-//            phone_subtitle?.setStyle(CaptionStyleCompat(
-//                    ContextCompat.getColor(requireContext(), R.color.white),
-//                    ContextCompat.getColor(requireContext(), R.color.transparent),
-//                    ContextCompat.getColor(requireContext(), R.color.transparent),
-//                    EDGE_TYPE_DROP_SHADOW,
-//                    ContextCompat.getColor(requireContext(), R.color.black),
-//                    Typeface.DEFAULT_BOLD,
-//            ))
-//            phone_subtitle?.setFixedTextSize(2, 25F)
 
             if (view != null) {
                 subtitleView?.setStyle(CaptionStyleCompat(
@@ -336,24 +301,11 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         }
 
         if (hasSubs) {
-//            phone_subtitle_toggle?.setVisible()
-            subtitleView?.setVisible()
-//            phone_subtitle_toggle?.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.accent_color))
+            subtitleToggle?.setVisible()
             subtitleToggle?.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.accent_color))
         } else {
-//            phone_subtitle_toggle?.setInvisible()
-            subtitleView?.setInvisible()
+            subtitleToggle?.setInvisible()
         }
-
-//        phone_subtitle_toggle?.setOnClickListener {
-//            if (phone_subtitle.isVisible) {
-//                phone_subtitle.setInvisible()
-//                VideoPlayerAnimations().setSubtitleOff(phone_subtitle_toggle, 200, requireContext())
-//            } else {
-//                phone_subtitle.setVisible()
-//                VideoPlayerAnimations().setSubtitleOn(phone_subtitle_toggle, 200, requireContext())
-//            }
-//        }
 
         subtitleToggle?.setOnClickListener {
             if (subtitleView?.isVisible == true) {

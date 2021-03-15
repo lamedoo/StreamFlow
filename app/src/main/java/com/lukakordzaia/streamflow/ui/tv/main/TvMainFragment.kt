@@ -105,7 +105,7 @@ class TvMainFragment : BrowseSupportFragment() {
             startEntranceTransition()
         }, 2000)
 
-        homeViewModel.dbList.observe(viewLifecycleOwner, {
+        homeViewModel.continueWatchingList.observe(viewLifecycleOwner, {
             watchedListRowsAdapter(it)
 
             if (it.isNullOrEmpty()) {
@@ -115,16 +115,16 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         })
 
-        homeViewModel.topMovieList.observe(viewLifecycleOwner, { movies ->
-            topMoviesRowsAdapter(movies)
+        homeViewModel.topMovieList.observe(viewLifecycleOwner, {
+            topMoviesRowsAdapter(it)
         })
 
         homeViewModel.newMovieList.observe(viewLifecycleOwner, {
             newMoviesRowsAdapter(it)
         })
 
-        homeViewModel.topTvShowList.observe(viewLifecycleOwner, { tvShows ->
-            topTvShowsRowsAdapter(tvShows)
+        homeViewModel.topTvShowList.observe(viewLifecycleOwner, {
+            topTvShowsRowsAdapter(it)
         })
 
         categoriesRowsAdapter()

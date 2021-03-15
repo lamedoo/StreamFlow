@@ -143,5 +143,17 @@
     <fragment
         android:id="@+id/newMoviesFragment"
         android:name="com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.NewMoviesFragment"
-        android:label="NewMoviesFragment" />
+        android:label="NewMoviesFragment" >
+        <action
+            android:id="@+id/action_newMoviesFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
+    </fragment>
 </navigation>

@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.navArgs
@@ -22,15 +25,25 @@ import kotlinx.android.synthetic.main.phone_single_title_fragment.*
 import kotlinx.android.synthetic.main.phone_single_title_info.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
+class SingleTitleFragment : BaseFragment() {
     private val singleTitleViewModel by viewModel<SingleTitleViewModel>()
     private lateinit var singleTitleCastAdapter: SingleTitleCastAdapter
     private lateinit var singleTitleRelatedAdapter: SingleTitleRelatedAdapter
     private val args: SingleTitleFragmentArgs by navArgs()
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_single_title_fragment)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        singleTitleViewModel.checkTitleInFirestore(args.titleId)
+
+        if (!hasInitializedRootView) {
+            Log.d("onviewcreated", "true")
+            hasInitializedRootView = true
+            singleTitleViewModel.checkTitleInFirestore(args.titleId)
+            singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+        }
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             single_title_appbar.setExpanded(true)
@@ -45,7 +58,7 @@ class SingleTitleFragment : BaseFragment(R.layout.phone_single_title_fragment) {
             }
         })
 
-        singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+//        singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
 
         single_title_back_button.setOnClickListener {
             requireActivity().onBackPressed()

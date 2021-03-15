@@ -45,10 +45,9 @@ class ContinueWatchingInfoFragment : BottomSheetDialogFragment() {
             clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
             clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                homeViewModel.deleteSingleContinueWatchingFromRoom(requireContext(), args.titleId)
-                homeViewModel.deleteSingleContinueWatchingFromFirestore(args.titleId)
+                homeViewModel.deleteContinueWatching(requireContext(), args.titleId)
                 clearDbDialog.dismiss()
-                navController(ContinueWatchingInfoFragmentDirections.actionContinueWatchingInfoFragmentToHomeFragment())
+                dismiss()
             }
             clearDbDialog.clear_db_alert_no.setOnClickListener {
                 clearDbDialog.dismiss()

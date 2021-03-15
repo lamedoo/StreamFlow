@@ -42,11 +42,6 @@ class MainActivity : AppCompatActivity() {
             setBottomNav()
         }
 
-//        window.setFlags(
-//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-//        )
-
         val appToolbar: MaterialToolbar = findViewById(R.id.app_main_toolbar)
         setSupportActionBar(appToolbar)
 
@@ -63,10 +58,11 @@ class MainActivity : AppCompatActivity() {
                         hideBottomNavigation()
                     }
                     is VideoPlayerFragment -> {
+//                        window.setFlags(
+//                                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//                                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+//                        )
                         hideBottomNavigation()
-                    }
-                    else -> {
-//                        hideBottomNavigation()
                     }
                 }
             }
@@ -103,24 +99,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return currentNavController?.value?.navigateUp() ?: false
-    }
-
-    private fun hideToolbar() {
-        with(app_main_toolbar) {
-            if (visibility == View.VISIBLE && alpha == 1f) {
-                animate()
-                    .alpha(0f)
-                    .withEndAction { visibility = View.GONE }
-            }
-        }
-    }
-
-    private fun showToolbar() {
-        with(app_main_toolbar) {
-            visibility = View.VISIBLE
-            animate()
-                .alpha(1f)
-        }
     }
 
     private fun hideBottomNavigation() {

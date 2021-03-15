@@ -4,20 +4,21 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryAdapter
-import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_single_category_fragment_new.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewMoviesFragment : BaseFragment(R.layout.phone_single_category_fragment) {
-    private val viewModel by viewModel<HomeViewModel>()
+class NewMoviesFragment : BaseFragment() {
+    private val viewModel by viewModel<SingleTopListViewModel>()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private var page = 1
     private var pastVisibleItems: Int = 0
@@ -25,9 +26,18 @@ class NewMoviesFragment : BaseFragment(R.layout.phone_single_category_fragment) 
     private var totalItemCount: Int = 0
     private var loading = false
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_single_category_fragment)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getNewMovies(page)
+
+        if (!hasInitializedRootView) {
+            Log.d("onviewcreated", "true")
+            hasInitializedRootView = true
+            viewModel.getNewMovies(page)
+        }
 
         viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
@@ -53,7 +63,7 @@ class NewMoviesFragment : BaseFragment(R.layout.phone_single_category_fragment) 
         })
 
         singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(AppConstants.NAV_TOP_MOVIES_TO_SINGLE, it)
+            viewModel.onSingleTitlePressed(AppConstants.NAV_NEW_MOVIES_TO_SINGLE, it)
         }
         rv_single_category.adapter = singleCategoryAdapter
         rv_single_category.layoutManager = layoutManager

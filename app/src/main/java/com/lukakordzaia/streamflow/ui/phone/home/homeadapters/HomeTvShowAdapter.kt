@@ -19,6 +19,7 @@ class HomeTvShowAdapter(private val context: Context, private val onTvShowClick:
     fun setTvShowsList(list: List<TitleList.Data>) {
         this.list = list
         notifyItemRangeInserted(0, list.size)
+//        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

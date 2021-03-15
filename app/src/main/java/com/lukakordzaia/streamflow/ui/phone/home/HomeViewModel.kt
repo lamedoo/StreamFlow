@@ -14,8 +14,6 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragmentDirections
-import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragmentDirections
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
@@ -32,23 +30,29 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     private val _newMovieList = MutableLiveData<List<TitleList.Data>>()
     val newMovieList: LiveData<List<TitleList.Data>> = _newMovieList
 
-    private val fetchNewMoviesList: MutableList<TitleList.Data> = ArrayList()
-
     private val _topMovieList = MutableLiveData<List<TitleList.Data>>()
     val topMovieList: LiveData<List<TitleList.Data>> = _topMovieList
-
-    private val fetchTopMoviesList: MutableList<TitleList.Data> = ArrayList()
 
     private val _topTvShowList = MutableLiveData<List<TitleList.Data>>()
     val topTvShowList: LiveData<List<TitleList.Data>> = _topTvShowList
 
-    private val fetchTopTvShowsList: MutableList<TitleList.Data> = ArrayList()
+    private val _continueWatchingList = MutableLiveData<List<DbTitleData>>()
+    val continueWatchingList: LiveData<List<DbTitleData>> = _continueWatchingList
 
-    private val _dbList = MutableLiveData<List<DbTitleData>>()
-    val dbList: LiveData<List<DbTitleData>> = _dbList
+//    private val dbTitles: MutableList<DbTitleData> = mutableListOf()
+//    private val continueWatchingTitlesFirestore: MutableList<DbDetails> = mutableListOf()
 
-    private val dbTitles: MutableList<DbTitleData> = mutableListOf()
-    private val continueWatchingTitlesFirestore: MutableList<DbDetails> = mutableListOf()
+    init {
+        if (currentUser() != null) {
+            getContinueWatchingFromFirestore()
+        } else {
+
+        }
+        getMovieDay()
+        getNewMovies(1)
+        getTopMovies(1)
+        getTopTvShows(1)
+    }
 
     fun onSingleTitlePressed(start: Int, titleId: Int) {
         when (start) {
@@ -57,12 +61,6 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             )
             AppConstants.NAV_CONTINUE_WATCHING_TO_SINGLE -> navigateToNewFragment(
                     ContinueWatchingInfoFragmentDirections.actionContinueWatchingInfoFragmentToSingleTitleFragmentNav(titleId)
-            )
-            AppConstants.NAV_TOP_MOVIES_TO_SINGLE -> navigateToNewFragment(
-                    TopMoviesFragmentDirections.actionTopMoviesFragmentToSingleTitleFragmentNav(titleId)
-            )
-            AppConstants.NAV_TOP_TV_SHOWS_TO_SINGLE -> navigateToNewFragment(
-                    TopTvShowsFragmentDirections.actionTopTvShowsFragmentToSingleTitleFragmentNav(titleId)
             )
         }
     }
@@ -99,41 +97,16 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToContinueWatchingInfoFragment(titleId, titleName))
     }
 
-    fun getContinueWatchingFromFirestorePHONE() {
-        viewModelScope.launch {
-            val data = repository.getContinueWatchingFromFirestore(currentUser()!!.uid)
-
-            if (data != null) {
-                for (title in data.documents) {
-                    continueWatchingTitlesFirestore.add(
-                            DbDetails(
-                                    title.data!!["id"].toString().toInt(),
-                                    title.data!!["language"].toString(),
-                                    title.data!!["continueFrom"] as Long,
-                                    title.data!!["titleDuration"] as Long,
-                                    title.data!!["isTvShow"] as Boolean,
-                                    title.data!!["season"].toString().toInt(),
-                                    title.data!!["episode"].toString().toInt()
-                            )
-                    )
-                }
-                getContinueWatchingTitlesFromApi(continueWatchingTitlesFirestore)
-            }
-        }
-    }
-
     fun getContinueWatchingFromFirestore() {
-        repository.getContinueWatchingFromFirestore1(currentUser()!!.uid, object : FirebaseContinueWatchingListCallBack {
+        val continueWatchingTitlesFirestore: MutableList<DbDetails> = mutableListOf()
+        repository.getContinueWatchingFromFirestore(currentUser()!!.uid, object : FirebaseContinueWatchingListCallBack {
             override fun continueWatchingList(titleList: MutableList<DbDetails>) {
-                if (!titleList.isNullOrEmpty()) {
-                    clearContinueWatchingTitleList()
+                    continueWatchingTitlesFirestore.clear()
                     for (title in titleList) {
                         continueWatchingTitlesFirestore.add(title)
                     }
                     getContinueWatchingTitlesFromApi(continueWatchingTitlesFirestore)
-                }
             }
-
         })
     }
 
@@ -141,18 +114,24 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         return repository.getContinueWatchingFromRoom(roomDb(context)!!)
     }
 
-    fun deleteSingleContinueWatchingFromRoom(context: Context, titleId: Int) {
+    fun deleteContinueWatching(context: Context, titleId: Int) {
+        if (currentUser() == null) {
+            deleteSingleContinueWatchingFromRoom(context, titleId)
+        } else {
+            deleteSingleContinueWatchingFromFirestore(titleId)
+        }
+    }
+
+    private fun deleteSingleContinueWatchingFromRoom(context: Context, titleId: Int) {
         viewModelScope.launch {
             repository.deleteSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
         }
     }
 
-    fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
+    private fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
         viewModelScope.launch {
             val deleteTitle = repository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
             if (deleteTitle) {
-                clearContinueWatchingTitleList()
-                getContinueWatchingFromFirestorePHONE()
                 newToastMessage("წაიშალა განაგრძეთ ყურებიდან")
             } else {
                 newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
@@ -161,12 +140,14 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     }
 
     fun clearContinueWatchingTitleList() {
-        continueWatchingTitlesFirestore.clear()
-        dbTitles.clear()
-        _dbList.value = mutableListOf()
+//        continueWatchingTitlesFirestore.clear()
+//        dbTitles.clear()
+        _continueWatchingList.value = mutableListOf()
     }
 
     fun getContinueWatchingTitlesFromApi(dbDetails: List<DbDetails>) {
+        Log.d("fetchfromapi", dbDetails.toString())
+        val dbTitles: MutableList<DbTitleData> = mutableListOf()
         viewModelScope.launch {
             dbDetails.forEach {
                 when (val databaseTitles = repository.getSingleTitleData(it.titleId)) {
@@ -187,14 +168,13 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                                         it.language
                                 )
                         )
-                        Log.d("savedtitles", "$databaseTitles")
-                        _dbList.value = dbTitles
                     }
                     is Result.Error -> {
                         newToastMessage("ბაზის ფილმები - ${databaseTitles.exception}")
                     }
                 }
             }
+            _continueWatchingList.value = dbTitles
         }
     }
 
@@ -224,9 +204,6 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             when (val newMovies = repository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = newMovies.data.data
-                    data.forEach {
-                        fetchNewMoviesList.add(it)
-                    }
                     _newMovieList.value = data
                     newMovieLoader.value = LoadingState.LOADED
                 }
@@ -246,9 +223,6 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             when (val topMovies = repository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
-                    data.forEach {
-                        fetchTopMoviesList.add(it)
-                    }
                     _topMovieList.value = data
                     topMovieLoader.value = LoadingState.LOADED
                 }
@@ -268,10 +242,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             when (val topTvShows = repository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = topTvShows.data.data
-                    data.forEach {
-                        fetchTopTvShowsList.add(it)
-                    }
-                    _topTvShowList.value = fetchTopTvShowsList
+                    _topTvShowList.value = data
                     topTvShowsLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
