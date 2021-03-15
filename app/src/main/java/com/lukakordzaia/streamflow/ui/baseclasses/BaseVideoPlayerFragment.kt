@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.baseclasses
 
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.ColorStateList
 import android.graphics.Typeface
@@ -50,6 +51,10 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     private var titleId = 0
     private var isTvShow = false
     private var chosenLanguage = ""
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
