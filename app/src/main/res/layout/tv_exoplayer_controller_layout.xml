@@ -27,33 +27,39 @@
         android:id="@+id/layout_header_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
-        android:paddingTop="30dp"
+        android:layout_marginStart="10dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+<!--        <ImageButton-->
+<!--            android:id="@+id/phone_exo_back"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_arrow_back"-->
+<!--            android:tint="@color/white"-->
+<!--            android:background="@color/transparent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@id/tv_header_tv"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"/>-->
+
         <TextView
             android:id="@+id/tv_header_tv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:ellipsize="end"
-            android:fontFamily="@font/georgian_uppercase"
-            android:maxLines="2"
-            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
             android:shadowColor="@color/trueBlack"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="3"
-            android:textColor="@color/white"
-            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_max="wrap"
-            app:layout_constraintWidth_percent="0.9"
-            tools:text="Funny Anim Videos" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="Funny Anim Videos"  />
 
         <ImageButton
             android:id="@+id/tv_subtitle_toggle"
@@ -65,9 +71,9 @@
             android:nextFocusDown="@id/exo_pause"
             android:padding="5dp"
             android:src="@drawable/exo_subtitles_off"
-            app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/exo_next"
-            app:layout_constraintTop_toTopOf="@id/tv_header_tv" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/exo_next"
@@ -78,9 +84,9 @@
             android:nextFocusLeft="@id/tv_subtitle_toggle"
             android:nextFocusDown="@id/exo_pause"
             android:src="@drawable/exo_next"
-            app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_header_tv" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/tv_next_season_button_controller"
@@ -90,9 +96,9 @@
             android:nextFocusLeft="@id/tv_subtitle_toggle"
             android:src="@drawable/exo_next"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/tv_header_tv"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_header_tv"
+            app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -178,6 +184,7 @@
         app:layout_constraintBottom_toTopOf="@id/barrier_bottom"
         app:played_color="@color/accent_color"
         app:scrubber_color="@color/accent_color"
+        app:scrubber_enabled_size="1dp"
         app:unplayed_color="@color/lb_grey" />
 
     <androidx.constraintlayout.widget.Barrier
@@ -212,6 +219,7 @@
         android:layout_marginEnd="7dp"
         android:layout_marginRight="7dp"
         android:text="00:00"
+        android:textAlignment="viewEnd"
         android:minWidth="50dp"
         android:textColor="@color/white"
         android:textSize="14sp"

@@ -23,7 +23,7 @@
         android:id="@+id/phone_subtitle"
         android:background="@color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

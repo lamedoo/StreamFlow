@@ -23,7 +23,7 @@
     <View
         android:layout_width="130dp"
         android:layout_height="180dp"
-        android:background="@drawable/video_player_background"
+        android:background="@drawable/rv_continue_watching_background"
         app:layout_constraintStart_toStartOf="@id/tv_watched_card_poster"
         app:layout_constraintEnd_toEndOf="@id/tv_watched_card_poster"
         app:layout_constraintTop_toTopOf="@id/tv_watched_card_poster"
