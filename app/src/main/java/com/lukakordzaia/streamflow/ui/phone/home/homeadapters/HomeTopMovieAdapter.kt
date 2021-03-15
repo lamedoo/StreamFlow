@@ -18,7 +18,7 @@ class HomeTopMovieAdapter(private val context: Context, private val onMovieClick
 
     fun setMoviesList(list: List<TitleList.Data>) {
         this.list = list
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0, list.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

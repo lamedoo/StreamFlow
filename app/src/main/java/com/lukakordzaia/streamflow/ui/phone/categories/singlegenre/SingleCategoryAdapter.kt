@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.ui.phone.categories.singlegenre
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +17,13 @@ import kotlinx.android.synthetic.main.rv_single_genre_item.view.*
 
 class SingleCategoryAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SingleCategoryAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
+    var startPosition = 0
 
-    fun setGenreTitleList(list: List<TitleList.Data>) {
-        this.list = list
-        notifyDataSetChanged()
+    fun setCategoryTitleList(list: List<TitleList.Data>) {
+        Log.d("newmovieslist", startPosition.toString())
+        this.list += list
+        notifyItemRangeChanged(startPosition, list.size)
+        startPosition += list.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,14 +36,14 @@ class SingleCategoryAdapter(private val context: Context, private val onTitleCli
         val listModel = list[position]
 
         holder.titleRoot.setOnClickListener {
-            listModel.id?.let { titleId -> onTitleClick(titleId) }
+            onTitleClick(listModel.id)
             it.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in))
         }
 
 
                     Picasso.get().load(listModel.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.titlePosterImageView)
 
-        if (!listModel.primaryName.isNullOrEmpty()) {
+        if (listModel.primaryName.isNotEmpty()) {
             holder.titleNameGeoTextView.text = listModel.primaryName
         } else {
             holder.titleNameGeoTextView.text = listModel.secondaryName

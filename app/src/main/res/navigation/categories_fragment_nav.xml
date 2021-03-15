@@ -51,6 +51,9 @@
                 android:name="titleId"
                 app:argType="integer" />
         </action>
+        <argument
+            android:name="genreName"
+            app:argType="string" />
     </fragment>
     <include app:graph="@navigation/single_title_fragment_nav" />
     <fragment
@@ -69,6 +72,9 @@
                 android:name="titleId"
                 app:argType="integer" />
         </action>
+        <argument
+            android:name="studioName"
+            app:argType="string" />
     </fragment>
     <include app:graph="@navigation/video_player_fragment_nav" />
 </navigation>

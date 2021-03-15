@@ -10,7 +10,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.GenreList
 import kotlinx.android.synthetic.main.rv_genre_item.view.*
 
-class GenresAdapter(private val context: Context, private val onGenreClick: (genreId: Int) -> Unit) : RecyclerView.Adapter<GenresAdapter.ViewHolder>() {
+class GenresAdapter(private val context: Context, private val onGenreClick: (genreId: Int, genreName: String) -> Unit) : RecyclerView.Adapter<GenresAdapter.ViewHolder>() {
     private var list: List<GenreList.Data> = ArrayList()
 
     fun setGenreList(list: List<GenreList.Data>) {
@@ -27,7 +27,7 @@ class GenresAdapter(private val context: Context, private val onGenreClick: (gen
 
         holder.genreNameTextView.text = genreModel.primaryName
         holder.genreNameTextView.setOnClickListener {
-            onGenreClick(genreModel.id)
+            onGenreClick(genreModel.id, genreModel.primaryName)
         }
     }
 

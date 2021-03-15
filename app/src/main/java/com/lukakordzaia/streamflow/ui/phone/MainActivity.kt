@@ -19,6 +19,7 @@ import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleGenreFr
 import com.lukakordzaia.streamflow.ui.phone.categories.singlestudio.SingleStudioFragment
 import com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
+import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.NewMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
@@ -54,22 +55,17 @@ class MainActivity : AppCompatActivity() {
                 when (f) {
                     is HomeFragment, is CategoriesFragment, is SearchTitlesFragment -> {
                         showBottomNavigation()
-                        showToolbar()
                     }
-                    is ProfileFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment, is FavoritesFragment, is SingleStudioFragment -> {
-                        showToolbar()
+                    is ProfileFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment, is NewMoviesFragment, is FavoritesFragment, is SingleStudioFragment -> {
                         hideBottomNavigation()
                     }
                     is SingleTitleFragment, is ChooseTitleDetailsFragment -> {
-                        hideToolbar()
                         hideBottomNavigation()
                     }
                     is VideoPlayerFragment -> {
-                        hideToolbar()
                         hideBottomNavigation()
                     }
                     else -> {
-                        showToolbar()
 //                        hideBottomNavigation()
                     }
                 }

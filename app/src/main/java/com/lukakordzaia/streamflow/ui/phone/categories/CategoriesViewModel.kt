@@ -28,12 +28,12 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
     private val _topTrailerList = MutableLiveData<List<TitleList.Data>>()
     val topTrailerList: LiveData<List<TitleList.Data>> = _topTrailerList
 
-    fun onSingleGenrePressed(genreId: Int) {
-        navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleGenreFragment(genreId))
+    fun onSingleGenrePressed(genreId: Int, genreName: String) {
+        navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleGenreFragment(genreId, genreName))
     }
 
-    fun onSingleStudioPressed(studioId: Int) {
-        navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleStudioFragment(studioId))
+    fun onSingleStudioPressed(studioId: Int, studioName: String) {
+        navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleStudioFragment(studioId, studioName))
     }
 
     fun onSingleTrailerPressed(titleId: Int, trailerUrl: String) {

@@ -5,20 +5,25 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_single_category_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleGenreFragment : Fragment(R.layout.phone_single_category_fragment) {
+class SingleGenreFragment : BaseFragment(R.layout.phone_single_category_fragment) {
     private val singleCategoryViewModel by viewModel<SingleCategoryViewModel>()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private val args: SingleGenreFragmentArgs by navArgs()
     private var page = 1
+    private var pastVisibleItems: Int = 0
+    private var visibleItemCount: Int = 0
+    private var totalItemCount: Int = 0
+    private var loading = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,6 +36,8 @@ class SingleGenreFragment : Fragment(R.layout.phone_single_category_fragment) {
                 }, 5000)
             }
         })
+
+        topBarListener(args.genreName)
 
 
         singleCategoryViewModel.getSingleGenre(args.genreId, page)
@@ -51,12 +58,28 @@ class SingleGenreFragment : Fragment(R.layout.phone_single_category_fragment) {
         rv_single_category.layoutManager = layoutManager
 
         singleCategoryViewModel.singleGenreList.observe(viewLifecycleOwner, {
-            singleCategoryAdapter.setGenreTitleList(it)
+            singleCategoryAdapter.setCategoryTitleList(it)
         })
 
         singleCategoryViewModel.hasMorePage.observe(viewLifecycleOwner, {
             if (it) {
-                infiniteScroll(single_category_nested_scroll) { fetchMoreTitle() }
+//                infiniteScroll(single_category_nested_scroll) { fetchMoreTitle() }
+                rv_single_category.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        if (dy > 0) {
+                            visibleItemCount = layoutManager.childCount
+                            totalItemCount = layoutManager.itemCount
+                            pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+
+                            Log.d("lastvisibleitems", loading.toString())
+
+                            if (!loading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                                loading = true
+                                fetchMoreTitle()
+                            }
+                        }
+                    }
+                })
             }
         })
 

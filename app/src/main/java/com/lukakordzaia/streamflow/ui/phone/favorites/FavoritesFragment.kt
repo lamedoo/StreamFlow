@@ -34,6 +34,8 @@ class FavoritesFragment : BaseFragment(R.layout.phone_favorites_fragment) {
             }
         }
 
+        topBarListener("ფავორიტები")
+
         // Favorite Movies
         favoritesViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
             when (it.status) {

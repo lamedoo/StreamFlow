@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_homeFragment_to_continueWatchingInfoFragment"
             app:destination="@id/continueWatchingInfoFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_newMoviesFragment"
+            app:destination="@id/newMoviesFragment" />
     </fragment>
     <include app:graph="@navigation/single_title_fragment_nav" />
     <include app:graph="@navigation/video_player_fragment_nav" />
@@ -137,4 +140,8 @@
             app:popUpToInclusive="true"
             app:popUpTo="@id/homeFragment"/>
     </dialog>
+    <fragment
+        android:id="@+id/newMoviesFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.NewMoviesFragment"
+        android:label="NewMoviesFragment" />
 </navigation>

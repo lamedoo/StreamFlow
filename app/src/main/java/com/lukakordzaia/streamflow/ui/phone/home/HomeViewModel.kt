@@ -67,6 +67,10 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         }
     }
 
+    fun newMoviesMorePressed() {
+        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToNewMoviesFragment())
+    }
+
     fun topMoviesMorePressed() {
         navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToTopMoviesFragment())
     }
@@ -223,7 +227,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     data.forEach {
                         fetchNewMoviesList.add(it)
                     }
-                    _newMovieList.value = fetchNewMoviesList
+                    _newMovieList.value = data
                     newMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -245,7 +249,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
                     data.forEach {
                         fetchTopMoviesList.add(it)
                     }
-                    _topMovieList.value = fetchTopMoviesList
+                    _topMovieList.value = data
                     topMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {

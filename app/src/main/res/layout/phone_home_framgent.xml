@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.phone.home.HomeFragment">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <include layout="@layout/main_top_toolbar" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        tools:context=".ui.phone.home.HomeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/home_main_container"
@@ -21,67 +23,67 @@
                 android:id="@+id/movieDay_progressBar"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:indeterminateTint="@color/accent_color"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:visibility="visible"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/main_movie_day_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="match_parent"
                 android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/movie_day_cover"
                     android:layout_width="match_parent"
                     android:layout_height="225dp"
-                    android:src="@drawable/movie_image_placeholder_landscape"
                     android:scaleType="fitXY"
-                    app:shapeAppearanceOverlay="@style/roundedCornersImageView"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    android:src="@drawable/movie_image_placeholder_landscape"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearanceOverlay="@style/roundedCornersImageView" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="225dp"
                     android:background="@drawable/phone_trailer_background"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="დღის ფილმი"
-                    android:textColor="@color/general_text_color"
                     android:background="@drawable/phone_tags_background"
                     android:fontFamily="@font/georgian_uppercase"
-                    android:paddingTop="8dp"
                     android:paddingStart="8dp"
+                    android:paddingTop="8dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="5dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    android:text="დღის ფილმი"
+                    android:textColor="@color/general_text_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/movie_day_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginBottom="5dp"
+                    android:maxLines="2"
+                    android:padding="5dp"
                     android:textColor="@color/general_text_color"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:maxLines="2"
-                    tools:text="ფილმის სახელი"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="ფილმის სახელი" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -128,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="main_watched_titles_none, rv_main_watched_titles"/>
+                app:constraint_referenced_ids="main_watched_titles_none, rv_main_watched_titles" />
 
             <TextView
                 android:id="@+id/main_new_movies_title"
@@ -139,8 +141,8 @@
                 android:text="ახალი დამატებული"
                 android:textColor="@color/general_text_color"
                 android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/main_continue_watching_barrier"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/main_continue_watching_barrier" />
 
             <ImageView
                 android:id="@+id/new_movies_more"
@@ -149,7 +151,7 @@
                 android:layout_marginTop="20dp"
                 android:src="@drawable/ic_arrow_right"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_continue_watching_barrier"/>
+                app:layout_constraintTop_toBottomOf="@id/main_continue_watching_barrier" />
 
             <View
                 android:layout_width="80dp"
@@ -162,13 +164,13 @@
                 android:id="@+id/newMovie_progressBar"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:indeterminateTint="@color/accent_color"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_new_movies_title"
-                android:visibility="visible"/>
+                app:layout_constraintTop_toBottomOf="@id/main_new_movies_title" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_main_new_movies"
@@ -190,8 +192,8 @@
                 android:text="ტოპ ფილმები"
                 android:textColor="@color/general_text_color"
                 android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/rv_main_new_movies"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_main_new_movies" />
 
             <ImageView
                 android:id="@+id/top_movies_more"
@@ -200,7 +202,7 @@
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_arrow_right"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_main_new_movies"/>
+                app:layout_constraintTop_toBottomOf="@id/rv_main_new_movies" />
 
 
             <View
@@ -214,13 +216,13 @@
                 android:id="@+id/topMovie_progressBar"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:indeterminateTint="@color/accent_color"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_top_movies_title"
-                android:visibility="visible"/>
+                app:layout_constraintTop_toBottomOf="@id/main_top_movies_title" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_main_top_movies"
@@ -242,8 +244,8 @@
                 android:text="ტოპ სერიალები"
                 android:textColor="@color/general_text_color"
                 android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/rv_main_top_movies"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_main_top_movies" />
 
             <ImageView
                 android:id="@+id/top_tvshows_more"
@@ -252,7 +254,7 @@
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_arrow_right"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_main_top_movies"/>
+                app:layout_constraintTop_toBottomOf="@id/rv_main_top_movies" />
 
             <View
                 android:layout_width="80dp"
@@ -265,13 +267,13 @@
                 android:id="@+id/topTvShow_progressBar"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:indeterminateTint="@color/accent_color"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_top_tvshows_title"
-                android:visibility="visible"/>
+                app:layout_constraintTop_toBottomOf="@id/main_top_tvshows_title" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_main_top_tvshows"
@@ -287,6 +289,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
-
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

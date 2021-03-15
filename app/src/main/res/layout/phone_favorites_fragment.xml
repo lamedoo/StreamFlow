@@ -1,143 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.phone.favorites.FavoritesFragment">
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <include layout="@layout/fragment_top_toolbar" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/fragment_padding">
+        android:layout_height="match_parent"
+        tools:context=".ui.phone.favorites.FavoritesFragment">
 
-        <LinearLayout
-            android:id="@+id/favorite_no_auth"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="40dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ფავორიტების სანახავად, გთხოვ გაიაროთ ავტორიზაცია"
-                android:textAlignment="center"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/favorite_go_to_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/button_background"
-                android:layout_marginTop="20dp"
-                android:paddingTop="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="7dp"
-                android:text="პროფილის პანელი"
-                android:textColor="@color/text_on_accent_color"
-                android:fontFamily="@font/georgian_uppercase"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/favorite_movies_container"
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:padding="@dimen/fragment_padding">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/georgian_uppercase"
-                android:text="ფავორიტი ფილმები"
-                android:textColor="@color/general_text_color"
-                android:textSize="15sp" />
-
-            <View
-                android:layout_width="80dp"
-                android:layout_height="2dp"
-                android:background="@color/accent_color" />
-
-            <TextView
-                android:id="@+id/favorite_no_movies"
+            <LinearLayout
+                android:id="@+id/favorite_no_auth"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="სამწუხაროდ, სიცარიელეა. დაამატეთ ფილმები ფავორიტებში"
-                android:visibility="gone"/>
-
-            <ProgressBar
-                android:id="@+id/favorite_movies_progressBar"
-                android:layout_width="50dp"
                 android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ფავორიტების სანახავად, გთხოვ გაიაროთ ავტორიზაცია"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/favorite_go_to_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/button_background"
+                    android:fontFamily="@font/georgian_uppercase"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="7dp"
+                    android:text="პროფილის პანელი"
+                    android:textColor="@color/text_on_accent_color" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/favorite_movies_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/georgian_uppercase"
+                    android:text="ფავორიტი ფილმები"
+                    android:textColor="@color/general_text_color"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:background="@color/accent_color" />
+
+                <TextView
+                    android:id="@+id/favorite_no_movies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="სამწუხაროდ, სიცარიელეა. დაამატეთ ფილმები ფავორიტებში"
+                    android:visibility="gone" />
+
+                <ProgressBar
+                    android:id="@+id/favorite_movies_progressBar"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:indeterminateTint="@color/accent_color"
+                    android:visibility="visible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_favorites_movies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/favorite_tvshows_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_gravity="center"
-                android:indeterminateTint="@color/accent_color"
-                android:visibility="visible"/>
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/favorite_movies_container">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_favorites_movies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/georgian_uppercase"
+                    android:text="ფავორიტი სერიალები"
+                    android:textColor="@color/general_text_color"
+                    android:textSize="15sp" />
 
-        </LinearLayout>
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:background="@color/accent_color" />
 
-        <LinearLayout
-            android:id="@+id/favorite_tvshows_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/favorite_movies_container">
+                <TextView
+                    android:id="@+id/favorite_no_tvshows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="სამწუხაროდ, სიცარიელეა. დაამატეთ სერიალები ფავორიტებში"
+                    android:visibility="gone" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/georgian_uppercase"
-                android:text="ფავორიტი სერიალები"
-                android:textColor="@color/general_text_color"
-                android:textSize="15sp" />
+                <ProgressBar
+                    android:id="@+id/favorite_tvshows_progressBar"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:indeterminateTint="@color/accent_color"
+                    android:visibility="visible" />
 
-            <View
-                android:layout_width="80dp"
-                android:layout_height="2dp"
-                android:background="@color/accent_color" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_favorites_tvshows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp" />
 
-            <TextView
-                android:id="@+id/favorite_no_tvshows"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="სამწუხაროდ, სიცარიელეა. დაამატეთ სერიალები ფავორიტებში"
-                android:visibility="gone"/>
+            </LinearLayout>
 
-            <ProgressBar
-                android:id="@+id/favorite_tvshows_progressBar"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center"
-                android:indeterminateTint="@color/accent_color"
-                android:visibility="visible"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_favorites_tvshows"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp" />
-
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</LinearLayout>

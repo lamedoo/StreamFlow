@@ -81,8 +81,8 @@ class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
         })
 
         val genreLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        genresAdapter = GenresAdapter(requireContext()) {
-            categoriesViewModel.onSingleGenrePressed(it)
+        genresAdapter = GenresAdapter(requireContext()) { genreId: Int, genreName: String ->
+            categoriesViewModel.onSingleGenrePressed(genreId, genreName)
         }
         rv_genres.layoutManager = genreLayout
         rv_genres.adapter = genresAdapter
@@ -103,8 +103,8 @@ class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
         })
 
         val studioLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        studiosAdapter = StudiosAdapter(requireContext()) {
-            categoriesViewModel.onSingleStudioPressed(it)
+        studiosAdapter = StudiosAdapter(requireContext()) { studioId: Int, studioName: String ->
+            categoriesViewModel.onSingleStudioPressed(studioId, studioName)
         }
         rv_studios.layoutManager = studioLayout
         rv_studios.adapter = studiosAdapter

@@ -19,6 +19,7 @@ import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTopMovieAdapte
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTvShowAdapter
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.main_top_toolbar.*
 import kotlinx.android.synthetic.main.phone_home_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -47,6 +48,14 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
                 }, 5000)
             }
         })
+
+        home_favorites.setOnClickListener {
+            navController(HomeFragmentDirections.actionHomeFragmentToFavoritesFragment())
+        }
+
+        home_profile.setOnClickListener {
+            navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
+        }
 
         //Movie Day
         viewModel.movieDayLoader.observe(viewLifecycleOwner, {
@@ -128,6 +137,9 @@ class HomeFragment : BaseFragment(R.layout.phone_home_framgent) {
             }
         })
 
+        new_movies_more.setOnClickListener {
+            viewModel.newMoviesMorePressed()
+        }
 
         val newMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeNewMovieAdapter = HomeNewMovieAdapter(requireContext()) {

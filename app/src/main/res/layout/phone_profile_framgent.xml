@@ -1,280 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profile_root"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/fragment_padding"
-    tools:background="@color/primaryColor"
-    tools:context=".ui.phone.profile.ProfileFragment">
+    android:orientation="vertical">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_photo"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/no_profile_picture"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/profile_username"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="10dp" />
+    <include layout="@layout/fragment_top_toolbar" />
 
-    <TextView
-        android:id="@+id/profile_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textAllCaps="true"
-        android:textColor="@color/general_text_color"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="@id/profile_photo"
-        app:layout_constraintBottom_toBottomOf="@id/profile_photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/profile_photo"
-        tools:layout_editor_absoluteY="10dp"
-        tools:text="Luka Kordzaia" />
-    
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/google_sign_barrier"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/profile_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="profile_photo"/>
+        android:layout_height="match_parent"
+        android:padding="@dimen/fragment_padding"
+        tools:background="@color/primaryColor"
+        tools:context=".ui.phone.profile.ProfileFragment">
 
-    <LinearLayout
-        android:id="@+id/google_sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/google_button_background"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/google_sign_barrier">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:src="@drawable/google_login_logo" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_photo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/no_profile_picture"
+            app:layout_constraintEnd_toStartOf="@+id/profile_username"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteY="10dp" />
 
         <TextView
+            android:id="@+id/profile_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textAllCaps="true"
+            android:textColor="@color/general_text_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/profile_photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/profile_photo"
+            app:layout_constraintTop_toTopOf="@id/profile_photo"
+            tools:layout_editor_absoluteY="10dp"
+            tools:text="Luka Kordzaia" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/google_sign_barrier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="profile_photo" />
+
+        <LinearLayout
+            android:id="@+id/google_sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="ავტორიზაცია"
-            android:textColor="@color/black"
-            android:textSize="13.5sp" />
+            android:layout_marginTop="20dp"
+            android:background="@drawable/google_button_background"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/google_sign_barrier">
 
-    </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:src="@drawable/google_login_logo" />
 
-    <LinearLayout
-        android:id="@+id/google_sign_out_button"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/google_button_background"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/google_sign_barrier">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="ავტორიზაცია"
+                android:textColor="@color/black"
+                android:textSize="13.5sp" />
 
-        <ImageView
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/google_sign_out_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:src="@drawable/google_login_logo" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="ანგარიშიდან გასვლა"
-            android:textColor="@color/red"
-            android:textSize="13.5sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/profile_connect_traktv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/phone_profile_item"
-        android:orientation="vertical"
-        android:padding="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/profile_delete_history"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:layout_editor_absoluteX="10dp">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_marginTop="20dp"
+            android:background="@drawable/google_button_background"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/google_sign_barrier">
 
             <ImageView
-                android:id="@+id/traktv_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/traktv_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_gravity="start|center_vertical"
+                android:src="@drawable/google_login_logo" />
 
             <TextView
-                android:id="@+id/profile_connect_traktv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/georgian_uppercase"
-                android:text="დაუკავშირდით TRAK.TV-ს"
-                android:textColor="@color/white"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/traktv_icon"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="ანგარიშიდან გასვლა"
+                android:textColor="@color/red"
+                android:textSize="13.5sp" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="ჩართეთ კალენდრის ფუნქცია აპლიკაციაში"
-                android:textColor="@color/general_text_color"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/traktv_icon"
-                app:layout_constraintTop_toBottomOf="@id/profile_connect_traktv_title" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/profile_connect_traktv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/phone_profile_item"
+            android:orientation="vertical"
+            android:padding="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/profile_delete_history"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:layout_editor_absoluteX="10dp">
 
-    </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/profile_disconnect_traktv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/phone_profile_item"
-        android:orientation="vertical"
-        android:padding="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/profile_delete_history"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:layout_editor_absoluteX="10dp">
+                <ImageView
+                    android:id="@+id/traktv_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/traktv_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/profile_connect_traktv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/georgian_uppercase"
+                    android:text="დაუკავშირდით TRAK.TV-ს"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/traktv_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/disconnect_traktv_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/traktv_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="ჩართეთ კალენდრის ფუნქცია აპლიკაციაში"
+                    android:textColor="@color/general_text_color"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/traktv_icon"
+                    app:layout_constraintTop_toBottomOf="@id/profile_connect_traktv_title" />
 
-            <TextView
-                android:id="@+id/profile_disconnect_traktv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/georgian_uppercase"
-                android:text="TRAKT.TV დაკავშირებულია"
-                android:textColor="@color/green_dark"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/disconnect_traktv_icon"
-                app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="დააჭირეთ, რომ გახვიდეთ პროფილიდან"
-                android:textColor="@color/general_text_color"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/disconnect_traktv_icon"
-                app:layout_constraintTop_toBottomOf="@id/profile_disconnect_traktv_title" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/profile_disconnect_traktv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/phone_profile_item"
+            android:orientation="vertical"
+            android:padding="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/profile_delete_history"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:layout_editor_absoluteX="10dp">
 
-    </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/profile_delete_history"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/phone_profile_item"
-        android:orientation="vertical"
-        android:padding="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_connect_traktv"
-        tools:layout_editor_absoluteX="10dp">
+                <ImageView
+                    android:id="@+id/disconnect_traktv_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/traktv_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/profile_disconnect_traktv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/georgian_uppercase"
+                    android:text="TRAKT.TV დაკავშირებულია"
+                    android:textColor="@color/green_dark"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/disconnect_traktv_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/clear_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/clear_db_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="დააჭირეთ, რომ გახვიდეთ პროფილიდან"
+                    android:textColor="@color/general_text_color"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/disconnect_traktv_icon"
+                    app:layout_constraintTop_toBottomOf="@id/profile_disconnect_traktv_title" />
 
-            <TextView
-                android:id="@+id/profile_delete_history_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/georgian_uppercase"
-                android:text="განაგრძეთ ყურების გასუფთავება"
-                android:textColor="@color/white"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/clear_icon"
-                app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="წაშალეთ განაგრძეთ ყურების სია"
-                android:textColor="@color/general_text_color"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/clear_icon"
-                app:layout_constraintTop_toBottomOf="@id/profile_delete_history_title" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/profile_delete_history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/phone_profile_item"
+            android:orientation="vertical"
+            android:padding="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_connect_traktv"
+            tools:layout_editor_absoluteX="10dp">
 
-    </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/clear_icon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/clear_db_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/profile_delete_history_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/georgian_uppercase"
+                    android:text="განაგრძეთ ყურების გასუფთავება"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/clear_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="წაშალეთ განაგრძეთ ყურების სია"
+                    android:textColor="@color/general_text_color"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/clear_icon"
+                    app:layout_constraintTop_toBottomOf="@id/profile_delete_history_title" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

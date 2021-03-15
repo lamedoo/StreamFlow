@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.phone.categories.singlegenre
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -62,7 +61,7 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
                     singleGenre.data.data.forEach {
                         fetchSingleGenreList.add(it)
                     }
-                    _singleGenreList.value = fetchSingleGenreList
+                    _singleGenreList.value = singleGenre.data.data
                     _hasMorePage.value = singleGenre.data.meta.pagination.totalPages!! > singleGenre.data.meta.pagination.currentPage!!
                     categoryLoader.value = LoadingState.LOADED
                 }
@@ -108,7 +107,8 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
                     singleStudio.data.data.forEach {
                         fetchSingleStudioList.add(it)
                     }
-                    _singleStudioList.value = fetchSingleStudioList
+                    _singleStudioList.value = singleStudio.data.data
+                    _hasMorePage.value = singleStudio.data.meta.pagination.totalPages!! > singleStudio.data.meta.pagination.currentPage!!
                     categoryLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
