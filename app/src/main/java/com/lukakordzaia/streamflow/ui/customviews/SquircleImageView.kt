@@ -10,13 +10,17 @@ import androidx.appcompat.widget.AppCompatTextView
 import kotlin.math.abs
 
 class SquircleImageView(context: Context, attrs: AttributeSet?) : AppCompatTextView(context, attrs) {
+    var paint = Paint()
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val squirclePath: Path = getSquirclePaath(20, 20, 400)
-        canvas.drawPath(squirclePath, Paint())
+        val squirclePath: Path = getSquirclePath(0, 0, 400)
+
+        paint.isAntiAlias = true
+        canvas.drawPath(squirclePath, paint)
     }
 
-    private fun getSquirclePaath(left: Int, top: Int, radius: Int): Path {
+    private fun getSquirclePath(left: Int, top: Int, radius: Int): Path {
         //Formula: (|x|)^3 + (|y|)^3 = radius^3
         val radiusToPow = (radius * radius * radius).toDouble()
         val path = Path()
