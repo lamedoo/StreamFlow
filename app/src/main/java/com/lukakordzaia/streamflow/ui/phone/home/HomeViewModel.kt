@@ -42,8 +42,6 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     init {
         if (currentUser() != null) {
             getContinueWatchingFromFirestore()
-        } else {
-
         }
         getMovieDay()
         getNewMovies(1)

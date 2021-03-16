@@ -32,20 +32,21 @@ class FavoritesFragment : BaseFragment() {
         if (!hasInitializedRootView) {
             Log.d("onviewcreated", "true")
             hasInitializedRootView = true
-            if (auth.currentUser != null) {
-                favoritesViewModel.getFavTitlesFromFirestore()
-            } else {
-                favorite_movies_container.setGone()
-                favorite_tvshows_container.setGone()
-                favorite_no_auth.setVisible()
-
-                favorite_go_to_profile.setOnClickListener {
-                    favoritesViewModel.onProfileButtonPressed()
-                }
-            }
         }
 
         topBarListener("ფავორიტები")
+
+        if (auth.currentUser != null) {
+            favoritesViewModel.getFavTitlesFromFirestore()
+        } else {
+            favorite_movies_container.setGone()
+            favorite_tvshows_container.setGone()
+            favorite_no_auth.setVisible()
+
+            favorite_go_to_profile.setOnClickListener {
+                favoritesViewModel.onProfileButtonPressed()
+            }
+        }
 
         // Favorite Movies
         favoritesViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {

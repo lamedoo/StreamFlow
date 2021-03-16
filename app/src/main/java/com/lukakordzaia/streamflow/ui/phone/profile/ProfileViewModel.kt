@@ -158,6 +158,7 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
                 if (addToFirestore) {
                     newToastMessage("სინქრონიზაცია წარმატებით დასრულდა")
                     deleteContinueWatchingFromRoomFull(context)
+                    refreshProfileOnLogin()
                 } else {
                     newToastMessage("სამწუხაროდ, ვერ მოხერხდა სინქრონიზაცია")
                 }

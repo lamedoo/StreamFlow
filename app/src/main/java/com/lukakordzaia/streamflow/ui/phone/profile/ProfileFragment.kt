@@ -236,7 +236,7 @@ class ProfileFragment : BaseFragment() {
                 syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog,null))
                 syncDialog.sync_continue_watching_alert_yes.setOnClickListener { _ ->
                     profileViewModel.addContinueWatchingToFirestore(requireContext(), it)
-                    profileViewModel.refreshProfileOnLogin()
+                    syncDialog.dismiss()
                 }
                 syncDialog.sync_continue_watching_alert_no.setOnClickListener {
                     syncDialog.dismiss()
