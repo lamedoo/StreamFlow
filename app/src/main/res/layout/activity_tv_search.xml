@@ -9,16 +9,17 @@
         layout="@layout/tv_sidebar"/>
 
     <include
+        android:id="@+id/sidebar"
         layout="@layout/tv_sidebar_collapsed"/>
 
     <fragment
         android:name="com.lukakordzaia.streamflow.ui.tv.search.TvSearchFragment"
         android:id="@+id/tv_details_fragment"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/sidebar"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

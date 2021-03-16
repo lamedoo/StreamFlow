@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.helpers.SearchSupportFragment
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -71,8 +71,8 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
         return rowsAdapter
     }
 
-    override fun onQueryTextChange(query: String): Boolean {
-        if (query.isBlank()) {
+    override fun onQueryTextChange(newQuery: String): Boolean {
+        if (newQuery.isBlank()) {
             searchTitlesViewModel.clearSearchResults()
             rowsAdapter.clear()
         }
@@ -109,7 +109,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
             val selectedIndex = currentRowAdapter.indexOf(item)
 
             if (selectedIndex <= 0) {
-                onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment.selectedPosition)
+                onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment?.selectedPosition)
             } else {
                 onFirstItem?.isFirstItem(false, null, null)
             }
