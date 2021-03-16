@@ -51,9 +51,6 @@ class SingleGenreFragment : BaseFragment() {
 
         topBarListener(args.genreName)
 
-
-        singleCategoryViewModel.getSingleGenre(args.genreId, page)
-
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
 
         singleCategoryViewModel.categoryLoader.observe(viewLifecycleOwner, {
@@ -75,7 +72,6 @@ class SingleGenreFragment : BaseFragment() {
 
         singleCategoryViewModel.hasMorePage.observe(viewLifecycleOwner, {
             if (it) {
-//                infiniteScroll(single_category_nested_scroll) { fetchMoreTitle() }
                 rv_single_category.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                         if (dy > 0) {

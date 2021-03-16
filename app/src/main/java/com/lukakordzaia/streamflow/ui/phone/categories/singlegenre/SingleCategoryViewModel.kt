@@ -58,10 +58,8 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
             categoryLoader.value = LoadingState.LOADING
             when (val singleGenre = repository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
-                    singleGenre.data.data.forEach {
-                        fetchSingleGenreList.add(it)
-                    }
-                    _singleGenreList.value = singleGenre.data.data
+                    fetchSingleGenreList.addAll(singleGenre.data.data)
+                    _singleGenreList.value = fetchSingleGenreList
                     _hasMorePage.value = singleGenre.data.meta.pagination.totalPages!! > singleGenre.data.meta.pagination.currentPage!!
                     categoryLoader.value = LoadingState.LOADED
                 }
@@ -104,10 +102,8 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
             categoryLoader.value = LoadingState.LOADING
             when (val singleStudio = repository.getSingleStudio(studioId, page)) {
                 is Result.Success -> {
-                    singleStudio.data.data.forEach {
-                        fetchSingleStudioList.add(it)
-                    }
-                    _singleStudioList.value = singleStudio.data.data
+                    fetchSingleStudioList.addAll(singleStudio.data.data)
+                    _singleStudioList.value = fetchSingleStudioList
                     _hasMorePage.value = singleStudio.data.meta.pagination.totalPages!! > singleStudio.data.meta.pagination.currentPage!!
                     categoryLoader.value = LoadingState.LOADED
                 }

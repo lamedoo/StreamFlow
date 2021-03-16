@@ -227,7 +227,7 @@
 
         <LinearLayout
             android:id="@+id/tv_details_buttons_row"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="20dp"
@@ -236,11 +236,32 @@
             android:visibility="gone"
             tools:visibility="visible">
 
+            <LinearLayout
+                android:id="@+id/tv_files_title_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="center"
+                android:padding="13dp"
+                android:nextFocusDown="@id/tv_details_go_bottom"
+                android:background="@drawable/tv_details_button_background">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/clear_db_icon"
+                    android:tint="@color/red"
+                    tools:ignore="UseAppTint" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_continue_play_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
                 android:background="@drawable/tv_details_button_background"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
@@ -259,7 +280,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
                 android:background="@drawable/tv_details_button_background"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
@@ -278,7 +299,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
                 android:padding="13dp"
                 android:background="@drawable/tv_details_button_background"
                 android:nextFocusDown="@id/tv_details_go_bottom">
@@ -301,64 +322,39 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+        </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/tv_files_title_delete"
+        <LinearLayout
+            android:id="@+id/tv_files_title_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:padding="13dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_details_buttons_row"
+            app:layout_constraintBottom_toBottomOf="@id/tv_details_buttons_row"
+            android:nextFocusDown="@id/tv_details_go_bottom"
+            android:nextFocusRight="@id/tv_files_title_favorite"
+            android:background="@drawable/tv_details_favorite_button_background">
+
+            <ProgressBar
+                android:id="@+id/tv_files_title_favorite_progressBar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:indeterminateTint="@color/accent_color"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/tv_files_title_favorite_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:padding="13dp"
-                android:nextFocusDown="@id/tv_details_go_bottom"
-                android:nextFocusRight="@id/tv_files_title_favorite"
-                android:background="@drawable/tv_details_button_background">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/clear_db_icon"
-                    android:tint="@color/red"
-                    tools:ignore="UseAppTint" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/tv_files_title_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="20dp"
-                android:padding="13dp"
-                android:nextFocusDown="@id/tv_details_go_bottom"
-                android:nextFocusRight="@id/tv_files_title_favorite"
-                android:background="@drawable/tv_details_favorite_button_background">
-
-                <ProgressBar
-                    android:id="@+id/tv_files_title_favorite_progressBar"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:indeterminateTint="@color/accent_color"
-                    android:visibility="gone"
-                    tools:visibility="visible"/>
-
-                <ImageView
-                    android:id="@+id/tv_files_title_favorite_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/title_favorite_icon_full"
-                    android:tint="@color/white"
-                    tools:ignore="UseAppTint" />
-
-            </LinearLayout>
+                android:src="@drawable/title_favorite_icon_full"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint" />
 
         </LinearLayout>
 

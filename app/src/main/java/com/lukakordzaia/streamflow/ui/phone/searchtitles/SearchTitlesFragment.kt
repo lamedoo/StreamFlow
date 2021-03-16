@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.animations.SearchAnimations
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.customviews.SearchEditText
 import com.lukakordzaia.streamflow.utils.*
@@ -24,6 +24,10 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent_new)
     private lateinit var searchTitlesAdapter: SearchTitlesAdapter
     private lateinit var topFranchisesAdapter: TopFranchisesAdapter
     private var page = 1
+    private var pastVisibleItems: Int = 0
+    private var visibleItemCount: Int = 0
+    private var totalItemCount: Int = 0
+    private var loading = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -95,7 +99,8 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent_new)
         searchTitlesViewModel.getTopFranchises()
 
         topFranchisesAdapter = TopFranchisesAdapter(requireContext()) { titleName, position ->
-            SearchAnimations().textTopTop(rv_top_franchises.getChildAt(position), search_titles_fragment, 500) { onFranchiseAnimationEnd(titleName) }
+//            SearchAnimations().textTopTop(rv_top_franchises.getChildAt(position), search_titles_fragment, 500) { onFranchiseAnimationEnd(titleName) }
+            onFranchiseAnimationEnd(titleName)
         }
         rv_top_franchises.layoutManager = FlowLayoutManager().apply {
             isAutoMeasureEnabled = true
@@ -111,6 +116,23 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent_new)
 
         searchTitlesViewModel.franchiseList.observe(viewLifecycleOwner, {
             topFranchisesAdapter.setFranchisesList(it)
+        })
+
+        rv_top_franchises.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    visibleItemCount = layoutManager.childCount
+                    totalItemCount = layoutManager.itemCount
+                    pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+
+                    Log.d("lastvisibleitems", loading.toString())
+
+                    if (!loading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                        loading = true
+                        fetchMoreResults()
+                    }
+                }
+            }
         })
 
         searchTitlesViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {

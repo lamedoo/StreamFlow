@@ -39,9 +39,6 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     private val _continueWatchingList = MutableLiveData<List<DbTitleData>>()
     val continueWatchingList: LiveData<List<DbTitleData>> = _continueWatchingList
 
-//    private val dbTitles: MutableList<DbTitleData> = mutableListOf()
-//    private val continueWatchingTitlesFirestore: MutableList<DbDetails> = mutableListOf()
-
     init {
         if (currentUser() != null) {
             getContinueWatchingFromFirestore()

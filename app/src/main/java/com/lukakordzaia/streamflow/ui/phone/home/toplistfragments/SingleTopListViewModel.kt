@@ -25,6 +25,8 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
 
     private val fetchNewMoviesList: MutableList<TitleList.Data> = ArrayList()
 
+    val testMovies = MutableLiveData<TitleList.Data>()
+
     private val _topMovieList = MutableLiveData<List<TitleList.Data>>()
     val topMovieList: LiveData<List<TitleList.Data>> = _topMovieList
 
@@ -55,10 +57,8 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
             when (val newMovies = repository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = newMovies.data.data
-                    data.forEach {
-                        fetchNewMoviesList.add(it)
-                    }
-                    _newMovieList.value = data
+                    fetchNewMoviesList.addAll(data)
+                    _newMovieList.value = fetchNewMoviesList
                     newMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -77,10 +77,8 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
             when (val topMovies = repository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
-                    data.forEach {
-                        fetchTopMoviesList.add(it)
-                    }
-                    _topMovieList.value = data
+                    fetchTopMoviesList.addAll(data)
+                    _topMovieList.value = fetchTopMoviesList
                     topMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -99,10 +97,8 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
             when (val topTvShows = repository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = topTvShows.data.data
-                    data.forEach {
-                        fetchTopTvShowsList.add(it)
-                    }
-                    _topTvShowList.value = data
+                    fetchTopTvShowsList.addAll(data)
+                    _topTvShowList.value = fetchTopTvShowsList
                     topTvShowsLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -113,11 +109,5 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
                 }
             }
         }
-    }
-
-    fun refreshContent(page: Int) {
-        getNewMovies(page)
-        getTopMovies(page)
-        getTopTvShows(page)
     }
 }

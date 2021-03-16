@@ -39,7 +39,7 @@ class SingleStudioFragment : BaseFragment() {
         if (!hasInitializedRootView) {
             Log.d("onviewcreated", "true")
             hasInitializedRootView = true
-            singleCategoryViewModel.getSingleGenre(args.studioId, page)
+            singleCategoryViewModel.getSingleStudio(args.studioId, page)
         }
 
         singleCategoryViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
@@ -52,8 +52,6 @@ class SingleStudioFragment : BaseFragment() {
         })
 
         topBarListener(args.studioName)
-
-        singleCategoryViewModel.getSingleStudio(args.studioId, page)
 
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
 

@@ -38,9 +38,7 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
             when (val search = repository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = search.data.data
-                    data.forEach {
-                        fetchSearchTitleList.add(it)
-                    }
+                    fetchSearchTitleList.addAll(data)
                     _searchList.value = fetchSearchTitleList
                     searchLoader.value = LoadingState.LOADED
                 }

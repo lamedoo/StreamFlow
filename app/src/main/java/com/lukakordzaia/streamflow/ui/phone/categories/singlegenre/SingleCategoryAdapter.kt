@@ -21,9 +21,11 @@ class SingleCategoryAdapter(private val context: Context, private val onTitleCli
 
     fun setCategoryTitleList(list: List<TitleList.Data>) {
         Log.d("newmovieslist", startPosition.toString())
-        this.list += list
-        notifyItemRangeChanged(startPosition, list.size)
+        this.list = list
+//        this.list.addAll(startPosition, list)
+//        notifyItemRangeChanged(startPosition, list.size)
         startPosition += list.size
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

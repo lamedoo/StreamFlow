@@ -8,7 +8,11 @@
     </item>
     <item android:state_pressed="false">
         <shape>
-            <solid android:color="@color/secondary_color"/>
+            <gradient
+                android:startColor="#333642"
+                android:endColor="@color/secondary_color"
+                android:angle="90" >
+            </gradient>
             <corners android:radius="5dp"/>
         </shape>
     </item>

@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.baseclasses
 
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.ColorStateList
 import android.graphics.Typeface
@@ -9,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -47,14 +47,11 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     private lateinit var player: SimpleExoPlayer
     private lateinit var playerView: PlayerView
     private var tracker: ProgressTracker? = null
+    var nextSeasonButton: Button? = null
 
     private var titleId = 0
     private var isTvShow = false
     private var chosenLanguage = ""
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,36 +72,53 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 super.onPlaybackStateChanged(state)
 
                 if (state == Player.STATE_READY) {
-                        tracker = ProgressTracker(player, object: ProgressTracker.PositionListener {
-                            override fun progress(position: Long) {
-                                exo_live_duration?.text = String.format("%02d:%02d:%02d",
-                                        TimeUnit.MILLISECONDS.toHours(position),
-                                        TimeUnit.MILLISECONDS.toMinutes(position) -
-                                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(position)),
-                                        TimeUnit.MILLISECONDS.toSeconds(position) -
-                                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
-                                )
+                    tracker = ProgressTracker(player, object : ProgressTracker.PositionListener {
+                        override fun progress(position: Long) {
+                            exo_live_duration?.text = String.format("%02d:%02d:%02d",
+                                    TimeUnit.MILLISECONDS.toHours(position),
+                                    TimeUnit.MILLISECONDS.toMinutes(position) -
+                                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(position)),
+                                    TimeUnit.MILLISECONDS.toSeconds(position) -
+                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
+                            )
 
+                        }
+                    })
+
+                    videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
+                        if (isTvShow) {
+                            setEpisodeName(name)
+                        } else {
+                            if (name.isNullOrEmpty()) {
+                                setMovieName("ტრეილერი")
+                            } else {
+                                setMovieName(name[player.currentWindowIndex])
                             }
-                        })
+                        }
+                    })
+
                     checkForNextSeason()
                     playerView.keepScreenOn = true
                 } else playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
+
+                if (state == Player.STATE_ENDED) {
+                    Log.d("playing", "false")
+                    if ((player.currentWindowIndex + 1) == player.mediaItemCount) {
+                        if (isTvShow) {
+                            val nextSeasonNum = videoPlayerViewModel.seasonForDb.value!! + 1
+                            videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+                                if (nextSeasonNum <= numOfSeasons) {
+                                    nextSeasonButtonClickOnEnd(nextSeasonNum)
+                                    nextSeasonButton?.callOnClick()
+                                }
+                            })
+                        }
+                    }
+                }
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 setControllerVisible()
-                videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
-                    if (isTvShow) {
-                        setEpisodeName(name)
-                    } else {
-                        if (name.isNullOrEmpty()) {
-                            setMovieName("ტრეილერი")
-                        } else {
-                            setMovieName(name[player.currentWindowIndex])
-                        }
-                    }
-                })
 
                 videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                     if (!it.isNullOrEmpty()) {
@@ -216,6 +230,31 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             )
             mediaPlayer.initPlayer(playerView, 0, 0L)
 
+        }
+    }
+
+    private fun nextSeasonButtonClickOnEnd(nextSeasonNum: Int) {
+        when (playerView) {
+            tv_title_player -> {
+                nextSeasonButton = tv_next_season_button
+            }
+            phone_title_player -> {
+                nextSeasonButton = phone_next_season_button
+            }
+        }
+
+        nextSeasonButton?.setVisible()
+        nextSeasonButton?.requestFocus()
+        nextSeasonButton?.text = "შემდეგი სეზონი: $nextSeasonNum"
+        nextSeasonButton?.setOnClickListener {
+            player.clearMediaItems()
+            videoPlayerViewModel.getPlaylistFiles(
+                    videoPlayerViewModel.titleIdForDb.value!!,
+                    nextSeasonNum,
+                    videoPlayerViewModel.languageForDb.value!!
+            )
+            mediaPlayer.initPlayer(playerView, 0, 0L)
+            playerView.showController()
         }
     }
 
