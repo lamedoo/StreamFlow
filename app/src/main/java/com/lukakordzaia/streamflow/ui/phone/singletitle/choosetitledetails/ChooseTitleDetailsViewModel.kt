@@ -52,14 +52,14 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
         )
     }
 
-    fun onEpisodePressed(titleId: Int, isTvShow: Boolean, chosenEpisode: Int) {
+    fun onEpisodePressed(titleId: Int, isTvShow: Boolean, chosenEpisode: Int, chosenLanguage: String) {
         navigateToNewFragment(
                 ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
                         VideoPlayerData(
                                 titleId,
                                 isTvShow,
                                 chosenSeason.value!!,
-                                chosenLanguage.value!!,
+                                chosenLanguage,
                                 chosenEpisode,
                                 0L,
                                 null

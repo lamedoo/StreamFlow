@@ -1,7 +1,8 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails
 
-import android.content.res.ColorStateList
+import android.app.Dialog
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,18 +17,21 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_choose_title_details_fragment.*
+import kotlinx.android.synthetic.main.tv_choose_language_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.concurrent.TimeUnit
 
 
 class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
     private val chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel by viewModel()
     private lateinit var chooseTitleDetailsEpisodesAdapter: ChooseTitleDetailsEpisodesAdapter
     private lateinit var chooseTitleDetailsSeasonAdapter: ChooseTitleDetailsSeasonAdapter
-    private lateinit var chooseTitleDetailsLanguageAdapter: ChooseTitleDetailsLanguageAdapter
+    private lateinit var chooseLanguageAdapter: TvChooseLanguageAdapter
     private val args: ChooseTitleDetailsFragmentArgs by navArgs()
+
+//    private var chosenSeasonInAdapter = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? {
@@ -39,22 +43,24 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
         chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
 
         val seasonLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseTitleDetailsSeasonAdapter = ChooseTitleDetailsSeasonAdapter(requireContext()) {
-            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it)
-            chooseTitleDetailsSeasonAdapter.setChosenSeason(it)
-        }
+        chooseTitleDetailsSeasonAdapter = ChooseTitleDetailsSeasonAdapter(requireContext(),
+            {
+                chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it)
+                chooseTitleDetailsSeasonAdapter.setChosenSeason(it)
+
+                if (it == chooseTitleDetailsViewModel.continueWatchingDetails.value?.season) {
+                    chooseTitleDetailsEpisodesAdapter.setChosenEpisode(chooseTitleDetailsViewModel.continueWatchingDetails.value!!.episode+1)
+                } else {
+                    chooseTitleDetailsEpisodesAdapter.setChosenEpisode(-1)
+                    rv_episodes.smoothScrollToPosition(0)
+                }
+            },
+            {
+
+            })
         rv_seasons.layoutManager = seasonLayout
         rv_seasons.adapter = chooseTitleDetailsSeasonAdapter
         ViewCompat.setNestedScrollingEnabled(rv_seasons, false)
-
-        val languageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseTitleDetailsLanguageAdapter = ChooseTitleDetailsLanguageAdapter(requireContext()) {
-            chooseTitleDetailsViewModel.setFileLanguage(it)
-            chooseTitleDetailsLanguageAdapter.setChosenLanguage(it)
-        }
-        rv_languages.layoutManager = languageLayout
-        rv_languages.adapter = chooseTitleDetailsLanguageAdapter
-        ViewCompat.setNestedScrollingEnabled(rv_languages, false)
 
         chooseTitleDetailsViewModel.noInternet.observe(viewLifecycleOwner, EventObserver { noInternet ->
                 if (noInternet) {
@@ -99,32 +105,20 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
             chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, args.numOfSeasons)
         }
 
-        chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
-            val languages = it.reversed()
-            chooseTitleDetailsLanguageAdapter.setLanguageList(languages)
-            chooseTitleDetailsViewModel.setFileLanguage(languages.first())
-        })
-
         chooseTitleDetailsViewModel.episodeInfo.observe(viewLifecycleOwner, {
             chooseTitleDetailsEpisodesAdapter.setEpisodeList(it)
         })
 
         chooseTitleDetailsEpisodesAdapter = ChooseTitleDetailsEpisodesAdapter(requireContext())
         {
-            chooseTitleDetailsViewModel.onEpisodePressed(args.titleId, args.isTvShow, it)
+            languagePickerDialog(it)
         }
         rv_episodes.adapter = chooseTitleDetailsEpisodesAdapter
 
         if (Firebase.auth.currentUser == null) {
-            chooseTitleDetailsViewModel.checkContinueWatchingTitleInRoom(
-                requireContext(),
-                args.titleId
-            ).observe(viewLifecycleOwner, { exists ->
+            chooseTitleDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), args.titleId).observe(viewLifecycleOwner, { exists ->
                 if (exists) {
-                    chooseTitleDetailsViewModel.getSingleContinueWatchingFromRoom(
-                        requireContext(),
-                        args.titleId
-                    )
+                    chooseTitleDetailsViewModel.getSingleContinueWatchingFromRoom(requireContext(), args.titleId)
                 }
             })
         } else {
@@ -133,48 +127,18 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
         chooseTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
-                choose_movie_details_continue.setOnClickListener { _ ->
-                    chooseTitleDetailsViewModel.onContinueWatchingPressed(it)
-                }
-
-                if (args.isTvShow) {
-                    choose_movie_details_continue.text = String.format(
-                        "გააგრძელეთ: \nს:${it.season} ე:${it.episode} / %02d:%02d",
-                        TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                    )
-                } else {
-                    choose_movie_details_continue.text = String.format(
-                        "გააგრძელეთ: \n%02d:%02d",
-                        TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                    )
-                }
-                choose_movie_details_continue.setVisible()
-                choose_movie_details_continue.backgroundTintList =
-                    ColorStateList.valueOf(requireContext().resources.getColor(R.color.accent_color))
-                choose_movie_details_continue.setTextColor(Color.parseColor("#FFFFFF"))
-
-                choose_movie_details_play.text = "თავიდან \nყურება"
-                choose_movie_details_play.backgroundTintList =
-                    ColorStateList.valueOf(requireContext().resources.getColor(R.color.secondary_color))
-                choose_movie_details_play.setTextColor(requireContext().resources.getColor(R.color.accent_color))
 
                 chooseTitleDetailsSeasonAdapter.setChosenSeason(it.season)
+                rv_seasons.smoothScrollToPosition(it.season)
                 chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it.season)
 
-                chooseTitleDetailsLanguageAdapter.setChosenLanguage(it.language)
-                chooseTitleDetailsViewModel.setFileLanguage(it.language)
+                chooseTitleDetailsEpisodesAdapter.setChosenEpisode(it.episode)
+                rv_episodes.smoothScrollToPosition(it.episode+1)
+
             }
         })
 
         choose_details_title.text = args.titleName
-
-        choose_movie_details_play.setOnClickListener { _ ->
-            chooseTitleDetailsViewModel.onPlayButtonPressed(args.titleId, args.isTvShow)
-        }
 
         choose_details_close.setOnClickListener {
             dismiss()
@@ -187,6 +151,26 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
         chooseTitleDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
+        })
+    }
+
+    private fun languagePickerDialog(episode: Int) {
+        val chooseLanguageDialog = Dialog(requireContext())
+        chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        chooseLanguageDialog.setContentView(layoutInflater.inflate(R.layout.tv_choose_language_dialog, null))
+        chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        chooseLanguageDialog.show()
+
+        val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        chooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) { language ->
+            chooseTitleDetailsViewModel.onEpisodePressed(args.titleId, args.isTvShow, episode, language)
+        }
+        chooseLanguageDialog.rv_tv_choose_language.layoutManager = chooseLanguageLayout
+        chooseLanguageDialog.rv_tv_choose_language.adapter = chooseLanguageAdapter
+
+        chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
+            val languages = languageList.reversed()
+            chooseLanguageAdapter.setLanguageList(languages)
         })
     }
 }

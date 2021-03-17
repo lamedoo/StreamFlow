@@ -2,9 +2,9 @@ package com.lukakordzaia.streamflow.ui.tv.genres
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.setGone
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.tv_sidebar.*
 import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSingleGenreActivity: BaseFragmentActivity(), TvSingleGenreFragment.OnTitleSelected {
+class TvSingleGenreActivity: BaseFragmentActivity(), TvCheckTitleSelected {
     private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +68,6 @@ class TvSingleGenreActivity: BaseFragmentActivity(), TvSingleGenreFragment.OnTit
     }
 
     override fun getTitleId(titleId: Int) {
-        Log.d("singletitleid", titleId.toString())
         tvDetailsViewModel.getSingleTitleData(titleId)
     }
 }

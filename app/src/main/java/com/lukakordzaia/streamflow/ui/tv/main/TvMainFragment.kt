@@ -2,11 +2,16 @@ package com.lukakordzaia.streamflow.ui.tv.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
@@ -19,6 +24,7 @@ import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
+import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -40,16 +46,31 @@ class TvMainFragment : BrowseSupportFragment() {
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
 
+    var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        onTitleSelected = context as? TvCheckTitleSelected
         onFirstItem = context as? TvCheckFirstItem
     }
 
     override fun onDetach() {
         super.onDetach()
+        onTitleSelected = null
         onFirstItem = null
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        val containerDock = view!!.findViewById<View>(R.id.browse_container_dock) as FrameLayout
+        val params = containerDock.layoutParams as ViewGroup.MarginLayoutParams
+        val resources: Resources = inflater.context.resources
+        val newHeaderMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, resources.displayMetrics).toInt()
+        val offsetToZero: Int = -resources.getDimensionPixelSize(R.dimen.lb_browse_rows_margin_top)
+        params.topMargin = offsetToZero + newHeaderMargin
+        containerDock.layoutParams = params
+        return view
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -212,8 +233,8 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun setupUIElements() {
-        badgeDrawable = resources.getDrawable(R.drawable.streamflowlogo)
-        title = "StreamFlow"
+//        badgeDrawable = resources.getDrawable(R.drawable.streamflowlogo)
+//        title = "StreamFlow"
         isHeadersTransitionOnBackEnabled = true
         brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
         adapter = rowsAdapter
@@ -267,6 +288,12 @@ class TvMainFragment : BrowseSupportFragment() {
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
+
+            if (item is TitleList.Data) {
+                onTitleSelected?.getTitleId(item.id)
+            } else if (item is DbTitleData) {
+                onTitleSelected?.getTitleId(item.id)
+            }
 
             if (indexOfItem == 0) {
                 onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment.selectedPosition)

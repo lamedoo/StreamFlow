@@ -1,6 +1,9 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle
 
+import android.app.Dialog
 import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,19 +17,26 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.animations.PlayButtonAnimations
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsViewModel
+import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.phone_single_title_details.*
 import kotlinx.android.synthetic.main.phone_single_title_fragment.*
 import kotlinx.android.synthetic.main.phone_single_title_info.*
+import kotlinx.android.synthetic.main.tv_choose_language_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 class SingleTitleFragment : BaseFragment() {
-    private val singleTitleViewModel by viewModel<SingleTitleViewModel>()
+    private val singleTitleViewModel: SingleTitleViewModel by viewModel()
+    private val chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel by viewModel()
+    private lateinit var chooseLanguageAdapter: TvChooseLanguageAdapter
     private lateinit var singleTitleCastAdapter: SingleTitleCastAdapter
     private lateinit var singleTitleRelatedAdapter: SingleTitleRelatedAdapter
     private val args: SingleTitleFragmentArgs by navArgs()
@@ -43,10 +53,20 @@ class SingleTitleFragment : BaseFragment() {
             hasInitializedRootView = true
             singleTitleViewModel.checkTitleInFirestore(args.titleId)
             singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
         }
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             single_title_appbar.setExpanded(true)
+            if (Firebase.auth.currentUser == null) {
+                chooseTitleDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), args.titleId).observe(viewLifecycleOwner, { exists ->
+                    if (exists) {
+                        chooseTitleDetailsViewModel.getSingleContinueWatchingFromRoom(requireContext(), args.titleId)
+                    }
+                })
+            } else {
+                chooseTitleDetailsViewModel.checkContinueWatchingInFirestore(args.titleId)
+            }
         }
 
         singleTitleViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
@@ -57,8 +77,6 @@ class SingleTitleFragment : BaseFragment() {
                 }, 5000)
             }
         })
-
-//        singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
 
         single_title_back_button.setOnClickListener {
             requireActivity().onBackPressed()
@@ -142,17 +160,56 @@ class SingleTitleFragment : BaseFragment() {
             if (it.countries.data.isNotEmpty()) {
                 tv_single_title_country.text = it.countries.data[0].secondaryName
             }
+
+            if (it.isTvShow) {
+                single_post_to_episodes_button.setVisible()
+            }
+
+
+            single_post_to_files_button.setOnClickListener { _ ->
+                languagePickerDialog()
+            }
         })
+
+        chooseTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            if (it != null) {
+
+                single_post_to_files_button.setOnClickListener { _ ->
+                    singleTitleViewModel.onContinueWatchingPressed(it)
+                }
+
+                if (it.isTvShow) {
+                    single_post_to_files_button.text = String.format(
+                            "ს:${it.season} ე:${it.episode} / %02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    )
+                } else {
+                    single_post_to_files_button.text = String.format(
+                            "%02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    )
+
+                    single_post_replay_button.setVisible()
+                    single_post_replay_button.setOnClickListener {
+                        languagePickerDialog()
+                    }
+                }
+            }
+        })
+
+        single_post_to_episodes_button?.setOnClickListener {
+            singleTitleViewModel.onEpisodesPressed(args.titleId)
+
+//            PlayButtonAnimations().rotatePlayButton(single_post_to_files_button, 1000)
+        }
 
         singleTitleViewModel.titleGenres.observe(viewLifecycleOwner, {
             single_title_genre_names.text = TextUtils.join(", ", it)
         })
-
-        single_post_to_files_button.setOnClickListener {
-            singleTitleViewModel.onPlayButtonPressed(args.titleId)
-
-            PlayButtonAnimations().rotatePlayButton(single_post_to_files_button, 1000)
-        }
 
         singleTitleViewModel.titleDirector.observe(viewLifecycleOwner, {
             single_title_director_name.text = it.originalName
@@ -208,5 +265,25 @@ class SingleTitleFragment : BaseFragment() {
             requireContext().createToast(it)
         })
 
+    }
+
+    private fun languagePickerDialog() {
+        val chooseLanguageDialog = Dialog(requireContext())
+        chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        chooseLanguageDialog.setContentView(layoutInflater.inflate(R.layout.tv_choose_language_dialog, null))
+        chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        chooseLanguageDialog.show()
+
+        val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        chooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) { language ->
+            singleTitleViewModel.onPlayButtonPressed(args.titleId, singleTitleViewModel.isTvShow.value!!, language)
+        }
+        chooseLanguageDialog.rv_tv_choose_language.layoutManager = chooseLanguageLayout
+        chooseLanguageDialog.rv_tv_choose_language.adapter = chooseLanguageAdapter
+
+        chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
+            val languages = languageList.reversed()
+            chooseLanguageAdapter.setLanguageList(languages)
+        })
     }
 }

@@ -21,6 +21,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
+import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
@@ -37,11 +38,12 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
 
+    var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onTitleSelected = context as? OnTitleSelected
+        onTitleSelected = context as? TvCheckTitleSelected
         onFirstItem = context as? TvCheckFirstItem
     }
 
@@ -262,9 +264,4 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
             }
         }
     }
-
-    interface OnTitleSelected {
-        fun getTitleId(titleId: Int)
-    }
-    var onTitleSelected: OnTitleSelected? = null
 }

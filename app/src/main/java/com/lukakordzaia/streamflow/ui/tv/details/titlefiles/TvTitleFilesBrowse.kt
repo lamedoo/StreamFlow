@@ -3,6 +3,8 @@ package com.lukakordzaia.streamflow.ui.tv.details.titlefiles
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -216,7 +218,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                     val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
 
                     val chooseLanguageDialog = Dialog(requireContext())
-//                    chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     chooseLanguageDialog.setContentView(layoutInflater.inflate(R.layout.tv_choose_language_dialog, null))
                     chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                     chooseLanguageDialog.show()

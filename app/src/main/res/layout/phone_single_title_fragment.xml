@@ -174,38 +174,19 @@
                         android:padding="10dp"
                         app:layout_constraintTop_toBottomOf="@id/single_title_name_geo"/>
 
-                    <TextView
-                        android:id="@+id/single_post_to_files_button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="უყურეთ"
-                        android:textAlignment="center"
-                        android:textColor="@color/text_on_accent_color"
-                        android:fontFamily="@font/georgian_uppercase"
-                        android:padding="10dp"
-                        android:background="@drawable/button_background"
-                        app:layout_constraintTop_toBottomOf="@id/single_title_info_details"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintWidth_default="percent"
-                        app:layout_constraintWidth_percent="0.5"/>
-
                     <LinearLayout
                         android:id="@+id/single_title_trailer_container"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="@id/single_post_to_files_button"
-                        app:layout_constraintBottom_toBottomOf="@id/single_post_to_files_button"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:gravity="end"
-                        app:layout_constraintWidth_default="percent"
-                        app:layout_constraintWidth_percent="0.5">
+                        app:layout_constraintTop_toBottomOf="@id/single_title_info_details"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="ტრეილერი"
-                            android:paddingTop="3dp"
+                            android:paddingTop="4dp"
                             android:textStyle="bold"
                             android:fontFamily="@font/georgian_uppercase"
                             android:textColor="@color/accent_color"/>
@@ -223,7 +204,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginTop="15dp"
                         android:orientation="vertical"
-                        app:layout_constraintTop_toBottomOf="@id/single_post_to_files_button">
+                        app:layout_constraintTop_toBottomOf="@id/single_title_trailer_container">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -256,5 +237,70 @@
             </androidx.core.widget.NestedScrollView>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:layout_marginBottom="-5dp"
+        android:background="@drawable/phone_single_title_watch_background"
+        android:paddingStart="10dp"
+        android:paddingTop="100dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="20dp">
+
+        <TextView
+            android:id="@+id/single_post_to_files_button"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/georgian_uppercase"
+            android:padding="10dp"
+            android:text="უყურე"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textColor="@color/text_on_accent_color"
+            app:layout_constraintEnd_toStartOf="@+id/single_post_replay_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/single_post_replay_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/replay_button_background"
+            android:padding="9dp"
+            android:src="@drawable/replay_icon"
+            android:tint="@color/accent_color"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/single_post_to_files_button"
+            app:layout_constraintEnd_toStartOf="@+id/single_post_to_episodes_button"
+            app:layout_constraintStart_toEndOf="@+id/single_post_to_files_button"
+            app:layout_constraintTop_toTopOf="@id/single_post_to_files_button"
+            app:tint="@color/accent_color"
+            tools:ignore="UseAppTint"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/single_post_to_episodes_button"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/replay_button_background"
+            android:fontFamily="@font/georgian_uppercase"
+            android:padding="10dp"
+            android:text="ეპიზოდები"
+            android:textAlignment="center"
+            android:textColor="@color/text_on_accent_color"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/single_post_to_files_button"
+            app:layout_constraintStart_toEndOf="@id/single_post_to_files_button"
+            app:layout_constraintTop_toTopOf="@id/single_post_to_files_button"
+            tools:visibility="visible" />
+
+    </LinearLayout>
 
 </FrameLayout>

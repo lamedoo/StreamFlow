@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
+import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.rv_choose_details_episodes_item.view.*
 
 class ChooseTitleDetailsEpisodesAdapter(
@@ -18,9 +20,15 @@ class ChooseTitleDetailsEpisodesAdapter(
         private val onEpisodeClick: (episodeId: Int) -> Unit,
 ) : RecyclerView.Adapter<ChooseTitleDetailsEpisodesAdapter.ViewHolder>() {
     private var list: List<TitleEpisodes> = ArrayList()
+    private var chosenEpisode: Int = -1
 
     fun setEpisodeList(list: List<TitleEpisodes>) {
         this.list = list
+        notifyDataSetChanged()
+    }
+
+    fun setChosenEpisode(episodeId: Int) {
+        chosenEpisode = episodeId
         notifyDataSetChanged()
     }
 
@@ -32,6 +40,14 @@ class ChooseTitleDetailsEpisodesAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val episodeModel = list[position]
+
+        val isChosen = position == chosenEpisode-1
+
+        if (isChosen) {
+            holder.episodeChosenIndicator.setVisible()
+        } else {
+            holder.episodeChosenIndicator.setGone()
+        }
 
         holder.episodeContainer.setOnClickListener {
             onEpisodeClick(episodeModel.episodeNum)
@@ -52,5 +68,6 @@ class ChooseTitleDetailsEpisodesAdapter(
         val episodeNumberTextView: TextView = view.rv_episodes_number
         val episodeNameTextView: TextView = view.rv_episodes_name
         val episodePosterImageView: ImageView = view.rv_episodes_poster
+        val episodeChosenIndicator: ImageView = view.rv_episodes_chosen_indicator
     }
 }

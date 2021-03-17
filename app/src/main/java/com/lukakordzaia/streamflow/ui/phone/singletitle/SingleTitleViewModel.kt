@@ -3,6 +3,7 @@ package com.lukakordzaia.streamflow.ui.phone.singletitle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
@@ -26,7 +27,6 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
 
     private val _titleGenres = MutableLiveData<List<String>>()
     val titleGenres: LiveData<List<String>> = _titleGenres
-//    private val fetchTitleGenres: MutableList<String> = ArrayList()
 
     private val _titleDirector = MutableLiveData<TitleCast.Data>()
     val titleDirector: LiveData<TitleCast.Data> = _titleDirector
@@ -40,7 +40,10 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
     private val _imdbId = MutableLiveData<String>()
     val imdbId: LiveData<String> = _imdbId
 
-    fun onPlayButtonPressed(titleId: Int) {
+    private val _isTvShow = MutableLiveData<Boolean>(false)
+    val isTvShow: LiveData<Boolean> = _isTvShow
+
+    fun onEpisodesPressed(titleId: Int) {
         navigateToNewFragment(
                 SingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
                         titleId,
@@ -67,6 +70,36 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
         )
     }
 
+    fun onContinueWatchingPressed(dbDetails: DbDetails) {
+        navigateToNewFragment(
+            SingleTitleFragmentDirections.actionSingleTitleFragmentToVideoPlayerFragmentNav(
+                VideoPlayerData(
+                    dbDetails.titleId,
+                    dbDetails.isTvShow,
+                    dbDetails.season,
+                    dbDetails.language,
+                    dbDetails.episode,
+                    dbDetails.watchedDuration,
+                    null
+                )
+            ))
+    }
+
+    fun onPlayButtonPressed(titleId: Int, isTvShow: Boolean, language: String) {
+        navigateToNewFragment(
+            SingleTitleFragmentDirections.actionSingleTitleFragmentToVideoPlayerFragmentNav(
+                VideoPlayerData(
+                    titleId,
+                    isTvShow,
+                    if (isTvShow) 1 else 0,
+                    language,
+                    if (isTvShow) 1 else 0,
+                    0L,
+                    null
+                )
+            ))
+    }
+
     fun onRelatedTitlePressed(titleId: Int) {
         navigateToNewFragment(SingleTitleFragmentDirections.actionSingleTitleFragmentSelf(titleId))
     }
@@ -82,6 +115,8 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
                             val data = titleData.data.data
                             _singleTitleData.value = data
                             _imdbId.value = data.imdbUrl.substring(27, data.imdbUrl.length)
+
+                            _isTvShow.value = data.isTvShow
 
 //                            if (data.isTvShow) {
 //                                checkTitleInTraktList("show", accessToken)
