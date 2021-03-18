@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
@@ -34,54 +33,6 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
 
     private val _continueWatchingDetails = MutableLiveData<DbDetails>()
     val continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
-
-
-    fun onPlayButtonPressed(titleId: Int, isTvShow: Boolean) {
-        navigateToNewFragment(
-                ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
-                        VideoPlayerData(
-                                titleId,
-                                isTvShow,
-                                if (isTvShow) 1 else 0,
-                                chosenLanguage.value!!,
-                                if (isTvShow) 1 else 0,
-                                0L,
-                                null
-                        )
-                ),
-        )
-    }
-
-    fun onEpisodePressed(titleId: Int, isTvShow: Boolean, chosenEpisode: Int, chosenLanguage: String) {
-        navigateToNewFragment(
-                ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
-                        VideoPlayerData(
-                                titleId,
-                                isTvShow,
-                                chosenSeason.value!!,
-                                chosenLanguage,
-                                chosenEpisode,
-                                0L,
-                                null
-                        )
-                )
-        )
-    }
-
-    fun onContinueWatchingPressed(dbDetails: DbDetails) {
-        navigateToNewFragment(
-                ChooseTitleDetailsFragmentDirections.actionChooseTitleDetailsFragmentToVideoPlayerFragmentNav(
-                        VideoPlayerData(
-                                dbDetails.titleId,
-                                dbDetails.isTvShow,
-                                dbDetails.season,
-                                dbDetails.language,
-                                dbDetails.episode,
-                                dbDetails.watchedDuration,
-                                null
-                        )
-                ))
-    }
 
     fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
         return repository.checkContinueWatchingTitleInRoom(roomDb(context)!!, titleId)

@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.categories
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,8 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.helpers.DotsIndicatorDecoration
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_categories_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,7 +50,18 @@ class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
         val trailerLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         trailersAdapter = TrailersAdapter(requireContext(),
                 { titleId, trailerUrl ->
-                    categoriesViewModel.onSingleTrailerPressed(titleId, trailerUrl)
+//                    categoriesViewModel.onSingleTrailerPressed(titleId, trailerUrl)
+                    val intent = Intent(context, VideoPlayerActivity::class.java)
+                    intent.putExtra("videoPlayerData", VideoPlayerData(
+                        titleId,
+                        false,
+                        0,
+                        "ENG",
+                        0,
+                        0L,
+                        trailerUrl
+                    ))
+                    activity?.startActivity(intent)
                 },
                 {
                     categoriesViewModel.onSingleTrailerInfoPressed(it)

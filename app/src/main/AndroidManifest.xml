@@ -34,6 +34,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity"
+            android:screenOrientation="landscape">
+        </activity>
         <activity android:name="com.lukakordzaia.streamflow.ui.tv.TvActivity"
             android:theme="@style/Theme.Leanback">
             <intent-filter>

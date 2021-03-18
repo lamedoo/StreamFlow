@@ -3,8 +3,10 @@ package com.lukakordzaia.streamflow.ui.phone.singletitle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.datamodels.*
+import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
+import com.lukakordzaia.streamflow.datamodels.SingleTitleData
+import com.lukakordzaia.streamflow.datamodels.TitleCast
+import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
@@ -52,52 +54,6 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
                         singleTitleData.value!!.isTvShow
                 )
         )
-    }
-
-    fun onTrailerPressed(titleId: Int, isTvShow: Boolean, trailerURl: String?) {
-        navigateToNewFragment(
-            SingleTitleFragmentDirections.actionSingleTitleFragmentToVideoPlayerFragmentNav(
-                    VideoPlayerData(
-                            titleId,
-                            isTvShow,
-                            0,
-                            "ENG",
-                            0,
-                            0L,
-                            trailerURl
-                    )
-            )
-        )
-    }
-
-    fun onContinueWatchingPressed(dbDetails: DbDetails) {
-        navigateToNewFragment(
-            SingleTitleFragmentDirections.actionSingleTitleFragmentToVideoPlayerFragmentNav(
-                VideoPlayerData(
-                    dbDetails.titleId,
-                    dbDetails.isTvShow,
-                    dbDetails.season,
-                    dbDetails.language,
-                    dbDetails.episode,
-                    dbDetails.watchedDuration,
-                    null
-                )
-            ))
-    }
-
-    fun onPlayButtonPressed(titleId: Int, isTvShow: Boolean, language: String) {
-        navigateToNewFragment(
-            SingleTitleFragmentDirections.actionSingleTitleFragmentToVideoPlayerFragmentNav(
-                VideoPlayerData(
-                    titleId,
-                    isTvShow,
-                    if (isTvShow) 1 else 0,
-                    language,
-                    if (isTvShow) 1 else 0,
-                    0L,
-                    null
-                )
-            ))
     }
 
     fun onRelatedTitlePressed(titleId: Int) {

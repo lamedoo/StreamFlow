@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle
 
 import android.app.Dialog
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -20,9 +21,11 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsViewModel
+import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
@@ -131,17 +134,17 @@ class SingleTitleFragment : BaseFragment() {
 
             single_title_trailer_container.setOnClickListener { _ ->
                 if (it.trailers.data.isNotEmpty()) {
-                    it.trailers.data.forEach { trailer ->
-                        if (trailer.language == "ENG") {
-                            singleTitleViewModel.onTrailerPressed(
-                                    args.titleId,
-                                    it.isTvShow,
-                                    trailer.fileUrl
-                            )
-                        } else {
-                            requireContext().createToast("other trailer")
-                        }
-                    }
+                    val intent = Intent(context, VideoPlayerActivity::class.java)
+                    intent.putExtra("videoPlayerData", VideoPlayerData(
+                        args.titleId,
+                        it.isTvShow,
+                        0,
+                        "ENG",
+                        0,
+                        0L,
+                        it.trailers.data[0].fileUrl
+                    ))
+                    activity?.startActivity(intent)
                 } else {
                     requireContext().createToast("ტრეილერი არ არის")
                 }
@@ -175,7 +178,17 @@ class SingleTitleFragment : BaseFragment() {
             if (it != null) {
 
                 single_post_to_files_button.setOnClickListener { _ ->
-                    singleTitleViewModel.onContinueWatchingPressed(it)
+                    val intent = Intent(context, VideoPlayerActivity::class.java)
+                    intent.putExtra("videoPlayerData", VideoPlayerData(
+                        it.titleId,
+                        it.isTvShow,
+                        it.season,
+                        it.language,
+                        it.episode,
+                        it.watchedDuration,
+                        null
+                    ))
+                    activity?.startActivity(intent)
                 }
 
                 if (it.isTvShow) {
@@ -203,8 +216,6 @@ class SingleTitleFragment : BaseFragment() {
 
         single_post_to_episodes_button?.setOnClickListener {
             singleTitleViewModel.onEpisodesPressed(args.titleId)
-
-//            PlayButtonAnimations().rotatePlayButton(single_post_to_files_button, 1000)
         }
 
         singleTitleViewModel.titleGenres.observe(viewLifecycleOwner, {
@@ -276,7 +287,18 @@ class SingleTitleFragment : BaseFragment() {
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         chooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) { language ->
-            singleTitleViewModel.onPlayButtonPressed(args.titleId, singleTitleViewModel.isTvShow.value!!, language)
+            chooseLanguageDialog.hide()
+            val intent = Intent(context, VideoPlayerActivity::class.java)
+            intent.putExtra("videoPlayerData", VideoPlayerData(
+                args.titleId,
+                singleTitleViewModel.isTvShow.value!!,
+                0,
+                language,
+                0,
+                0L,
+                null
+            ))
+            activity?.startActivity(intent)
         }
         chooseLanguageDialog.rv_tv_choose_language.layoutManager = chooseLanguageLayout
         chooseLanguageDialog.rv_tv_choose_language.adapter = chooseLanguageAdapter

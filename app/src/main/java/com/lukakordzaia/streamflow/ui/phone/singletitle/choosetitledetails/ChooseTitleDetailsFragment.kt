@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -16,7 +17,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.phone_choose_title_details_fragment.*
@@ -163,7 +166,20 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         chooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) { language ->
-            chooseTitleDetailsViewModel.onEpisodePressed(args.titleId, args.isTvShow, episode, language)
+            chooseLanguageDialog.hide()
+//            chooseTitleDetailsViewModel.onEpisodePressed(args.titleId, args.isTvShow, episode, language)
+            val intent = Intent(context, VideoPlayerActivity::class.java)
+            intent.putExtra("videoPlayerData", VideoPlayerData(
+                args.titleId,
+                args.isTvShow,
+                chooseTitleDetailsViewModel.chosenSeason.value!!,
+                language,
+                episode,
+                0L,
+                null
+            )
+            )
+            activity?.startActivity(intent)
         }
         chooseLanguageDialog.rv_tv_choose_language.layoutManager = chooseLanguageLayout
         chooseLanguageDialog.rv_tv_choose_language.adapter = chooseLanguageAdapter

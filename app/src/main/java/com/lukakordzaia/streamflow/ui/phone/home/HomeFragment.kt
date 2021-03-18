@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.home
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
@@ -8,12 +9,14 @@ import android.util.Log
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeDbTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeNewMovieAdapter
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTopMovieAdapter
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTvShowAdapter
+import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.main_top_toolbar.*
@@ -92,7 +95,18 @@ class HomeFragment : BaseFragment() {
         val dbLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeDbTitlesAdapter = HomeDbTitlesAdapter(requireContext(),
                 {
-                    viewModel.onContinueWatchingPressed(it)
+//                    viewModel.onContinueWatchingPressed(it)
+                    val intent = Intent(context, VideoPlayerActivity::class.java)
+                    intent.putExtra("videoPlayerData", VideoPlayerData(
+                        it.id,
+                        it.isTvShow,
+                        it.season,
+                        it.language,
+                        it.episode,
+                        it.watchedDuration,
+                        null
+                    ))
+                    activity?.startActivity(intent)
                 },
                 {
                     viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
