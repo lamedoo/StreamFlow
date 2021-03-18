@@ -3,14 +3,14 @@
     android:id="@+id/tv_default_card_root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/rv_tv_watched_card_view_background"
+    android:background="@drawable/rv_tv_default_card_view_background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/tv_default_card_poster"
-        android:layout_width="100dp"
-        android:layout_height="150dp"
+        android:layout_width="130dp"
+        android:layout_height="180dp"
         android:scaleType="fitXY"
         tools:src="@drawable/friends_poster"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/tv_default_card_name"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:paddingTop="10dp"

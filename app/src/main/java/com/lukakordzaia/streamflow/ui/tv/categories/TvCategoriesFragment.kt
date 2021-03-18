@@ -6,29 +6,31 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
+import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvCategoriesFragment : VerticalGridSupportFragment() {
-    private val gridAdapter = ArrayObjectAdapter(TvCardPresenter())
+    private val gridAdapter = ArrayObjectAdapter(TvCategoryPresenter())
     private val tvCategoriesViewModel: TvCategoriesViewModel by viewModel()
     private var page = 1
 
+    var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        onTitleSelected = context as? TvCheckTitleSelected
         onFirstItem = context as? TvCheckFirstItem
     }
 
     override fun onDetach() {
         super.onDetach()
+        onTitleSelected = null
         onFirstItem = null
     }
 
@@ -40,22 +42,6 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        when (activity?.intent?.getSerializableExtra("type") as Int) {
-            AppConstants.TV_CATEGORY_NEW_MOVIES -> {
-                badgeDrawable = resources.getDrawable(R.drawable.tv_new_movies_icon_full)
-                tvCategoriesViewModel.getNewMoviesTv(page)
-            }
-            AppConstants.TV_CATEGORY_TOP_MOVIES -> {
-                badgeDrawable = resources.getDrawable(R.drawable.tv_top_titles_icon_full)
-                tvCategoriesViewModel.getTopMoviesTv(page)
-            }
-            AppConstants.TV_CATEGORY_TOP_TV_SHOWS -> {
-                badgeDrawable = resources.getDrawable(R.drawable.tv_top_titles_icon_full)
-
-                tvCategoriesViewModel.getTopTvShowsTv(page)
-            }
-        }
         loadData()
         adapter = gridAdapter
     }
@@ -98,6 +84,10 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
+
+            if (item is TitleList.Data) {
+                onTitleSelected?.getTitleId(item.id, null)
+            }
 
             val gridSize = Array(gridAdapter.size()) { i -> (i * 1) + 1 }.toList()
 

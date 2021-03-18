@@ -3,17 +3,14 @@
     android:id="@+id/tv_watched_card_root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
     android:background="@drawable/rv_tv_watched_card_view_background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/tv_watched_card_poster"
-        android:layout_width="130dp"
-        android:layout_height="180dp"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
         android:scaleType="fitXY"
         tools:src="@drawable/friends_poster"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,8 +18,8 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <View
-        android:layout_width="130dp"
-        android:layout_height="180dp"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
         android:background="@drawable/rv_continue_watching_background"
         app:layout_constraintStart_toStartOf="@id/tv_watched_card_poster"
         app:layout_constraintEnd_toEndOf="@id/tv_watched_card_poster"
@@ -38,37 +35,5 @@
         app:layout_constraintEnd_toEndOf="@id/tv_watched_card_poster"
         app:layout_constraintTop_toTopOf="@id/tv_watched_card_poster"
         app:layout_constraintBottom_toBottomOf="@id/tv_watched_card_poster"/>
-
-    <SeekBar
-        android:id="@+id/tv_watched_card_seekbar"
-        android:layout_width="130dp"
-        android:layout_height="10dp"
-        android:thumbTint="@color/general_text_color"
-        android:thumb="@color/accent_color"
-        android:progressTint="@color/accent_color"
-        tools:progress="50"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:progressBackgroundTint="@color/general_text_color"
-        app:layout_constraintStart_toStartOf="@id/tv_watched_card_poster"
-        app:layout_constraintEnd_toEndOf="@id/tv_watched_card_poster"
-        app:layout_constraintBottom_toBottomOf="@id/tv_watched_card_poster"/>
-
-    <TextView
-        android:id="@+id/tv_watched_card_season"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/georgian_uppercase"
-        android:textColor="@color/general_text_color"
-        android:textSize="11sp"
-        android:paddingTop="5dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        android:text="ს1 ე24"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/tv_watched_card_seekbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

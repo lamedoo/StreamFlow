@@ -31,7 +31,7 @@ class CustomListRowPresenter : ListRowPresenter(FocusHighlight.ZOOM_FACTOR_NONE,
             val headerItem = (item as Row).headerItem
             val vh = viewHolder as ViewHolder
             val title = vh.view.findViewById<TextView>(R.id.row_header)
-            if (!TextUtils.isEmpty(headerItem!!.name)) {
+            if (!TextUtils.isEmpty(headerItem?.name)) {
                 title.text = headerItem.name
                 title.typeface = ResourcesCompat.getFont(title.context, R.font.georgian_uppercase)
                 title.setPadding(0, 12, 0, 0)

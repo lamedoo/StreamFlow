@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.ui.tv.favorites
 
 import android.view.ViewGroup
+import androidx.leanback.widget.HorizontalGridView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.SingleTitleData
@@ -14,7 +15,9 @@ class TvFavoritesPresenter : Presenter() {
 
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
-        cardView.background = parent.resources.getDrawable(R.drawable.rv_tv_default_card_view_background)
+
+        val horizontalGridView: HorizontalGridView = parent.findViewById(R.id.row_content)
+        horizontalGridView.setItemSpacing(1)
 
         return ViewHolder(cardView)
     }

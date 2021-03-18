@@ -4,16 +4,18 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_tv.*
 import kotlinx.android.synthetic.main.tv_sidebar.*
-import kotlinx.android.synthetic.main.tv_sidebar.tv_sidebar
 import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
+import kotlinx.android.synthetic.main.tv_top_title_header.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 class TvActivity : BaseFragmentActivity(), TvCheckTitleSelected {
     private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
@@ -63,7 +65,34 @@ class TvActivity : BaseFragmentActivity(), TvCheckTitleSelected {
         })
     }
 
-    override fun getTitleId(titleId: Int) {
+    override fun getTitleId(titleId: Int, continueWatchingDetails: DbTitleData?) {
         tvDetailsViewModel.getSingleTitleData(titleId)
+
+        if (continueWatchingDetails != null) {
+            home_top_watched_seekbar.setVisible()
+            home_top_watched_season.setVisible()
+            if (continueWatchingDetails.isTvShow) {
+                home_top_watched_season.text = String.format("ს${continueWatchingDetails.season} ე${continueWatchingDetails.episode} / %02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(continueWatchingDetails.watchedDuration),
+                        TimeUnit.MILLISECONDS.toSeconds(continueWatchingDetails.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(continueWatchingDetails.watchedDuration))
+                )
+            } else {
+                home_top_watched_season.text = String.format("%02d:%02d:%02d",
+                        TimeUnit.MILLISECONDS.toHours(continueWatchingDetails.watchedDuration),
+                        TimeUnit.MILLISECONDS.toMinutes(continueWatchingDetails.watchedDuration) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(continueWatchingDetails.watchedDuration)),
+                        TimeUnit.MILLISECONDS.toSeconds(continueWatchingDetails.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(continueWatchingDetails.watchedDuration))
+                )
+            }
+
+            home_top_watched_seekbar.max = continueWatchingDetails.titleDuration.toInt()
+            home_top_watched_seekbar.progress = continueWatchingDetails.watchedDuration.toInt()
+        } else {
+            home_top_watched_season.setGone()
+            home_top_watched_seekbar.setGone()
+        }
+
     }
 }

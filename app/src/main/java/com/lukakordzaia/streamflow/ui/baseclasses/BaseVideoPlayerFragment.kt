@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -154,11 +153,11 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         super.onDetach()
         checkForNextSeasonOnEnd().cancel()
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            requireActivity().window.setDecorFitsSystemWindows(true)
-        } else {
-            requireActivity().window.decorView.systemUiVisibility = View.VISIBLE
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            requireActivity().window.setDecorFitsSystemWindows(true)
+//        } else {
+//            requireActivity().window.decorView.systemUiVisibility = View.VISIBLE
+//        }
     }
 
     private fun checkForNextSeason() {

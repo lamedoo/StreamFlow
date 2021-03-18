@@ -30,6 +30,7 @@ import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvEpisode
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvSeasonsPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
+import com.lukakordzaia.streamflow.ui.tv.search.TvSearchPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import kotlinx.android.synthetic.main.tv_choose_language_dialog.*
 import kotlinx.android.synthetic.main.tv_details_season_item.view.*
@@ -182,7 +183,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     }
 
     private fun relatedRowsAdapter(relatedList: List<TitleList.Data>, isTvShow: Boolean) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter()).apply {
             relatedList.forEach {
                 add(it)
             }

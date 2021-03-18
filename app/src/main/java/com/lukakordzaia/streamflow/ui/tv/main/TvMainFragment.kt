@@ -70,6 +70,7 @@ class TvMainFragment : BrowseSupportFragment() {
         val offsetToZero: Int = -resources.getDimensionPixelSize(R.dimen.lb_browse_rows_margin_top)
         params.topMargin = offsetToZero + newHeaderMargin
         containerDock.layoutParams = params
+
         return view
     }
 
@@ -80,6 +81,7 @@ class TvMainFragment : BrowseSupportFragment() {
         }
 
         headersState = HEADERS_DISABLED
+
 
         setHeaderPresenterSelector(object : PresenterSelector() {
             override fun getPresenter(item: Any?): Presenter {
@@ -290,9 +292,9 @@ class TvMainFragment : BrowseSupportFragment() {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
             if (item is TitleList.Data) {
-                onTitleSelected?.getTitleId(item.id)
+                onTitleSelected?.getTitleId(item.id, null)
             } else if (item is DbTitleData) {
-                onTitleSelected?.getTitleId(item.id)
+                onTitleSelected?.getTitleId(item.id, item)
             }
 
             if (indexOfItem == 0) {

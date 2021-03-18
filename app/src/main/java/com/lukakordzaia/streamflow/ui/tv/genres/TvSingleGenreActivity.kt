@@ -4,14 +4,16 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_tv_single_genre.*
 import kotlinx.android.synthetic.main.tv_sidebar.*
 import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
+import kotlinx.android.synthetic.main.tv_top_title_header.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSingleGenreActivity: BaseFragmentActivity(), TvCheckTitleSelected {
@@ -48,26 +50,29 @@ class TvSingleGenreActivity: BaseFragmentActivity(), TvCheckTitleSelected {
                 .commit()
 
         tvDetailsViewModel.singleTitleData.observe(this, {
-            single_genre_top_name.text = it.secondaryName
+            home_top_istvshow.setVisible()
+            home_top_name.text = it.secondaryName
             Picasso.get().load(it.covers?.data?.x1050)
-                .error(R.drawable.movie_image_placeholder_landscape).into(single_genre_top_poster)
-            single_genre_top_year.text = "${it.year}   ·"
+                .error(R.drawable.movie_image_placeholder_landscape).into(home_top_poster)
+            home_top_year.text = "${it.year}   ·"
             if (it.isTvShow) {
-                single_genre_top_duration.text = "${it.seasons?.data?.size} სეზონი   ·"
+                home_top_istvshow.text = "სერიალი"
+                home_top_duration.text = "${it.seasons?.data?.size} სეზონი   ·"
             } else {
-                single_genre_top_duration.text = "${it.duration.toString()} წთ   ·"
+                home_top_istvshow.text = "ფილმი"
+                home_top_duration.text = "${it.duration.toString()} წთ   ·"
             }
             if (it.rating.imdb?.score != null) {
-                single_genre_top_rating.text = "IMDB ${it.rating.imdb.score.toString()}"
+                home_top_rating.text = "IMDB ${it.rating.imdb.score.toString()}"
             }
         })
 
         tvDetailsViewModel.titleGenres.observe(this, {
-            single_genre_top_genres.text = TextUtils.join(", ", it)
+            home_top_genres.text = TextUtils.join(", ", it)
         })
     }
 
-    override fun getTitleId(titleId: Int) {
+    override fun getTitleId(titleId: Int, continueWatchingDetails: DbTitleData?) {
         tvDetailsViewModel.getSingleTitleData(titleId)
     }
 }

@@ -17,14 +17,8 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
     private val args: VideoPlayerFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-        phone_title_player.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
-                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+        super.onViewCreated(view, savedInstanceState)
 
         setExoPlayer(phone_title_player)
 
@@ -34,6 +28,9 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getPlayListFiles(args.videoPlayerData.titleId, args.videoPlayerData.chosenSeason, args.videoPlayerData.chosenLanguage, args.videoPlayerData.isTvShow)
+//            requireActivity().window.decorView.apply {
+//                systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//            }
         }
     }
 
@@ -50,12 +47,12 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
 //            }
 //        }
 
-//        requireActivity().window.decorView.apply {
-//            systemUiVisibility =
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-//                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-//                        View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//        }
+        requireActivity().window.decorView.apply {
+            systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        }
 //
 //        phone_title_player.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
 //                or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -63,6 +60,12 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
 //                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 //                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 //                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
     }
 
     override fun onStart() {

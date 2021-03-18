@@ -13,15 +13,17 @@
     <include
         layout="@layout/tv_sidebar_collapsed"/>
 
+    <include
+        layout="@layout/tv_top_title_header"/>
+
     <fragment
         android:name="com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesFragment"
         android:id="@+id/tv_main_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginStart="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintHeight_percent="0.6"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

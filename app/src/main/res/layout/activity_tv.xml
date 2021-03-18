@@ -12,94 +12,13 @@
         tools:visibility="gone"/>
 
     <include
-        android:id="@+id/tv_sidebar"
         layout="@layout/tv_sidebar_collapsed"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="30dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_sidebar"
-        app:layout_constraintWidth_default="percent"
-        app:layout_constraintHeight_percent="0.6">
-
-        <ImageView
-            android:id="@+id/home_top_poster"
-            android:layout_width="500dp"
-            android:layout_height="300dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/movie_image_placeholder_landscape"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/tv_single_genre_header_poster_background"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/home_top_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Title Name"
-            android:textSize="35sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintTop_toTopOf="@id/home_top_poster"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/home_top_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="2015"
-            android:textColor="@color/general_text_color"
-            app:layout_constraintTop_toBottomOf="@id/home_top_name"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/home_top_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="1:37:43"
-            android:textColor="@color/general_text_color"
-            app:layout_constraintTop_toBottomOf="@id/home_top_name"
-            app:layout_constraintStart_toEndOf="@id/home_top_year" />
-
-        <TextView
-            android:id="@+id/home_top_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="8.6"
-            android:textColor="@color/general_text_color"
-            app:layout_constraintTop_toBottomOf="@id/home_top_name"
-            app:layout_constraintStart_toEndOf="@id/home_top_duration" />
-
-        <TextView
-            android:id="@+id/home_top_genres"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="დრამა, კომედია, აზარტული"
-            android:textColor="@color/general_text_color"
-            app:layout_constraintTop_toBottomOf="@id/home_top_year"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.5"/>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    <include
+        layout="@layout/tv_top_title_header"/>
 
     <fragment
         android:name="com.lukakordzaia.streamflow.ui.tv.main.TvMainFragment"

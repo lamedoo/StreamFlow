@@ -252,7 +252,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             if (item is TitleList.Data) {
-                onTitleSelected?.getTitleId(item.id)
+                onTitleSelected?.getTitleId(item.id, null)
             }
 
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
