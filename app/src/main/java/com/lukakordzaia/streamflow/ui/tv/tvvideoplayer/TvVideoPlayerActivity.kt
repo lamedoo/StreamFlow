@@ -120,16 +120,20 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_NEXT -> {
-                tv_title_player.dispatchMediaKeyEvent(event!!)
-                return true
+                if (!tv_title_player.isControllerVisible) {
+                    tv_title_player.showController()
+                }
+                tv_title_player.exo_ffwd.callOnClick()
             }
             KeyEvent.KEYCODE_MEDIA_REWIND -> {
                 tv_title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
-                tv_title_player.dispatchMediaKeyEvent(event!!)
-                return true
+                if (!tv_title_player.isControllerVisible) {
+                    tv_title_player.showController()
+                }
+                tv_title_player.exo_rew.callOnClick()
             }
         }
         return super.onKeyDown(keyCode, event)
