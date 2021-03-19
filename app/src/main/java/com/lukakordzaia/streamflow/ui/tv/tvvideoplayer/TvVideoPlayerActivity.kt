@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
+import kotlinx.android.synthetic.main.continue_watching_dialog.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.view.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
@@ -48,6 +49,10 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.showController()
                     tv_title_player.exo_pause.requestFocus()
                 }
+
+                if (continue_watching_dialog_root.isVisible) {
+                    continue_watching_dialog_yes.requestFocus()
+                }
             }
             KeyEvent.KEYCODE_DPAD_CENTER -> {
                 if (!tv_title_player.isControllerVisible) {
@@ -77,6 +82,10 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 if (tv_next_season_button.isFocused) {
                     exo_play?.requestFocus()
                     exo_pause?.requestFocus()
+                }
+
+                if (continue_watching_dialog_root.isVisible) {
+                    continue_watching_dialog_home.requestFocus()
                 }
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {

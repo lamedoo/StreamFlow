@@ -120,6 +120,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     }
 
                     mediaAndSubtitle.value = mediaItemsList
+                    Log.d("subtitlesseries", getSubtitles.toString())
                 }
                 is Result.Error -> {
                     Log.d("errornextepisode", files.exception)
@@ -140,10 +141,17 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     }
                 }
             }
+
             if (!singleEpisodeFiles.subtitles.isNullOrEmpty()) {
-                singleEpisodeFiles.subtitles.forEach {
-                    if (it!!.lang.equals(chosenLanguage, true)) {
-                        getSubtitles.add(it.url)
+                if (singleEpisodeFiles.subtitles.size == 1) {
+                    getSubtitles.add(singleEpisodeFiles.subtitles[0]!!.url)
+                } else if (singleEpisodeFiles.subtitles.size > 1) {
+                    singleEpisodeFiles.subtitles.forEach {
+                        if (it!!.lang.equals(chosenLanguage, true)) {
+                            getSubtitles.add(it.url)
+                        } else {
+                            getSubtitles.add("0")
+                        }
                     }
                 }
             } else {
