@@ -12,6 +12,22 @@
     tools:visibility="visible">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="დიდი ხანია, რაც გამოჩენილხარ? გინდა გაგრძელება?"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:shadowColor="@color/trueBlack"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/continue_watching_dialog_yes"
+        android:layout_marginBottom="50dp"/>
+
+    <TextView
         android:id="@+id/continue_watching_dialog_yes"
         android:layout_width="320dp"
         android:layout_height="wrap_content"

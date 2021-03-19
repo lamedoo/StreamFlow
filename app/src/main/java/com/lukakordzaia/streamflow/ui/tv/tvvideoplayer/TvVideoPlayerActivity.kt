@@ -99,7 +99,9 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.exo_rew.callOnClick()
                 }
 
-                tv_title_player.setRewindIncrementMs(rewIncrement)
+                if (!continue_watching_dialog_root.isVisible) {
+                    tv_title_player.setRewindIncrementMs(rewIncrement)
+                }
 //                timerHandler.postDelayed(rewTimerRunnable, 2000)
                 return true
             }
@@ -112,7 +114,9 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.exo_ffwd.callOnClick()
                 }
 
-                tv_title_player.setFastForwardIncrementMs(ffIncrement)
+                if (!continue_watching_dialog_root.isVisible) {
+                    tv_title_player.setFastForwardIncrementMs(ffIncrement)
+                }
 //                timerHandler.postDelayed(ffTimerRunnable, 2000)
 
             }
@@ -125,7 +129,9 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
-                tv_title_player.dispatchMediaKeyEvent(event!!)
+                if (!continue_watching_dialog_root.isVisible) {
+                    tv_title_player.dispatchMediaKeyEvent(event!!)
+                }
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_NEXT -> {
@@ -135,7 +141,9 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 tv_title_player.exo_ffwd.callOnClick()
             }
             KeyEvent.KEYCODE_MEDIA_REWIND -> {
-                tv_title_player.dispatchMediaKeyEvent(event!!)
+                if (!continue_watching_dialog_root.isVisible) {
+                    tv_title_player.dispatchMediaKeyEvent(event!!)
+                }
                 return true
             }
             KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {

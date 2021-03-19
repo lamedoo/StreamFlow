@@ -149,8 +149,6 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
                     singleEpisodeFiles.subtitles.forEach {
                         if (it!!.lang.equals(chosenLanguage, true)) {
                             getSubtitles.add(it.url)
-                        } else {
-                            getSubtitles.add("0")
                         }
                     }
                 }

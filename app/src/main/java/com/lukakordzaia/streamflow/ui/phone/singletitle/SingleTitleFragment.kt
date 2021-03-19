@@ -292,9 +292,9 @@ class SingleTitleFragment : BaseFragment() {
             intent.putExtra("videoPlayerData", VideoPlayerData(
                 args.titleId,
                 singleTitleViewModel.isTvShow.value!!,
-                0,
+                if (singleTitleViewModel.isTvShow.value!!) 1 else 0,
                 language,
-                0,
+                if (singleTitleViewModel.isTvShow.value!!) 1 else 0,
                 0L,
                 null
             ))

@@ -48,5 +48,4 @@
     <include
         layout="@layout/continue_watching_dialog"/>
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
