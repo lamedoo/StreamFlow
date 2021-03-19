@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -29,6 +30,7 @@ import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.*
+import kotlinx.android.synthetic.main.continue_watching_dialog.*
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
@@ -47,6 +49,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     private lateinit var playerView: PlayerView
     private var tracker: ProgressTracker? = null
     var nextSeasonButton: Button? = null
+    private var mediaItemsPlayed = 0
 
     private var titleId = 0
     private var isTvShow = false
@@ -117,7 +120,18 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                setControllerVisible()
+                if (mediaItemsPlayed < 6) {
+                    setControllerVisible()
+                }
+
+                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
+                    mediaItemsPlayed++
+                    Log.d("mediatransition", mediaItemsPlayed.toString())
+                    showContinueWatchingDialog()
+                } else if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK) {
+                    mediaItemsPlayed = 0
+                    Log.d("mediatransition", mediaItemsPlayed.toString())
+                }
 
                 videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                     if (!it.isNullOrEmpty()) {
@@ -133,14 +147,17 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     }
                 })
 
-                videoPlayerViewModel.setVideoPlayerInfo(
-                        VideoPlayerInfo(
-                                player.currentWindowIndex,
-                                player.currentPosition,
-                                player.duration
-                        )
-                )
-                videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    videoPlayerViewModel.setVideoPlayerInfo(
+                            VideoPlayerInfo(
+                                    player.currentWindowIndex,
+                                    player.currentPosition,
+                                    player.duration
+                            )
+                    )
+                    videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
+                }, 2000)
             }
         })
 
@@ -358,6 +375,24 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 subtitleView?.setVisible()
                 VideoPlayerAnimations().setSubtitleOn(subtitleToggle, 200, requireContext())
             }
+        }
+    }
+
+    private fun showContinueWatchingDialog() {
+        if (mediaItemsPlayed == 6) {
+//            player.pause()
+            tv_title_player?.hideController()
+            phone_title_player?.hideController()
+
+            continue_watching_dialog_root.setVisible()
+
+//            continue_watching_dialog_root.requestFocus()
+            continue_watching_dialog_yes.setOnClickListener {
+                requireContext().createToast("aaaaaa")
+            }
+            continue_watching_dialog_yes.requestFocus()
+
+            mediaItemsPlayed = 0
         }
     }
 

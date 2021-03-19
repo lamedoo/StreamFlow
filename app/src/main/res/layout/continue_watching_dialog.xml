@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/continue_watching_dialog_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#99000000"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <TextView
+        android:id="@+id/continue_watching_dialog_yes"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:nextFocusUp="@id/continue_watching_dialog_yes"
+        android:nextFocusRight="@id/continue_watching_dialog_yes"
+        android:nextFocusLeft="@id/continue_watching_dialog_yes"
+        android:nextFocusDown="@id/continue_watching_dialog_home"
+        android:background="@drawable/continue_watching_dialog_button_background"
+        android:padding="10dp"
+        android:text="ყურების გაგრძელება"
+        android:textAlignment="center"
+        android:textColor="@color/text_on_accent_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/continue_watching_dialog_home"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/continue_watching_dialog_home"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:nextFocusUp="@id/continue_watching_dialog_yes"
+        android:nextFocusDown="@id/continue_watching_dialog_home"
+        android:nextFocusLeft="@id/continue_watching_dialog_home"
+        android:nextFocusRight="@id/continue_watching_dialog_home"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/continue_watching_dialog_button_background"
+        android:padding="10dp"
+        android:text="მთავარ გვერდზე დაბრუნება"
+        android:textColor="@color/text_on_accent_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/continue_watching_dialog_yes" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,5 +45,8 @@
         tools:text="შემდეგი სეზონი: 2"
         tools:visibility="visible" />
 
+    <include
+        layout="@layout/continue_watching_dialog"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

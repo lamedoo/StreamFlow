@@ -47,8 +47,9 @@ class TvActivity : BaseFragmentActivity(), TvCheckTitleSelected {
 
         tvDetailsViewModel.singleTitleData.observe(this, {
             home_top_name.text = it.secondaryName
-            Picasso.get().load(it.covers?.data?.x1050)
-                .error(R.drawable.movie_image_placeholder_landscape).into(home_top_poster)
+            if (it.covers?.data?.x1050!!.isNotBlank()) {
+                Picasso.get().load(it.covers.data.x1050).error(R.drawable.movie_image_placeholder_landscape).into(home_top_poster)
+            }
             home_top_year.text = "${it.year}   ·"
             if (it.isTvShow) {
                 home_top_duration.text = "${it.seasons?.data?.size} სეზონი   ·"
