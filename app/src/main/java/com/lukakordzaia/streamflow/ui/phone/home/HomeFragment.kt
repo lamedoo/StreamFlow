@@ -2,6 +2,7 @@ package com.lukakordzaia.streamflow.ui.phone.home
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -65,6 +66,15 @@ class HomeFragment : BaseFragment() {
         home_profile.setOnClickListener {
             navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
         }
+        
+        home_fragment_scroll.setOnScrollChangeListener { v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            if (scrollY > 0) {
+                toolbar.setBackgroundColor(Color.parseColor("#282A38"))
+                toolbar.background.alpha = 255
+            } else {
+                toolbar.background.alpha = 0
+            }
+        }
 
         //Movie Day
         viewModel.movieDayLoader.observe(viewLifecycleOwner, {
@@ -98,13 +108,13 @@ class HomeFragment : BaseFragment() {
 //                    viewModel.onContinueWatchingPressed(it)
                     val intent = Intent(context, VideoPlayerActivity::class.java)
                     intent.putExtra("videoPlayerData", VideoPlayerData(
-                        it.id,
-                        it.isTvShow,
-                        it.season,
-                        it.language,
-                        it.episode,
-                        it.watchedDuration,
-                        null
+                            it.id,
+                            it.isTvShow,
+                            it.season,
+                            it.language,
+                            it.episode,
+                            it.watchedDuration,
+                            null
                     ))
                     activity?.startActivity(intent)
                 },
@@ -120,8 +130,10 @@ class HomeFragment : BaseFragment() {
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (auth.currentUser == null) {
                 viewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
-                        viewModel.getContinueWatchingTitlesFromApi(it)
+                    viewModel.getContinueWatchingTitlesFromApi(it)
                 })
+            } else {
+                viewModel.getContinueWatchingFromFirestore()
             }
         }
 

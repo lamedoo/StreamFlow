@@ -40,9 +40,9 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     val continueWatchingList: LiveData<List<DbTitleData>> = _continueWatchingList
 
     init {
-        if (currentUser() != null) {
-            getContinueWatchingFromFirestore()
-        }
+//        if (currentUser() != null) {
+//            getContinueWatchingFromFirestore()
+//        }
         getMovieDay()
         getNewMovies(1)
         getTopMovies(1)

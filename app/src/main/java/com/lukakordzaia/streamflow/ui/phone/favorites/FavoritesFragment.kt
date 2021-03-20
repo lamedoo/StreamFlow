@@ -38,6 +38,9 @@ class FavoritesFragment : BaseFragment() {
 
         if (auth.currentUser != null) {
             favoritesViewModel.getFavTitlesFromFirestore()
+            favorite_movies_container.setVisible()
+            favorite_tvshows_container.setVisible()
+            favorite_no_auth.setGone()
         } else {
             favorite_movies_container.setGone()
             favorite_tvshows_container.setGone()

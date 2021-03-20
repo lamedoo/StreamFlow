@@ -251,7 +251,7 @@
         android:paddingBottom="20dp">
 
         <TextView
-            android:id="@+id/single_post_to_files_button"
+            android:id="@+id/single_post_play_button"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"
@@ -275,10 +275,10 @@
             android:src="@drawable/replay_icon"
             android:tint="@color/accent_color"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/single_post_to_files_button"
+            app:layout_constraintBottom_toBottomOf="@id/single_post_play_button"
             app:layout_constraintEnd_toStartOf="@+id/single_post_to_episodes_button"
-            app:layout_constraintStart_toEndOf="@+id/single_post_to_files_button"
-            app:layout_constraintTop_toTopOf="@id/single_post_to_files_button"
+            app:layout_constraintStart_toEndOf="@+id/single_post_play_button"
+            app:layout_constraintTop_toTopOf="@id/single_post_play_button"
             app:tint="@color/accent_color"
             tools:ignore="UseAppTint"
             tools:visibility="visible" />
@@ -296,9 +296,9 @@
             android:textColor="@color/text_on_accent_color"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/single_post_to_files_button"
-            app:layout_constraintStart_toEndOf="@id/single_post_to_files_button"
-            app:layout_constraintTop_toTopOf="@id/single_post_to_files_button"
+            app:layout_constraintBottom_toBottomOf="@id/single_post_play_button"
+            app:layout_constraintStart_toEndOf="@id/single_post_play_button"
+            app:layout_constraintTop_toTopOf="@id/single_post_play_button"
             tools:visibility="visible" />
 
     </LinearLayout>

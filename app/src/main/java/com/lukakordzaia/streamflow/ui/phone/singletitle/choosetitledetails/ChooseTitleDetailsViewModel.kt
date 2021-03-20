@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
+import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
@@ -31,8 +32,8 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
     private val _episodeInfo = MutableLiveData<List<TitleEpisodes>>()
     val episodeInfo: LiveData<List<TitleEpisodes>> = _episodeInfo
 
-    private val _continueWatchingDetails = MutableLiveData<DbDetails>()
-    val continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
+    private val _continueWatchingDetails = MutableLiveData<DbDetails>(null)
+    val     continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
 
     fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
         return repository.checkContinueWatchingTitleInRoom(roomDb(context)!!, titleId)
@@ -42,6 +43,14 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
         viewModelScope.launch {
             _continueWatchingDetails.value = repository.getSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
         }
+    }
+
+    fun checkContinueWatchingInFirestore1(titleId: Int) {
+        repository.checkContinueWatchingInFirestore1(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingListCallBack {
+            override fun continueWatchingList(titleList: MutableList<DbDetails>) {
+                _continueWatchingDetails.value = titleList[0]
+            }
+        })
     }
 
     fun checkContinueWatchingInFirestore(titleId: Int) {
@@ -60,10 +69,6 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
                 )
             }
         }
-    }
-
-    fun setFileLanguage(language: String) {
-        _chosenLanguage.value = language
     }
 
     fun getSeasonFiles(titleId: Int, season: Int) {

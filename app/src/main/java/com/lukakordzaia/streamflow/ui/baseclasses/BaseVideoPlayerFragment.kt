@@ -53,6 +53,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     private var tracker: ProgressTracker? = null
     var nextSeasonButton: Button? = null
     private var mediaItemsPlayed = 0
+    private var isTrailer: Boolean = false
 
     private var titleId = 0
     private var isTvShow = false
@@ -189,12 +190,9 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                             player.duration
                         )
                     )
-                    videoPlayerViewModel.addContinueWatching(
-                        requireContext(),
-                        titleId,
-                        isTvShow,
-                        chosenLanguage
-                    )
+                    if (!isTrailer) {
+                        videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
+                    }
                 }, 2000)
             }
         })
@@ -469,9 +467,11 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
 
     fun initPlayer(isTvShow: Boolean, watchedTime: Long, chosenEpisode: Int, trailerUrl: String?) {
         if (trailerUrl != null) {
+            isTrailer = true
             mediaPlayer.setMediaItems(listOf(MediaItem.fromUri(Uri.parse(trailerUrl))))
             mediaPlayer.initPlayer(playerView, chosenEpisode, watchedTime)
         } else {
+            isTrailer = false
             videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, { it ->
                 if (it.size == 1) {
                     mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it[0]))
@@ -489,12 +489,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
         }
         tracker?.purgeHandler()
         if (trailerUrl == null) {
-            videoPlayerViewModel.addContinueWatching(
-                requireContext(),
-                titleId,
-                isTvShow,
-                chosenLanguage
-            )
+            videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
         }
     }
 }

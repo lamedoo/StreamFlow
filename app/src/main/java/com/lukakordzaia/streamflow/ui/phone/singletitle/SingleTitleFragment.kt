@@ -68,7 +68,7 @@ class SingleTitleFragment : BaseFragment() {
                     }
                 })
             } else {
-                chooseTitleDetailsViewModel.checkContinueWatchingInFirestore(args.titleId)
+                chooseTitleDetailsViewModel.checkContinueWatchingInFirestore1(args.titleId)
             }
         }
 
@@ -167,39 +167,33 @@ class SingleTitleFragment : BaseFragment() {
             if (it.isTvShow) {
                 single_post_to_episodes_button.setVisible()
             }
-
-
-            single_post_to_files_button.setOnClickListener { _ ->
-                languagePickerDialog()
-            }
         })
 
         chooseTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
-
-                single_post_to_files_button.setOnClickListener { _ ->
+                single_post_play_button.setOnClickListener { _ ->
                     val intent = Intent(context, VideoPlayerActivity::class.java)
                     intent.putExtra("videoPlayerData", VideoPlayerData(
-                        it.titleId,
-                        it.isTvShow,
-                        it.season,
-                        it.language,
-                        it.episode,
-                        it.watchedDuration,
-                        null
+                            it.titleId,
+                            it.isTvShow,
+                            it.season,
+                            it.language,
+                            it.episode,
+                            it.watchedDuration,
+                            null
                     ))
                     activity?.startActivity(intent)
                 }
 
                 if (it.isTvShow) {
-                    single_post_to_files_button.text = String.format(
+                    single_post_play_button.text = String.format(
                             "ს:${it.season} ე:${it.episode} / %02d:%02d",
                             TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                             TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
                                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
                     )
                 } else {
-                    single_post_to_files_button.text = String.format(
+                    single_post_play_button.text = String.format(
                             "%02d:%02d",
                             TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                             TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
@@ -210,6 +204,10 @@ class SingleTitleFragment : BaseFragment() {
                     single_post_replay_button.setOnClickListener {
                         languagePickerDialog()
                     }
+                }
+            } else {
+                single_post_play_button.setOnClickListener { _ ->
+                    languagePickerDialog()
                 }
             }
         })

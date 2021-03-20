@@ -1,5 +1,7 @@
 package com.lukakordzaia.streamflow.repository
 
+import android.content.ContentValues
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -7,6 +9,7 @@ import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.database.DbDetails
 import com.lukakordzaia.streamflow.database.WatchedDao
 import com.lukakordzaia.streamflow.datamodels.*
+import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
@@ -130,6 +133,32 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
             data
         } catch (e: Exception) {
             null
+        }
+    }
+
+    fun checkContinueWatchingInFirestore1(currentUserUid: String, titleId: Int, continueWatchingListCallBack: FirebaseContinueWatchingListCallBack) {
+        val docRef = Firebase.firestore.collection("users").document(currentUserUid).collection("continueWatching").document(titleId.toString())
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(ContentValues.TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+            if (snapshot?.data != null ) {
+                Log.d(ContentValues.TAG, snapshot.data.toString())
+                val titleList: MutableList<DbDetails> = ArrayList()
+                    titleList.add( DbDetails(
+                            snapshot.data?.get("id").toString().toInt(),
+                            snapshot.data?.get("language").toString(),
+                            snapshot.data?.get("continueFrom") as Long,
+                            snapshot.data?.get("titleDuration") as Long,
+                            snapshot.data?.get("isTvShow") as Boolean,
+                            snapshot.data?.get("season").toString().toInt(),
+                            snapshot.data?.get("episode").toString().toInt()
+                    ))
+                continueWatchingListCallBack.continueWatchingList(titleList)
+            } else {
+                Log.d(ContentValues.TAG, "Current data: null")
+            }
         }
     }
 
