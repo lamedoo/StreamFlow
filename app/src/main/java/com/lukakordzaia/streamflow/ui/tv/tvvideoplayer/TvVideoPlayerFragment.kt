@@ -102,7 +102,12 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
                 videoPlayerData.chosenLanguage,
                 videoPlayerData.trailerUrl
             )
-            requireActivity().onBackPressed()
+            if (!tv_title_player.isControllerVisible) {
+                requireActivity().onBackPressed()
+            } else {
+                requireActivity().onBackPressed()
+                requireActivity().onBackPressed()
+            }
             super.onStop()
             Log.d("videoplaying", "stopped")
         }
