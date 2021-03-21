@@ -413,7 +413,7 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                 )
             )
         } else {
-            subtitleToggle?.setInvisible()
+            subtitleToggle?.setGone()
         }
 
         subtitleToggle?.setOnClickListener {

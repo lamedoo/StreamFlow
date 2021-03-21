@@ -21,7 +21,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_default="percent"
-        app:layout_constraintHeight_percent="0.6" />
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
