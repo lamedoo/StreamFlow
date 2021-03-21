@@ -8,6 +8,7 @@ import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
+import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 
 
@@ -18,6 +19,10 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
         super.onViewCreated(view, savedInstanceState)
 
         setExoPlayer(tv_title_player)
+
+        tv_exo_back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val chosenLanguage = activity?.intent?.getSerializableExtra("chosenLanguage") as String
@@ -89,7 +94,6 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
     }
 
     override fun onStop() {
-        super.onStop()
         if (Util.SDK_INT >= 24) {
             releasePlayer(
                 videoPlayerData.titleId,
@@ -97,6 +101,8 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
                 videoPlayerData.chosenLanguage,
                 videoPlayerData.trailerUrl
             )
+            requireActivity().onBackPressed()
+            super.onStop()
             Log.d("videoplaying", "stopped")
         }
     }

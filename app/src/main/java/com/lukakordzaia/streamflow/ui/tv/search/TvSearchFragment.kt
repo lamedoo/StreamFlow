@@ -8,14 +8,13 @@ import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
-import com.lukakordzaia.streamflow.helpers.SearchSupportFragment
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchResultProvider {
+class TvSearchFragment : androidx.leanback.app.SearchSupportFragment(), androidx.leanback.app.SearchSupportFragment.SearchResultProvider {
     private val rowsAdapter = ArrayObjectAdapter(CustomListRowPresenter())
     private val searchTitlesViewModel by viewModel<SearchTitlesViewModel>()
     private var page = 1

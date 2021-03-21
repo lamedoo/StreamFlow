@@ -95,6 +95,8 @@ class TvVideoPlayerActivity : FragmentActivity() {
 
                 if (exo_next.isFocused || tv_next_season_button_controller.isFocused) {
                     tv_subtitle_toggle.requestFocus()
+                } else if (tv_subtitle_toggle.isFocused) {
+                    tv_exo_back.requestFocus()
                 } else {
                     tv_title_player.exo_rew.callOnClick()
                 }
@@ -110,15 +112,31 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.showController()
                 }
 
-                if (!tv_subtitle_toggle.isFocused) {
-                    tv_title_player.exo_ffwd.callOnClick()
+                if (tv_title_player.player?.mediaItemCount == 1) {
+                    if (tv_exo_back.isFocused && tv_subtitle_toggle.isVisible) {
+                        tv_subtitle_toggle.requestFocus()
+                    } else {
+                        tv_title_player.exo_ffwd.callOnClick()
+                    }
+                } else {
+                    if (tv_exo_back.isFocused && tv_subtitle_toggle.isVisible) {
+                        tv_subtitle_toggle.requestFocus()
+                    } else if (tv_subtitle_toggle.isFocused) {
+                        if (tv_next_season_button_controller.isVisible) {
+                            tv_next_season_button_controller.requestFocus()
+                        } else {
+                            exo_next.requestFocus()
+                        }
+                    } else {
+                        tv_title_player.exo_ffwd.callOnClick()
+                    }
                 }
 
                 if (!continue_watching_dialog_root.isVisible) {
                     tv_title_player.setFastForwardIncrementMs(ffIncrement)
                 }
 //                timerHandler.postDelayed(ffTimerRunnable, 2000)
-
+                return true
             }
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
                 tv_title_player.dispatchMediaKeyEvent(event!!)
@@ -139,6 +157,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.showController()
                 }
                 tv_title_player.exo_ffwd.callOnClick()
+                return true
             }
             KeyEvent.KEYCODE_MEDIA_REWIND -> {
                 if (!continue_watching_dialog_root.isVisible) {
@@ -151,6 +170,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.showController()
                 }
                 tv_title_player.exo_rew.callOnClick()
+                return true
             }
         }
         return super.onKeyDown(keyCode, event)

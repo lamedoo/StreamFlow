@@ -79,10 +79,11 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
     }
 
     override fun onStop() {
-        super.onStop()
         if (Util.SDK_INT >= 24) {
             releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage, videoPlayerData.trailerUrl)
-            Log.d("videoplaying", "stopped")
         }
+        requireActivity().onBackPressed()
+        Log.d("videoplaying", "stopped")
+        super.onStop()
     }
 }

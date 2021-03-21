@@ -35,8 +35,10 @@ import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
+import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.view.*
 import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
+import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.view.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -99,41 +101,29 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     tracker = ProgressTracker(player, object : ProgressTracker.PositionListener {
                         override fun progress(position: Long) {
                             exo_live_duration?.text = String.format(
-                                "%02d:%02d:%02d",
-                                TimeUnit.MILLISECONDS.toHours(position),
-                                TimeUnit.MILLISECONDS.toMinutes(position) -
-                                        TimeUnit.HOURS.toMinutes(
-                                            TimeUnit.MILLISECONDS.toHours(
-                                                position
+                                    "%02d:%02d:%02d",
+                                    TimeUnit.MILLISECONDS.toHours(position),
+                                    TimeUnit.MILLISECONDS.toMinutes(position) -
+                                            TimeUnit.HOURS.toMinutes(
+                                                    TimeUnit.MILLISECONDS.toHours(
+                                                            position
+                                                    )
+                                            ),
+                                    TimeUnit.MILLISECONDS.toSeconds(position) -
+                                            TimeUnit.MINUTES.toSeconds(
+                                                    TimeUnit.MILLISECONDS.toMinutes(
+                                                            position
+                                                    )
                                             )
-                                        ),
-                                TimeUnit.MILLISECONDS.toSeconds(position) -
-                                        TimeUnit.MINUTES.toSeconds(
-                                            TimeUnit.MILLISECONDS.toMinutes(
-                                                position
-                                            )
-                                        )
                             )
 
-                        }
-                    })
-
-                    videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
-                        if (isTvShow) {
-                            setEpisodeName(name)
-                        } else {
-                            if (name.isNullOrEmpty()) {
-                                setMovieName("ტრეილერი")
-                            } else {
-                                setMovieName(name[player.currentWindowIndex])
-                            }
                         }
                     })
 
                     checkForNextSeason()
                     playerView.keepScreenOn = true
                 } else playerView.keepScreenOn =
-                    !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
+                        !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
 
                 if (state == Player.STATE_ENDED) {
                     Log.d("playing", "false")
@@ -141,13 +131,13 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                         if (isTvShow) {
                             val nextSeasonNum = videoPlayerViewModel.seasonForDb.value!! + 1
                             videoPlayerViewModel.numOfSeasons.observe(
-                                viewLifecycleOwner,
-                                { numOfSeasons ->
-                                    if (nextSeasonNum <= numOfSeasons) {
-                                        nextSeasonButtonClickOnEnd(nextSeasonNum)
-                                        nextSeasonButton?.callOnClick()
-                                    }
-                                })
+                                    viewLifecycleOwner,
+                                    { numOfSeasons ->
+                                        if (nextSeasonNum <= numOfSeasons) {
+                                            nextSeasonButtonClickOnEnd(nextSeasonNum)
+                                            nextSeasonButton?.callOnClick()
+                                        }
+                                    })
                         }
                     }
                 }
@@ -158,13 +148,16 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     setControllerVisible()
                 }
 
-                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
-                    mediaItemsPlayed++
-                    Log.d("mediatransition", mediaItemsPlayed.toString())
-                    showContinueWatchingDialog()
-                } else if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_SEEK) {
-                    mediaItemsPlayed = 0
-                    Log.d("mediatransition", mediaItemsPlayed.toString())
+                when (reason) {
+                    Player.MEDIA_ITEM_TRANSITION_REASON_AUTO -> {
+                        mediaItemsPlayed++
+                        showContinueWatchingDialog()
+                    }
+                    Player.MEDIA_ITEM_TRANSITION_REASON_SEEK -> {
+                        mediaItemsPlayed = 0
+                    }
+                    else -> {
+                    }
                 }
 
                 videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
@@ -181,17 +174,32 @@ open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
                     }
                 })
 
+                Log.d("mediatransition", "${mediaItem?.mediaId}")
 
                 Handler(Looper.getMainLooper()).postDelayed({
+                    if (isTrailer) {
+                        setMovieName("ტრეილერი")
+                    } else {
+                        videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
+                            if (isTvShow) {
+                                setEpisodeName(name)
+                            } else {
+                                setMovieName(name[player.currentWindowIndex])
+                            }
+                        })
+                    }
+
                     videoPlayerViewModel.setVideoPlayerInfo(
-                        VideoPlayerInfo(
-                            player.currentWindowIndex,
-                            player.currentPosition,
-                            player.duration
-                        )
+                            VideoPlayerInfo(
+                                    player.currentWindowIndex,
+                                    player.currentPosition,
+                                    player.duration
+                            )
                     )
-                    if (!isTrailer) {
-                        videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
+                    if (mediaItem != null) {
+                        if (!isTrailer) {
+                            videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
+                        }
                     }
                 }, 2000)
             }
