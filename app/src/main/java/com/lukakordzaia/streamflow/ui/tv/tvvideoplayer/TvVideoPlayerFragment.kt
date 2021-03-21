@@ -22,6 +22,7 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
 
         tv_exo_back.setOnClickListener {
             requireActivity().onBackPressed()
+            requireActivity().onBackPressed()
         }
 
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
