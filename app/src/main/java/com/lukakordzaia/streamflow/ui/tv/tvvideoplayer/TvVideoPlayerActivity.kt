@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.KeyEvent
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.R
@@ -101,6 +102,10 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.exo_rew.callOnClick()
                 }
 
+                if (exo_next.isFocused || tv_next_season_button_controller.isFocused && tv_subtitle_toggle.isGone) {
+                    tv_exo_back.requestFocus()
+                }
+
                 if (!continue_watching_dialog_root.isVisible) {
                     tv_title_player.setRewindIncrementMs(rewIncrement)
                 }
@@ -115,13 +120,19 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 if (tv_title_player.player?.mediaItemCount == 1) {
                     if (tv_exo_back.isFocused && tv_subtitle_toggle.isVisible) {
                         tv_subtitle_toggle.requestFocus()
-                    } else {
-                        tv_title_player.exo_ffwd.callOnClick()
+                    } else  if (tv_exo_back.isFocused && tv_subtitle_toggle.isGone){
+                        exo_next.requestFocus()
                     }
                 } else {
                     if (tv_exo_back.isFocused && tv_subtitle_toggle.isVisible) {
                         tv_subtitle_toggle.requestFocus()
                     } else if (tv_subtitle_toggle.isFocused) {
+                        if (tv_next_season_button_controller.isVisible) {
+                            tv_next_season_button_controller.requestFocus()
+                        } else {
+                            exo_next.requestFocus()
+                        }
+                    } else if (tv_exo_back.isFocused && tv_subtitle_toggle.isGone) {
                         if (tv_next_season_button_controller.isVisible) {
                             tv_next_season_button_controller.requestFocus()
                         } else {
