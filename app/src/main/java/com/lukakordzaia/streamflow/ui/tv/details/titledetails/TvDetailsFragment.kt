@@ -110,8 +110,11 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                 }
             }
 
-
-            Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(tv_files_title_poster)
+            if (it.covers?.data?.x1050!!.isNotBlank()) {
+                Picasso.get().load(it.covers.data.x1050).error(R.drawable.movie_image_placeholder_landscape).into(tv_files_title_poster)
+            } else {
+                Picasso.get().load(R.drawable.movie_image_placeholder_landscape).error(R.drawable.movie_image_placeholder_landscape).into(tv_files_title_poster)
+            }
 
 
             tv_files_title_year.text = it.year.toString()
