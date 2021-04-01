@@ -17,10 +17,10 @@ import com.lukakordzaia.streamflow.ui.customviews.SearchEditText
 import com.lukakordzaia.streamflow.utils.*
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
 import kotlinx.android.synthetic.main.main_top_toolbar.*
-import kotlinx.android.synthetic.main.phone_search_titles_framgent_new.*
+import kotlinx.android.synthetic.main.phone_search_titles_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent_new) {
+class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent) {
     private val searchTitlesViewModel by viewModel<SearchTitlesViewModel>()
     private lateinit var searchTitlesAdapter: SearchTitlesAdapter
     private lateinit var topFranchisesAdapter: TopFranchisesAdapter
@@ -71,6 +71,7 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent_new)
                     rv_search_titles_container.setGone()
                     top_search_container.setVisible()
                 }
+                search_title_text.hideKeyboard()
             }
 
 

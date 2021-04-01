@@ -5,8 +5,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
 import android.view.animation.AccelerateInterpolator
-import androidx.core.util.toHalf
-import kotlinx.android.synthetic.main.phone_search_titles_framgent_new.*
 
 class SearchAnimations {
     fun textTopTop(view: View, container: View, duration: Long, Unit: () -> Unit) {
