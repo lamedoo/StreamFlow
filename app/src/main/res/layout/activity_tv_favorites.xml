@@ -26,4 +26,17 @@
         app:layout_constraintWidth_default="percent"
         app:layout_constraintHeight_percent="0.6"/>
 
+    <ImageView
+        android:layout_width="270dp"
+        android:layout_height="100dp"
+        android:paddingTop="40dp"
+        android:paddingStart="60dp"
+        android:paddingBottom="5dp"
+        android:paddingEnd="15dp"
+        android:src="@drawable/streamflowlogo"
+        android:background="@drawable/tv_logo_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
