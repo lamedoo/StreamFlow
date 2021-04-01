@@ -7,7 +7,7 @@
             android:startColor="@color/primaryColor"
             android:centerColor="@color/primaryColor"
             android:endColor="@android:color/transparent"
-            android:centerX="0.2"
+            android:centerX="0.1"
             android:type="linear"
             android:angle="0" />
     </shape>
@@ -18,7 +18,7 @@
                 android:startColor="@color/primaryColor"
                 android:centerColor="@color/primaryColor"
                 android:endColor="@android:color/transparent"
-                android:centerX="0.1"
+                android:centerX="0.2"
                 android:type="linear"
                 android:angle="90" />
         </shape>
