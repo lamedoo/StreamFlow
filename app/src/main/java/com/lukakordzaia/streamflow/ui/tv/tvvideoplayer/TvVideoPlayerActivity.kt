@@ -122,6 +122,8 @@ class TvVideoPlayerActivity : FragmentActivity() {
                         tv_subtitle_toggle.requestFocus()
                     } else  if (tv_exo_back.isFocused && tv_subtitle_toggle.isGone){
                         exo_next.requestFocus()
+                    } else {
+                        tv_title_player.exo_ffwd.callOnClick()
                     }
                 } else {
                     if (tv_exo_back.isFocused && tv_subtitle_toggle.isVisible) {
