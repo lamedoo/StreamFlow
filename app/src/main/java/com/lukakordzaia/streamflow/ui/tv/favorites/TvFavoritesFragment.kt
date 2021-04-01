@@ -21,6 +21,7 @@ import com.lukakordzaia.streamflow.datamodels.SingleTitleData
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.helpers.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
@@ -35,17 +36,20 @@ class TvFavoritesFragment : BrowseSupportFragment() {
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
+    var hasFavorites: TvHasFavoritesListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onTitleSelected = context as? TvCheckTitleSelected
         onFirstItem = context as? TvCheckFirstItem
+        hasFavorites = context as? TvHasFavoritesListener
     }
 
     override fun onDetach() {
         super.onDetach()
         onTitleSelected = null
         onFirstItem = null
+        hasFavorites = null
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -91,12 +95,24 @@ class TvFavoritesFragment : BrowseSupportFragment() {
             startEntranceTransition()
         }, 2000)
 
+        favoritesViewModel.favoriteNoMovies.observe(viewLifecycleOwner, { noMovies ->
+            favoritesViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, { noTvShows ->
+                if (noMovies && noTvShows) {
+                    hasFavorites?.hasFavorites(false)
+                }
+            })
+        })
+
         favoritesViewModel.movieResult.observe(viewLifecycleOwner, {
-            movieRowsAdapter(it)
+            if (!it.isNullOrEmpty()) {
+                movieRowsAdapter(it)
+            }
         })
 
         favoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
-            tvShowsRowsAdapter(it)
+            if (!it.isNullOrEmpty()) {
+                tvShowsRowsAdapter(it)
+            }
         })
 
         prepareBackgroundManager()
@@ -105,8 +121,8 @@ class TvFavoritesFragment : BrowseSupportFragment() {
     }
 
     private fun initRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, "ფილმები"), ArrayObjectAdapter(TvCardPresenter()))
-        val secondHeaderItem = ListRow(HeaderItem(1, "სერიალები"), ArrayObjectAdapter(TvCardPresenter()))
+        val firstHeaderItem = ListRow(HeaderItem(0, ""), ArrayObjectAdapter(TvCardPresenter()))
+        val secondHeaderItem = ListRow(HeaderItem(1, ""), ArrayObjectAdapter(TvCardPresenter()))
         val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }

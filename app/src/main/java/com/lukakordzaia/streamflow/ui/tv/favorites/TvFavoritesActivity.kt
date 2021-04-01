@@ -1,13 +1,18 @@
 package com.lukakordzaia.streamflow.ui.tv.favorites
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.helpers.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
+import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_sidebar.*
@@ -15,8 +20,10 @@ import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
 import kotlinx.android.synthetic.main.tv_top_title_header.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvFavoritesActivity: BaseFragmentActivity(), TvCheckTitleSelected {
+class TvFavoritesActivity: BaseFragmentActivity(), TvCheckTitleSelected, TvHasFavoritesListener {
     private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
+
+    private var hasFavorites = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +50,14 @@ class TvFavoritesActivity: BaseFragmentActivity(), TvCheckTitleSelected {
         googleSignOut(tv_sidebar_signout)
         googleProfileDetails(tv_sidebar_profile_photo, tv_sidebar_profile_username)
 
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+            if (!hasFavorites) {
+                this.createToast("სამწუხაროდ, არ გაქვთ ფავორიტები არჩეული")
+            }
+        }, 2500)
+
+
         tvDetailsViewModel.singleTitleData.observe(this, {
             home_top_name.text = it.secondaryName
             Picasso.get().load(it.covers?.data?.x1050)
@@ -65,5 +80,10 @@ class TvFavoritesActivity: BaseFragmentActivity(), TvCheckTitleSelected {
 
     override fun getTitleId(titleId: Int, continueWatchingDetails: DbTitleData?) {
         tvDetailsViewModel.getSingleTitleData(titleId)
+    }
+
+    override fun hasFavorites(has: Boolean) {
+        Log.d("hasfavorites", has.toString())
+        hasFavorites = has
     }
 }
