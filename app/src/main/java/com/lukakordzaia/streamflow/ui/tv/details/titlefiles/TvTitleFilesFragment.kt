@@ -17,7 +17,6 @@ class TvTitleFilesFragment : Fragment(R.layout.tv_title_files_fragment) {
                 parentFragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.slide_from_top, R.anim.slide_out_down)
                         .replace(R.id.tv_details_fr_nav_host, TvDetailsFragment())
-                        .show(TvDetailsFragment())
                         .commit()
             }
         }

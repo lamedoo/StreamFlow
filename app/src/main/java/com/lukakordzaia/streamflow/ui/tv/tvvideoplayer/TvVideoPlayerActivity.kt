@@ -211,6 +211,8 @@ class TvVideoPlayerActivity : FragmentActivity() {
             tv_title_player.hideController()
         } else {
             val intent = Intent(this, TvDetailsActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("titleId", titleId)
             intent.putExtra("isTvShow", isTvShow)
             startActivity(intent)

@@ -13,8 +13,8 @@ class TvDetailsActivity : FragmentActivity() {
         setContentView(R.layout.activity_tv_details)
 
         supportFragmentManager.beginTransaction()
-                .add(R.id.tv_details_fr_nav_host, tvDetailsFragment)
-                .show(tvDetailsFragment)
+                .replace(R.id.tv_details_fr_nav_host, tvDetailsFragment)
                 .commit()
     }
+
 }

@@ -233,7 +233,6 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                 parentFragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
                         .replace(R.id.tv_details_fr_nav_host, TvTitleFilesFragment())
-                        .show(TvTitleFilesFragment())
                         .commit()
             }
             this.hasFocus = hasFocus
