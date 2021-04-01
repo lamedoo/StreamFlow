@@ -78,8 +78,10 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             tv_sidebar.setGone()
         }
         home.setOnClickListener {
-            startActivity(Intent(this, TvActivity::class.java))
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            val intent = Intent(this, TvActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
             tv_sidebar.setGone()
         }
         favorites.setOnClickListener {
