@@ -16,6 +16,7 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.customviews.SearchEditText
 import com.lukakordzaia.streamflow.utils.*
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
+import kotlinx.android.synthetic.main.main_top_toolbar.*
 import kotlinx.android.synthetic.main.phone_search_titles_framgent_new.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -31,6 +32,9 @@ class SearchTitlesFragment : Fragment(R.layout.phone_search_titles_framgent_new)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        home_favorites.setGone()
+        home_profile.setGone()
 
         searchTitlesViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {

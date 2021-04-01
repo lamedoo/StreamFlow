@@ -16,6 +16,7 @@ import com.lukakordzaia.streamflow.helpers.DotsIndicatorDecoration
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
+import kotlinx.android.synthetic.main.main_top_toolbar.*
 import kotlinx.android.synthetic.main.phone_categories_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,6 +28,9 @@ class CategoriesFragment : Fragment(R.layout.phone_categories_framgent) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        home_favorites.setGone()
+        home_profile.setGone()
 
         categoriesViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {

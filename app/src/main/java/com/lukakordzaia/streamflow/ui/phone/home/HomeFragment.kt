@@ -124,8 +124,8 @@ class HomeFragment : BaseFragment() {
                 { titleId: Int, titleName: String ->
                     viewModel.onContinueWatchingInfoPressed(titleId, titleName)
                 })
-        rv_main_watched_titles.adapter = homeDbTitlesAdapter
-        rv_main_watched_titles.layoutManager = dbLayout
+        rv_continue_watching_titles.adapter = homeDbTitlesAdapter
+        rv_continue_watching_titles.layoutManager = dbLayout
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (auth.currentUser == null) {
@@ -139,11 +139,9 @@ class HomeFragment : BaseFragment() {
 
         viewModel.continueWatchingList.observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
-                main_watched_titles_none.setVisible()
-                rv_main_watched_titles.setGone()
+                continue_watching_container.setGone()
             } else {
-                main_watched_titles_none.setGone()
-                rv_main_watched_titles.setVisible()
+                continue_watching_container.setVisible()
                 homeDbTitlesAdapter.setWatchedTitlesList(it)
             }
         })
