@@ -2,16 +2,24 @@ package com.lukakordzaia.streamflow.ui.tv.search
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
+import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSearchFragmentNew : BrowseSupportFragment() {
@@ -19,6 +27,7 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
     private val searchTitlesViewModel by viewModel<SearchTitlesViewModel>()
     private var page = 1
     private var searchQuery = ""
+    private var hasFocus = false
 
     var onFirstItem: TvCheckFirstItem? = null
 
@@ -32,21 +41,67 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
         onFirstItem = null
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        workaroundFocus()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        val containerDock = view!!.findViewById<View>(R.id.browse_container_dock) as FrameLayout
+        val params = containerDock.layoutParams as ViewGroup.MarginLayoutParams
+        val resources: Resources = inflater.context.resources
+        val newHeaderMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, resources.displayMetrics).toInt()
+        val offsetToZero: Int = -resources.getDimensionPixelSize(R.dimen.lb_browse_rows_margin_top)
+        params.topMargin = offsetToZero + newHeaderMargin
+        containerDock.layoutParams = params
+
+        return view
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onItemViewClickedListener = ItemViewClickedListener()
         onItemViewSelectedListener = ItemViewSelectedListener()
 
+        headersState = HEADERS_DISABLED
+
+        setHeaderPresenterSelector(object : PresenterSelector() {
+            override fun getPresenter(item: Any?): Presenter {
+                return TvHeaderItemPresenter()
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val query = (activity as TvSearchActivity).getSearchQuery()
+        searchTitlesViewModel.searchList.observe(viewLifecycleOwner, { list ->
+            Log.d("searchquery", list.toString())
+            val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter()).apply {
+                list.forEach {
+                    add(it)
+                }
+            }
+            rowsAdapter.add(ListRow(listRowAdapter))
 
-            Log.d("searchquery", query)
+            setupUIElements()
+        })
     }
+
+    fun setSearchQuery(query: String) {
+        searchTitlesViewModel.getSearchTitlesTv(query, page)
+    }
+
+    private fun setupUIElements() {
+//        badgeDrawable = resources.getDrawable(R.drawable.streamflowlogo)
+//        title = "StreamFlow"
+        isHeadersTransitionOnBackEnabled = true
+        brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
+        adapter = rowsAdapter
+    }
+
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
         override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row) {
@@ -74,6 +129,21 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
             if (selectedIndex != -1 && currentRowAdapter.size() - 1 == selectedIndex) {
                 page++
                 searchTitlesViewModel.getSearchTitlesTv(searchQuery, page)
+            }
+        }
+    }
+
+    private fun workaroundFocus() {
+        if (view != null) {
+            val viewToFocus = requireActivity().findViewById<View>(R.id.tv_search_title_text)
+            val browseFrameLayout: BrowseFrameLayout = requireView().findViewById(androidx.leanback.R.id.browse_frame)
+            browseFrameLayout.onFocusSearchListener = BrowseFrameLayout.OnFocusSearchListener setOnFocusSearchListener@{ _: View?, direction: Int ->
+                if (direction == View.FOCUS_UP) {
+                    this.hasFocus = true
+                    return@setOnFocusSearchListener viewToFocus
+                } else {
+                    return@setOnFocusSearchListener null
+                }
             }
         }
     }
