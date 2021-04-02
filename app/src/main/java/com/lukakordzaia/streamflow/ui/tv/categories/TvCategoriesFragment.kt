@@ -42,6 +42,17 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        when (activity?.intent?.getSerializableExtra("type") as Int) {
+            AppConstants.TV_CATEGORY_NEW_MOVIES -> {
+                tvCategoriesViewModel.getNewMoviesTv(page)
+            }
+            AppConstants.TV_CATEGORY_TOP_MOVIES -> {
+                tvCategoriesViewModel.getTopMoviesTv(page)
+            }
+            AppConstants.TV_CATEGORY_TOP_TV_SHOWS -> {
+                tvCategoriesViewModel.getTopTvShowsTv(page)
+            }
+        }
         loadData()
         adapter = gridAdapter
     }
