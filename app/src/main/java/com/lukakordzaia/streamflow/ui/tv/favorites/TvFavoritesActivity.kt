@@ -14,7 +14,9 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_tv_favorites.*
 import kotlinx.android.synthetic.main.tv_sidebar.*
 import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
 import kotlinx.android.synthetic.main.tv_top_title_header.*
@@ -53,6 +55,7 @@ class TvFavoritesActivity: BaseFragmentActivity(), TvCheckTitleSelected, TvHasFa
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
 
             if (!hasFavorites) {
+                no_favorites_container.setVisible()
                 this.createToast("სამწუხაროდ, არ გაქვთ ფავორიტები არჩეული")
             }
         }, 2500)

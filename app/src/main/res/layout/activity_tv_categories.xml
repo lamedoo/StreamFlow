@@ -11,8 +11,8 @@
     <include
         layout="@layout/tv_sidebar_collapsed"/>
 
-    <include
-        layout="@layout/tv_top_title_header"/>
+<!--    <include-->
+<!--        layout="@layout/tv_top_title_header"/>-->
 
     <fragment
         android:name="com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesFragment"
