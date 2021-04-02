@@ -3,18 +3,18 @@ package com.lukakordzaia.streamflow.ui.tv.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
-import com.lukakordzaia.streamflow.helpers.SearchSupportFragment
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchResultProvider {
+class TvSearchFragmentNew : BrowseSupportFragment() {
     private val rowsAdapter = ArrayObjectAdapter(CustomListRowPresenter())
     private val searchTitlesViewModel by viewModel<SearchTitlesViewModel>()
     private var page = 1
@@ -32,62 +32,20 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
         onFirstItem = null
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSearchResultProvider(this)
-        setOnItemViewClickedListener(ItemViewClickedListener())
-        setOnItemViewSelectedListener(ItemViewSelectedListener())
-//        setSpeechRecognitionCallback {
-//            startActivityForResult(recognizerIntent, 0x00000010)
-//        }
+        onItemViewClickedListener = ItemViewClickedListener()
+        onItemViewSelectedListener = ItemViewSelectedListener()
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchTitlesViewModel.searchList.observe(viewLifecycleOwner, {
-            val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter()).apply {
-                it.forEach {
-                    add(it)
-                }
-            }
-            rowsAdapter.add(ListRow(listRowAdapter))
-        })
-    }
+        val query = (activity as TvSearchActivity).getSearchQuery()
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        when (requestCode) {
-//            0x00000010 -> {
-//                when (resultCode) {
-//                    Activity.RESULT_OK -> setSearchQuery(data, true)
-//                }
-//            }
-//        }
-//    }
-
-    override fun getResultsAdapter(): ObjectAdapter {
-        return rowsAdapter
-    }
-
-    override fun onQueryTextChange(newQuery: String): Boolean {
-        if (newQuery.isBlank()) {
-            searchTitlesViewModel.clearSearchResults()
-            rowsAdapter.clear()
-        }
-        return true
-    }
-
-    override fun onQueryTextSubmit(query: String): Boolean {
-        rowsAdapter.clear()
-        if (query.isNotBlank()) {
-            searchQuery = query
-            searchTitlesViewModel.getSearchTitlesTv(query, page)
-        } else {
-            searchTitlesViewModel.clearSearchResults()
-            rowsAdapter.clear()
-        }
-        return true
+            Log.d("searchquery", query)
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
