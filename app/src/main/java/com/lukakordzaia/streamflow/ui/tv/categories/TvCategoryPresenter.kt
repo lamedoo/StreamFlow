@@ -22,7 +22,7 @@ class TvCategoryPresenter : Presenter() {
         val movie = item as TitleList.Data
         val cardView = viewHolder.view as TvDefaultCardView
 
-        if (!movie.primaryName.isNullOrBlank()) {
+        if (movie.primaryName.isNotBlank()) {
             cardView.tv_default_card_name.text = movie.primaryName
         } else {
             cardView.tv_default_card_name.text = movie.secondaryName

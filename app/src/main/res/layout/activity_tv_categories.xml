@@ -11,8 +11,8 @@
     <include
         layout="@layout/tv_sidebar_collapsed"/>
 
-<!--    <include-->
-<!--        layout="@layout/tv_top_title_header"/>-->
+    <include
+        layout="@layout/tv_top_title_header"/>
 
     <fragment
         android:name="com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesFragment"
@@ -21,8 +21,8 @@
         android:layout_height="0dp"
         android:layout_marginStart="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent="1" />
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintHeight_percent="0.6" />
 
     <ImageView
         android:layout_width="270dp"

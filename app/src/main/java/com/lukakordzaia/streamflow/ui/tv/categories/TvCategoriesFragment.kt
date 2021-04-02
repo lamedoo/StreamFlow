@@ -85,9 +85,9 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
 
-//            if (item is TitleList.Data) {
-//                onTitleSelected?.getTitleId(item.id, null)
-//            }
+            if (item is TitleList.Data) {
+                onTitleSelected?.getTitleId(item.id, null)
+            }
 
             val gridSize = Array(gridAdapter.size()) { i -> (i * 1) + 1 }.toList()
 
