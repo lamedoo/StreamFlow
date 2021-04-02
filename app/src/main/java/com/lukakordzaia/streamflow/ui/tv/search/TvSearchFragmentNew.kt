@@ -23,8 +23,8 @@ import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSearchFragmentNew : BrowseSupportFragment() {
-    private val rowsAdapter = ArrayObjectAdapter(CustomListRowPresenter())
     private val searchTitlesViewModel by viewModel<SearchTitlesViewModel>()
+    private lateinit var rowsAdapter: ArrayObjectAdapter
     private var page = 1
     private var searchQuery = ""
     private var hasFocus = false
@@ -72,6 +72,12 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
                 return TvHeaderItemPresenter()
             }
         })
+
+        val listRowPresenter = CustomListRowPresenter().apply {
+            shadowEnabled = false
+            selectEffectEnabled = false
+        }
+        rowsAdapter = ArrayObjectAdapter(listRowPresenter)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,19 +90,27 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
                     add(it)
                 }
             }
-            rowsAdapter.add(ListRow(listRowAdapter))
+            rowsAdapter.add(page-1, ListRow(listRowAdapter))
 
             setupUIElements()
         })
     }
 
     fun setSearchQuery(query: String) {
+        searchQuery = query
         searchTitlesViewModel.getSearchTitlesTv(query, page)
     }
 
+    fun clearRowsAdapter() {
+        page = 1
+        rowsAdapter.clear()
+    }
+
+    fun clearSearchResults() {
+        searchTitlesViewModel.clearSearchResults()
+    }
+
     private fun setupUIElements() {
-//        badgeDrawable = resources.getDrawable(R.drawable.streamflowlogo)
-//        title = "StreamFlow"
         isHeadersTransitionOnBackEnabled = true
         brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
         adapter = rowsAdapter
@@ -129,6 +143,8 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
             if (selectedIndex != -1 && currentRowAdapter.size() - 1 == selectedIndex) {
                 page++
                 searchTitlesViewModel.getSearchTitlesTv(searchQuery, page)
+                Log.d("lastitem", "true")
+                rowsSupportFragment!!.setSelectedPosition(1, true, ListRowPresenter.SelectItemViewHolderTask(0))
             }
         }
     }

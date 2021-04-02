@@ -1,7 +1,6 @@
 package com.lukakordzaia.streamflow.ui.tv.search
 
 import android.os.Bundle
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
@@ -13,10 +12,13 @@ import kotlinx.android.synthetic.main.tv_sidebar.*
 import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
 
 class TvSearchActivity : BaseFragmentActivity() {
+    private lateinit var fragment: TvSearchFragmentNew
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv_search)
+
+        fragment = supportFragmentManager.findFragmentById(R.id.tv_search_fragment) as TvSearchFragmentNew
 
         setSidebarClickListeners(
                 tv_sidebar_search,
@@ -46,9 +48,8 @@ class TvSearchActivity : BaseFragmentActivity() {
 
         tv_search_title_text.setQueryTextChangeListener(object : SearchEditText.QueryTextListener {
             override fun onQueryTextSubmit(query: String?) {
+                fragment.clearRowsAdapter()
                 if (!query.isNullOrBlank()) {
-                    Log.d("searchqueryactivity", query)
-                    val fragment = supportFragmentManager.findFragmentById(R.id.tv_search_fragment) as TvSearchFragmentNew
                     fragment.setSearchQuery(query)
                 }
                 tv_search_title_text.hideKeyboard()

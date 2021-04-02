@@ -29,7 +29,7 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
 
     fun clearSearchResults() {
         fetchSearchTitleList.clear()
-        _searchList.value = mutableListOf()
+        _searchList.value = fetchSearchTitleList
     }
 
     fun getSearchTitles(keywords: String, page: Int) {
