@@ -3,6 +3,7 @@ package com.lukakordzaia.streamflow.di
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
+import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModelNew
 import com.lukakordzaia.streamflow.network.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.repository.*
@@ -36,6 +37,7 @@ val viewModelModule = module {
     viewModel { TvTitleFilesViewModel(get()) }
     viewModel { FavoritesViewModel(get(), get()) }
     viewModel { SingleTopListViewModel(get()) }
+    viewModel { VideoPlayerViewModelNew(get()) }
 }
 
 val repositoryModule = module {

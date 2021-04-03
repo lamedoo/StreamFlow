@@ -30,7 +30,7 @@ class BuildMediaSource(context: Context) {
 
             MergingMediaSource(mediaSource)
         } else {
-            Log.d("mediaitems", titleMediaItemsUri.toString())
+            Log.d("mediaitems1", titleMediaItemsUri.toString())
             val subtitlesSource = SingleSampleMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(titleMediaItemsUri.titleSubUri), textFormat, C.TIME_UNSET)
 

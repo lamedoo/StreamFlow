@@ -8,12 +8,12 @@ import android.view.View
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragmentNew
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 
 
-open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment_video_player) {
+open class VideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.phone_fragment_video_player) {
     private lateinit var videoPlayerData: VideoPlayerData
 
 
@@ -29,7 +29,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         }
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenLanguage, videoPlayerData.isTvShow)
+            getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenEpisode, videoPlayerData.chosenLanguage, videoPlayerData.isTvShow)
         }
     }
 
