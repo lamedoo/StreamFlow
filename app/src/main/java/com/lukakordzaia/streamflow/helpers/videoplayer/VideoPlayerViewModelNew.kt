@@ -19,10 +19,6 @@ import kotlinx.coroutines.launch
 class VideoPlayerViewModelNew(private val repository: SingleTitleRepository) : BaseViewModel() {
     val numOfSeasons = MutableLiveData<Int>()
 
-    private val getSubtitles: MutableList<String> = ArrayList()
-    private val getSeasonEpisodes: MutableList<String> = ArrayList()
-    private val seasonEpisodesIntoUri: MutableList<MediaItem> = ArrayList()
-
     private var getEpisode: String = ""
     private var getSubtitlesNew: String = ""
 
@@ -74,13 +70,6 @@ class VideoPlayerViewModelNew(private val repository: SingleTitleRepository) : B
                 }
             }
         }
-    }
-
-    private fun clearPlayerForNextSeason() {
-        getSeasonEpisodes.clear()
-        seasonEpisodesIntoUri.clear()
-        getTitleNameList.clear()
-        getSubtitles.clear()
     }
 
     fun getTitleFiles(titleId: Int, chosenSeason: Int, chosenEpisode: Int, chosenLanguage: String) {
@@ -173,12 +162,10 @@ class VideoPlayerViewModelNew(private val repository: SingleTitleRepository) : B
         if (singleEpisodeFiles.lang == chosenLanguage) {
             if (singleEpisodeFiles.files.size == 1) {
                 getEpisode = singleEpisodeFiles.files[0].src
-                getSeasonEpisodes.add(singleEpisodeFiles.files[0].src)
             } else if (singleEpisodeFiles.files.size > 1) {
                 singleEpisodeFiles.files.forEach {
                     if (it.quality == "HIGH") {
                         getEpisode = it.src
-                        getSeasonEpisodes.add(it.src)
                     }
                 }
             }
@@ -186,18 +173,15 @@ class VideoPlayerViewModelNew(private val repository: SingleTitleRepository) : B
             if (!singleEpisodeFiles.subtitles.isNullOrEmpty()) {
                 if (singleEpisodeFiles.subtitles.size == 1) {
                     getSubtitlesNew = singleEpisodeFiles.subtitles[0]!!.url
-                    getSubtitles.add(singleEpisodeFiles.subtitles[0]!!.url)
                 } else if (singleEpisodeFiles.subtitles.size > 1) {
                     singleEpisodeFiles.subtitles.forEach {
                         if (it!!.lang.equals(chosenLanguage, true)) {
                             getSubtitlesNew = it.url
-                            getSubtitles.add(it.url)
                         }
                     }
                 }
             } else {
                 getSubtitlesNew = "0"
-                getSubtitles.add("0")
             }
         }
     }

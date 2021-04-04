@@ -102,25 +102,16 @@ open class BaseVideoPlayerFragmentNew(fragment: Int) : Fragment(fragment) {
 
                 if (state == Player.STATE_READY) {
                     episodeHasEnded = true
+                    showContinueWatchingDialog()
                     tracker = ProgressTrackerNew(player, object : ProgressTrackerNew.PositionListener {
                         override fun progress(position: Long) {
-                            exo_live_duration?.text = String.format(
-                                    "%02d:%02d:%02d",
+                            exo_live_duration?.text = String.format("%02d:%02d:%02d",
                                     TimeUnit.MILLISECONDS.toHours(position),
                                     TimeUnit.MILLISECONDS.toMinutes(position) -
-                                            TimeUnit.HOURS.toMinutes(
-                                                    TimeUnit.MILLISECONDS.toHours(
-                                                            position
-                                                    )
-                                            ),
+                                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(position)),
                                     TimeUnit.MILLISECONDS.toSeconds(position) -
-                                            TimeUnit.MINUTES.toSeconds(
-                                                    TimeUnit.MILLISECONDS.toMinutes(
-                                                            position
-                                                    )
-                                            )
+                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
                             )
-
                         }
                     })
                     playerView.keepScreenOn = true
@@ -128,6 +119,7 @@ open class BaseVideoPlayerFragmentNew(fragment: Int) : Fragment(fragment) {
 
                 if (state == Player.STATE_ENDED) {
                     if (episodeHasEnded) {
+                        mediaItemsPlayed++
                         tv_next_button.callOnClick()
                         episodeHasEnded = false
                     }
@@ -135,22 +127,9 @@ open class BaseVideoPlayerFragmentNew(fragment: Int) : Fragment(fragment) {
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                if (mediaItemsPlayed < 4) {
-                    setControllerVisible()
-                }
+                setControllerVisible()
 
-                when (reason) {
-                    Player.MEDIA_ITEM_TRANSITION_REASON_AUTO -> {
-                        mediaItemsPlayed++
-                        showContinueWatchingDialog()
-                    }
-                    Player.MEDIA_ITEM_TRANSITION_REASON_SEEK -> {
-                        mediaItemsPlayed = 0
-                    }
-                    else -> {}
-                }
-
-                Log.d("mediatransition", "${mediaItem?.mediaId}")
+                Log.d("mediatransition", mediaItemsPlayed.toString())
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     if (isTrailer) {
@@ -307,14 +286,8 @@ open class BaseVideoPlayerFragmentNew(fragment: Int) : Fragment(fragment) {
 
     private fun showContinueWatchingDialog() {
         if (mediaItemsPlayed == 4) {
-            videoPlayerViewModel.addContinueWatching(
-                requireContext(),
-                titleId,
-                isTvShow,
-                chosenLanguage
-            )
+            videoPlayerViewModel.addContinueWatching(requireContext(), titleId, isTvShow, chosenLanguage)
             player.pause()
-            tv_title_player?.controllerShowTimeoutMs = 200
 
             continue_watching_dialog_root.setVisible()
 
