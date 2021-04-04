@@ -35,12 +35,12 @@ class TvVideoPlayerActivity : FragmentActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
-                if (tv_next_season_button_controller.isVisible) {
-                    exo_pause.nextFocusUpId = R.id.tv_next_season_button_controller
-                    exo_play.nextFocusUpId = R.id.tv_next_season_button_controller
+                if (tv_next_button.isVisible) {
+                    exo_pause.nextFocusUpId = R.id.tv_next_button
+                    exo_play.nextFocusUpId = R.id.tv_next_button
                 } else if (tv_title_player.player?.mediaItemCount != 1) {
-                    exo_pause.nextFocusUpId = R.id.exo_next
-                    exo_play.nextFocusUpId = R.id.exo_next
+                    exo_pause.nextFocusUpId = R.id.tv_next_button
+                    exo_play.nextFocusUpId = R.id.tv_next_button
                 } else {
                     exo_pause.nextFocusUpId = R.id.tv_subtitle_toggle
                     exo_play.nextFocusUpId = R.id.tv_subtitle_toggle
@@ -72,17 +72,12 @@ class TvVideoPlayerActivity : FragmentActivity() {
 
                 if (tv_title_player.player!!.isPlaying) {
                     tv_subtitle_toggle.nextFocusDownId = R.id.exo_pause
-                    exo_next.nextFocusDownId = R.id.exo_pause
-                    tv_next_season_button_controller?.nextFocusDownId = R.id.exo_pause
+                    tv_next_button.nextFocusDownId = R.id.exo_pause
+                    tv_next_button?.nextFocusDownId = R.id.exo_pause
                 } else {
                     tv_subtitle_toggle.nextFocusDownId = R.id.exo_play
-                    exo_next.nextFocusDownId = R.id.exo_play
-                    tv_next_season_button_controller?.nextFocusDownId = R.id.exo_play
-                }
-
-                if (tv_next_season_button.isFocused) {
-                    exo_play?.requestFocus()
-                    exo_pause?.requestFocus()
+                    tv_next_button.nextFocusDownId = R.id.exo_play
+                    tv_next_button?.nextFocusDownId = R.id.exo_play
                 }
 
                 if (continue_watching_dialog_root.isVisible) {
@@ -94,7 +89,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.showController()
                 }
 
-                if (exo_next.isFocused || tv_next_season_button_controller.isFocused) {
+                if (tv_next_button.isFocused || tv_next_button.isFocused) {
                     tv_subtitle_toggle.requestFocus()
                 } else if (tv_subtitle_toggle.isFocused) {
                     tv_exo_back.requestFocus()
@@ -102,7 +97,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     tv_title_player.exo_rew.callOnClick()
                 }
 
-                if (exo_next.isFocused || tv_next_season_button_controller.isFocused && tv_subtitle_toggle.isGone) {
+                if (tv_next_button.isFocused || tv_next_button.isFocused && tv_subtitle_toggle.isGone) {
                     tv_exo_back.requestFocus()
                 }
 
@@ -121,7 +116,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     if (tv_exo_back.isFocused && tv_subtitle_toggle.isVisible) {
                         tv_subtitle_toggle.requestFocus()
                     } else  if (tv_exo_back.isFocused && tv_subtitle_toggle.isGone){
-                        exo_next.requestFocus()
+                        tv_next_button.requestFocus()
                     } else {
                         tv_title_player.exo_ffwd.callOnClick()
                     }
@@ -129,16 +124,16 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     if (tv_exo_back.isFocused && tv_subtitle_toggle.isVisible) {
                         tv_subtitle_toggle.requestFocus()
                     } else if (tv_subtitle_toggle.isFocused) {
-                        if (tv_next_season_button_controller.isVisible) {
-                            tv_next_season_button_controller.requestFocus()
+                        if (tv_next_button.isVisible) {
+                            tv_next_button.requestFocus()
                         } else {
-                            exo_next.requestFocus()
+                            tv_next_button.requestFocus()
                         }
                     } else if (tv_exo_back.isFocused && tv_subtitle_toggle.isGone) {
-                        if (tv_next_season_button_controller.isVisible) {
-                            tv_next_season_button_controller.requestFocus()
+                        if (tv_next_button.isVisible) {
+                            tv_next_button.requestFocus()
                         } else {
-                            exo_next.requestFocus()
+                            tv_next_button.requestFocus()
                         }
                     } else {
                         tv_title_player.exo_ffwd.callOnClick()

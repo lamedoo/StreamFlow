@@ -8,12 +8,12 @@ import android.view.View
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragmentNew
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 
 
-open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment_video_player) {
+open class VideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.phone_fragment_video_player) {
     private lateinit var videoPlayerData: VideoPlayerData
 
 
@@ -29,7 +29,9 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         }
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenLanguage, videoPlayerData.isTvShow)
+            if (videoPlayerData.trailerUrl == null) {
+                getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenEpisode, videoPlayerData.chosenLanguage, videoPlayerData.isTvShow)
+            }
         }
     }
 
@@ -54,7 +56,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         super.onStart()
         if (Util.SDK_INT >= 24) {
             if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode, videoPlayerData.trailerUrl)
+                initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
             }
             Log.d("videoplaying", "started")
         }
@@ -64,7 +66,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
         super.onResume()
         if (Util.SDK_INT < 24) {
             if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode, videoPlayerData.trailerUrl)
+                initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
             }
             Log.d("videoplaying", "resumed")
         }
@@ -73,14 +75,14 @@ open class VideoPlayerFragment : BaseVideoPlayerFragment(R.layout.phone_fragment
     override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
-            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage, videoPlayerData.trailerUrl)
+            releasePlayer()
             Log.d("videoplaying", "paused")
         }
     }
 
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
-            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage, videoPlayerData.trailerUrl)
+            releasePlayer()
         }
         requireActivity().onBackPressed()
         Log.d("videoplaying", "stopped")

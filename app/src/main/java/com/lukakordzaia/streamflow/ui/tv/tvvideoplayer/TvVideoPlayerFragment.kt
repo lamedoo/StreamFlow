@@ -7,12 +7,12 @@ import android.view.View
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragmentNew
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 
 
-open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_player_fragment) {
+open class TvVideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.tv_video_player_fragment) {
     private lateinit var videoPlayerData: VideoPlayerData
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,12 +44,7 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
         )
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getPlayListFiles(
-                videoPlayerData.titleId,
-                videoPlayerData.chosenSeason,
-                videoPlayerData.chosenLanguage,
-                videoPlayerData.isTvShow
-            )
+            getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenEpisode, videoPlayerData.chosenLanguage, videoPlayerData.isTvShow)
         }
 
 
@@ -58,12 +53,7 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
     override fun onStart() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
-            initPlayer(
-                videoPlayerData.isTvShow,
-                videoPlayerData.watchedTime,
-                videoPlayerData.chosenEpisode,
-                videoPlayerData.trailerUrl
-            )
+            initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
             Log.d("videoplaying", "started")
         }
     }
@@ -71,12 +61,7 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
     override fun onResume() {
         super.onResume()
         if (Util.SDK_INT < 24) {
-            initPlayer(
-                videoPlayerData.isTvShow,
-                videoPlayerData.watchedTime,
-                videoPlayerData.chosenEpisode,
-                videoPlayerData.trailerUrl
-            )
+            initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
             Log.d("videoplaying", "started")
         }
     }
@@ -84,24 +69,14 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragment(R.layout.tv_video_pla
     override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
-            releasePlayer(
-                videoPlayerData.titleId,
-                videoPlayerData.isTvShow,
-                videoPlayerData.chosenLanguage,
-                videoPlayerData.trailerUrl
-            )
+            releasePlayer()
             Log.d("videoplaying", "paused")
         }
     }
 
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
-            releasePlayer(
-                videoPlayerData.titleId,
-                videoPlayerData.isTvShow,
-                videoPlayerData.chosenLanguage,
-                videoPlayerData.trailerUrl
-            )
+            releasePlayer()
             if (!tv_title_player.isControllerVisible) {
                 requireActivity().onBackPressed()
             } else {

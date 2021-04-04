@@ -59,19 +59,17 @@
             <ImageButton
                 android:id="@+id/exo_next"
                 style="@style/ExoMediaButton.Next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:background="@drawable/exo_buttons_focused"
                 android:src="@drawable/exo_next" />
 
             <ImageButton
-                android:id="@+id/tv_next_season_button_controller"
+                android:id="@+id/tv_next_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/exo_buttons_focused"
-                android:src="@drawable/exo_next"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                android:src="@drawable/exo_next" />
 
         </RelativeLayout>
 

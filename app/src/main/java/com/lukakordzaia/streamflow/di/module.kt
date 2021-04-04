@@ -25,7 +25,6 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { SingleTitleViewModel(get(), get()) }
-    viewModel { VideoPlayerViewModel(get()) }
     viewModel { CategoriesViewModel(get()) }
     viewModel { SingleCategoryViewModel(get()) }
     viewModel { SearchTitlesViewModel(get()) }
@@ -36,6 +35,7 @@ val viewModelModule = module {
     viewModel { TvTitleFilesViewModel(get()) }
     viewModel { FavoritesViewModel(get(), get()) }
     viewModel { SingleTopListViewModel(get()) }
+    viewModel { VideoPlayerViewModel(get()) }
 }
 
 val repositoryModule = module {
