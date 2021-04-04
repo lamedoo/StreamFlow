@@ -44,13 +44,7 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.tv_video_
         )
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getPlayListFiles(
-                videoPlayerData.titleId,
-                videoPlayerData.chosenSeason,
-                videoPlayerData.chosenEpisode,
-                videoPlayerData.chosenLanguage,
-                videoPlayerData.isTvShow
-            )
+            getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenEpisode, videoPlayerData.chosenLanguage, videoPlayerData.isTvShow)
         }
 
 
@@ -59,12 +53,7 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.tv_video_
     override fun onStart() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
-            initPlayer(
-                videoPlayerData.isTvShow,
-                videoPlayerData.watchedTime,
-                videoPlayerData.chosenEpisode,
-                videoPlayerData.trailerUrl
-            )
+            initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
             Log.d("videoplaying", "started")
         }
     }
@@ -72,12 +61,7 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.tv_video_
     override fun onResume() {
         super.onResume()
         if (Util.SDK_INT < 24) {
-            initPlayer(
-                videoPlayerData.isTvShow,
-                videoPlayerData.watchedTime,
-                videoPlayerData.chosenEpisode,
-                videoPlayerData.trailerUrl
-            )
+            initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
             Log.d("videoplaying", "started")
         }
     }
@@ -85,24 +69,14 @@ open class TvVideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.tv_video_
     override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
-            releasePlayer(
-                videoPlayerData.titleId,
-                videoPlayerData.isTvShow,
-                videoPlayerData.chosenLanguage,
-                videoPlayerData.trailerUrl
-            )
+            releasePlayer()
             Log.d("videoplaying", "paused")
         }
     }
 
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
-            releasePlayer(
-                videoPlayerData.titleId,
-                videoPlayerData.isTvShow,
-                videoPlayerData.chosenLanguage,
-                videoPlayerData.trailerUrl
-            )
+            releasePlayer()
             if (!tv_title_player.isControllerVisible) {
                 requireActivity().onBackPressed()
             } else {

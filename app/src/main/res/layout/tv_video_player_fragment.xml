@@ -25,26 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <Button
-        android:id="@+id/tv_next_season_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="70dp"
-        android:ellipsize="end"
-        android:letterSpacing="0"
-        android:maxLines="2"
-        android:padding="12dp"
-        android:textSize="14sp"
-        android:visibility="gone"
-        android:textColor="@color/black"
-        android:background="@drawable/exo_next_season_focused"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="შემდეგი სეზონი: 2"
-        tools:visibility="visible" />
-
     <include
         layout="@layout/continue_watching_dialog"/>
 

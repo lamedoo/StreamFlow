@@ -5,7 +5,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.ui.PlayerView
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
+import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 
 
 class MediaPlayerClass(private val player: SimpleExoPlayer) {
@@ -19,10 +19,9 @@ class MediaPlayerClass(private val player: SimpleExoPlayer) {
         player.play()
     }
 
-    fun releasePlayer(onRelease: (playBackOptions: VideoPlayerInfo) -> Unit) {
+    fun releasePlayer(onRelease: (playBackOptions: PlayerDurationInfo) -> Unit) {
         onRelease(
-            VideoPlayerInfo(
-                player.currentWindowIndex,
+            PlayerDurationInfo(
                 player.currentPosition,
                 player.duration
             )

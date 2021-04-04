@@ -29,7 +29,9 @@ open class VideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.phone_fragm
         }
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenEpisode, videoPlayerData.chosenLanguage, videoPlayerData.isTvShow)
+            if (videoPlayerData.trailerUrl == null) {
+                getPlayListFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason, videoPlayerData.chosenEpisode, videoPlayerData.chosenLanguage, videoPlayerData.isTvShow)
+            }
         }
     }
 
@@ -54,7 +56,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.phone_fragm
         super.onStart()
         if (Util.SDK_INT >= 24) {
             if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode, videoPlayerData.trailerUrl)
+                initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
             }
             Log.d("videoplaying", "started")
         }
@@ -64,7 +66,7 @@ open class VideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.phone_fragm
         super.onResume()
         if (Util.SDK_INT < 24) {
             if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                initPlayer(videoPlayerData.isTvShow, videoPlayerData.watchedTime, videoPlayerData.chosenEpisode, videoPlayerData.trailerUrl)
+                initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
             }
             Log.d("videoplaying", "resumed")
         }
@@ -73,14 +75,14 @@ open class VideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.phone_fragm
     override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
-            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage, videoPlayerData.trailerUrl)
+            releasePlayer()
             Log.d("videoplaying", "paused")
         }
     }
 
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
-            releasePlayer(videoPlayerData.titleId, videoPlayerData.isTvShow, videoPlayerData.chosenLanguage, videoPlayerData.trailerUrl)
+            releasePlayer()
         }
         requireActivity().onBackPressed()
         Log.d("videoplaying", "stopped")

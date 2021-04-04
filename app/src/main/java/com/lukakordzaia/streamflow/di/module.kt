@@ -3,7 +3,6 @@ package com.lukakordzaia.streamflow.di
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
-import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModelNew
 import com.lukakordzaia.streamflow.network.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.repository.*
@@ -26,7 +25,6 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { SingleTitleViewModel(get(), get()) }
-    viewModel { VideoPlayerViewModel(get()) }
     viewModel { CategoriesViewModel(get()) }
     viewModel { SingleCategoryViewModel(get()) }
     viewModel { SearchTitlesViewModel(get()) }
@@ -37,7 +35,7 @@ val viewModelModule = module {
     viewModel { TvTitleFilesViewModel(get()) }
     viewModel { FavoritesViewModel(get(), get()) }
     viewModel { SingleTopListViewModel(get()) }
-    viewModel { VideoPlayerViewModelNew(get()) }
+    viewModel { VideoPlayerViewModel(get()) }
 }
 
 val repositoryModule = module {

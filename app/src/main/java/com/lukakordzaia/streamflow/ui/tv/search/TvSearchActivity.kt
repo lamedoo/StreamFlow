@@ -7,6 +7,7 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.customviews.SearchEditText
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.showKeyboard
 import kotlinx.android.synthetic.main.activity_tv_search.*
 import kotlinx.android.synthetic.main.tv_sidebar.*
 import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
@@ -45,6 +46,9 @@ class TvSearchActivity : BaseFragmentActivity() {
         googleSignIn(tv_sidebar_signin)
         googleSignOut(tv_sidebar_signout)
         googleProfileDetails(tv_sidebar_profile_photo, tv_sidebar_profile_username)
+
+        tv_search_title_text.requestFocus()
+        tv_search_title_text.showKeyboard()
 
         tv_search_title_text.setQueryTextChangeListener(object : SearchEditText.QueryTextListener {
             override fun onQueryTextSubmit(query: String?) {

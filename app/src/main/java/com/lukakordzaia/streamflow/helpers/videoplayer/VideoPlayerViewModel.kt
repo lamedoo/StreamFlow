@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.streamflow.database.DbDetails
+import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 import com.lukakordzaia.streamflow.datamodels.TitleFiles
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
@@ -17,41 +18,37 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
 class VideoPlayerViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
-    val numOfSeasons = MutableLiveData<Int>()
+    private val numOfSeasons = MutableLiveData<Int>()
 
-    private val getSubtitles: MutableList<String> = ArrayList()
-    private val getSeasonEpisodes: MutableList<String> = ArrayList()
-    private val seasonEpisodesIntoUri: MutableList<MediaItem> = ArrayList()
+    private var getEpisode: String = ""
+    private var getSubtitles: String = ""
+    val mediaAndSubtitle = MutableLiveData<TitleMediaItemsUri>()
 
-    val titleIdForDb = MutableLiveData<Int>()
+    private val _videoPlayerInfo = MutableLiveData<VideoPlayerInfo>()
+    val videoPlayerInfo: LiveData<VideoPlayerInfo> = _videoPlayerInfo
+
     private val playbackPositionForDb = MutableLiveData(0L)
     private val titleDurationForDb = MutableLiveData(0L)
-    val seasonForDb = MutableLiveData(1)
-    private val episodeForDb = MutableLiveData<Int>()
-    val languageForDb = MutableLiveData<String>()
 
-    private val getTitleNameList: MutableList<String> = ArrayList()
+    private val _setTitleNameList = MutableLiveData<String>()
+    val setTitleName: LiveData<String> = _setTitleNameList
 
-    private val _setTitleNameList = MutableLiveData<List<String>>()
-    val setTitleName: LiveData<List<String>> = _setTitleNameList
+    var totalEpisodesInSeason = MutableLiveData<Int>()
 
-    val mediaAndSubtitle = MutableLiveData<List<TitleMediaItemsUri>>()
-
-    fun setVideoPlayerInfo(videoPlayerInfo: VideoPlayerInfo) {
-        playbackPositionForDb.value = videoPlayerInfo.playbackPosition
-        episodeForDb.value = videoPlayerInfo.currentWindow
-        titleDurationForDb.value = videoPlayerInfo.titleDuration
+    fun setVideoPlayerInfo(playerDurationInfo: PlayerDurationInfo) {
+        playbackPositionForDb.value = playerDurationInfo.playbackPosition
+        titleDurationForDb.value = playerDurationInfo.titleDuration
     }
 
-    fun addContinueWatching(context: Context, titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
+    fun addContinueWatching(context: Context) {
         val dbDetails = DbDetails(
-                titleId,
-                chosenLanguage,
+                videoPlayerInfo.value!!.titleId,
+                videoPlayerInfo.value!!.chosenLanguage,
                 playbackPositionForDb.value!!,
                 titleDurationForDb.value!!,
-                isTvShow,
-                seasonForDb.value!!,
-                episodeForDb.value!! + 1
+                videoPlayerInfo.value!!.isTvShow,
+                videoPlayerInfo.value!!.chosenSeason,
+                videoPlayerInfo.value!!.chosenEpisode
         )
         if (playbackPositionForDb.value!! > 0 && titleDurationForDb.value!! > 0) {
             if (currentUser() != null) {
@@ -71,89 +68,78 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
         }
     }
 
-    private fun clearPlayerForNextSeason() {
-        getSeasonEpisodes.clear()
-        seasonEpisodesIntoUri.clear()
-        getTitleNameList.clear()
-        getSubtitles.clear()
-    }
+    fun getTitleFiles(videoPlayerInfo: VideoPlayerInfo) {
+        _videoPlayerInfo.value = VideoPlayerInfo(videoPlayerInfo.titleId,
+                videoPlayerInfo.isTvShow,
+                videoPlayerInfo.chosenSeason,
+                videoPlayerInfo.chosenEpisode,
+                videoPlayerInfo.chosenLanguage
+        )
 
-    fun getPlaylistFiles(titleId: Int, chosenSeason: Int, chosenLanguage: String) {
-        seasonForDb.value = chosenSeason
-        titleIdForDb.value = titleId
-        languageForDb.value = chosenLanguage
-        clearPlayerForNextSeason()
+        getEpisode = ""
+
         viewModelScope.launch {
-            when (val files = repository.getSingleTitleFiles(titleId, chosenSeason)) {
+            when (val files = repository.getSingleTitleFiles(videoPlayerInfo.titleId, videoPlayerInfo.chosenSeason)) {
                 is Result.Success -> {
-                    val season = files.data.data
-                    season.forEach { singleEpisode ->
-                        getTitleNameList.add(singleEpisode.title)
-                        singleEpisode.files.forEach { singleEpisodeFiles ->
-                            checkAvailability(singleEpisodeFiles, chosenLanguage)
-                        }
+                    totalEpisodesInSeason.value = files.data.data.size
+
+                    val season = if (videoPlayerInfo.chosenSeason == 0) {
+                        files.data.data[0]
+                    } else {
+                        files.data.data[videoPlayerInfo.chosenEpisode - 1]
                     }
 
-                    if (getSeasonEpisodes.size < season.size) {
-                        newToastMessage("${getSeasonEpisodes.size + 1} ეპიზოდიდან ავტომატურად გადაირთვება ინგლისურ ენაზე")
-                        val restOfSeason = season.subList(getSeasonEpisodes.size, season.size)
-                        restOfSeason.forEach { singleEpisode ->
-                            singleEpisode.files.forEach { singleEpisodeFiles ->
-                                checkAvailability(singleEpisodeFiles, "ENG")
-                            }
-                        }
+                    _setTitleNameList.value = season.title
+
+                    season.files.forEach { singleFiles ->
+                        checkAvailability(singleFiles, videoPlayerInfo.chosenLanguage)
                     }
 
-                    getSeasonEpisodes.forEach {
-                        val items = MediaItem.fromUri(Uri.parse(it))
-                        seasonEpisodesIntoUri.add(items)
+                    val episodeIntoUri = if (getEpisode.isNotBlank()) {
+                        MediaItem.fromUri(Uri.parse(getEpisode))
+                    } else {
+                        checkAvailability(season.files[0], season.files[0].lang)
+                        newToastMessage("${videoPlayerInfo.chosenLanguage} - ვერ მოიძებნა. ავტომატურად ჩაირთო - ${season.files[0].lang}")
+                        MediaItem.fromUri(Uri.parse(getEpisode))
                     }
 
-                    _setTitleNameList.value = getTitleNameList
+                    Log.d("episodlink", getEpisode)
 
-                    val mediaItemsList: MutableList<TitleMediaItemsUri> = ArrayList()
 
-                    var i = 0
-                    while (i < getSubtitles.size) {
-                        mediaItemsList.add(TitleMediaItemsUri(seasonEpisodesIntoUri[i], getSubtitles[i]))
-                        i++
-                    }
-
-                    mediaAndSubtitle.value = mediaItemsList
-                    Log.d("subtitlesseries", getSubtitles.toString())
+                    val mediaItems = TitleMediaItemsUri(episodeIntoUri, getSubtitles)
+                    mediaAndSubtitle.value = mediaItems
                 }
                 is Result.Error -> {
                     Log.d("errornextepisode", files.exception)
                 }
             }
         }
-
     }
 
     private fun checkAvailability(singleEpisodeFiles: TitleFiles.Data.File, chosenLanguage: String) {
         if (singleEpisodeFiles.lang == chosenLanguage) {
             if (singleEpisodeFiles.files.size == 1) {
-                getSeasonEpisodes.add(singleEpisodeFiles.files[0].src)
+                getEpisode = singleEpisodeFiles.files[0].src
             } else if (singleEpisodeFiles.files.size > 1) {
                 singleEpisodeFiles.files.forEach {
                     if (it.quality == "HIGH") {
-                        getSeasonEpisodes.add(it.src)
+                        getEpisode = it.src
                     }
                 }
             }
 
             if (!singleEpisodeFiles.subtitles.isNullOrEmpty()) {
                 if (singleEpisodeFiles.subtitles.size == 1) {
-                    getSubtitles.add(singleEpisodeFiles.subtitles[0]!!.url)
+                    getSubtitles = singleEpisodeFiles.subtitles[0]!!.url
                 } else if (singleEpisodeFiles.subtitles.size > 1) {
                     singleEpisodeFiles.subtitles.forEach {
                         if (it!!.lang.equals(chosenLanguage, true)) {
-                            getSubtitles.add(it.url)
+                            getSubtitles = it.url
                         }
                     }
                 }
             } else {
-                getSubtitles.add("0")
+                getSubtitles = "0"
             }
         }
     }
