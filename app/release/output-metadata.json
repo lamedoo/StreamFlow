@@ -10,9 +10,9 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 20,
-      "versionName": "1.5.6",
-      "outputFile": "StreamFlow v1.5.6.apk"
+      "versionCode": 21,
+      "versionName": "1.6",
+      "outputFile": "StreamFlow v1.6.apk"
     }
   ]
 }
