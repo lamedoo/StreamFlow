@@ -10,21 +10,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneFavoritesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.phone_favorites_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoritesFragment : BaseFragment() {
+class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
     private val favoritesViewModel: FavoritesViewModel by viewModel()
     private lateinit var favoritesMoviesAdapter: FavoritesAdapter
     private lateinit var favoriteTvShowsAdapter: FavoritesAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_favorites_fragment)
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneFavoritesBinding
+        get() = FragmentPhoneFavoritesBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

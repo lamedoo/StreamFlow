@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.lukakordzaia.streamflow.ui.phone.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/phone_home_framgent" >
+        tools:layout="@layout/fragment_phone_home" >
         <action
             android:id="@+id/action_homeFragment_to_single_title_fragment_nav"
             app:destination="@id/single_title_fragment_nav"

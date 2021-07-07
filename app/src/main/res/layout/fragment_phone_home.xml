@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/home_fragment_scroll"
+        android:id="@+id/fragment_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".ui.phone.home.HomeFragment"
@@ -26,7 +26,7 @@
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/main_movie_day_container"
+                android:id="@+id/movie_day_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
@@ -100,7 +100,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
-                android:id="@+id/home_main_container"
+                android:id="@+id/main_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/fragment_padding"
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/main_new_movies_title"
+                        android:id="@+id/new_movies_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -174,7 +174,7 @@
                         android:layout_height="2dp"
                         android:background="@color/accent_color"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/main_new_movies_title" />
+                        app:layout_constraintTop_toBottomOf="@id/new_movies_title" />
 
                     <ProgressBar
                         android:id="@+id/newMovie_progressBar"
@@ -186,17 +186,17 @@
                         android:visibility="visible"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/main_new_movies_title" />
+                        app:layout_constraintTop_toBottomOf="@id/new_movies_title" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_main_new_movies"
+                        android:id="@+id/rv_new_movies"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="20dp"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/main_new_movies_title"
+                        app:layout_constraintTop_toBottomOf="@id/new_movies_title"
                         app:spanCount="2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -207,7 +207,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/main_top_movies_title"
+                        android:id="@+id/top_movies_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -232,7 +232,7 @@
                         android:layout_height="2dp"
                         android:background="@color/accent_color"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/main_top_movies_title" />
+                        app:layout_constraintTop_toBottomOf="@id/top_movies_title" />
 
                     <ProgressBar
                         android:id="@+id/topMovie_progressBar"
@@ -244,28 +244,28 @@
                         android:visibility="visible"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/main_top_movies_title" />
+                        app:layout_constraintTop_toBottomOf="@id/top_movies_title" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_main_top_movies"
+                        android:id="@+id/rv_top_movies"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="20dp"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/main_top_movies_title"
+                        app:layout_constraintTop_toBottomOf="@id/top_movies_title"
                         app:spanCount="2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/top_tvshows_container"
+                    android:id="@+id/top_tvShows_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/main_top_tvshows_title"
+                        android:id="@+id/top_tvShows_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -277,7 +277,7 @@
                         app:layout_constraintTop_toTopOf="parent"/>
 
                     <ImageView
-                        android:id="@+id/top_tvshows_more"
+                        android:id="@+id/top_tvShows_more"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -290,7 +290,7 @@
                         android:layout_height="2dp"
                         android:background="@color/accent_color"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/main_top_tvshows_title" />
+                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_title" />
 
                     <ProgressBar
                         android:id="@+id/topTvShow_progressBar"
@@ -302,17 +302,17 @@
                         android:visibility="visible"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/main_top_tvshows_title" />
+                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_title" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_main_top_tvshows"
+                        android:id="@+id/rv_top_tvShows"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="20dp"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/main_top_tvshows_title"
+                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_title"
                         app:spanCount="2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

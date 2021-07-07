@@ -9,6 +9,7 @@ import android.os.Looper
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -20,11 +21,10 @@ import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.main_top_toolbar.*
-import kotlinx.android.synthetic.main.phone_home_framgent.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
     private val homeViewModel: HomeViewModel by viewModel()
 
     private lateinit var homeDbTitlesAdapter: HomeDbTitlesAdapter
@@ -32,13 +32,12 @@ class HomeFragment : BaseFragment() {
     private lateinit var homeTopMovieAdapter: HomeTopMovieAdapter
     private lateinit var homeTvShowAdapter: HomeTvShowAdapter
 
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneHomeBinding
+        get() = FragmentPhoneHomeBinding::inflate
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_home_framgent)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,6 +47,36 @@ class HomeFragment : BaseFragment() {
             hasInitializedRootView = true
         }
 
+        fragmentListeners()
+        fragmentObservers()
+
+        movieDayContainer()
+        continueWatchingContainer()
+        newMoviesContainer()
+        topMoviesContainer()
+        topTvShowsContainer()
+    }
+
+    private fun fragmentListeners() {
+        home_favorites.setOnClickListener {
+            navController(HomeFragmentDirections.actionHomeFragmentToFavoritesFragment())
+        }
+
+        home_profile.setOnClickListener {
+            navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
+        }
+
+        binding.fragmentScroll.setOnScrollChangeListener { v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            if (scrollY > 0) {
+                binding.toolbar.root.setBackgroundColor(Color.parseColor("#282A38"))
+                binding.toolbar.root.background.alpha = 255
+            } else {
+                binding.toolbar.root.background.alpha = 0
+            }
+        }
+    }
+
+    private fun fragmentObservers() {
         homeViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
@@ -57,72 +86,65 @@ class HomeFragment : BaseFragment() {
             }
         })
 
-        home_favorites.setOnClickListener {
-            navController(HomeFragmentDirections.actionHomeFragmentToFavoritesFragment())
-        }
+        homeViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+            navController(it)
+        })
 
-        home_profile.setOnClickListener {
-            navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
-        }
-        
-        home_fragment_scroll.setOnScrollChangeListener { v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-            if (scrollY > 0) {
-                toolbar.setBackgroundColor(Color.parseColor("#282A38"))
-                toolbar.background.alpha = 255
-            } else {
-                toolbar.background.alpha = 0
-            }
-        }
+        homeViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
+        })
+    }
 
-        //Movie Day
+    private fun movieDayContainer() {
         homeViewModel.movieDayLoader.observe(viewLifecycleOwner, {
             when (it.status) {
-                LoadingState.Status.RUNNING -> movieDay_progressBar.setVisible()
+                LoadingState.Status.RUNNING -> binding.movieDayProgressBar.setVisible()
                 LoadingState.Status.SUCCESS -> {
-                    movieDay_progressBar.setGone()
-                    main_movie_day_container.setVisible()
+                    binding.movieDayProgressBar.setGone()
+                    binding.movieDayContainer.setVisible()
                 }
             }
         })
 
-        homeViewModel.movieDayData.observe(viewLifecycleOwner, { it ->
-            main_movie_day_container.setOnClickListener { _ ->
+        homeViewModel.movieDayData.observe(viewLifecycleOwner, {
+            binding.movieDayContainer.setOnClickListener { _ ->
                 homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it.id)
             }
 
-            Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(movie_day_cover)
+            Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(binding.movieDayCover)
 
             if (it.primaryName.isNotEmpty()) {
-                movie_day_name.text = it.primaryName
+                binding.movieDayName.text = it.primaryName
             } else {
-                movie_day_name.text = it.secondaryName
+                binding.movieDayName.text = it.secondaryName
             }
         })
+    }
 
-        //Continue Watching Titles List
+    private fun continueWatchingContainer() {
         val dbLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeDbTitlesAdapter = HomeDbTitlesAdapter(requireContext(),
-                {
-                    val intent = Intent(context, VideoPlayerActivity::class.java)
-                    intent.putExtra("videoPlayerData", VideoPlayerData(
-                            it.id,
-                            it.isTvShow,
-                            it.season,
-                            it.language,
-                            it.episode,
-                            it.watchedDuration,
-                            null
-                    ))
-                    activity?.startActivity(intent)
-                },
-                {
-                    homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
-                },
-                { titleId: Int, titleName: String ->
-                    homeViewModel.onContinueWatchingInfoPressed(titleId, titleName)
-                })
-        rv_continue_watching_titles.adapter = homeDbTitlesAdapter
-        rv_continue_watching_titles.layoutManager = dbLayout
+            {
+                val intent = Intent(context, VideoPlayerActivity::class.java)
+                intent.putExtra("videoPlayerData", VideoPlayerData(
+                    it.id,
+                    it.isTvShow,
+                    it.season,
+                    it.language,
+                    it.episode,
+                    it.watchedDuration,
+                    null
+                ))
+                activity?.startActivity(intent)
+            },
+            {
+                homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
+            },
+            { titleId: Int, titleName: String ->
+                homeViewModel.onContinueWatchingInfoPressed(titleId, titleName)
+            })
+        binding.rvContinueWatchingTitles.adapter = homeDbTitlesAdapter
+        binding.rvContinueWatchingTitles.layoutManager = dbLayout
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (auth.currentUser == null) {
@@ -136,23 +158,23 @@ class HomeFragment : BaseFragment() {
 
         homeViewModel.continueWatchingList.observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
-                continue_watching_container.setGone()
+                binding.continueWatchingContainer.setGone()
             } else {
-                continue_watching_container.setVisible()
+                binding.continueWatchingContainer.setVisible()
                 homeDbTitlesAdapter.setWatchedTitlesList(it)
             }
         })
+    }
 
-
-        //New Movies List
+    private fun newMoviesContainer() {
         homeViewModel.newMovieLoader.observe(viewLifecycleOwner, {
             when (it.status) {
-                LoadingState.Status.RUNNING -> newMovie_progressBar.setVisible()
-                LoadingState.Status.SUCCESS -> newMovie_progressBar.setGone()
+                LoadingState.Status.RUNNING -> binding.newMovieProgressBar.setVisible()
+                LoadingState.Status.SUCCESS -> binding.newMovieProgressBar.setGone()
             }
         })
 
-        new_movies_more.setOnClickListener {
+        binding.newMoviesMore.setOnClickListener {
             homeViewModel.newMoviesMorePressed()
         }
 
@@ -160,18 +182,19 @@ class HomeFragment : BaseFragment() {
         homeNewMovieAdapter = HomeNewMovieAdapter(requireContext()) {
             homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
-        rv_main_new_movies.adapter = homeNewMovieAdapter
-        rv_main_new_movies.layoutManager = newMovieLayout
+        binding.rvNewMovies.adapter = homeNewMovieAdapter
+        binding.rvNewMovies.layoutManager = newMovieLayout
 
         homeViewModel.newMovieList.observe(viewLifecycleOwner, {
             homeNewMovieAdapter.setMoviesList(it)
         })
+    }
 
-        //Top Movies List
+    private fun topMoviesContainer() {
         homeViewModel.topMovieLoader.observe(viewLifecycleOwner, {
             when (it.status) {
-                LoadingState.Status.RUNNING -> topMovie_progressBar.setVisible()
-                LoadingState.Status.SUCCESS -> topMovie_progressBar.setGone()
+                LoadingState.Status.RUNNING -> binding.topMovieProgressBar.setVisible()
+                LoadingState.Status.SUCCESS -> binding.topMovieProgressBar.setGone()
             }
         })
 
@@ -179,23 +202,23 @@ class HomeFragment : BaseFragment() {
         homeTopMovieAdapter = HomeTopMovieAdapter(requireContext()) {
             homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
-        rv_main_top_movies.adapter = homeTopMovieAdapter
-        rv_main_top_movies.layoutManager = topMovieLayout
+        binding.rvTopMovies.adapter = homeTopMovieAdapter
+        binding.rvTopMovies.layoutManager = topMovieLayout
 
         homeViewModel.topMovieList.observe(viewLifecycleOwner, {
             homeTopMovieAdapter.setMoviesList(it)
         })
 
-        top_movies_more.setOnClickListener {
+        binding.topMoviesMore.setOnClickListener {
             homeViewModel.topMoviesMorePressed()
         }
+    }
 
-
-        //Top TvShows List
+    private fun topTvShowsContainer() {
         homeViewModel.topTvShowsLoader.observe(viewLifecycleOwner, {
             when (it.status) {
-                LoadingState.Status.RUNNING -> topTvShow_progressBar.setVisible()
-                LoadingState.Status.SUCCESS -> topTvShow_progressBar.setGone()
+                LoadingState.Status.RUNNING -> binding.topTvShowProgressBar.setVisible()
+                LoadingState.Status.SUCCESS -> binding.topTvShowProgressBar.setGone()
             }
         })
 
@@ -203,24 +226,16 @@ class HomeFragment : BaseFragment() {
         homeTvShowAdapter = HomeTvShowAdapter(requireContext()) {
             homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
-        rv_main_top_tvshows.adapter = homeTvShowAdapter
-        rv_main_top_tvshows.layoutManager = tvShowLayout
+        binding.rvTopTvShows.adapter = homeTvShowAdapter
+        binding.rvTopTvShows.layoutManager = tvShowLayout
 
         homeViewModel.topTvShowList.observe(viewLifecycleOwner, {
             homeTvShowAdapter.setTvShowsList(it)
         })
 
-        top_tvshows_more.setOnClickListener {
+        binding.topTvShowsMore.setOnClickListener {
             homeViewModel.topTvShowsMorePressed()
         }
-
-        homeViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
-        })
-
-        homeViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

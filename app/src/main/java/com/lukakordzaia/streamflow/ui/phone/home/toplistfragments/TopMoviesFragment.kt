@@ -9,16 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
-import kotlinx.android.synthetic.main.phone_single_category_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TopMoviesFragment : BaseFragment() {
-    private val viewModel by viewModel<SingleTopListViewModel>()
+class TopMoviesFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
+    private val viewModel: SingleTopListViewModel by viewModel()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private var page = 1
     private var pastVisibleItems: Int = 0
@@ -26,20 +25,24 @@ class TopMoviesFragment : BaseFragment() {
     private var totalItemCount: Int = 0
     private var loading = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_single_category_fragment)
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleCategoryBinding
+        get() = FragmentPhoneSingleCategoryBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (!hasInitializedRootView) {
-            Log.d("onviewcreated", "true")
             hasInitializedRootView = true
             viewModel.getTopMovies(page)
         }
 
+        topBarListener("ტოპ ფილმები")
 
+        fragmentObservers()
+        topMoviesContainer()
+    }
+
+    private fun fragmentObservers() {
         viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
@@ -49,28 +52,35 @@ class TopMoviesFragment : BaseFragment() {
             }
         })
 
-        topBarListener("ტოპ ფილმები")
+        viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+            navController(it)
+        })
 
-        val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
+        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
+        })
+    }
 
+    private fun topMoviesContainer() {
         viewModel.topMovieLoader.observe(viewLifecycleOwner, {
             when (it.status) {
-                LoadingState.Status.RUNNING -> single_category_progressBar.setVisible()
-                LoadingState.Status.SUCCESS -> single_category_progressBar.setGone()
+                LoadingState.Status.RUNNING -> binding.progressBar.setVisible()
+                LoadingState.Status.SUCCESS -> binding.progressBar.setGone()
             }
         })
 
+        val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(AppConstants.NAV_TOP_MOVIES_TO_SINGLE, it)
         }
-        rv_single_category.adapter = singleCategoryAdapter
-        rv_single_category.layoutManager = layoutManager
+        binding.rvSingleCategory.adapter = singleCategoryAdapter
+        binding.rvSingleCategory.layoutManager = layoutManager
 
         viewModel.topMovieList.observe(viewLifecycleOwner, {
             singleCategoryAdapter.setCategoryTitleList(it)
         })
 
-        rv_single_category.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.rvSingleCategory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
                     visibleItemCount = layoutManager.childCount
@@ -84,18 +94,10 @@ class TopMoviesFragment : BaseFragment() {
                 }
             }
         })
-
-        viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
-        })
-
-        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
-        })
     }
 
     private fun fetchMoreTopMovies() {
-        single_category_progressBar.setVisible()
+        binding.progressBar.setVisible()
         page++
         Log.d("currentpage", page.toString())
         viewModel.getTopMovies(page)
