@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,7 +106,7 @@ class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
 
 
         favoritesViewModel.movieResult.observe(viewLifecycleOwner, {
-            favoritesMoviesAdapter.setFavoritesTitleList(it)
+            favoritesMoviesAdapter.setItems(it)
         })
     }
 
@@ -147,7 +146,7 @@ class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
         binding.rvFavoritesTvshows.adapter = favoriteTvShowsAdapter
 
         favoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
-            favoriteTvShowsAdapter.setFavoritesTitleList(it)
+            favoriteTvShowsAdapter.setItems(it)
         })
     }
 }

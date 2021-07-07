@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.categories.singlegenre
+package com.lukakordzaia.streamflow.ui.phone.categories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +8,7 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.CategoriesRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleGenreFragmentDirections
 import com.lukakordzaia.streamflow.ui.phone.categories.singlestudio.SingleStudioFragmentDirections
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch

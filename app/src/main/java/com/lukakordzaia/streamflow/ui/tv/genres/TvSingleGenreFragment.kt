@@ -22,7 +22,7 @@ import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
-import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
+import com.lukakordzaia.streamflow.ui.phone.categories.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.utils.AppConstants

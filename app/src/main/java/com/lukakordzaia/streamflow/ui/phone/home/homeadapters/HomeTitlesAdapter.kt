@@ -1,20 +1,25 @@
-package com.lukakordzaia.streamflow.ui.phone.singletitle
+package com.lukakordzaia.streamflow.ui.phone.home.homeadapters
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvHomeItemBinding
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.rv_home_item.view.*
 
-class SingleTitleRelatedAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<SingleTitleRelatedAdapter.ViewHolder>() {
+class HomeTitlesAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeTitlesAdapter.ViewHolder>() {
     private var list: List<TitleList.Data> = ArrayList()
 
-    fun setRelatedList(list: List<TitleList.Data>) {
+    fun setItems(list: List<TitleList.Data>) {
         this.list = list
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0, list.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

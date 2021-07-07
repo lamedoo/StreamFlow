@@ -9,13 +9,17 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.RvFranchiseItemBinding
 import com.lukakordzaia.streamflow.datamodels.FranchiseList
 import com.lukakordzaia.streamflow.datamodels.TitleList
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_franchise_item.view.*
 import kotlinx.android.synthetic.main.rv_search_item.view.*
 
-class TopFranchisesAdapter(private val context: Context, private val onTitleClick: (titleName : String, position: Int) -> Unit) : RecyclerView.Adapter<TopFranchisesAdapter.ViewHolder>() {
+class TopFranchisesAdapter(
+    private val context: Context,
+    private val onTitleClick: (titleName: String, position: Int) -> Unit
+) : RecyclerView.Adapter<TopFranchisesAdapter.ViewHolder>() {
     private var list: List<FranchiseList.Data> = ArrayList()
 
     fun setFranchisesList(list: List<FranchiseList.Data>) {
@@ -25,27 +29,27 @@ class TopFranchisesAdapter(private val context: Context, private val onTitleClic
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.rv_franchise_item, parent, false)
+            RvFranchiseItemBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listModel = list[position]
 
-        holder.titleRoot.setOnClickListener {
-            onTitleClick(listModel.name, position)
-        }
-
-        holder.titleNameGeoTextView.text = listModel.name
-
+        holder.bind(listModel, position)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val titleRoot: ConstraintLayout = view.rv_franchise_item_root
-        val titleNameGeoTextView: TextView = view.rv_franchise_item_name_geo
+    inner class ViewHolder(val view: RvFranchiseItemBinding) : RecyclerView.ViewHolder(view.root) {
+        fun bind(model: FranchiseList.Data, position: Int) {
+            view.rvFranchiseItemName.text = model.name
+
+            view.root.setOnClickListener {
+                onTitleClick(model.name, position)
+            }
+        }
     }
 }

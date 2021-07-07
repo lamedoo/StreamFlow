@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.RvSingleTitleCastItemBinding
 import com.lukakordzaia.streamflow.datamodels.TitleCast
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_single_title_cast_item.view.*
@@ -23,39 +24,38 @@ class SingleTitleCastAdapter(private val context: Context, private val onCastCli
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                LayoutInflater.from(context).inflate(R.layout.rv_single_title_cast_item, parent, false)
+                RvSingleTitleCastItemBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listModel = list[position]
 
-        holder.castRoot.setOnClickListener {
-            onCastClick(listModel.originalName)
-        }
-
-        if (listModel.poster.isNotEmpty()) {
-            Picasso.get().load(listModel.poster).into(holder.castPosterImageView)
-        } else {
-            Picasso.get().load(R.drawable.no_profile_picture).into(holder.castPosterImageView)
-        }
-
-        if (listModel.primaryName.isNotEmpty()) {
-            holder.castNameTextView.text = listModel.primaryName
-        } else {
-            holder.castNameTextView.text = listModel.originalName
-        }
-
+        holder.bind(listModel)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val castRoot: ConstraintLayout = view.rv_cast_item_root
-        val castPosterImageView: ImageView = view.rv_cast_item_poster
-        val castNameTextView: TextView = view.rv_cast_item_name
+    inner class ViewHolder(val view: RvSingleTitleCastItemBinding) : RecyclerView.ViewHolder(view.root) {
+        fun bind(model: TitleCast.Data) {
+            if (model.poster.isNotEmpty()) {
+                Picasso.get().load(model.poster).into(view.rvCastItemPoster)
+            } else {
+                Picasso.get().load(R.drawable.no_profile_picture).into(view.rvCastItemPoster)
+            }
+
+            if (model.primaryName.isNotEmpty()) {
+                view.rvCastItemName.text = model.primaryName
+            } else {
+                view.rvCastItemName.text = model.originalName
+            }
+
+            view.root.setOnClickListener {
+                onCastClick(model.originalName)
+            }
+        }
     }
 
 }

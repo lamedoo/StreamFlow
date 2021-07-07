@@ -10,12 +10,11 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
-import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryAdapter
-import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
+import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
+import com.lukakordzaia.streamflow.ui.phone.categories.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -77,7 +76,7 @@ class SingleStudioFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() 
         binding.rvSingleCategory.layoutManager = layoutManager
 
         singleCategoryViewModel.singleStudioList.observe(viewLifecycleOwner, {
-            singleCategoryAdapter.setCategoryTitleList(it)
+            singleCategoryAdapter.setItems(it)
         })
 
         singleCategoryViewModel.hasMorePage.observe(viewLifecycleOwner, {

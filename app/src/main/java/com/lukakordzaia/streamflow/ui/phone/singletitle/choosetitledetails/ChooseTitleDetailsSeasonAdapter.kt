@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.RvChooseDetailsSeasonItemBinding
 import kotlinx.android.synthetic.main.rv_choose_details_season_item.view.*
 
 class ChooseTitleDetailsSeasonAdapter(
@@ -31,35 +32,36 @@ class ChooseTitleDetailsSeasonAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.rv_choose_details_season_item, parent, false)
+            RvChooseDetailsSeasonItemBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val seasonModel = list[position]
 
-        val isChosen = seasonModel == chosenSeason
-
-        if (isChosen) {
-            holder.seasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.rv_choose_details_season_chosen, null)
-        } else {
-            holder.seasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.rv_choose_details_season, null)
-        }
-
-        holder.seasonContainer.setOnClickListener {
-            onSeasonClick(seasonModel)
-            onSeasonChosen(position)
-        }
-
-        holder.seasonNumberTextView.text = "სეზონი $seasonModel"
+        holder.bind(seasonModel, position)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val seasonContainer: ConstraintLayout = view.rv_season_container
-        val seasonNumberTextView: TextView = view.rv_season_number
+    inner class ViewHolder(val view: RvChooseDetailsSeasonItemBinding) : RecyclerView.ViewHolder(view.root) {
+        fun bind(model: Int, position: Int) {
+            val isChosen = model == chosenSeason
+
+            if (isChosen) {
+                view.rvSeasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.rv_choose_details_season_chosen, null)
+            } else {
+                view.rvSeasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.rv_choose_details_season, null)
+            }
+
+            view.rvSeasonContainer.setOnClickListener {
+                onSeasonClick(model)
+                onSeasonChosen(position)
+            }
+
+            view.rvSeasonNumber.text = "სეზონი $model"
+        }
     }
 }

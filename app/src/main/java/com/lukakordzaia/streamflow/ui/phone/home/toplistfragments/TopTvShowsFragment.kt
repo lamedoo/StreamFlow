@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
-import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryAdapter
+import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -77,7 +77,7 @@ class TopTvShowsFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
         binding.rvSingleCategory.layoutManager = layoutManager
 
         viewModel.topTvShowList.observe(viewLifecycleOwner, {
-            singleCategoryAdapter.setCategoryTitleList(it)
+            singleCategoryAdapter.setItems(it)
         })
 
         binding.rvSingleCategory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
