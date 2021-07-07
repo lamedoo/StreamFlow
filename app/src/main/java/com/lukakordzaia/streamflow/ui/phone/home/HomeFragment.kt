@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
@@ -26,7 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class HomeFragment : BaseFragment() {
-    private val viewModel by viewModel<HomeViewModel>()
+    private val homeViewModel: HomeViewModel by viewModel()
 
     private lateinit var homeDbTitlesAdapter: HomeDbTitlesAdapter
     private lateinit var homeNewMovieAdapter: HomeNewMovieAdapter
@@ -46,15 +45,14 @@ class HomeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (!hasInitializedRootView) {
-            Log.d("onviewcreated", "true")
             hasInitializedRootView = true
         }
 
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+        homeViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.refreshContent(1)
+                    homeViewModel.refreshContent(1)
                 }, 5000)
             }
         })
@@ -77,7 +75,7 @@ class HomeFragment : BaseFragment() {
         }
 
         //Movie Day
-        viewModel.movieDayLoader.observe(viewLifecycleOwner, {
+        homeViewModel.movieDayLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> movieDay_progressBar.setVisible()
                 LoadingState.Status.SUCCESS -> {
@@ -87,9 +85,9 @@ class HomeFragment : BaseFragment() {
             }
         })
 
-        viewModel.movieDayData.observe(viewLifecycleOwner, { it ->
+        homeViewModel.movieDayData.observe(viewLifecycleOwner, { it ->
             main_movie_day_container.setOnClickListener { _ ->
-                viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it.id)
+                homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it.id)
             }
 
             Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(movie_day_cover)
@@ -105,7 +103,6 @@ class HomeFragment : BaseFragment() {
         val dbLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeDbTitlesAdapter = HomeDbTitlesAdapter(requireContext(),
                 {
-//                    viewModel.onContinueWatchingPressed(it)
                     val intent = Intent(context, VideoPlayerActivity::class.java)
                     intent.putExtra("videoPlayerData", VideoPlayerData(
                             it.id,
@@ -119,25 +116,25 @@ class HomeFragment : BaseFragment() {
                     activity?.startActivity(intent)
                 },
                 {
-                    viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
+                    homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
                 },
                 { titleId: Int, titleName: String ->
-                    viewModel.onContinueWatchingInfoPressed(titleId, titleName)
+                    homeViewModel.onContinueWatchingInfoPressed(titleId, titleName)
                 })
         rv_continue_watching_titles.adapter = homeDbTitlesAdapter
         rv_continue_watching_titles.layoutManager = dbLayout
 
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (auth.currentUser == null) {
-                viewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
-                    viewModel.getContinueWatchingTitlesFromApi(it)
+                homeViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
+                    homeViewModel.getContinueWatchingTitlesFromApi(it)
                 })
             } else {
-                viewModel.getContinueWatchingFromFirestore()
+                homeViewModel.getContinueWatchingFromFirestore()
             }
         }
 
-        viewModel.continueWatchingList.observe(viewLifecycleOwner, {
+        homeViewModel.continueWatchingList.observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
                 continue_watching_container.setGone()
             } else {
@@ -148,7 +145,7 @@ class HomeFragment : BaseFragment() {
 
 
         //New Movies List
-        viewModel.newMovieLoader.observe(viewLifecycleOwner, {
+        homeViewModel.newMovieLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> newMovie_progressBar.setVisible()
                 LoadingState.Status.SUCCESS -> newMovie_progressBar.setGone()
@@ -156,22 +153,22 @@ class HomeFragment : BaseFragment() {
         })
 
         new_movies_more.setOnClickListener {
-            viewModel.newMoviesMorePressed()
+            homeViewModel.newMoviesMorePressed()
         }
 
         val newMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeNewMovieAdapter = HomeNewMovieAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
+            homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         rv_main_new_movies.adapter = homeNewMovieAdapter
         rv_main_new_movies.layoutManager = newMovieLayout
 
-        viewModel.newMovieList.observe(viewLifecycleOwner, {
+        homeViewModel.newMovieList.observe(viewLifecycleOwner, {
             homeNewMovieAdapter.setMoviesList(it)
         })
 
         //Top Movies List
-        viewModel.topMovieLoader.observe(viewLifecycleOwner, {
+        homeViewModel.topMovieLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> topMovie_progressBar.setVisible()
                 LoadingState.Status.SUCCESS -> topMovie_progressBar.setGone()
@@ -180,22 +177,22 @@ class HomeFragment : BaseFragment() {
 
         val topMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeTopMovieAdapter = HomeTopMovieAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
+            homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         rv_main_top_movies.adapter = homeTopMovieAdapter
         rv_main_top_movies.layoutManager = topMovieLayout
 
-        viewModel.topMovieList.observe(viewLifecycleOwner, {
+        homeViewModel.topMovieList.observe(viewLifecycleOwner, {
             homeTopMovieAdapter.setMoviesList(it)
         })
 
         top_movies_more.setOnClickListener {
-            viewModel.topMoviesMorePressed()
+            homeViewModel.topMoviesMorePressed()
         }
 
 
         //Top TvShows List
-        viewModel.topTvShowsLoader.observe(viewLifecycleOwner, {
+        homeViewModel.topTvShowsLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> topTvShow_progressBar.setVisible()
                 LoadingState.Status.SUCCESS -> topTvShow_progressBar.setGone()
@@ -204,24 +201,24 @@ class HomeFragment : BaseFragment() {
 
         val tvShowLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeTvShowAdapter = HomeTvShowAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
+            homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         rv_main_top_tvshows.adapter = homeTvShowAdapter
         rv_main_top_tvshows.layoutManager = tvShowLayout
 
-        viewModel.topTvShowList.observe(viewLifecycleOwner, {
+        homeViewModel.topTvShowList.observe(viewLifecycleOwner, {
             homeTvShowAdapter.setTvShowsList(it)
         })
 
         top_tvshows_more.setOnClickListener {
-            viewModel.topTvShowsMorePressed()
+            homeViewModel.topTvShowsMorePressed()
         }
 
-        viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+        homeViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
 
-        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+        homeViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
     }
