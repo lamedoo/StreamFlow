@@ -44,7 +44,7 @@ class TvMainFragment : BrowseSupportFragment() {
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private val page = 1
     lateinit var metrics: DisplayMetrics
-    lateinit var backgroundManager: BackgroundManager
+    private lateinit var backgroundManager: BackgroundManager
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null

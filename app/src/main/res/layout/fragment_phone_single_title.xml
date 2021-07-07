@@ -166,7 +166,7 @@
                         tools:text="ფილმის სახელი"/>
 
                     <include
-                        android:id="@+id/single_title_info_details"
+                        android:id="@+id/info_details"
                         layout="@layout/phone_single_title_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -178,7 +178,7 @@
                         android:id="@+id/single_title_trailer_container"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/single_title_info_details"
+                        app:layout_constraintTop_toBottomOf="@id/info_details"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent">
 
@@ -251,7 +251,7 @@
         android:paddingBottom="20dp">
 
         <TextView
-            android:id="@+id/single_post_play_button"
+            android:id="@+id/play_button"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"
@@ -261,12 +261,12 @@
             android:textAlignment="center"
             android:textStyle="bold"
             android:textColor="@color/text_on_accent_color"
-            app:layout_constraintEnd_toStartOf="@+id/single_post_replay_button"
+            app:layout_constraintEnd_toStartOf="@+id/replay_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/single_post_replay_button"
+            android:id="@+id/replay_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -275,16 +275,16 @@
             android:src="@drawable/replay_icon"
             android:tint="@color/accent_color"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/single_post_play_button"
-            app:layout_constraintEnd_toStartOf="@+id/single_post_to_episodes_button"
-            app:layout_constraintStart_toEndOf="@+id/single_post_play_button"
-            app:layout_constraintTop_toTopOf="@id/single_post_play_button"
+            app:layout_constraintBottom_toBottomOf="@id/play_button"
+            app:layout_constraintEnd_toStartOf="@+id/episodes_button"
+            app:layout_constraintStart_toEndOf="@+id/play_button"
+            app:layout_constraintTop_toTopOf="@id/play_button"
             app:tint="@color/accent_color"
             tools:ignore="UseAppTint"
             tools:visibility="visible" />
 
         <TextView
-            android:id="@+id/single_post_to_episodes_button"
+            android:id="@+id/episodes_button"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -296,9 +296,9 @@
             android:textColor="@color/text_on_accent_color"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/single_post_play_button"
-            app:layout_constraintStart_toEndOf="@id/single_post_play_button"
-            app:layout_constraintTop_toTopOf="@id/single_post_play_button"
+            app:layout_constraintBottom_toBottomOf="@id/play_button"
+            app:layout_constraintStart_toEndOf="@id/play_button"
+            app:layout_constraintTop_toTopOf="@id/play_button"
             tools:visibility="visible" />
 
     </LinearLayout>

@@ -2,19 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.phone.searchtitles.SearchTitlesFragment">
 
     <include layout="@layout/main_top_toolbar" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_titles_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
-        android:padding="@dimen/fragment_padding"
-        tools:context=".ui.phone.searchtitles.SearchTitlesFragment">
+        android:padding="@dimen/fragment_padding">
 
         <com.lukakordzaia.streamflow.ui.customviews.SearchEditText
             android:id="@+id/search_title_text"

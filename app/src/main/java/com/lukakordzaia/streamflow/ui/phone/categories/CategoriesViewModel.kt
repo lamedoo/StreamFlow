@@ -36,20 +36,6 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
         navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleStudioFragment(studioId, studioName))
     }
 
-    fun onSingleTrailerPressed(titleId: Int, trailerUrl: String) {
-        navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToVideoPlayerFragmentNav(
-                VideoPlayerData(
-                        titleId,
-                        false,
-                        0,
-                        "ENG",
-                        0,
-                        0L,
-                        trailerUrl
-                )
-        ))
-    }
-
     fun onSingleTrailerInfoPressed(titleId: Int) {
         navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleTitleFragmentNav(titleId))
     }

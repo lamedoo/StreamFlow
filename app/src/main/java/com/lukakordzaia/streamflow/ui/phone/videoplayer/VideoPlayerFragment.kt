@@ -16,11 +16,10 @@ import kotlinx.android.synthetic.main.phone_fragment_video_player.*
 open class VideoPlayerFragment : BaseVideoPlayerFragmentNew(R.layout.phone_fragment_video_player) {
     private lateinit var videoPlayerData: VideoPlayerData
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        videoPlayerData = activity?.intent!!.getParcelableExtra<VideoPlayerData>("videoPlayerData")
+        videoPlayerData = activity?.intent!!.getParcelableExtra("videoPlayerData") as VideoPlayerData
 
         setExoPlayer(phone_title_player)
 

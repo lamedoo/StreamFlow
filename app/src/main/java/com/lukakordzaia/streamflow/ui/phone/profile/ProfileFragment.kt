@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
 import com.lukakordzaia.streamflow.datamodels.TraktNewList
 import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -30,12 +31,11 @@ import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.connect_traktv_alert_dialog.*
-import kotlinx.android.synthetic.main.phone_profile_framgent.*
 import kotlinx.android.synthetic.main.sync_continue_watching_alert_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ProfileFragment : BaseFragment() {
+class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     private val profileViewModel: ProfileViewModel by viewModel()
     private var googleAccount: GoogleSignInAccount? = null
     private var traktToken: String? = null
@@ -51,15 +51,13 @@ class ProfileFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_profile_framgent)
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneProfileBinding
+        get() = FragmentPhoneProfileBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (!hasInitializedRootView) {
-            Log.d("onviewcreated", "true")
             hasInitializedRootView = true
         }
 
@@ -75,18 +73,18 @@ class ProfileFragment : BaseFragment() {
             .build()
         val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
-        google_sign_in_button.setOnClickListener {
+        binding.googleSignInButton.setOnClickListener {
             val signInIntent: Intent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-        google_sign_out_button.setOnClickListener {
+        binding.googleSignOutButton.setOnClickListener {
             auth.signOut()
             googleSignInClient.signOut()
             updateGoogleUI(null)
         }
 
-        profile_delete_history.setOnClickListener {
+        binding.deleteHistory.setOnClickListener {
             val clearDbDialog = Dialog(requireContext())
             clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog,null))
@@ -108,7 +106,7 @@ class ProfileFragment : BaseFragment() {
             updateTraktUi(false)
         }
 
-        profile_connect_traktv.setOnClickListener {
+        binding.connectTraktv.setOnClickListener {
             traktDialog.setContentView(layoutInflater.inflate(R.layout.connect_traktv_alert_dialog,null))
             traktDialog.show()
             profileViewModel.getDeviceCode()
@@ -147,7 +145,7 @@ class ProfileFragment : BaseFragment() {
             }
         }
 
-        profile_disconnect_traktv.setOnClickListener {
+        binding.disconnectTraktv.setOnClickListener {
             authSharedPreferences.saveAccessToken("")
             authSharedPreferences.saveRefreshToken("")
             updateTraktUi(false)
@@ -216,13 +214,13 @@ class ProfileFragment : BaseFragment() {
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
 //                    updateGoogleUI(user)
-                    Snackbar.make(profile_root,"წარმატებით გაიარეთ ავტორიზაცია", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.profileRoot,"წარმატებით გაიარეთ ავტორიზაცია", Snackbar.LENGTH_SHORT).show()
                     profileViewModel.createUserFirestore()
 
                     showSyncDialog()
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    Snackbar.make(profile_root, "ავტორიზაცია ვერ მოხერხდა", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(binding.profileRoot, "ავტორიზაცია ვერ მოხერხდა", Snackbar.LENGTH_SHORT)
                         .show()
                     updateGoogleUI(null)
                 }
@@ -257,34 +255,32 @@ class ProfileFragment : BaseFragment() {
 
     private fun updateTraktUi(isLoggedIn: Boolean) {
         if (isLoggedIn) {
-            profile_disconnect_traktv.setVisible()
-            profile_connect_traktv.setGone()
+            binding.disconnectTraktv.setVisible()
+            binding.connectTraktv.setGone()
         } else {
-            profile_disconnect_traktv.setGone()
-            profile_connect_traktv.setVisible()
+            binding.disconnectTraktv.setGone()
+            binding.connectTraktv.setVisible()
         }
 
     }
 
     private fun updateGoogleUI(user: FirebaseUser?) {
         if (user != null) {
-            profile_photo.setVisible()
+            binding.profilePhoto.setVisible()
 
             if (googleAccount != null) {
-                profile_username.text = "${googleAccount!!.givenName} ${googleAccount!!.familyName}"
-                Picasso.get().load(googleAccount!!.photoUrl).into(profile_photo)
+                binding.profileUsername.text = "${googleAccount!!.givenName} ${googleAccount!!.familyName}"
+                Picasso.get().load(googleAccount!!.photoUrl).into(binding.profilePhoto)
             }
 
-            google_sign_in_button.setGone()
-            google_sign_out_button.setVisible()
-
-
+            binding.googleSignInButton.setGone()
+            binding.googleSignOutButton.setVisible()
         } else {
-            profile_username.text = ""
-            profile_photo.setGone()
+            binding.profileUsername.text = ""
+            binding.profilePhoto.setGone()
 
-            google_sign_in_button.setVisible()
-            google_sign_out_button.setGone()
+            binding.googleSignInButton.setVisible()
+            binding.googleSignOutButton.setGone()
         }
     }
 

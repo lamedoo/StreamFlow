@@ -6,7 +6,8 @@
 
     <include layout="@layout/fragment_top_toolbar" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/profile_root"
@@ -117,13 +118,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/profile_connect_traktv"
+            android:id="@+id/connect_traktv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/phone_profile_item"
             android:orientation="vertical"
             android:padding="15dp"
-            app:layout_constraintBottom_toTopOf="@+id/profile_delete_history"
+            app:layout_constraintBottom_toTopOf="@+id/delete_history"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -144,7 +145,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/profile_connect_traktv_title"
+                    android:id="@+id/connect_traktv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -166,20 +167,20 @@
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/traktv_icon"
-                    app:layout_constraintTop_toBottomOf="@id/profile_connect_traktv_title" />
+                    app:layout_constraintTop_toBottomOf="@id/connect_traktv_title" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/profile_disconnect_traktv"
+            android:id="@+id/disconnect_traktv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/phone_profile_item"
             android:orientation="vertical"
             android:padding="15dp"
-            app:layout_constraintBottom_toTopOf="@+id/profile_delete_history"
+            app:layout_constraintBottom_toTopOf="@+id/delete_history"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
@@ -199,7 +200,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/profile_disconnect_traktv_title"
+                    android:id="@+id/disconnect_traktv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -221,14 +222,14 @@
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/disconnect_traktv_icon"
-                    app:layout_constraintTop_toBottomOf="@id/profile_disconnect_traktv_title" />
+                    app:layout_constraintTop_toBottomOf="@id/disconnect_traktv_title" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/profile_delete_history"
+            android:id="@+id/delete_history"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/phone_profile_item"
@@ -237,7 +238,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_connect_traktv"
+            app:layout_constraintTop_toBottomOf="@+id/connect_traktv"
             tools:layout_editor_absoluteX="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -255,7 +256,7 @@
                     app:tint="@color/white" />
 
                 <TextView
-                    android:id="@+id/profile_delete_history_title"
+                    android:id="@+id/delete_history_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -278,7 +279,7 @@
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/clear_icon"
-                    app:layout_constraintTop_toBottomOf="@id/profile_delete_history_title" />
+                    app:layout_constraintTop_toBottomOf="@id/delete_history_title" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
