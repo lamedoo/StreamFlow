@@ -70,16 +70,15 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
     private fun searchInput() {
         binding.searchTitleText.setQueryTextChangeListener(object : SearchEditText.QueryTextListener {
             override fun onQueryTextSubmit(query: String?) {
-                if (!query.isNullOrBlank()) {
-                    searchTitlesViewModel.getSearchTitles(query, page)
-                    binding.rvSearchTitlesContainer.setVisible()
-                    binding.topSearchContainer.setGone()
-                } else {
-                    searchTitlesViewModel.clearSearchResults()
-                    binding.rvSearchTitlesContainer.setGone()
-                    binding.topSearchContainer.setVisible()
-                }
-                binding.searchTitleText.hideKeyboard()
+//                if (!query.isNullOrBlank()) {
+//                    binding.rvSearchTitlesContainer.setVisible()
+//                    binding.topSearchContainer.setGone()
+//                } else {
+//                    searchTitlesViewModel.clearSearchResults()
+//                    binding.searchTitleText.setText("")
+//                    binding.rvSearchTitlesContainer.setGone()
+//                    binding.topSearchContainer.setVisible()
+//                }
             }
 
 
@@ -89,6 +88,8 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
                     binding.topSearchContainer.setVisible()
                     searchTitlesViewModel.clearSearchResults()
                 } else {
+                    searchTitlesViewModel.clearSearchResults()
+                    searchTitlesViewModel.getSearchTitles(newText, page)
                     binding.rvSearchTitlesContainer.setVisible()
                     binding.topSearchContainer.setGone()
                 }
@@ -116,9 +117,20 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
             searchTitlesAdapter.setSearchTitleList(it)
         })
 
-        infiniteScroll(binding.searchNestedScroll) {
-            fetchMoreResults()
-        }
+        binding.rvSearchTitles.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    visibleItemCount = layoutManager.childCount
+                    totalItemCount = layoutManager.itemCount
+                    pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+
+                    if (!loading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                        loading = true
+                        fetchMoreResults()
+                    }
+                }
+            }
+        })
     }
 
     private fun franchisesContainer() {
@@ -142,27 +154,13 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
         searchTitlesViewModel.franchiseList.observe(viewLifecycleOwner, {
             topFranchisesAdapter.setFranchisesList(it)
         })
-
-//        binding.rvTopFranchises.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                if (dy > 0) {
-//                    visibleItemCount = layoutManager.childCount
-//                    totalItemCount = layoutManager.itemCount
-//                    pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-//
-//                    if (!loading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
-//                        loading = true
-//                        fetchMoreResults()
-//                    }
-//                }
-//            }
-//        })
     }
 
     private fun fetchMoreResults() {
         page++
         searchTitlesViewModel.getSearchTitles(binding.searchTitleText.text.toString(), page)
         binding.searchProgressBar.setVisible()
+        loading = false
     }
 
     private fun onFranchiseAnimationEnd(titleName: String) {

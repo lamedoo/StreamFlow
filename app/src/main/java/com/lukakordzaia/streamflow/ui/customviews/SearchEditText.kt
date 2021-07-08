@@ -8,8 +8,10 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.widget.doAfterTextChanged
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.utils.hideKeyboard
 import com.lukakordzaia.streamflow.utils.setLeftDrawable
 import com.lukakordzaia.streamflow.utils.setRightDrawable
+import com.lukakordzaia.streamflow.utils.showKeyboard
 
 class SearchEditText
 @JvmOverloads constructor(
@@ -48,6 +50,8 @@ class SearchEditText
         setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 queryTextListener?.onQueryTextSubmit(text.toString())
+                this.hideKeyboard()
+                this.clearFocus()
                 true
             } else {
                 false
@@ -62,6 +66,8 @@ class SearchEditText
                 when {
                     rightDrawableClicked(event) -> {
                         setText("")
+                        this.showKeyboard()
+                        this.clearFocus()
                         return@OnTouchListener true
                     }
                     leftDrawableClicked(event) -> {

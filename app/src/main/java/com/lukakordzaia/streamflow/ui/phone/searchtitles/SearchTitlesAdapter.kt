@@ -47,7 +47,13 @@ class SearchTitlesAdapter(private val context: Context, private val onTitleClick
             }
 
             view.rvSearchItemYear.text = "${model.year.toString()}, "
-            Picasso.get().load(model.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.rvSearchItemPoster)
+
+            if (!model.posters?.data?.x240.isNullOrEmpty()) {
+                Picasso.get().load(model.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.rvSearchItemPoster)
+            } else {
+                Picasso.get().load(R.drawable.movie_image_placeholder).placeholder(R.drawable.movie_image_placeholder).into(view.rvSearchItemPoster)
+
+            }
 
             if (model.isTvShow == true) {
                 view.rvSearchItemIsTvShow.text = "სერიალი"
