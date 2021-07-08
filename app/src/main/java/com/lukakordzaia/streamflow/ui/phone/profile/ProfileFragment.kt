@@ -23,15 +23,15 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
+import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
 import com.lukakordzaia.streamflow.datamodels.TraktNewList
 import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.connect_traktv_alert_dialog.*
-import kotlinx.android.synthetic.main.sync_continue_watching_alert_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -85,21 +85,23 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         }
 
         binding.deleteHistory.setOnClickListener {
-            val clearDbDialog = Dialog(requireContext())
-            clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog,null))
-            clearDbDialog.clear_db_alert_yes.setOnClickListener {
+            val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
+            val clearHistory = Dialog(requireContext())
+            clearHistory.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            clearHistory.setContentView(binding.root)
+
+            binding.continueButton.setOnClickListener {
                 if (auth.currentUser == null) {
                     profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
                 } else {
                     profileViewModel.deleteContinueWatchingFromFirestoreFull()
                 }
-                clearDbDialog.dismiss()
+                clearHistory.dismiss()
             }
-            clearDbDialog.clear_db_alert_no.setOnClickListener {
-                clearDbDialog.dismiss()
+            binding.cancelButton.setOnClickListener {
+                clearHistory.dismiss()
             }
-            clearDbDialog.show()
+            clearHistory.show()
         }
 
         if (traktToken == "") {
@@ -230,13 +232,15 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     private fun showSyncDialog() {
         profileViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
+                val binding = DialogSyncDatabaseBinding.inflate(LayoutInflater.from(requireContext()))
                 val syncDialog = Dialog(requireContext())
-                syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog,null))
-                syncDialog.sync_continue_watching_alert_yes.setOnClickListener { _ ->
+                syncDialog.setContentView(binding.root)
+
+                binding.confirmButton.setOnClickListener { _ ->
                     profileViewModel.addContinueWatchingToFirestore(requireContext(), it)
                     syncDialog.dismiss()
                 }
-                syncDialog.sync_continue_watching_alert_no.setOnClickListener {
+                binding.cancelButton.setOnClickListener {
                     syncDialog.dismiss()
                 }
                 syncDialog.show()

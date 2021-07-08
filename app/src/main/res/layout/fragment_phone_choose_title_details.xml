@@ -10,7 +10,7 @@
     tools:context=".ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment">
 
     <TextView
-        android:id="@+id/title_file_not_yet"
+        android:id="@+id/no_files_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="20dp"
@@ -23,7 +23,7 @@
         android:visibility="gone" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/movie_files_container"
+        android:id="@+id/files_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -40,7 +40,7 @@
             tools:text="ფილმის სახელი"/>
 
         <ImageView
-            android:id="@+id/choose_details_close"
+            android:id="@+id/close_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/clear_bottomsheet"
@@ -53,9 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            app:layout_constraintTop_toBottomOf="@id/choose_details_close"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            app:layout_constraintTop_toBottomOf="@id/close_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -74,8 +72,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>

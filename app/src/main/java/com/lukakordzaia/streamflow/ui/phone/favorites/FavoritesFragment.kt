@@ -9,11 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneFavoritesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
-import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
@@ -89,18 +89,9 @@ class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
                 favoritesViewModel.onSingleTitlePressed(it)
             },
             { titleId: Int ->
-                val clearDbDialog = Dialog(requireContext())
-                clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
-                clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                    favoritesViewModel.removeFavTitleFromFirestore(titleId)
-                    clearDbDialog.dismiss()
-                }
-                clearDbDialog.clear_db_alert_no.setOnClickListener {
-                    clearDbDialog.dismiss()
-                }
-                clearDbDialog.show()
-            })
+                removeTitleDialog(titleId)
+            }
+        )
         binding.rvFavoritesMovies.layoutManager = moviesLayout
         binding.rvFavoritesMovies.adapter = favoritesMoviesAdapter
 
@@ -130,23 +121,30 @@ class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
                 favoritesViewModel.onSingleTitlePressed(it)
             },
             { titleId: Int ->
-                val clearDbDialog = Dialog(requireContext())
-                clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
-                clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                    favoritesViewModel.removeFavTitleFromFirestore(titleId)
-                    clearDbDialog.dismiss()
-                }
-                clearDbDialog.clear_db_alert_no.setOnClickListener {
-                    clearDbDialog.dismiss()
-                }
-                clearDbDialog.show()
-            })
+                removeTitleDialog(titleId)
+            }
+        )
         binding.rvFavoritesTvshows.layoutManager = tvShowsLayout
         binding.rvFavoritesTvshows.adapter = favoriteTvShowsAdapter
 
         favoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
             favoriteTvShowsAdapter.setItems(it)
         })
+    }
+
+    private fun removeTitleDialog(titleId: Int) {
+        val binding = DialogRemoveFavoriteBinding.inflate(LayoutInflater.from(requireContext()))
+        val removeFavorite = Dialog(requireContext())
+        removeFavorite.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        removeFavorite.setContentView(binding.root)
+
+        binding.confirmButton.setOnClickListener {
+            favoritesViewModel.removeFavTitleFromFirestore(titleId)
+            removeFavorite.dismiss()
+        }
+        binding.cancelButton.setOnClickListener {
+            removeFavorite.dismiss()
+        }
+        removeFavorite.show()
     }
 }

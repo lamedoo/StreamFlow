@@ -4,22 +4,19 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTvSettingsBinding
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
-import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import kotlinx.android.synthetic.main.fragment_tv_settings.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -97,20 +94,22 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
         }
 
         binding.tvSettingsDelete.setOnClickListener {
+            val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
             val clearDbDialog = Dialog(requireContext())
-            clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
-            clearDbDialog.clear_db_alert_yes.setOnClickListener {
+            clearDbDialog.setContentView(binding.root)
+
+            binding.continueButton.setOnClickListener {
                 profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
                 profileViewModel.deleteContinueWatchingFromFirestoreFull()
 
                 val intent = Intent(requireContext(), TvSettingsActivity::class.java)
                 startActivity(intent)
             }
-            clearDbDialog.clear_db_alert_no.setOnClickListener {
+            binding.cancelButton.setOnClickListener {
                 clearDbDialog.dismiss()
             }
             clearDbDialog.show()
-            clearDbDialog.clear_db_alert_yes.requestFocus()
+            binding.continueButton.requestFocus()
         }
 
         binding.tvSettingsSignout.setOnClickListener {

@@ -10,7 +10,7 @@
     android:padding="20dp">
 
     <TextView
-        android:id="@+id/continue_watching_info_title"
+        android:id="@+id/title_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -20,20 +20,20 @@
         tools:text="ფილმის სახელი"/>
 
     <ImageView
-        android:id="@+id/continue_watching_info_close"
+        android:id="@+id/close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/clear_bottomsheet"
-        app:layout_constraintTop_toTopOf="@id/continue_watching_info_title"
-        app:layout_constraintBottom_toBottomOf="@id/continue_watching_info_title"
+        app:layout_constraintTop_toTopOf="@id/title_name"
+        app:layout_constraintBottom_toBottomOf="@id/title_name"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
-        android:id="@+id/continue_watching_info_details"
+        android:id="@+id/title_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/continue_watching_info_title">
+        app:layout_constraintTop_toBottomOf="@id/title_name">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -53,11 +53,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/continue_watching_info_remove"
+        android:id="@+id/remove_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        app:layout_constraintTop_toBottomOf="@id/continue_watching_info_details">
+        app:layout_constraintTop_toBottomOf="@id/title_details">
 
         <ImageView
             android:layout_width="24dp"

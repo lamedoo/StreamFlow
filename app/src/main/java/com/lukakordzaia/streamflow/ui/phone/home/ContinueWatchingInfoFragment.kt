@@ -8,53 +8,59 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneContinueWatchingInfoBinding
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseBottomSheet
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.navController
-import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.phone_continue_watching_info_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ContinueWatchingInfoFragment : BottomSheetDialogFragment() {
+class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchingInfoBinding>() {
     private val homeViewModel: HomeViewModel by viewModel()
     private val args: ContinueWatchingInfoFragmentArgs by navArgs()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
-            View? {
-        return inflater.inflate(R.layout.phone_continue_watching_info_fragment, container, false)
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneContinueWatchingInfoBinding
+        get() = FragmentPhoneContinueWatchingInfoBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        continue_watching_info_title.text = args.titleName
+        binding.titleName.text = args.titleName
 
-        continue_watching_info_close.setOnClickListener {
+        fragmentListeners()
+        fragmentObservers()
+    }
+
+    private fun fragmentListeners() {
+        binding.closeButton.setOnClickListener {
             dismiss()
         }
 
-        continue_watching_info_details.setOnClickListener {
+        binding.titleDetails.setOnClickListener {
             homeViewModel.onSingleTitlePressed(AppConstants.NAV_CONTINUE_WATCHING_TO_SINGLE, args.titleId)
         }
 
-        continue_watching_info_remove.setOnClickListener {
-            val clearDbDialog = Dialog(requireContext())
-            clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
-            clearDbDialog.clear_db_alert_yes.setOnClickListener {
+        binding.removeTitle.setOnClickListener {
+            val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
+            val removeTitle = Dialog(requireContext())
+            removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            removeTitle.setContentView(binding.root)
+
+           binding.continueButton.setOnClickListener {
                 homeViewModel.deleteContinueWatching(requireContext(), args.titleId)
-                clearDbDialog.dismiss()
+                removeTitle.dismiss()
                 dismiss()
             }
-            clearDbDialog.clear_db_alert_no.setOnClickListener {
-                clearDbDialog.dismiss()
+            binding.cancelButton.setOnClickListener {
+                removeTitle.dismiss()
             }
-            clearDbDialog.show()
+            removeTitle.show()
         }
+    }
 
+    private fun fragmentObservers() {
         homeViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })

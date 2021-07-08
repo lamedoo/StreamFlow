@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/sync_continue_watching_alert_title"
+        android:id="@+id/sync_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="გსურთ მოწყობილობის 'განაგრძეთ ყურების' სინქრონიზაცია თქვენს ანგარიშთან?"
@@ -22,12 +22,12 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:src="@drawable/sync_continue_watching_icon"
-        app:layout_constraintTop_toBottomOf="@id/sync_continue_watching_alert_title"
+        app:layout_constraintTop_toBottomOf="@id/sync_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/sync_continue_watching_warning"
+        android:id="@+id/sync_warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/sync_continue_watching_alert_no"
+        android:id="@+id/cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -48,11 +48,11 @@
         android:textSize="18sp"
         android:padding="20dp"
         android:background="@drawable/alert_dialog_button_background"
-        app:layout_constraintTop_toBottomOf="@id/sync_continue_watching_warning"
-        app:layout_constraintEnd_toStartOf="@id/sync_continue_watching_alert_yes"/>
+        app:layout_constraintTop_toBottomOf="@id/sync_warning"
+        app:layout_constraintEnd_toStartOf="@id/confirm_button"/>
 
     <TextView
-        android:id="@+id/sync_continue_watching_alert_yes"
+        android:id="@+id/confirm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -61,7 +61,7 @@
         android:textSize="18sp"
         android:padding="20dp"
         android:background="@drawable/alert_dialog_button_background"
-        app:layout_constraintTop_toBottomOf="@id/sync_continue_watching_warning"
+        app:layout_constraintTop_toBottomOf="@id/sync_warning"
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

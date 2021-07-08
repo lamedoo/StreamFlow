@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -32,7 +33,6 @@ import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.ui.tv.search.TvSearchPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
-import kotlinx.android.synthetic.main.tv_choose_language_dialog.*
 import kotlinx.android.synthetic.main.tv_details_season_item.view.*
 import kotlinx.android.synthetic.main.tv_title_files_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -218,18 +218,19 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                     val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
                     val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
 
+                    val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
                     val chooseLanguageDialog = Dialog(requireContext())
                     chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    chooseLanguageDialog.setContentView(layoutInflater.inflate(R.layout.tv_choose_language_dialog, null))
                     chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                    chooseLanguageDialog.setContentView(binding.root)
                     chooseLanguageDialog.show()
 
                     val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
                     tvChooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) {
                         playEpisode(titleId, isTvShow, it)
                     }
-                    chooseLanguageDialog.rv_tv_choose_language.layoutManager = chooseLanguageLayout
-                    chooseLanguageDialog.rv_tv_choose_language.adapter = tvChooseLanguageAdapter
+                    binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
+                    binding.rvChooseLanguage.adapter = tvChooseLanguageAdapter
 
                     tvTitleFilesViewModel.availableLanguages.observe(viewLifecycleOwner, {
                         val languages = it.reversed()

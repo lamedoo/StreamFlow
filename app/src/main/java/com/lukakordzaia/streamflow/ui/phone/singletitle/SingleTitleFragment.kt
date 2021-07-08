@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +20,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -32,7 +32,6 @@ import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.phone_single_title_details.*
 import kotlinx.android.synthetic.main.phone_single_title_info.*
-import kotlinx.android.synthetic.main.tv_choose_language_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -290,10 +289,11 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
     }
 
     private fun languagePickerDialog() {
+        val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        chooseLanguageDialog.setContentView(layoutInflater.inflate(R.layout.tv_choose_language_dialog, null))
         chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        chooseLanguageDialog.setContentView(binding.root)
         chooseLanguageDialog.show()
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
@@ -311,8 +311,8 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
             ))
             activity?.startActivity(intent)
         }
-        chooseLanguageDialog.rv_tv_choose_language.layoutManager = chooseLanguageLayout
-        chooseLanguageDialog.rv_tv_choose_language.adapter = chooseLanguageAdapter
+        binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
+        binding.rvChooseLanguage.adapter = chooseLanguageAdapter
 
         chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
             val languages = languageList.reversed()

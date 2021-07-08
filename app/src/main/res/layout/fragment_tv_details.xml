@@ -17,7 +17,7 @@
         tools:visibility="gone"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/tv_details_top"
+        android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:background="@color/primaryColor"
@@ -25,7 +25,7 @@
         tools:visibility="visible">
 
         <ImageView
-            android:id="@+id/tv_files_title_poster"
+            android:id="@+id/background_poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusable="false"
@@ -42,7 +42,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/tv_details_top_info"
+            android:id="@+id/title_info"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -50,7 +50,7 @@
             app:layout_constraintHeight_percent="0.6">
 
             <TextView
-                android:id="@+id/tv_files_title_name_eng"
+                android:id="@+id/title_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -66,11 +66,11 @@
                 tools:text="Friends" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/tv_files_info_details"
+                android:id="@+id/title_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_files_title_name_eng">
+                app:layout_constraintTop_toBottomOf="@id/title_name">
 
                 <LinearLayout
                     android:id="@+id/tv_files_score_container"
@@ -92,7 +92,7 @@
                         android:src="@drawable/phone_imdb_logo" />
 
                     <TextView
-                        android:id="@+id/tv_files_title_imdb_score"
+                        android:id="@+id/imdb_score"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_data"
@@ -121,7 +121,7 @@
                         android:src="@drawable/info_calendar_icon" />
 
                     <TextView
-                        android:id="@+id/tv_files_title_year"
+                        android:id="@+id/year"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_data"
@@ -150,7 +150,7 @@
                         android:src="@drawable/info_duration_icon" />
 
                     <TextView
-                        android:id="@+id/tv_files_title_duration"
+                        android:id="@+id/duration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_data"
@@ -179,7 +179,7 @@
                         android:src="@drawable/info_country_icon" />
 
                     <TextView
-                        android:id="@+id/tv_files_title_country"
+                        android:id="@+id/country"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_data"
@@ -191,7 +191,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/tv_files_title_desc"
+                android:id="@+id/title_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:focusable="false"
@@ -199,7 +199,7 @@
                 android:padding="10dp"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_files_info_details"
+                app:layout_constraintTop_toBottomOf="@id/title_details"
                 app:layout_constraintWidth_default="percent"
                 app:layout_constraintWidth_percent="0.7"
                 tools:text="Upon witnessing a man's head cracked open with an axe, 16-year-old Yuri Honjou trembles in fear and confusion as she flees from the masked assailant, only to find out she's trapped in an abandoned building where every door is mysteriously locked. Desperately searching for a way out, Yuri runs to the rooftop, but a world with no signs of life stands before her, surrounded by high-rise buildings. Though filled with despair, once she learns that her brother is also in this strange place, Yuri is determined to find him and escape. However, she soon finds that there are more masked murderers in the area, anxious to terrorize their newfound victims and satiate their sickest desires, leaving Yuri to question if they will be able to make it out alive." />
@@ -209,7 +209,7 @@
 
 
         <TextView
-            android:id="@+id/tv_details_no_files"
+            android:id="@+id/no_files_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
@@ -222,22 +222,22 @@
             android:layout_gravity="center"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_details_top_info"
+            app:layout_constraintTop_toBottomOf="@id/title_info"
             tools:visibility="gone"/>
 
         <LinearLayout
-            android:id="@+id/tv_details_buttons_row"
+            android:id="@+id/buttons_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_details_top_info"
+            app:layout_constraintTop_toBottomOf="@id/title_info"
             android:visibility="gone"
             tools:visibility="visible">
 
             <LinearLayout
-                android:id="@+id/tv_files_title_delete"
+                android:id="@+id/delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="true"
@@ -245,7 +245,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_gravity="center"
                 android:padding="13dp"
-                android:nextFocusDown="@id/tv_details_go_bottom"
+                android:nextFocusDown="@id/next_details"
                 android:background="@drawable/tv_details_button_background">
 
                 <ImageView
@@ -258,7 +258,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_continue_play_button"
+                android:id="@+id/continue_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -276,7 +276,7 @@
                 tools:visibility="visible" />
 
             <TextView
-                android:id="@+id/tv_play_button"
+                android:id="@+id/play_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -290,10 +290,10 @@
                 android:textColor="@color/secondary_text_color"
                 android:padding="15dp"
                 android:text="ყურება"
-                android:nextFocusDown="@id/tv_details_go_bottom" />
+                android:nextFocusDown="@id/next_details" />
 
             <LinearLayout
-                android:id="@+id/tv_files_trailer"
+                android:id="@+id/trailer_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="true"
@@ -302,7 +302,7 @@
                 android:layout_gravity="center"
                 android:padding="13dp"
                 android:background="@drawable/tv_details_button_background"
-                android:nextFocusDown="@id/tv_details_go_bottom">
+                android:nextFocusDown="@id/next_details">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -325,7 +325,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tv_files_title_favorite"
+            android:id="@+id/favorite_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="true"
@@ -334,14 +334,14 @@
             android:layout_marginEnd="10dp"
             android:padding="13dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_details_buttons_row"
-            app:layout_constraintBottom_toBottomOf="@id/tv_details_buttons_row"
-            android:nextFocusDown="@id/tv_details_go_bottom"
-            android:nextFocusRight="@id/tv_files_title_favorite"
+            app:layout_constraintTop_toTopOf="@id/buttons_row"
+            app:layout_constraintBottom_toBottomOf="@id/buttons_row"
+            android:nextFocusDown="@id/next_details"
+            android:nextFocusRight="@id/favorite_container"
             android:background="@drawable/tv_details_favorite_button_background">
 
             <ProgressBar
-                android:id="@+id/tv_files_title_favorite_progressBar"
+                android:id="@+id/favorite_progressBar"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:indeterminateTint="@color/accent_color"
@@ -349,7 +349,7 @@
                 tools:visibility="visible"/>
 
             <ImageView
-                android:id="@+id/tv_files_title_favorite_icon"
+                android:id="@+id/favorite_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/title_favorite_icon_full"
@@ -359,7 +359,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tv_details_go_bottom"
+            android:id="@+id/next_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -372,7 +372,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
-                android:id="@+id/tv_details_go_bottom_title"
+                android:id="@+id/next_details_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"

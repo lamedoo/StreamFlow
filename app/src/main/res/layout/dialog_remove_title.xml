@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/clear_db_alert_root"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,10 +7,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/clear_db_alert_title"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ნამდვილად გსურთ ფავორიტებიდან წაშლა?"
+        android:text="ნამდვილად გსურთ განაგრძეთ ყურების წაშლა?"
         android:textAlignment="center"
         android:textSize="20sp"
         android:padding="10dp"
@@ -19,39 +19,43 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <ImageView
-        android:id="@+id/clear_db_alert_icon"
+        android:id="@+id/icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/remove_db_title_icon"
-        app:layout_constraintTop_toBottomOf="@id/clear_db_alert_title"
+        android:src="@drawable/clear_db_icon"
+        app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/red" />
+        app:tint="@color/red"
+        android:tint="@color/red"
+        tools:ignore="UseAppTint" />
 
     <TextView
-        android:id="@+id/clear_db_alert_no"
+        android:id="@+id/cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="true"
         android:layout_marginTop="20dp"
         android:text="არა"
         android:textStyle="bold"
         android:textSize="18sp"
         android:padding="20dp"
         android:background="@drawable/alert_dialog_button_background"
-        app:layout_constraintTop_toBottomOf="@id/clear_db_alert_icon"
-        app:layout_constraintEnd_toStartOf="@id/clear_db_alert_yes"/>
+        app:layout_constraintTop_toBottomOf="@id/icon"
+        app:layout_constraintEnd_toStartOf="@id/continue_button"/>
 
     <TextView
-        android:id="@+id/clear_db_alert_yes"
+        android:id="@+id/continue_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="true"
         android:layout_marginTop="20dp"
         android:text="დიახ"
         android:textStyle="bold"
         android:textSize="18sp"
         android:padding="20dp"
         android:background="@drawable/alert_dialog_button_background"
-        app:layout_constraintTop_toBottomOf="@id/clear_db_alert_icon"
+        app:layout_constraintTop_toBottomOf="@id/icon"
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
