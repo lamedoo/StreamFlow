@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.RvGenreItemBinding
-import com.lukakordzaia.streamflow.network.models.response.categories.GetGenresResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
 
 class GenresAdapter(
     private val context: Context,

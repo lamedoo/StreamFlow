@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.trakttv.response
 
 
 import com.google.gson.annotations.SerializedName
 
-data class AddToTraktListResponse(
+data class AddTitleToTraktListResponse(
     @SerializedName("added")
     val added: Added,
     @SerializedName("existing")

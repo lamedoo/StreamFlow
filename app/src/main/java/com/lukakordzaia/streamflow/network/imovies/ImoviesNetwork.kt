@@ -2,13 +2,13 @@ package com.lukakordzaia.streamflow.network.imovies
 
 
 import com.lukakordzaia.streamflow.network.EndPoints
-import com.lukakordzaia.streamflow.network.models.response.categories.GetTopFranchisesResponse
-import com.lukakordzaia.streamflow.network.models.response.categories.GetGenresResponse
-import com.lukakordzaia.streamflow.network.models.response.categories.GetTopStudiosResponse
-import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
-import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleResponse
-import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleCastResponse
-import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleFilesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers

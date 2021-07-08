@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.trakttv.response
 
 
 import com.google.gson.annotations.SerializedName
 
-data class TraktGetToken(
+data class GetUserTokenResponse(
     @SerializedName("access_token")
     val accessToken: String,
     @SerializedName("created_at")

@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.network.models.response.categories
+package com.lukakordzaia.streamflow.network.models.imovies.response.categories
 
 
 import com.google.gson.annotations.SerializedName

@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.network.models.response.singletitle
+package com.lukakordzaia.streamflow.network.models.imovies.response.singletitle
 
 
 import com.google.gson.annotations.SerializedName

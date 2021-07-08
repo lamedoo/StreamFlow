@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.trakttv.request
 
 
 import com.google.gson.annotations.SerializedName
 
-data class AddTvShowToTraktList(
+data class AddTvShowToTraktListRequestBody(
     @SerializedName("shows")
     val tvShows: List<Showy>
 ) {

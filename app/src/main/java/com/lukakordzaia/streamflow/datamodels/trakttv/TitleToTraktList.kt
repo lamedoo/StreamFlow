@@ -1,19 +1,19 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.datamodels.trakttv
 
 
 import com.google.gson.annotations.SerializedName
 
-data class RemoveTitleFromTraktList(
+data class TitleToTraktList(
     @SerializedName("episodes")
-    val episodes: List<Episode>,
+    val episodes: List<Episode>?,
     @SerializedName("movies")
-    val movies: List<Movy>,
+    val movies: List<Movy>?,
     @SerializedName("people")
-    val people: List<People>,
+    val people: List<People>?,
     @SerializedName("seasons")
-    val seasons: List<Season>,
+    val seasons: List<Season>?,
     @SerializedName("shows")
-    val shows: List<Show>
+    val shows: List<Show>?
 ) {
     data class Episode(
         @SerializedName("ids")
@@ -37,9 +37,7 @@ data class RemoveTitleFromTraktList(
     ) {
         data class Ids(
             @SerializedName("imdb")
-            val imdb: String,
-            @SerializedName("trakt")
-            val trakt: Int
+            val imdb: String
         )
     }
 

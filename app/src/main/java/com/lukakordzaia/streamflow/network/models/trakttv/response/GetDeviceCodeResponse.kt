@@ -1,14 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.trakttv.response
 
 
 import com.google.gson.annotations.SerializedName
 
-data class SendTraktvClientId(
-        @SerializedName("client_id")
-        val clientId: String
-)
-
-data class TraktvDeviceCode(
+data class GetDeviceCodeResponse(
     @SerializedName("device_code")
     val deviceCode: String,
     @SerializedName("expires_in")

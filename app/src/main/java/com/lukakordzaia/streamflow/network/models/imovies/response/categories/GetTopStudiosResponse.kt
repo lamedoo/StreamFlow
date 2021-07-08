@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.network.models.response.categories
+package com.lukakordzaia.streamflow.network.models.imovies.response.categories
 
 
 import com.google.gson.annotations.SerializedName
 
-data class GetGenresResponse(
+data class GetTopStudiosResponse(
     @SerializedName("data")
     val `data`: List<Data>,
     @SerializedName("meta")
@@ -12,14 +12,20 @@ data class GetGenresResponse(
     data class Data(
         @SerializedName("backgroundImage")
         val backgroundImage: String,
+        @SerializedName("backgroundImageNarrow")
+        val backgroundImageNarrow: String,
         @SerializedName("id")
         val id: Int,
-        @SerializedName("primaryName")
-        val primaryName: String,
-        @SerializedName("secondaryName")
-        val secondaryName: String,
-        @SerializedName("tertiaryName")
-        val tertiaryName: String
+        @SerializedName("isFeatured")
+        val isFeatured: Boolean,
+        @SerializedName("lightPoster")
+        val lightPoster: String,
+        @SerializedName("name")
+        val name: String,
+        @SerializedName("poster")
+        val poster: String,
+        @SerializedName("rating")
+        val rating: Double
     )
 
     data class Meta(
@@ -40,7 +46,9 @@ data class GetGenresResponse(
             @SerializedName("total_pages")
             val totalPages: Int
         ) {
-            class Links(
+            data class Links(
+                @SerializedName("next")
+                val next: String
             )
         }
     }

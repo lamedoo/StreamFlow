@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.trakttv.response
 
 
 import com.google.gson.annotations.SerializedName
 
-class GetTraktSfListByType : ArrayList<GetTraktSfListByType.GetTraktSfListByTypeItem>(){
+class GetListByTitleTypeResponse : ArrayList<GetListByTitleTypeResponse.GetTraktSfListByTypeItem>(){
     data class GetTraktSfListByTypeItem(
         @SerializedName("episode")
         val episode: Episode,

@@ -1,10 +1,9 @@
 package com.lukakordzaia.streamflow.repository
 
-import com.lukakordzaia.streamflow.network.models.response.categories.GetGenresResponse
-import com.lukakordzaia.streamflow.network.models.response.categories.GetTopStudiosResponse
-import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 

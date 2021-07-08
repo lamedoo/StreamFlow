@@ -7,7 +7,7 @@ import com.lukakordzaia.streamflow.network.interceptors.NetworkConnectionInterce
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import com.lukakordzaia.streamflow.network.interceptors.DefaultHeaderInterceptor
-import com.lukakordzaia.streamflow.network.traktv.TraktvNetwork
+import com.lukakordzaia.streamflow.network.trakttv.TraktTvNetwork
 import com.lukakordzaia.streamflow.repository.*
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
@@ -57,7 +57,7 @@ val generalModule = module {
     single { DefaultHeaderInterceptor() }
     single { RetrofitBuilder(get(), get()) }
     single { get<RetrofitBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
-    single { get<RetrofitBuilder>().getRetrofitInstance().create(TraktvNetwork::class.java) }
+    single { get<RetrofitBuilder>().getRetrofitInstance().create(TraktTvNetwork::class.java) }
     single { SpinnerClass(get()) }
     single { BuildMediaSource(get()) }
     single { AuthSharedPreferences(get()) }

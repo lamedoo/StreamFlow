@@ -10,6 +10,7 @@ class DefaultHeaderInterceptor : Interceptor {
 
         request = request.newBuilder()
             .addHeader("User-Agent", "imovies")
+            .addHeader("Content-Type", "application/json")
             .build()
         
         return chain.proceed(request)

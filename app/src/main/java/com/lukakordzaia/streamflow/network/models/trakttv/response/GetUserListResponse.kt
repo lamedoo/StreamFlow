@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.trakttv.response
 
 
 import com.google.gson.annotations.SerializedName
 
-data class TraktGetUserList(
+data class GetUserListResponse(
     @SerializedName("allow_comments")
     val allowComments: Boolean,
     @SerializedName("comment_count")

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.RvStudioItemBinding
-import com.lukakordzaia.streamflow.network.models.response.categories.GetTopStudiosResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
 import com.squareup.picasso.Picasso
 
 class StudiosAdapter(private val context: Context, private val onStudiosClick: (studioId: Int, studioName: String) -> Unit) : RecyclerView.Adapter<StudiosAdapter.ViewHolder>() {

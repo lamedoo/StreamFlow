@@ -12,10 +12,10 @@ import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.network.*
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
-import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
-import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleResponse
-import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleCastResponse
-import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleFilesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import kotlinx.coroutines.tasks.await
 
 class TvDetailsRepository(private val service: ImoviesNetwork) : ImoviesCall() {

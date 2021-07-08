@@ -26,8 +26,8 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
-import com.lukakordzaia.streamflow.datamodels.TraktNewList
-import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
+import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
+import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
@@ -113,7 +113,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
             traktDialog.show()
             profileViewModel.getDeviceCode()
 
-            profileViewModel.traktDeviceCode.observe(viewLifecycleOwner, {
+            profileViewModel.traktDeviceCodeResponse.observe(viewLifecycleOwner, {
                 traktDialog.connect_traktv_user_code.text = it.userCode
                 traktDialog.connect_traktv_url.text = it.verificationUrl
                 countdown.start()
@@ -133,7 +133,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                 }
 
                 profileViewModel.getUserToken(
-                    TraktRequestToken(
+                    GetUserTokenRequestBody(
                         AppConstants.TRAKTV_CLIENT_ID,
                         AppConstants.TRAKTV_CLIENT_SECRET,
                         it.deviceCode
@@ -154,7 +154,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         }
 
 
-        profileViewModel.traktUserToken.observe(viewLifecycleOwner, { userToken ->
+        profileViewModel.userUserTokenResponse.observe(viewLifecycleOwner, { userToken ->
             if (userToken != null) {
                 traktDialog.hide()
                 countdown.cancel()
@@ -169,7 +169,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         profileViewModel.traktSfListExists.observe(viewLifecycleOwner, {
             if (!it) {
                 profileViewModel.createNewList(
-                    TraktNewList(
+                    AddNewListRequestBody(
                         null,
                         null,
                         null,

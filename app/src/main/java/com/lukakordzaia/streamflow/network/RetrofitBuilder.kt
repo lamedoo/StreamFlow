@@ -1,10 +1,7 @@
 package com.lukakordzaia.streamflow.network
 
-import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import com.lukakordzaia.streamflow.network.interceptors.DefaultHeaderInterceptor
 import com.lukakordzaia.streamflow.network.interceptors.NetworkConnectionInterceptor
-import com.lukakordzaia.streamflow.network.traktv.TraktvNetwork
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

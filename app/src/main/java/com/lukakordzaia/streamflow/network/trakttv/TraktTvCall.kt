@@ -1,11 +1,11 @@
-package com.lukakordzaia.streamflow.network.traktv
+package com.lukakordzaia.streamflow.network.trakttv
 
 import com.lukakordzaia.streamflow.network.InternetConnection
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.utils.AppConstants
 import retrofit2.Response
 
-open class TraktvCall {
+open class TraktTvCall {
     suspend fun <T: Any> traktvCall(call: suspend () -> Response<T>): Result<T> {
         return try {
             val response = call.invoke()

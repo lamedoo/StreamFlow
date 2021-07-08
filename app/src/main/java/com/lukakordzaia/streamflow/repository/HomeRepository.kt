@@ -7,8 +7,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingDao
-import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleResponse
-import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.*
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork

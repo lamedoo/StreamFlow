@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.RvFranchiseItemBinding
-import com.lukakordzaia.streamflow.network.models.response.categories.GetTopFranchisesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
 
 class TopFranchisesAdapter(
     private val context: Context,
