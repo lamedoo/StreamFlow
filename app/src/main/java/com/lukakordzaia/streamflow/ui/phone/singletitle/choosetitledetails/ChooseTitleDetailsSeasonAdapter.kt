@@ -14,8 +14,7 @@ import kotlinx.android.synthetic.main.rv_choose_details_season_item.view.*
 
 class ChooseTitleDetailsSeasonAdapter(
         private val context: Context,
-        private val onSeasonClick: (seasonId: Int) -> Unit,
-        private val onSeasonChosen: (chosenSeason: Int) -> Unit
+        private val onSeasonClick: (seasonId: Int) -> Unit
 ) : RecyclerView.Adapter<ChooseTitleDetailsSeasonAdapter.ViewHolder>() {
     private var list: List<Int> = ArrayList()
     private var chosenSeason: Int = 1
@@ -39,7 +38,7 @@ class ChooseTitleDetailsSeasonAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val seasonModel = list[position]
 
-        holder.bind(seasonModel, position)
+        holder.bind(seasonModel)
     }
 
     override fun getItemCount(): Int {
@@ -47,7 +46,7 @@ class ChooseTitleDetailsSeasonAdapter(
     }
 
     inner class ViewHolder(val view: RvChooseDetailsSeasonItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: Int, position: Int) {
+        fun bind(model: Int) {
             val isChosen = model == chosenSeason
 
             if (isChosen) {
@@ -58,7 +57,6 @@ class ChooseTitleDetailsSeasonAdapter(
 
             view.rvSeasonContainer.setOnClickListener {
                 onSeasonClick(model)
-                onSeasonChosen(position)
             }
 
             view.rvSeasonNumber.text = "სეზონი $model"

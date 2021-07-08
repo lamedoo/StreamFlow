@@ -19,12 +19,14 @@ import kotlinx.android.synthetic.main.rv_choose_details_episodes_item.view.*
 class ChooseTitleDetailsEpisodesAdapter(
         private val context: Context,
         private val onEpisodeClick: (episodeId: Int) -> Unit,
+        private val onChosenEpisode: (position: Int) -> Unit
 ) : RecyclerView.Adapter<ChooseTitleDetailsEpisodesAdapter.ViewHolder>() {
     private var list: List<TitleEpisodes> = ArrayList()
     private var chosenEpisode: Int = -1
 
     fun setEpisodeList(list: List<TitleEpisodes>) {
         this.list = list
+        onChosenEpisode(chosenEpisode)
         notifyDataSetChanged()
     }
 
