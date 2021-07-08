@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTvSettingsBinding
+import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.utils.createToast
@@ -123,9 +124,5 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
     override fun onDetach() {
         super.onDetach()
         onSettingsSelected = null
-    }
-
-    interface OnSettingsSelected {
-        fun getSettingsType(type: Int)
     }
 }

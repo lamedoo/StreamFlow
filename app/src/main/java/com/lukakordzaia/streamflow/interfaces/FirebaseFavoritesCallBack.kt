@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.network
+package com.lukakordzaia.streamflow.interfaces
 
 interface FavoritesCallBack {
     fun moviesList(movies: MutableList<Int>)

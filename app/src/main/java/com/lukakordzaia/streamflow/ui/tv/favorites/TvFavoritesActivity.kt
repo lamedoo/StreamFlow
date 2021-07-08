@@ -8,8 +8,8 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
-import com.lukakordzaia.streamflow.helpers.TvHasFavoritesListener
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.createToast

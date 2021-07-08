@@ -23,8 +23,8 @@ import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
-import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity

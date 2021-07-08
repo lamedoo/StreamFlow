@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.helpers
+package com.lukakordzaia.streamflow.interfaces
 
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
 

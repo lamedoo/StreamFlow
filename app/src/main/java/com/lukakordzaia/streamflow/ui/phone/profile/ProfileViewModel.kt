@@ -135,12 +135,6 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
         }
     }
 
-    fun onDeletePressedTv(context: Context) {
-        val intent = Intent(context, TvActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-    }
-
     fun createUserFirestore() {
         viewModelScope.launch {
             repository.createUserFirestore(currentUser())

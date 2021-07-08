@@ -19,9 +19,9 @@ import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
-import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
-import com.lukakordzaia.streamflow.helpers.TvHasFavoritesListener
+import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
