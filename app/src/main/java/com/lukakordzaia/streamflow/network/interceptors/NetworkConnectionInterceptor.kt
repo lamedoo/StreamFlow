@@ -1,7 +1,8 @@
-package com.lukakordzaia.streamflow.network
+package com.lukakordzaia.streamflow.network.interceptors
 
 import android.content.Context
 import android.net.ConnectivityManager
+import com.lukakordzaia.streamflow.network.InternetConnection
 import okhttp3.Interceptor
 import okhttp3.Response
 

@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.ui.phone.categories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.CategoriesRepository
@@ -14,33 +14,33 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class SingleCategoryViewModel(private val repository: CategoriesRepository) : BaseViewModel() {
-    private val _singleGenreList = MutableLiveData<List<TitleList.Data>>()
-    val singleGenreList: LiveData<List<TitleList.Data>> = _singleGenreList
+    private val _singleGenreList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val singleGenreList: LiveData<List<GetTitlesResponse.Data>> = _singleGenreList
 
-    private val fetchSingleGenreList: MutableList<TitleList.Data> = ArrayList()
+    private val fetchSingleGenreList: MutableList<GetTitlesResponse.Data> = ArrayList()
 
-    private val _singleStudioList = MutableLiveData<List<TitleList.Data>>()
-    val singleStudioList: LiveData<List<TitleList.Data>> = _singleStudioList
+    private val _singleStudioList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val singleStudioList: LiveData<List<GetTitlesResponse.Data>> = _singleStudioList
 
-    private val fetchSingleStudioList: MutableList<TitleList.Data> = ArrayList()
+    private val fetchSingleStudioList: MutableList<GetTitlesResponse.Data> = ArrayList()
 
-    private val _singleGenreAnimation = MutableLiveData<List<TitleList.Data>>()
-    val singleGenreAnimation: LiveData<List<TitleList.Data>> = _singleGenreAnimation
+    private val _singleGenreAnimation = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val singleGenreAnimation: LiveData<List<GetTitlesResponse.Data>> = _singleGenreAnimation
 
-    private val _singleGenreComedy = MutableLiveData<List<TitleList.Data>>()
-    val singleGenreComedy: LiveData<List<TitleList.Data>> = _singleGenreComedy
+    private val _singleGenreComedy = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val singleGenreComedy: LiveData<List<GetTitlesResponse.Data>> = _singleGenreComedy
 
-    private val _singleGenreMelodrama = MutableLiveData<List<TitleList.Data>>()
-    val singleGenreMelodrama: LiveData<List<TitleList.Data>> = _singleGenreMelodrama
+    private val _singleGenreMelodrama = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val singleGenreMelodrama: LiveData<List<GetTitlesResponse.Data>> = _singleGenreMelodrama
 
-    private val _singleGenreHorror = MutableLiveData<List<TitleList.Data>>()
-    val singleGenreHorror: LiveData<List<TitleList.Data>> = _singleGenreHorror
+    private val _singleGenreHorror = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val singleGenreHorror: LiveData<List<GetTitlesResponse.Data>> = _singleGenreHorror
 
-    private val _singleGenreAdventure = MutableLiveData<List<TitleList.Data>>()
-    val singleGenreAdventure: LiveData<List<TitleList.Data>> = _singleGenreAdventure
+    private val _singleGenreAdventure = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val singleGenreAdventure: LiveData<List<GetTitlesResponse.Data>> = _singleGenreAdventure
 
-    private val _singleGenreAction = MutableLiveData<List<TitleList.Data>>()
-    val singleGenreAction: LiveData<List<TitleList.Data>> = _singleGenreAction
+    private val _singleGenreAction = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val singleGenreAction: LiveData<List<GetTitlesResponse.Data>> = _singleGenreAction
 
     private val _hasMorePage = MutableLiveData(true)
     val hasMorePage: LiveData<Boolean> = _hasMorePage

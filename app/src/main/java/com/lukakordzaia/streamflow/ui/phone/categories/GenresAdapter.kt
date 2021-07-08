@@ -2,22 +2,18 @@ package com.lukakordzaia.streamflow.ui.phone.categories
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvGenreItemBinding
-import com.lukakordzaia.streamflow.datamodels.GenreList
-import kotlinx.android.synthetic.main.rv_genre_item.view.*
+import com.lukakordzaia.streamflow.network.models.response.categories.GetGenresResponse
 
 class GenresAdapter(
     private val context: Context,
     private val onGenreClick: (genreId: Int, genreName: String) -> Unit
 ) : RecyclerView.Adapter<GenresAdapter.ViewHolder>() {
-    private var list: List<GenreList.Data> = ArrayList()
+    private var list: List<GetGenresResponse.Data> = ArrayList()
 
-    fun setGenreList(list: List<GenreList.Data>) {
+    fun setGenreList(list: List<GetGenresResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -39,7 +35,7 @@ class GenresAdapter(
     }
 
     inner class ViewHolder(val view: RvGenreItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: GenreList.Data) {
+        fun bind(model: GetGenresResponse.Data) {
             view.rvGenreName.apply {
                 text = model.primaryName
                 setOnClickListener {

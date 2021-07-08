@@ -2,20 +2,16 @@ package com.lukakordzaia.streamflow.ui.phone.categories
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvStudioItemBinding
-import com.lukakordzaia.streamflow.datamodels.StudioList
+import com.lukakordzaia.streamflow.network.models.response.categories.GetTopStudiosResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_studio_item.view.*
 
 class StudiosAdapter(private val context: Context, private val onStudiosClick: (studioId: Int, studioName: String) -> Unit) : RecyclerView.Adapter<StudiosAdapter.ViewHolder>() {
-    private var list: List<StudioList.Data> = ArrayList()
+    private var list: List<GetTopStudiosResponse.Data> = ArrayList()
 
-    fun setStudioList(list: List<StudioList.Data>) {
+    fun setStudioList(list: List<GetTopStudiosResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -37,7 +33,7 @@ class StudiosAdapter(private val context: Context, private val onStudiosClick: (
     }
 
     inner class ViewHolder(val view: RvStudioItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: StudioList.Data) {
+        fun bind(model: GetTopStudiosResponse.Data) {
             Picasso.get().load(model.poster).into(view.rvStudioPoster)
             view.rvStudioPoster.setOnClickListener {
                 onStudiosClick(model.id, model.name)

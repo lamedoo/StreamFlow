@@ -2,22 +2,17 @@ package com.lukakordzaia.streamflow.ui.phone.singletitle
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvSingleTitleCastItemBinding
-import com.lukakordzaia.streamflow.datamodels.TitleCast
+import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleCastResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_single_title_cast_item.view.*
 
 class SingleTitleCastAdapter(private val context: Context, private val onCastClick: (name: String) -> Unit) : RecyclerView.Adapter<SingleTitleCastAdapter.ViewHolder>() {
-    private var list: List<TitleCast.Data> = ArrayList()
+    private var list: List<GetSingleTitleCastResponse.Data> = ArrayList()
 
-    fun setCastList(list: List<TitleCast.Data>) {
+    fun setCastList(list: List<GetSingleTitleCastResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -39,7 +34,7 @@ class SingleTitleCastAdapter(private val context: Context, private val onCastCli
     }
 
     inner class ViewHolder(val view: RvSingleTitleCastItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: TitleCast.Data) {
+        fun bind(model: GetSingleTitleCastResponse.Data) {
             if (model.poster.isNotEmpty()) {
                 Picasso.get().load(model.poster).into(view.rvCastItemPoster)
             } else {

@@ -49,7 +49,7 @@ class TvSingleGenreActivity: BaseFragmentActivity(), TvCheckTitleSelected {
                 .show(TvSingleGenreFragment())
                 .commit()
 
-        tvDetailsViewModel.singleTitleData.observe(this, {
+        tvDetailsViewModel.getSingleTitleResponse.observe(this, {
             home_top_istvshow.setVisible()
             home_top_name.text = it.secondaryName
 

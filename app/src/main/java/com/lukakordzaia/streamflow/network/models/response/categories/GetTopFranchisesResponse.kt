@@ -1,38 +1,38 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.response.categories
 
 
 import com.google.gson.annotations.SerializedName
 
-data class FranchiseList(
+data class GetTopFranchisesResponse(
     @SerializedName("data")
     val `data`: List<Data>,
     @SerializedName("meta")
     val meta: Meta
 ) {
     data class Data(
-            @SerializedName("color")
+        @SerializedName("color")
         val color: String,
-            @SerializedName("createDate")
+        @SerializedName("createDate")
         val createDate: String,
-            @SerializedName("description")
+        @SerializedName("description")
         val description: String,
-            @SerializedName("followersCount")
+        @SerializedName("followersCount")
         val followersCount: FollowersCount,
-            @SerializedName("id")
+        @SerializedName("id")
         val id: Int,
-            @SerializedName("imageUrl")
+        @SerializedName("imageUrl")
         val imageUrl: String,
-            @SerializedName("isFeatured")
+        @SerializedName("isFeatured")
         val isFeatured: Boolean,
-            @SerializedName("moviesCount")
+        @SerializedName("moviesCount")
         val moviesCount: MoviesCount,
-            @SerializedName("name")
+        @SerializedName("name")
         val name: String,
-            @SerializedName("posters")
+        @SerializedName("posters")
         val posters: Posters,
-            @SerializedName("private")
+        @SerializedName("private")
         val `private`: Boolean,
-            @SerializedName("user")
+        @SerializedName("user")
         val user: User
     ) {
         data class FollowersCount(

@@ -1,38 +1,36 @@
 package com.lukakordzaia.streamflow.network
 
 import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
+import com.lukakordzaia.streamflow.network.interceptors.DefaultHeaderInterceptor
+import com.lukakordzaia.streamflow.network.interceptors.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.traktv.TraktvNetwork
-import com.lukakordzaia.streamflow.utils.AppConstants
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitBuilder(networkConnectionInterceptor: NetworkConnectionInterceptor) {
-    private val okHttpClient = OkHttpClient()
-            .newBuilder()
-            .addInterceptor(networkConnectionInterceptor)
-            .addInterceptor(getInterceptor())
-            .build()
+class RetrofitBuilder(private val networkConnectionInterceptor: NetworkConnectionInterceptor, private val defaultHeaderInterceptor: DefaultHeaderInterceptor) {
+    private var retrofitInstance: Retrofit? = null
 
-    private val retrofit: Retrofit = Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(AppConstants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-    private fun getInterceptor(): Interceptor {
+    fun getRetrofitInstance(): Retrofit {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        return loggingInterceptor
-    }
 
-    fun buildImoviesService(): ImoviesNetwork {
-        return retrofit.create(ImoviesNetwork::class.java)
-    }
+        val okHttpClient = OkHttpClient()
+            .newBuilder()
+            .addInterceptor(defaultHeaderInterceptor)
+            .addInterceptor(networkConnectionInterceptor)
+            .addInterceptor(loggingInterceptor)
+            .build()
 
-    fun buildTraktvService(): TraktvNetwork {
-        return retrofit.create(TraktvNetwork::class.java)
+        if (retrofitInstance == null) {
+            retrofitInstance = Retrofit.Builder()
+                .baseUrl(EndPoints.BASE_URL)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        }
+        return retrofitInstance!!
     }
 }

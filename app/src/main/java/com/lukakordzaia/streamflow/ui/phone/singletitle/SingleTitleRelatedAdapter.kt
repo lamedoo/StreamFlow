@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvHomeItemBinding
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
 
 class SingleTitleRelatedAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<SingleTitleRelatedAdapter.ViewHolder>() {
-    private var list: List<TitleList.Data> = ArrayList()
+    private var list: List<GetTitlesResponse.Data> = ArrayList()
 
-    fun setRelatedList(list: List<TitleList.Data>) {
+    fun setRelatedList(list: List<GetTitlesResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -34,7 +34,7 @@ class SingleTitleRelatedAdapter(private val context: Context, private val onTitl
     }
 
     inner class ViewHolder(val view: RvHomeItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: TitleList.Data) {
+        fun bind(model: GetTitlesResponse.Data) {
             if (model.primaryName.isNotEmpty()) {
                 view.itemName.text = model.primaryName
             } else {

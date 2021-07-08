@@ -2,22 +2,17 @@ package com.lukakordzaia.streamflow.ui.phone.searchtitles
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvSearchItemBinding
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_search_item.view.*
 
 class SearchTitlesAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SearchTitlesAdapter.ViewHolder>() {
-    private var list: List<TitleList.Data> = ArrayList()
+    private var list: List<GetTitlesResponse.Data> = ArrayList()
 
-    fun setSearchTitleList(list: List<TitleList.Data>) {
+    fun setSearchTitleList(list: List<GetTitlesResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -39,7 +34,7 @@ class SearchTitlesAdapter(private val context: Context, private val onTitleClick
     }
 
     inner class ViewHolder(val view: RvSearchItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: TitleList.Data) {
+        fun bind(model: GetTitlesResponse.Data) {
             if (!model.secondaryName.isNullOrEmpty()) {
                 view.rvSearchItemName.text = model.secondaryName
             } else {

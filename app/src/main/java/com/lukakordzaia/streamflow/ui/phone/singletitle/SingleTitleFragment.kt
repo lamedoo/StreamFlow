@@ -30,7 +30,6 @@ import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.phone_single_title_details.*
 import kotlinx.android.synthetic.main.phone_single_title_info.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -208,7 +207,7 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
             }
         })
 
-        singleTitleViewModel.singleTitleData.observe(viewLifecycleOwner, {
+        singleTitleViewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
             if (it.primaryName.isNotBlank()) {
                 binding.singleTitleNameGeo.text = it.primaryName
             }
@@ -257,7 +256,7 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
             single_title_genre_names.text = TextUtils.join(", ", it)
         })
 
-        singleTitleViewModel.titleDirector.observe(viewLifecycleOwner, {
+        singleTitleViewModel.getSingleTitleDirectorResponse.observe(viewLifecycleOwner, {
             single_title_director_name.text = it.originalName
         })
     }
@@ -270,7 +269,7 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
         rv_single_title_cast.layoutManager = castLayout
         rv_single_title_cast.adapter = singleTitleCastAdapter
 
-        singleTitleViewModel.castData.observe(viewLifecycleOwner, {
+        singleTitleViewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
             singleTitleCastAdapter.setCastList(it)
         })
     }

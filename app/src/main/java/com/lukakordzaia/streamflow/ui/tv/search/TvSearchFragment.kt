@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.SearchSupportFragment
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
@@ -92,7 +92,7 @@ class TvSearchFragment : SearchSupportFragment(), SearchSupportFragment.SearchRe
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
         override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row) {
-            if (item is TitleList.Data) {
+            if (item is GetTitlesResponse.Data) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)

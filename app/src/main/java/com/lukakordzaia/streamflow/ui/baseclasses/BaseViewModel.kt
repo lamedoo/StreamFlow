@@ -9,7 +9,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
-import com.lukakordzaia.streamflow.database.WatchedDao
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingDao
 import com.lukakordzaia.streamflow.utils.Event
 
 abstract class BaseViewModel : ViewModel() {
@@ -39,7 +39,7 @@ abstract class BaseViewModel : ViewModel() {
         return Firebase.auth.currentUser
     }
 
-    fun roomDb(context: Context): WatchedDao? {
-        return ImoviesDatabase.getDatabase(context)?.getDao()
+    fun roomDb(context: Context): ContinueWatchingDao? {
+        return ImoviesDatabase.getDatabase(context)?.continueWatchingDao()
     }
 }

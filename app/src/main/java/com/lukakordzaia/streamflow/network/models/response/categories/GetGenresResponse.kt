@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.response.categories
 
 
 import com.google.gson.annotations.SerializedName
 
-data class GenreList(
+data class GetGenresResponse(
     @SerializedName("data")
     val `data`: List<Data>,
     @SerializedName("meta")

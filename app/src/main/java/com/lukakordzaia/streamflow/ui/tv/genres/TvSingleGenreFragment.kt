@@ -18,7 +18,7 @@ import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
@@ -140,7 +140,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         })
     }
 
-    private fun firstCategoryAdapter(category: List<TitleList.Data>) {
+    private fun firstCategoryAdapter(category: List<GetTitlesResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
@@ -152,7 +152,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun secondCategoryAdapter(category: List<TitleList.Data>) {
+    private fun secondCategoryAdapter(category: List<GetTitlesResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
@@ -164,7 +164,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun thirdCategoryAdapter(category: List<TitleList.Data>) {
+    private fun thirdCategoryAdapter(category: List<GetTitlesResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
@@ -176,7 +176,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun fourthCategoryAdapter(category: List<TitleList.Data>) {
+    private fun fourthCategoryAdapter(category: List<GetTitlesResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
@@ -188,7 +188,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun fifthCategoryAdapter(category: List<TitleList.Data>) {
+    private fun fifthCategoryAdapter(category: List<GetTitlesResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
@@ -200,7 +200,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun sixthCategoryAdapter(category: List<TitleList.Data>) {
+    private fun sixthCategoryAdapter(category: List<GetTitlesResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
@@ -240,7 +240,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
                 rowViewHolder: RowPresenter.ViewHolder,
                 row: Row
         ) {
-            if (item is TitleList.Data) {
+            if (item is GetTitlesResponse.Data) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
@@ -251,7 +251,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            if (item is TitleList.Data) {
+            if (item is GetTitlesResponse.Data) {
                 onTitleSelected?.getTitleId(item.id, null)
             }
 

@@ -2,24 +2,19 @@ package com.lukakordzaia.streamflow.ui.phone.categories
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvTrailerItemBinding
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_trailer_item.view.*
 
 class TrailersAdapter(private val context: Context,
                       private val onTrailerClick: (trailerId: Int, trailerUrl: String) -> Unit,
                       private val onTrailerInfoClick: (trailerId: Int) -> Unit) : RecyclerView.Adapter<TrailersAdapter.ViewHolder>() {
-    private var list: List<TitleList.Data> = ArrayList()
+    private var list: List<GetTitlesResponse.Data> = ArrayList()
 
-    fun setTrailerList(list: List<TitleList.Data>) {
+    fun setTrailerList(list: List<GetTitlesResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -41,7 +36,7 @@ class TrailersAdapter(private val context: Context,
     }
 
     inner class ViewHolder(val view: RvTrailerItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: TitleList.Data) {
+        fun bind(model: GetTitlesResponse.Data) {
             if (model.primaryName.isNotEmpty()) {
                 view.rvTrailerName.text = model.primaryName
             } else {

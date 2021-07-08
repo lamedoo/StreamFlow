@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.leanback.widget.HorizontalGridView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
+import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.ui.customviews.TvDefaultCardView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_default_card_view.view.*
@@ -23,7 +23,7 @@ class TvFavoritesPresenter : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val movie = item as SingleTitleData.Data
+        val movie = item as GetSingleTitleResponse.Data
         val cardView = viewHolder.view as TvDefaultCardView
 
         if (!movie.primaryName.isNullOrBlank()) {

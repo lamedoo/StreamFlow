@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.response.titles
 
 
 import com.google.gson.annotations.SerializedName
 
-data class TitleList(
+data class GetTitlesResponse(
     @SerializedName("data")
     val `data`: List<Data>,
     @SerializedName("meta")

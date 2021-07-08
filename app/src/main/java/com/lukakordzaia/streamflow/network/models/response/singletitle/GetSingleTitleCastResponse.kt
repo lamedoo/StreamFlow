@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.response.singletitle
 
 
 import com.google.gson.annotations.SerializedName
 
-data class TitleCast(
+data class GetSingleTitleCastResponse(
     @SerializedName("data")
     val `data`: List<Data>,
     @SerializedName("meta")

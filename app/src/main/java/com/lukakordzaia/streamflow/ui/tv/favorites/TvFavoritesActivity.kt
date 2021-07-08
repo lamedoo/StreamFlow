@@ -61,7 +61,7 @@ class TvFavoritesActivity: BaseFragmentActivity(), TvCheckTitleSelected, TvHasFa
         }, 2500)
 
 
-        tvDetailsViewModel.singleTitleData.observe(this, {
+        tvDetailsViewModel.getSingleTitleResponse.observe(this, {
             home_top_name.text = it.secondaryName
             Picasso.get().load(it.covers?.data?.x1050)
                 .error(R.drawable.movie_image_placeholder_landscape).into(home_top_poster)

@@ -2,25 +2,19 @@ package com.lukakordzaia.streamflow.ui.phone.sharedadapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.databinding.RvHomeItemBinding
 import com.lukakordzaia.streamflow.databinding.RvSingleGenreItemBinding
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_single_genre_item.view.*
 
 class SingleCategoryAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SingleCategoryAdapter.ViewHolder>() {
-    private var list: List<TitleList.Data> = ArrayList()
+    private var list: List<GetTitlesResponse.Data> = ArrayList()
     private var startPosition = 0
 
-    fun setItems(list: List<TitleList.Data>) {
+    fun setItems(list: List<GetTitlesResponse.Data>) {
         this.list = list
         startPosition += list.size
         notifyDataSetChanged()
@@ -43,7 +37,7 @@ class SingleCategoryAdapter(private val context: Context, private val onTitleCli
     }
 
     inner class ViewHolder(val view: RvSingleGenreItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: TitleList.Data) {
+        fun bind(model: GetTitlesResponse.Data) {
             if (model.primaryName.isNotEmpty()) {
                 view.itemName.text = model.primaryName
             } else {

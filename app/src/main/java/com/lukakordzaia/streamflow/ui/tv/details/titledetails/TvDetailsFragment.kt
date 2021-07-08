@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.database.DbDetails
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTvDetailsBinding
@@ -220,7 +220,7 @@ class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
         tvDetailsViewModel.getSingleTitleData(titleId)
         tvDetailsViewModel.getSingleTitleFiles(titleId)
 
-        tvDetailsViewModel.singleTitleData.observe(viewLifecycleOwner, {
+        tvDetailsViewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
             binding.trailerButton.setOnClickListener { _ ->
                 if (!it.trailers.data.isNullOrEmpty()) {
                     trailerUrl = it.trailers.data.last().fileUrl
@@ -284,7 +284,7 @@ class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
         activity?.startActivity(intent)
     }
 
-    private fun continueTitlePlay(item: DbDetails) {
+    private fun continueTitlePlay(item: ContinueWatchingRoom) {
         trailerUrl = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra("titleId", item.titleId)

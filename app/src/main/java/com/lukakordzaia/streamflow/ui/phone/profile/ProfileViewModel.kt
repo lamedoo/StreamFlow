@@ -8,7 +8,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.DbDetails
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.TraktGetToken
 import com.lukakordzaia.streamflow.datamodels.TraktNewList
 import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
@@ -147,13 +147,13 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
         }
     }
 
-    fun getContinueWatchingFromRoom(context: Context): LiveData<List<DbDetails>> {
+    fun getContinueWatchingFromRoom(context: Context): LiveData<List<ContinueWatchingRoom>> {
         return profileRepository.getContinueWatchingFromRoom(roomDb(context)!!)
     }
 
-    fun addContinueWatchingToFirestore(context: Context, dbDetailsList: List<DbDetails>) {
+    fun addContinueWatchingToFirestore(context: Context, continueWatchingRoomList: List<ContinueWatchingRoom>) {
         viewModelScope.launch {
-            dbDetailsList.forEach {
+            continueWatchingRoomList.forEach {
                 val addToFirestore = profileRepository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, it)
                 if (addToFirestore) {
                     newToastMessage("სინქრონიზაცია წარმატებით დასრულდა")

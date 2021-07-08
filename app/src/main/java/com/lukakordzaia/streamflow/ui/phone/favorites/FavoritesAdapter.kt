@@ -2,26 +2,21 @@ package com.lukakordzaia.streamflow.ui.phone.favorites
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvFavoriteItemBinding
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_favorite_item.view.*
 
 class FavoritesAdapter(
     private val context: Context,
     private val onTitleClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int) -> Unit
 ) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
-    private var list: List<SingleTitleData.Data> = ArrayList()
+    private var list: List<GetSingleTitleResponse.Data> = ArrayList()
 
-    fun setItems(list: List<SingleTitleData.Data>) {
+    fun setItems(list: List<GetSingleTitleResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -43,7 +38,7 @@ class FavoritesAdapter(
     }
 
     inner class ViewHolder(val view: RvFavoriteItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: SingleTitleData.Data) {
+        fun bind(model: GetSingleTitleResponse.Data) {
             Picasso.get().load(model.posters.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.itemPoster)
 
             view.root.setOnClickListener {

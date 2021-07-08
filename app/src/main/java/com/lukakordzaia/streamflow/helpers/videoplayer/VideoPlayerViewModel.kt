@@ -7,9 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
-import com.lukakordzaia.streamflow.database.DbDetails
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
-import com.lukakordzaia.streamflow.datamodels.TitleFiles
+import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
 import com.lukakordzaia.streamflow.network.Result
@@ -41,7 +41,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
     }
 
     fun addContinueWatching(context: Context) {
-        val dbDetails = DbDetails(
+        val dbDetails = ContinueWatchingRoom(
                 videoPlayerInfo.value!!.titleId,
                 videoPlayerInfo.value!!.chosenLanguage,
                 playbackPositionForDb.value!!,
@@ -116,23 +116,23 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
         }
     }
 
-    private fun checkAvailability(singleEpisodeFiles: TitleFiles.Data.File, chosenLanguage: String) {
-        if (singleEpisodeFiles.lang == chosenLanguage) {
-            if (singleEpisodeFiles.files.size == 1) {
-                getEpisode = singleEpisodeFiles.files[0].src
-            } else if (singleEpisodeFiles.files.size > 1) {
-                singleEpisodeFiles.files.forEach {
+    private fun checkAvailability(singleEpisodeFilesGetSingle: GetSingleTitleFilesResponse.Data.File, chosenLanguage: String) {
+        if (singleEpisodeFilesGetSingle.lang == chosenLanguage) {
+            if (singleEpisodeFilesGetSingle.files.size == 1) {
+                getEpisode = singleEpisodeFilesGetSingle.files[0].src
+            } else if (singleEpisodeFilesGetSingle.files.size > 1) {
+                singleEpisodeFilesGetSingle.files.forEach {
                     if (it.quality == "HIGH") {
                         getEpisode = it.src
                     }
                 }
             }
 
-            if (!singleEpisodeFiles.subtitles.isNullOrEmpty()) {
-                if (singleEpisodeFiles.subtitles.size == 1) {
-                    getSubtitles = singleEpisodeFiles.subtitles[0]!!.url
-                } else if (singleEpisodeFiles.subtitles.size > 1) {
-                    singleEpisodeFiles.subtitles.forEach {
+            if (!singleEpisodeFilesGetSingle.subtitles.isNullOrEmpty()) {
+                if (singleEpisodeFilesGetSingle.subtitles.size == 1) {
+                    getSubtitles = singleEpisodeFilesGetSingle.subtitles[0]!!.url
+                } else if (singleEpisodeFilesGetSingle.subtitles.size > 1) {
+                    singleEpisodeFilesGetSingle.subtitles.forEach {
                         if (it!!.lang.equals(chosenLanguage, true)) {
                             getSubtitles = it.url
                         }

@@ -3,17 +3,13 @@ package com.lukakordzaia.streamflow.ui.phone.searchtitles
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSearchTitlesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -69,17 +65,7 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
 
     private fun searchInput() {
         binding.searchTitleText.setQueryTextChangeListener(object : SearchEditText.QueryTextListener {
-            override fun onQueryTextSubmit(query: String?) {
-//                if (!query.isNullOrBlank()) {
-//                    binding.rvSearchTitlesContainer.setVisible()
-//                    binding.topSearchContainer.setGone()
-//                } else {
-//                    searchTitlesViewModel.clearSearchResults()
-//                    binding.searchTitleText.setText("")
-//                    binding.rvSearchTitlesContainer.setGone()
-//                    binding.topSearchContainer.setVisible()
-//                }
-            }
+            override fun onQueryTextSubmit(query: String?) {}
 
 
             override fun onQueryTextChange(newText: String?) {
@@ -151,7 +137,7 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
             }
         })
 
-        searchTitlesViewModel.franchiseList.observe(viewLifecycleOwner, {
+        searchTitlesViewModel.getTopFranchisesResponse.observe(viewLifecycleOwner, {
             topFranchisesAdapter.setFranchisesList(it)
         })
     }

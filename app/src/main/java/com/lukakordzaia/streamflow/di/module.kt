@@ -3,8 +3,11 @@ package com.lukakordzaia.streamflow.di
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
-import com.lukakordzaia.streamflow.network.NetworkConnectionInterceptor
+import com.lukakordzaia.streamflow.network.interceptors.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
+import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
+import com.lukakordzaia.streamflow.network.interceptors.DefaultHeaderInterceptor
+import com.lukakordzaia.streamflow.network.traktv.TraktvNetwork
 import com.lukakordzaia.streamflow.repository.*
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
@@ -50,8 +53,11 @@ val repositoryModule = module {
 }
 
 val generalModule = module {
-    single { RetrofitBuilder(get()) }
     single { NetworkConnectionInterceptor(get()) }
+    single { DefaultHeaderInterceptor() }
+    single { RetrofitBuilder(get(), get()) }
+    single { get<RetrofitBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
+    single { get<RetrofitBuilder>().getRetrofitInstance().create(TraktvNetwork::class.java) }
     single { SpinnerClass(get()) }
     single { BuildMediaSource(get()) }
     single { AuthSharedPreferences(get()) }

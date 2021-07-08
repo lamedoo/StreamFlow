@@ -8,14 +8,14 @@ import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
+import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import com.lukakordzaia.streamflow.network.traktv.TraktvCall
+import com.lukakordzaia.streamflow.network.traktv.TraktvNetwork
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
-class TraktRepository(retrofitBuilder: RetrofitBuilder): TraktvCall() {
-    private val service = retrofitBuilder.buildTraktvService()
-
+class TraktRepository(private val service: TraktvNetwork): TraktvCall() {
     suspend fun getDeviceCode(): Result<TraktvDeviceCode> {
         return traktvCall { service.getDeviceCode(SendTraktvClientId(AppConstants.TRAKTV_CLIENT_ID)) }
     }

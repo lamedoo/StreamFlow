@@ -24,6 +24,8 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
+import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters.TvCastPresenter
@@ -113,7 +115,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         tvTitleFilesViewModel.getSingleTitleRelated(titleId)
 
 
-        tvTitleFilesViewModel.castData.observe(viewLifecycleOwner, {
+        tvTitleFilesViewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
             castRowsAdapter(it, isTvShow)
         })
 
@@ -171,9 +173,9 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         }
     }
 
-    private fun castRowsAdapter(castList: List<TitleCast.Data>, isTvShow: Boolean) {
+    private fun castRowsAdapter(castResponseListGetSingle: List<GetSingleTitleCastResponse.Data>, isTvShow: Boolean) {
         val listRowAdapter = ArrayObjectAdapter(TvCastPresenter(requireContext())).apply {
-            castList.forEach {
+            castResponseListGetSingle.forEach {
                 add(it)
             }
         }
@@ -182,7 +184,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         }
     }
 
-    private fun relatedRowsAdapter(relatedList: List<TitleList.Data>, isTvShow: Boolean) {
+    private fun relatedRowsAdapter(relatedList: List<GetTitlesResponse.Data>, isTvShow: Boolean) {
         val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter()).apply {
             relatedList.forEach {
                 add(it)
@@ -237,7 +239,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                         tvChooseLanguageAdapter.setLanguageList(languages)
                     })
                 }
-                is TitleList.Data -> {
+                is GetTitlesResponse.Data -> {
                     val intent = Intent(context, TvDetailsActivity::class.java)
                     intent.putExtra("titleId", item.id)
                     intent.putExtra("isTvShow", item.isTvShow)

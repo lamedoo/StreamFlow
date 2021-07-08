@@ -1,9 +1,9 @@
-package com.lukakordzaia.streamflow.datamodels
+package com.lukakordzaia.streamflow.network.models.response.categories
 
 
 import com.google.gson.annotations.SerializedName
 
-data class StudioList(
+data class GetTopStudiosResponse(
     @SerializedName("data")
     val `data`: List<Data>,
     @SerializedName("meta")

@@ -17,7 +17,7 @@ import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
+import com.lukakordzaia.streamflow.network.models.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
 import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
@@ -127,7 +127,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
         rowsAdapter.addAll(0, initListRows)
     }
 
-    private fun movieRowsAdapter(movies: List<SingleTitleData.Data>) {
+    private fun movieRowsAdapter(movies: List<GetSingleTitleResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter()).apply {
             movies.forEach {
                 add(it)
@@ -139,7 +139,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun tvShowsRowsAdapter(tvShows: List<SingleTitleData.Data>) {
+    private fun tvShowsRowsAdapter(tvShows: List<GetSingleTitleResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter()).apply {
             tvShows.forEach {
                 add(it)
@@ -178,7 +178,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
                 rowViewHolder: RowPresenter.ViewHolder,
                 row: Row
         ) {
-            if (item is SingleTitleData.Data) {
+            if (item is GetSingleTitleResponse.Data) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
@@ -191,7 +191,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
-            if (item is SingleTitleData.Data) {
+            if (item is GetSingleTitleResponse.Data) {
                 onTitleSelected?.getTitleId(item.id, null)
             }
 

@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.DbDetails
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
@@ -22,17 +22,17 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     val topMovieLoader = MutableLiveData<LoadingState>()
     val topTvShowsLoader = MutableLiveData<LoadingState>()
 
-    private val _movieDayData = MutableLiveData<TitleList.Data>()
-    val movieDayData: LiveData<TitleList.Data> = _movieDayData
+    private val _movieDayData = MutableLiveData<GetTitlesResponse.Data>()
+    val movieDayData: LiveData<GetTitlesResponse.Data> = _movieDayData
 
-    private val _newMovieList = MutableLiveData<List<TitleList.Data>>()
-    val newMovieList: LiveData<List<TitleList.Data>> = _newMovieList
+    private val _newMovieList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val newMovieList: LiveData<List<GetTitlesResponse.Data>> = _newMovieList
 
-    private val _topMovieList = MutableLiveData<List<TitleList.Data>>()
-    val topMovieList: LiveData<List<TitleList.Data>> = _topMovieList
+    private val _topMovieList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val topMovieList: LiveData<List<GetTitlesResponse.Data>> = _topMovieList
 
-    private val _topTvShowList = MutableLiveData<List<TitleList.Data>>()
-    val topTvShowList: LiveData<List<TitleList.Data>> = _topTvShowList
+    private val _topTvShowList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val topTvShowList: LiveData<List<GetTitlesResponse.Data>> = _topTvShowList
 
     private val _continueWatchingList = MutableLiveData<List<DbTitleData>>()
     val continueWatchingList: LiveData<List<DbTitleData>> = _continueWatchingList
@@ -73,17 +73,17 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
     fun getContinueWatchingFromFirestore() {
         repository.getContinueWatchingFromFirestore(currentUser()!!.uid, object : FirebaseContinueWatchingListCallBack {
-            override fun continueWatchingList(titleList: MutableList<DbDetails>) {
+            override fun continueWatchingList(titleList: MutableList<ContinueWatchingRoom>) {
                 getContinueWatchingTitlesFromApi(titleList)
             }
         })
     }
 
-    fun getContinueWatchingFromRoom(context: Context): LiveData<List<DbDetails>> {
+    fun getContinueWatchingFromRoom(context: Context): LiveData<List<ContinueWatchingRoom>> {
         return repository.getContinueWatchingFromRoom(roomDb(context)!!)
     }
 
-    fun getContinueWatchingTitlesFromApi(dbDetails: List<DbDetails>) {
+    fun getContinueWatchingTitlesFromApi(dbDetails: List<ContinueWatchingRoom>) {
         val dbTitles: MutableList<DbTitleData> = mutableListOf()
         viewModelScope.launch {
             dbDetails.forEach {

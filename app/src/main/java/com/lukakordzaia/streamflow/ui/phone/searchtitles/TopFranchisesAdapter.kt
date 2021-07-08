@@ -2,27 +2,18 @@ package com.lukakordzaia.streamflow.ui.phone.searchtitles
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvFranchiseItemBinding
-import com.lukakordzaia.streamflow.datamodels.FranchiseList
-import com.lukakordzaia.streamflow.datamodels.TitleList
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_franchise_item.view.*
-import kotlinx.android.synthetic.main.rv_search_item.view.*
+import com.lukakordzaia.streamflow.network.models.response.categories.GetTopFranchisesResponse
 
 class TopFranchisesAdapter(
     private val context: Context,
     private val onTitleClick: (titleName: String, position: Int) -> Unit
 ) : RecyclerView.Adapter<TopFranchisesAdapter.ViewHolder>() {
-    private var list: List<FranchiseList.Data> = ArrayList()
+    private var list: List<GetTopFranchisesResponse.Data> = ArrayList()
 
-    fun setFranchisesList(list: List<FranchiseList.Data>) {
+    fun setFranchisesList(list: List<GetTopFranchisesResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -44,7 +35,7 @@ class TopFranchisesAdapter(
     }
 
     inner class ViewHolder(val view: RvFranchiseItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: FranchiseList.Data, position: Int) {
+        fun bind(model: GetTopFranchisesResponse.Data, position: Int) {
             view.rvFranchiseItemName.text = model.name
 
             view.root.setOnClickListener {
