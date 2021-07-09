@@ -16,7 +16,7 @@
         android:clipChildren="false"
         android:padding="@dimen/fragment_padding">
 
-        <com.lukakordzaia.streamflow.ui.customviews.SearchEditText
+        <com.lukakordzaia.streamflow.customviews.SearchEditText
             android:id="@+id/search_title_text"
             android:layout_width="match_parent"
             android:layout_height="53dp"

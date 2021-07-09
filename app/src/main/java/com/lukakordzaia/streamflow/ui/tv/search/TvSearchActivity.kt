@@ -3,9 +3,9 @@ package com.lukakordzaia.streamflow.ui.tv.search
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.customviews.SearchEditText
 import com.lukakordzaia.streamflow.databinding.ActivityTvSearchBinding
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
-import com.lukakordzaia.streamflow.ui.customviews.SearchEditText
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.showKeyboard

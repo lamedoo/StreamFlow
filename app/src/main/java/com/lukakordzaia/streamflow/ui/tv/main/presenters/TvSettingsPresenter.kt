@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.customviews.TvCategoriesCardView
 import com.lukakordzaia.streamflow.datamodels.TvSettingsList
-import com.lukakordzaia.streamflow.ui.customviews.TvCategoriesCardView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_categories_card_view.view.*
 

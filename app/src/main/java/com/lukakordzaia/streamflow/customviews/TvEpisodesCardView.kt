@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.customviews
+package com.lukakordzaia.streamflow.customviews
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,9 +6,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.lukakordzaia.streamflow.R
 import kotlinx.android.synthetic.main.tv_watched_card_view.view.*
 
-open class TvDefaultWithTitleCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+open class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     init {
-        inflate(context, R.layout.tv_default_with_title_card_view, this)
+        inflate(context, R.layout.tv_details_episodes_item, this)
     }
 
     fun setPosterDimensions(width: Int, height: Int) {

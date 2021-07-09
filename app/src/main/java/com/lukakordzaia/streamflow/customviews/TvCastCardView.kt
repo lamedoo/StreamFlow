@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.customviews
+package com.lukakordzaia.streamflow.customviews
 
 import android.content.Context
 import android.util.AttributeSet

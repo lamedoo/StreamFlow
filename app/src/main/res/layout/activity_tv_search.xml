@@ -51,7 +51,7 @@
 
     </LinearLayout>
 
-    <com.lukakordzaia.streamflow.ui.customviews.SearchEditText
+    <com.lukakordzaia.streamflow.customviews.SearchEditText
         android:id="@+id/search_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

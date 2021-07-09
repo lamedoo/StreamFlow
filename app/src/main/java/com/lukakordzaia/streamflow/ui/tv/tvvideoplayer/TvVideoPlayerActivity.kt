@@ -8,11 +8,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvVideoPlayerBinding
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
+import kotlinx.android.synthetic.main.fragment_tv_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.view.*
-import kotlinx.android.synthetic.main.tv_video_player_fragment.*
 
 class TvVideoPlayerActivity : FragmentActivity() {
     private lateinit var binding: ActivityTvVideoPlayerBinding
@@ -49,7 +50,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 }
 
                 if (continue_watching_dialog_root.isVisible) {
-                    continue_watching_dialog_yes.requestFocus()
+                    confirm_button.requestFocus()
                 }
             }
             KeyEvent.KEYCODE_DPAD_CENTER -> {
@@ -78,7 +79,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 }
 
                 if (continue_watching_dialog_root.isVisible) {
-                    continue_watching_dialog_home.requestFocus()
+                    go_back_button.requestFocus()
                 }
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
@@ -195,16 +196,15 @@ class TvVideoPlayerActivity : FragmentActivity() {
 
 
     override fun onBackPressed() {
-        val titleId = this.intent?.getSerializableExtra("titleId") as Int
-        val isTvShow = this.intent?.getSerializableExtra("isTvShow") as Boolean
+        val videoPlayerData = this.intent!!.getParcelableExtra("videoPlayerData") as VideoPlayerData
         if (tv_title_player.isControllerVisible) {
             tv_title_player.hideController()
         } else {
             val intent = Intent(this, TvDetailsActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra("titleId", titleId)
-            intent.putExtra("isTvShow", isTvShow)
+            intent.putExtra("titleId", videoPlayerData.titleId)
+            intent.putExtra("isTvShow", videoPlayerData.isTvShow)
             startActivity(intent)
             finish()
         }

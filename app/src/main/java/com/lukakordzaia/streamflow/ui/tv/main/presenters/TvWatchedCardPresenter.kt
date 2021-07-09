@@ -4,8 +4,8 @@ import android.view.ViewGroup
 import androidx.leanback.widget.HorizontalGridView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.customviews.TvWatchedCardView
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.ui.customviews.TvWatchedCardView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_watched_card_view.view.*
 

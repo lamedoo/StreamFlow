@@ -20,11 +20,12 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -235,8 +236,6 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun setupUIElements() {
-//        badgeDrawable = resources.getDrawable(R.drawable.streamflowlogo)
-//        title = "StreamFlow"
         isHeadersTransitionOnBackEnabled = true
         brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
         adapter = rowsAdapter
@@ -262,13 +261,15 @@ class TvMainFragment : BrowseSupportFragment() {
             } else if (item is DbTitleData) {
                 val trailerUrl: String? = null
                 val intent = Intent(context, TvVideoPlayerActivity::class.java)
-                intent.putExtra("titleId", item.id)
-                intent.putExtra("isTvShow", item.isTvShow)
-                intent.putExtra("chosenLanguage", item.language)
-                intent.putExtra("chosenSeason", item.season)
-                intent.putExtra("chosenEpisode", item.episode)
-                intent.putExtra("watchedTime", item.watchedDuration)
-                intent.putExtra("trailerUrl", trailerUrl)
+                intent.putExtra("videoPlayerData", VideoPlayerData(
+                    item.id,
+                    item.isTvShow,
+                    item.season,
+                    item.language,
+                    item.episode,
+                    item.watchedDuration,
+                    trailerUrl
+                ))
                 activity?.startActivity(intent)
             } else if (item is TvCategoriesList) {
                 when (item.categoriesId) {

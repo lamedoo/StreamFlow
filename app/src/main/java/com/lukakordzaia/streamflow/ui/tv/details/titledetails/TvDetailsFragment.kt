@@ -19,6 +19,7 @@ import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingR
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTvDetailsBinding
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -261,39 +262,45 @@ class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
 
     private fun playTitleTrailer(titleId: Int, isTvShow: Boolean, trailerUrl: String) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("titleId", titleId)
-        intent.putExtra("isTvShow", isTvShow)
-        intent.putExtra("chosenLanguage", "ENG")
-        intent.putExtra("chosenSeason", 0)
-        intent.putExtra("chosenEpisode", 0)
-        intent.putExtra("watchedTime", 0L)
-        intent.putExtra("trailerUrl", trailerUrl)
+        intent.putExtra("videoPlayerData", VideoPlayerData(
+            titleId,
+            isTvShow,
+            0,
+            "ENG",
+            0,
+            0L,
+            trailerUrl
+        ))
         activity?.startActivity(intent)
     }
 
     private fun playTitleFromStart(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
         trailerUrl = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("titleId", titleId)
-        intent.putExtra("isTvShow", isTvShow)
-        intent.putExtra("chosenLanguage", chosenLanguage)
-        intent.putExtra("chosenSeason", if (isTvShow) 1 else 0)
-        intent.putExtra("chosenEpisode", if (isTvShow) 1 else 0)
-        intent.putExtra("watchedTime", 0L)
-        intent.putExtra("trailerUrl", trailerUrl)
+        intent.putExtra("videoPlayerData", VideoPlayerData(
+            titleId,
+            isTvShow,
+            if (isTvShow) 1 else 0,
+            chosenLanguage,
+            if (isTvShow) 1 else 0,
+            0L,
+            trailerUrl
+        ))
         activity?.startActivity(intent)
     }
 
     private fun continueTitlePlay(item: ContinueWatchingRoom) {
         trailerUrl = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("titleId", item.titleId)
-        intent.putExtra("isTvShow", item.isTvShow)
-        intent.putExtra("chosenLanguage", item.language)
-        intent.putExtra("chosenSeason", item.season)
-        intent.putExtra("chosenEpisode", item.episode)
-        intent.putExtra("watchedTime", item.watchedDuration)
-        intent.putExtra("trailerUrl", trailerUrl)
+        intent.putExtra("videoPlayerData", VideoPlayerData(
+            item.titleId,
+            item.isTvShow,
+            item.season,
+            item.language,
+            item.episode,
+            item.watchedDuration,
+            trailerUrl
+        ))
         activity?.startActivity(intent)
     }
 }

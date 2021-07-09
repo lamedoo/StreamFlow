@@ -264,13 +264,15 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     private fun playEpisode(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
         val trailerUrl: String? = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("titleId", titleId)
-        intent.putExtra("isTvShow", isTvShow)
-        intent.putExtra("chosenLanguage", chosenLanguage)
-        intent.putExtra("chosenSeason", this.tvTitleFilesViewModel.chosenSeason.value)
-        intent.putExtra("chosenEpisode", this.tvTitleFilesViewModel.chosenEpisode.value)
-        intent.putExtra("watchedTime", 0L)
-        intent.putExtra("trailerUrl", trailerUrl)
+        intent.putExtra("videoPlayerData", VideoPlayerData(
+            titleId,
+            isTvShow,
+            this.tvTitleFilesViewModel.chosenSeason.value!!,
+            chosenLanguage,
+            this.tvTitleFilesViewModel.chosenEpisode.value!!,
+            0L,
+            trailerUrl
+        ))
         activity?.startActivity(intent)
     }
 

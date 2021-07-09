@@ -9,7 +9,7 @@
         android:id="@+id/videoPlayerFragment"
         android:name="com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerFragment"
         android:label="fragment_video_player"
-        tools:layout="@layout/phone_fragment_video_player" >
+        tools:layout="@layout/fragment_phone_video_player" >
         <argument
             android:name="videoPlayerData"
             app:argType="com.lukakordzaia.streamflow.datamodels.VideoPlayerData" />

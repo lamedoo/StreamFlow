@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.customviews.TvCastCardView
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
-import com.lukakordzaia.streamflow.ui.customviews.TvCastCardView
 import kotlinx.android.synthetic.main.tv_cast_card_item.view.*
 
 class TvCastPresenter(private val context: Context) : Presenter() {

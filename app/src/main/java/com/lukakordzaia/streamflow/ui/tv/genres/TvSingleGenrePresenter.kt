@@ -4,8 +4,8 @@ import android.view.ViewGroup
 import androidx.leanback.widget.HorizontalGridView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.customviews.TvGenresCardView
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
-import com.lukakordzaia.streamflow.ui.customviews.TvGenresCardView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_genres_card_view.view.*
 

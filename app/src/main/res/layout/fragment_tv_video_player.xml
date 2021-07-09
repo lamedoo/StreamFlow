@@ -26,6 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <include
+        android:id="@+id/continue_watching"
         layout="@layout/continue_watching_dialog"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
