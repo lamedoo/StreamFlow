@@ -39,8 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_back"
-            android:tint="@color/white"
-            android:background="@drawable/exo_buttons_focused" />
+            android:background="@drawable/exo_buttons_focused"
+            app:tint="@color/white" />
 
         <ImageButton
             android:id="@+id/tv_subtitle_toggle"

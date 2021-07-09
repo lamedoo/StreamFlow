@@ -30,7 +30,7 @@ import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
-import com.lukakordzaia.streamflow.ui.tv.TvActivity
+import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
@@ -45,7 +45,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
-open class BaseVideoPlayerFragmentNew(fragment: Int) : Fragment(fragment) {
+open class BaseVideoPlayerFragment(fragment: Int) : Fragment(fragment) {
     protected val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
     private val buildMediaSource: BuildMediaSource by inject()
 
@@ -64,7 +64,7 @@ open class BaseVideoPlayerFragmentNew(fragment: Int) : Fragment(fragment) {
             override fun onTick(millisUntilFinished: Long) {
             }
             override fun onFinish() {
-                if (this@BaseVideoPlayerFragmentNew.activity is TvVideoPlayerActivity) {
+                if (this@BaseVideoPlayerFragment.activity is TvVideoPlayerActivity) {
                     requireActivity().onBackPressed()
                     requireActivity().onBackPressed()
                 } else {
@@ -102,7 +102,7 @@ open class BaseVideoPlayerFragmentNew(fragment: Int) : Fragment(fragment) {
                     videoPlayerInfo = it
                 })
 
-                if (this@BaseVideoPlayerFragmentNew::videoPlayerInfo.isInitialized) {
+                if (this@BaseVideoPlayerFragment::videoPlayerInfo.isInitialized) {
                     nextButtonClickListener()
                     prevButtonClickListener()
                 }
@@ -111,7 +111,7 @@ open class BaseVideoPlayerFragmentNew(fragment: Int) : Fragment(fragment) {
 
                     episodeHasEnded = true
                     showContinueWatchingDialog()
-                    tracker = ProgressTrackerNew(player, object : ProgressTrackerNew.PositionListener {
+                    tracker = ProgressTrackerNew(player, object : PositionListener {
                         override fun progress(position: Long) {
                             exo_live_duration?.text = String.format("%02d:%02d:%02d",
                                     TimeUnit.MILLISECONDS.toHours(position),
@@ -388,25 +388,25 @@ open class BaseVideoPlayerFragmentNew(fragment: Int) : Fragment(fragment) {
         autoBackPress.cancel()
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
-}
 
-class ProgressTrackerNew(private val player: Player, private val positionListener: PositionListener) : Runnable {
+    inner class ProgressTrackerNew(private val player: Player, private val positionListener: PositionListener) : Runnable {
+        private val handler: Handler = Handler()
+        override fun run() {
+            val position = player.duration - player.currentPosition
+            positionListener.progress(position)
+            handler.postDelayed(this, 1000)
+        }
+
+        fun purgeHandler() {
+            handler.removeCallbacks(this)
+        }
+
+        init {
+            handler.post(this)
+        }
+    }
+
     interface PositionListener {
         fun progress(position: Long)
-    }
-
-    private val handler: Handler = Handler()
-    override fun run() {
-        val position = player.duration - player.currentPosition
-        positionListener.progress(position)
-        handler.postDelayed(this, 1000)
-    }
-
-    fun purgeHandler() {
-        handler.removeCallbacks(this)
-    }
-
-    init {
-        handler.post(this)
     }
 }

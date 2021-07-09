@@ -16,6 +16,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ListRowPresenter
+import androidx.viewbinding.ViewBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -30,10 +31,10 @@ import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflow.ui.tv.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesActivity
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
+import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.streamflow.ui.tv.settings.TvSettingsActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
@@ -44,7 +45,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_sidebar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
+abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCheckFirstItem {
     private val profileViewModel: ProfileViewModel by viewModel()
     private var googleAccount: GoogleSignInAccount? = null
     private var googleSignInClient: GoogleSignInClient? = null
@@ -61,8 +62,14 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
     private var rowsSupportFragment: RowsSupportFragment? = null
     private var rowsPosition: Int? = null
 
+    lateinit var binding: VB
+    abstract fun getViewBinding(): VB
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = getViewBinding()
+        setContentView(binding.root)
+
         googleAccount = GoogleSignIn.getLastSignedInAccount(this)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

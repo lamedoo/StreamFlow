@@ -1,7 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.profile
 
 import android.content.Context
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -9,15 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.streamflow.network.models.trakttv.response.GetUserTokenResponse
+import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.response.GetDeviceCodeResponse
-import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.trakttv.response.GetUserTokenResponse
 import com.lukakordzaia.streamflow.repository.ProfileRepository
 import com.lukakordzaia.streamflow.repository.TraktRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.streamflow.ui.tv.TvActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 

@@ -36,7 +36,7 @@
         app:layout_constraintWidth_percent="0.65">
         
         <LinearLayout
-            android:id="@+id/tv_settings_trakt_container"
+            android:id="@+id/trakt_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -63,7 +63,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tv_settings_info_container"
+            android:id="@+id/info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -90,7 +90,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tv_settings_delete_container"
+            android:id="@+id/delete_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -117,7 +117,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tv_settings_signout_container"
+            android:id="@+id/signOut_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -133,7 +133,7 @@
                 android:fontFamily="@font/georgian_uppercase"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/tv_settings_profile_photo"
+                android:id="@+id/profile_photo"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center"
@@ -143,7 +143,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
-                android:id="@+id/tv_settings_profile_name"
+                android:id="@+id/profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -153,7 +153,7 @@
                 android:textSize="17sp"/>
 
             <TextView
-                android:id="@+id/tv_settings_profile_email"
+                android:id="@+id/profile_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

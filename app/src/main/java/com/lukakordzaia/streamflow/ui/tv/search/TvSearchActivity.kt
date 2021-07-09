@@ -3,65 +3,58 @@ package com.lukakordzaia.streamflow.ui.tv.search
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.ActivityTvSearchBinding
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.customviews.SearchEditText
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.showKeyboard
-import kotlinx.android.synthetic.main.activity_tv_search.*
-import kotlinx.android.synthetic.main.tv_sidebar.*
-import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
 
-class TvSearchActivity : BaseFragmentActivity() {
+class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>() {
     private lateinit var fragment: TvSearchFragmentNew
+
+    override fun getViewBinding() = ActivityTvSearchBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tv_search)
 
         fragment = supportFragmentManager.findFragmentById(R.id.tv_search_fragment) as TvSearchFragmentNew
 
         setSidebarClickListeners(
-                tv_sidebar_search,
-                tv_sidebar_home,
-                tv_sidebar_favorites,
-                tv_sidebar_movies,
-                tv_sidebar_genres,
-                tv_sidebar_settings
+            binding.tvSidebar.searchButton,
+            binding.tvSidebar.homeButton,
+            binding.tvSidebar.favoritesButton,
+            binding.tvSidebar.moviesButton,
+            binding.tvSidebar.genresButton,
+            binding.tvSidebar.settingsButton
         )
 
-        setCurrentButton(tv_sidebar_search)
+        setCurrentButton(binding.tvSidebar.searchButton)
 
-        tv_sidebar_search.setOnClickListener {
-            tv_sidebar.setGone()
+        binding.tvSidebar.searchButton.setOnClickListener {
+            binding.tvSidebar.root.setGone()
         }
 
-        tv_sidebar_collapsed_search_icon.setColorFilter(
-                ContextCompat.getColor(
-                        this,
-                        R.color.accent_color
-                )
-        )
+        binding.tvSidebarCollapsed.collapsedSearchIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
-        googleSignIn(tv_sidebar_signin)
-        googleSignOut(tv_sidebar_signout)
-        googleProfileDetails(tv_sidebar_profile_photo, tv_sidebar_profile_username)
+        googleSignIn(binding.tvSidebar.signIn)
+        googleSignOut(binding.tvSidebar.signOut)
+        googleProfileDetails(binding.tvSidebar.profilePhoto, binding.tvSidebar.profileUsername)
 
-        tv_search_title_text.requestFocus()
-        tv_search_title_text.showKeyboard()
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            binding.searchInput.showKeyboard()
+        }
 
-        tv_search_title_text.setQueryTextChangeListener(object : SearchEditText.QueryTextListener {
+        binding.searchInput.setQueryTextChangeListener(object : SearchEditText.QueryTextListener {
             override fun onQueryTextSubmit(query: String?) {
                 fragment.clearRowsAdapter()
                 if (!query.isNullOrBlank()) {
                     fragment.setSearchQuery(query)
                 }
-                tv_search_title_text.hideKeyboard()
+                binding.searchInput.hideKeyboard()
             }
 
-
-            override fun onQueryTextChange(newText: String?) {
-            }
+            override fun onQueryTextChange(newText: String?) {}
         })
     }
 }
