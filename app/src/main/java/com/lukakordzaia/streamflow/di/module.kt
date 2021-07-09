@@ -2,11 +2,10 @@ package com.lukakordzaia.streamflow.di
 
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
-import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
-import com.lukakordzaia.streamflow.network.interceptors.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import com.lukakordzaia.streamflow.network.interceptors.DefaultHeaderInterceptor
+import com.lukakordzaia.streamflow.network.interceptors.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.trakttv.TraktTvNetwork
 import com.lukakordzaia.streamflow.repository.*
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
@@ -19,6 +18,7 @@ import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsViewModel
+import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.TvTitleFilesViewModel

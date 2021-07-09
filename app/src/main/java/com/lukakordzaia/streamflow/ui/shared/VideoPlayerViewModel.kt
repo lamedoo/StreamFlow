@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.helpers.videoplayer
+package com.lukakordzaia.streamflow.ui.shared
 
 import android.content.Context
 import android.net.Uri
@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch

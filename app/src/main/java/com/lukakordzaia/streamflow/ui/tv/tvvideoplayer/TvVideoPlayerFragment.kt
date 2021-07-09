@@ -1,9 +1,7 @@
 package com.lukakordzaia.streamflow.ui.tv.tvvideoplayer
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -12,15 +10,10 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.ui.CaptionStyleCompat
 import com.google.android.exoplayer2.util.Util
-import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.animations.VideoPlayerAnimations
 import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
@@ -28,8 +21,9 @@ import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
-import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
+import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerHelpers
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setInvisible
@@ -252,48 +246,8 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {
-        val subtitleView = binding.tvSubtitle
-        val subtitleToggle = tv_subtitle_toggle
-
-        player.addTextOutput {
-            subtitleView.onCues(it)
-
-            if (view != null) {
-                subtitleView.setStyle(
-                    CaptionStyleCompat(
-                        ContextCompat.getColor(requireContext(), R.color.white),
-                        ContextCompat.getColor(requireContext(), R.color.transparent),
-                        ContextCompat.getColor(requireContext(), R.color.transparent),
-                        CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW,
-                        ContextCompat.getColor(requireContext(), R.color.black),
-                        Typeface.DEFAULT_BOLD,
-                    )
-                )
-                subtitleView.setFixedTextSize(2, 25F)
-            }
-        }
-
-        if (hasSubs) {
-            subtitleToggle?.setVisible()
-            subtitleToggle?.imageTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.accent_color
-                )
-            )
-        } else {
-            subtitleToggle?.setGone()
-        }
-
-        subtitleToggle?.setOnClickListener {
-            if (subtitleView.isVisible) {
-                subtitleView.setInvisible()
-                VideoPlayerAnimations().setSubtitleOff(subtitleToggle, 200, requireContext())
-            } else {
-                subtitleView.setVisible()
-                VideoPlayerAnimations().setSubtitleOn(subtitleToggle, 200, requireContext())
-            }
-        }
+        binding.tvTitlePlayer.subtitleView?.setInvisible()
+        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.tvSubtitle, tv_subtitle_toggle, player, hasSubs)
     }
 
     private fun showContinueWatchingDialog() {
@@ -330,12 +284,8 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
             videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
 
-                if (it.titleSubUri.isNotEmpty()) {
-                    if (it.titleSubUri == "0") {
-                        subtitleFunctions(false)
-                    } else {
-                        subtitleFunctions(true)
-                    }
+                if (it.titleSubUri.isNotEmpty() && it.titleSubUri != "0") {
+                    subtitleFunctions(true)
                 } else {
                     subtitleFunctions(false)
                 }

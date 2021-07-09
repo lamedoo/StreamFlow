@@ -12,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:show_buffering="always"
+        app:fastforward_increment="10000"
+        app:rewind_increment="10000"
         app:surface_type="surface_view"
         app:buffered_color="@color/accent_color"
         app:controller_layout_id="@layout/tv_exoplayer_controller_layout"/>
