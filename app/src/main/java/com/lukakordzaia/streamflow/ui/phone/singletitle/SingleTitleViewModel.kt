@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
-import com.lukakordzaia.streamflow.datamodels.TitleCast
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
@@ -19,22 +19,22 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
     val singleTitleLoader = MutableLiveData<LoadingState>()
     val traktFavoriteLoader = MutableLiveData<LoadingState>()
 
-    private val _singleTitleData = MutableLiveData<SingleTitleData.Data>()
-    val singleTitleData: LiveData<SingleTitleData.Data> = _singleTitleData
+    private val _singleTitleData = MutableLiveData<GetSingleTitleResponse.Data>()
+    val getSingleTitleResponse: LiveData<GetSingleTitleResponse.Data> = _singleTitleData
 
     private val numOfSeasons = MutableLiveData<Int>()
 
-    private val _castData = MutableLiveData<List<TitleCast.Data>>()
-    val castData: LiveData<List<TitleCast.Data>> = _castData
+    private val _castData = MutableLiveData<List<GetSingleTitleCastResponse.Data>>()
+    val castResponseDataGetSingle: LiveData<List<GetSingleTitleCastResponse.Data>> = _castData
 
     private val _titleGenres = MutableLiveData<List<String>>()
     val titleGenres: LiveData<List<String>> = _titleGenres
 
-    private val _titleDirector = MutableLiveData<TitleCast.Data>()
-    val titleDirector: LiveData<TitleCast.Data> = _titleDirector
+    private val _titleDirector = MutableLiveData<GetSingleTitleCastResponse.Data>()
+    val getSingleTitleDirectorResponse: LiveData<GetSingleTitleCastResponse.Data> = _titleDirector
 
-    private val _singleTitleRelated = MutableLiveData<List<TitleList.Data>>()
-    val singleTitleRelated: LiveData<List<TitleList.Data>> = _singleTitleRelated
+    private val _singleTitleRelated = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val singleTitleRelated: LiveData<List<GetTitlesResponse.Data>> = _singleTitleRelated
 
     private val _addToFavorites = MutableLiveData<Boolean>()
     val addToFavorites: LiveData<Boolean> = _addToFavorites
@@ -49,9 +49,9 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
         navigateToNewFragment(
                 SingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
                         titleId,
-                        if (singleTitleData.value!!.originalName.isNullOrEmpty()) singleTitleData.value!!.primaryName else singleTitleData.value!!.originalName!!,
+                        if (getSingleTitleResponse.value!!.originalName.isNullOrEmpty()) getSingleTitleResponse.value!!.primaryName else getSingleTitleResponse.value!!.originalName!!,
                         numOfSeasons.value!!,
-                        singleTitleData.value!!.isTvShow
+                        getSingleTitleResponse.value!!.isTvShow
                 )
         )
     }
@@ -258,9 +258,9 @@ class SingleTitleViewModel(private val repository: SingleTitleRepository, privat
             traktFavoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
                 val addToFavorites = repository.addFavTitleToFirestore(currentUser()!!.uid, AddTitleToFirestore(
-                    singleTitleData.value!!.secondaryName,
-                    singleTitleData.value!!.isTvShow,
-                    singleTitleData.value!!.id,
+                    getSingleTitleResponse.value!!.secondaryName,
+                    getSingleTitleResponse.value!!.isTvShow,
+                    getSingleTitleResponse.value!!.id,
                     imdbId.value!!
                 ))
                 if (addToFavorites) {

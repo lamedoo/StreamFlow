@@ -5,7 +5,7 @@ import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.setGone
@@ -45,7 +45,7 @@ class TvActivity : BaseFragmentActivity(), TvCheckTitleSelected {
         googleSignOut(tv_sidebar_signout)
         googleProfileDetails(tv_sidebar_profile_photo, tv_sidebar_profile_username)
 
-        tvDetailsViewModel.singleTitleData.observe(this, {
+        tvDetailsViewModel.getSingleTitleResponse.observe(this, {
             home_top_name.text = it.secondaryName
             if (it.covers?.data?.x1050!!.isNotBlank()) {
                 Picasso.get().load(it.covers.data.x1050).error(R.drawable.movie_image_placeholder_landscape).into(home_top_poster)

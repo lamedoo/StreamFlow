@@ -59,7 +59,7 @@
         android:id="@+id/profileFragment"
         android:name="com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/phone_profile_framgent" >
+        tools:layout="@layout/fragment_phone_profile" >
         <action
             android:id="@+id/action_profileFragment_self"
             app:destination="@id/profileFragment"

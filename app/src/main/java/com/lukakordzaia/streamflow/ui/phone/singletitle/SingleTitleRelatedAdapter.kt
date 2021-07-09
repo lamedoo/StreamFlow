@@ -2,65 +2,51 @@ package com.lukakordzaia.streamflow.ui.phone.singletitle
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.databinding.RvHomeItemBinding
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_home_item.view.*
 
-class SingleTitleRelatedAdapter(private val context: Context, private val onMovieClick: (id: Int) -> Unit) : RecyclerView.Adapter<SingleTitleRelatedAdapter.ViewHolder>() {
-    private var list: List<TitleList.Data> = ArrayList()
+class SingleTitleRelatedAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<SingleTitleRelatedAdapter.ViewHolder>() {
+    private var list: List<GetTitlesResponse.Data> = ArrayList()
 
-    fun setRelatedList(list: List<TitleList.Data>) {
+    fun setRelatedList(list: List<GetTitlesResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                LayoutInflater.from(context).inflate(R.layout.rv_home_item, parent, false)
+            RvHomeItemBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listModel = list[position]
 
-        holder.movieRoot.setOnClickListener {
-            listModel.id?.let { movieId -> onMovieClick(movieId) }
-        }
-
-        if (listModel.posters != null) {
-            if (listModel.posters.data != null) {
-                if (!listModel.posters.data.x240.isNullOrEmpty()) {
-                    Picasso.get().load(listModel.posters.data.x240).into(holder.moviePosterImageView)
-                } else {
-                    Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.moviePosterImageView)
-                }
-            }
-        }
-
-        if (!listModel.primaryName.isNullOrEmpty()) {
-            holder.movieTitleGeoTextView.text = listModel.primaryName
-        } else {
-            holder.movieTitleGeoTextView.text = listModel.secondaryName
-        }
-
+        holder.bind(listModel)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val movieRoot: ConstraintLayout = view.rv_home_item_root
-        val moviePosterImageView: ImageView = view.rv_home_item_poster
-//        val movieTitleEngTextView: TextView = view.rv_home_item_name_eng
-        val movieTitleGeoTextView: TextView = view.rv_home_item_name_geo
+    inner class ViewHolder(val view: RvHomeItemBinding) : RecyclerView.ViewHolder(view.root) {
+        fun bind(model: GetTitlesResponse.Data) {
+            if (model.primaryName.isNotEmpty()) {
+                view.itemName.text = model.primaryName
+            } else {
+                view.itemName.text = model.secondaryName
+            }
+
+            Picasso.get().load(model.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.itemPoster)
+
+            view.root.setOnClickListener {
+                onTitleClick(model.id)
+            }
+        }
     }
 
 }

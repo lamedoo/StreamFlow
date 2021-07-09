@@ -3,8 +3,8 @@ package com.lukakordzaia.streamflow.ui.phone.favorites
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
-import com.lukakordzaia.streamflow.network.FavoritesCallBack
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.interfaces.FavoritesCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.FavoritesRepository
@@ -20,11 +20,11 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
     val favoriteNoMovies = MutableLiveData<Boolean>()
     val favoriteNoTvShows = MutableLiveData<Boolean>()
 
-    private val _movieResult = MutableLiveData<List<SingleTitleData.Data>>()
-    val movieResult: LiveData<List<SingleTitleData.Data>> = _movieResult
+    private val _movieResult = MutableLiveData<List<GetSingleTitleResponse.Data>>()
+    val movieResult: LiveData<List<GetSingleTitleResponse.Data>> = _movieResult
 
-    private val _tvShowResult = MutableLiveData<List<SingleTitleData.Data>>()
-    val tvShowResult: LiveData<List<SingleTitleData.Data>> = _tvShowResult
+    private val _tvShowResult = MutableLiveData<List<GetSingleTitleResponse.Data>>()
+    val tvShowResult: LiveData<List<GetSingleTitleResponse.Data>> = _tvShowResult
 
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(FavoritesFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
@@ -37,14 +37,15 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
     fun getFavTitlesFromFirestore() {
         favoriteMoviesLoader.value = LoadingState.LOADING
         favoriteTvShowsLoader.value = LoadingState.LOADING
-        favoritesRepository.getFavTitlesFromFirestore(currentUser()!!.uid, object : FavoritesCallBack {
+        favoritesRepository.getFavTitlesFromFirestore(currentUser()!!.uid, object :
+            FavoritesCallBack {
             override fun moviesList(movies: MutableList<Int>) {
                 if (movies.isNullOrEmpty()) {
                     favoriteMoviesLoader.value = LoadingState.LOADED
                     favoriteNoMovies.value = true
                 } else {
                     favoriteNoMovies.value = false
-                    val fetchMovieResult: MutableList<SingleTitleData.Data> = ArrayList()
+                    val fetchMovieResult: MutableList<GetSingleTitleResponse.Data> = ArrayList()
                     viewModelScope.launch {
                         movies.forEach {
                             when (val moviesData = favoritesRepository.getSingleTitleData(it)) {
@@ -67,7 +68,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
                     favoriteNoTvShows.value = true
                 } else {
                     favoriteNoTvShows.value = false
-                    val fetchTvShowResult: MutableList<SingleTitleData.Data> = ArrayList()
+                    val fetchTvShowResult: MutableList<GetSingleTitleResponse.Data> = ArrayList()
                     viewModelScope.launch {
                         tvShows.forEach {
                             when (val tvShowsData = favoritesRepository.getSingleTitleData(it)) {

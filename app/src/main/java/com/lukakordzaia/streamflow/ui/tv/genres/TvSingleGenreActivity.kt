@@ -5,7 +5,7 @@ import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.setGone
@@ -49,7 +49,7 @@ class TvSingleGenreActivity: BaseFragmentActivity(), TvCheckTitleSelected {
                 .show(TvSingleGenreFragment())
                 .commit()
 
-        tvDetailsViewModel.singleTitleData.observe(this, {
+        tvDetailsViewModel.getSingleTitleResponse.observe(this, {
             home_top_istvshow.setVisible()
             home_top_name.text = it.secondaryName
 

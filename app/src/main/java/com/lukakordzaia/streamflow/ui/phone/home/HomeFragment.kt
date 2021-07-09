@@ -13,10 +13,7 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
-import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeDbTitlesAdapter
-import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeNewMovieAdapter
-import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTopMovieAdapter
-import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTvShowAdapter
+import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.*
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
@@ -28,9 +25,9 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
     private val homeViewModel: HomeViewModel by viewModel()
 
     private lateinit var homeDbTitlesAdapter: HomeDbTitlesAdapter
-    private lateinit var homeNewMovieAdapter: HomeNewMovieAdapter
-    private lateinit var homeTopMovieAdapter: HomeTopMovieAdapter
-    private lateinit var homeTvShowAdapter: HomeTvShowAdapter
+    private lateinit var homeNewMovieAdapter: HomeTitlesAdapter
+    private lateinit var homeTopMovieAdapter: HomeTitlesAdapter
+    private lateinit var homeTvShowAdapter: HomeTitlesAdapter
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneHomeBinding
         get() = FragmentPhoneHomeBinding::inflate
@@ -64,6 +61,18 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
 
         home_profile.setOnClickListener {
             navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
+        }
+
+        binding.newMoviesMore.setOnClickListener {
+            homeViewModel.newMoviesMorePressed()
+        }
+
+        binding.topMoviesMore.setOnClickListener {
+            homeViewModel.topMoviesMorePressed()
+        }
+
+        binding.topTvShowsMore.setOnClickListener {
+            homeViewModel.topTvShowsMorePressed()
         }
 
         binding.fragmentScroll.setOnScrollChangeListener { v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
@@ -174,19 +183,15 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
             }
         })
 
-        binding.newMoviesMore.setOnClickListener {
-            homeViewModel.newMoviesMorePressed()
-        }
-
         val newMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeNewMovieAdapter = HomeNewMovieAdapter(requireContext()) {
+        homeNewMovieAdapter = HomeTitlesAdapter(requireContext()) {
             homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         binding.rvNewMovies.adapter = homeNewMovieAdapter
         binding.rvNewMovies.layoutManager = newMovieLayout
 
         homeViewModel.newMovieList.observe(viewLifecycleOwner, {
-            homeNewMovieAdapter.setMoviesList(it)
+            homeNewMovieAdapter.setItems(it)
         })
     }
 
@@ -199,19 +204,15 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         })
 
         val topMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeTopMovieAdapter = HomeTopMovieAdapter(requireContext()) {
+        homeTopMovieAdapter = HomeTitlesAdapter(requireContext()) {
             homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         binding.rvTopMovies.adapter = homeTopMovieAdapter
         binding.rvTopMovies.layoutManager = topMovieLayout
 
         homeViewModel.topMovieList.observe(viewLifecycleOwner, {
-            homeTopMovieAdapter.setMoviesList(it)
+            homeTopMovieAdapter.setItems(it)
         })
-
-        binding.topMoviesMore.setOnClickListener {
-            homeViewModel.topMoviesMorePressed()
-        }
     }
 
     private fun topTvShowsContainer() {
@@ -223,19 +224,15 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         })
 
         val tvShowLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeTvShowAdapter = HomeTvShowAdapter(requireContext()) {
+        homeTvShowAdapter = HomeTitlesAdapter(requireContext()) {
             homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         binding.rvTopTvShows.adapter = homeTvShowAdapter
         binding.rvTopTvShows.layoutManager = tvShowLayout
 
         homeViewModel.topTvShowList.observe(viewLifecycleOwner, {
-            homeTvShowAdapter.setTvShowsList(it)
+            homeTvShowAdapter.setItems(it)
         })
-
-        binding.topTvShowsMore.setOnClickListener {
-            homeViewModel.topTvShowsMorePressed()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

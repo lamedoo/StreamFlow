@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.ui.phone.home.toplistfragments
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.HomeRepository
@@ -17,25 +17,25 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
     val topMovieLoader = MutableLiveData<LoadingState>()
     val topTvShowsLoader = MutableLiveData<LoadingState>()
 
-    private val _movieDayData = MutableLiveData<TitleList.Data>()
-    val movieDayData: LiveData<TitleList.Data> = _movieDayData
+    private val _movieDayData = MutableLiveData<GetTitlesResponse.Data>()
+    val movieDayData: LiveData<GetTitlesResponse.Data> = _movieDayData
 
-    private val _newMovieList = MutableLiveData<List<TitleList.Data>>()
-    val newMovieList: LiveData<List<TitleList.Data>> = _newMovieList
+    private val _newMovieList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val newMovieList: LiveData<List<GetTitlesResponse.Data>> = _newMovieList
 
-    private val fetchNewMoviesList: MutableList<TitleList.Data> = ArrayList()
+    private val fetchNewMoviesList: MutableList<GetTitlesResponse.Data> = ArrayList()
 
-    val testMovies = MutableLiveData<TitleList.Data>()
+    val testMovies = MutableLiveData<GetTitlesResponse.Data>()
 
-    private val _topMovieList = MutableLiveData<List<TitleList.Data>>()
-    val topMovieList: LiveData<List<TitleList.Data>> = _topMovieList
+    private val _topMovieList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val topMovieList: LiveData<List<GetTitlesResponse.Data>> = _topMovieList
 
-    private val fetchTopMoviesList: MutableList<TitleList.Data> = ArrayList()
+    private val fetchTopMoviesList: MutableList<GetTitlesResponse.Data> = ArrayList()
 
-    private val _topTvShowList = MutableLiveData<List<TitleList.Data>>()
-    val topTvShowList: LiveData<List<TitleList.Data>> = _topTvShowList
+    private val _topTvShowList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val topTvShowList: LiveData<List<GetTitlesResponse.Data>> = _topTvShowList
 
-    private val fetchTopTvShowsList: MutableList<TitleList.Data> = ArrayList()
+    private val fetchTopTvShowsList: MutableList<GetTitlesResponse.Data> = ArrayList()
 
     fun onSingleTitlePressed(start: Int, titleId: Int) {
         when (start) {

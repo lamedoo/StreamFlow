@@ -8,7 +8,7 @@
         android:id="@+id/categoriesFragment"
         android:name="com.lukakordzaia.streamflow.ui.phone.categories.CategoriesFragment"
         android:label="fragment_genres_categories"
-        tools:layout="@layout/phone_categories_framgent" >
+        tools:layout="@layout/fragment_phone_categories" >
         <action
             android:id="@+id/action_categoriesFragment_to_singleGenreFragment"
             app:destination="@id/singleGenreFragment"

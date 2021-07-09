@@ -9,7 +9,7 @@
         android:id="@+id/singleTitleFragment"
         android:name="com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleFragment"
         android:label="fragment_single_title"
-        tools:layout="@layout/phone_single_title_fragment">
+        tools:layout="@layout/fragment_phone_single_title">
         <action
             android:id="@+id/action_singleTitleFragment_to_chooseTitleDetailsFragment"
             app:destination="@id/chooseTitleDetailsFragment" />
@@ -31,7 +31,7 @@
         android:id="@+id/chooseTitleDetailsFragment"
         android:name="com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment"
         android:label="fragment_choose_title_details"
-        tools:layout="@layout/phone_choose_title_details_fragment" >
+        tools:layout="@layout/fragment_phone_choose_title_details" >
         <argument
             android:name="titleId"
             app:argType="integer" />

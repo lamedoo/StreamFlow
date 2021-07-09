@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
-import com.lukakordzaia.streamflow.datamodels.TitleList
-import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -81,7 +81,7 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
         setGridPresenter(gridPresenter)
 
         onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
-            if (item is TitleList.Data) {
+            if (item is GetTitlesResponse.Data) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
@@ -96,7 +96,7 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
 
-            if (item is TitleList.Data) {
+            if (item is GetTitlesResponse.Data) {
                 onTitleSelected?.getTitleId(item.id, null)
             }
 

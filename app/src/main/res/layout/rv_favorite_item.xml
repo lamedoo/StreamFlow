@@ -11,7 +11,7 @@
     android:layout_marginBottom="30dp">
 
     <ImageView
-        android:id="@+id/rv_favorite_item_poster"
+        android:id="@+id/item_poster"
         android:layout_width="130dp"
         android:layout_height="180dp"
         android:scaleType="fitXY"
@@ -29,18 +29,18 @@
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv_favorite_item_poster">
+        app:layout_constraintTop_toBottomOf="@id/item_poster">
 
         <ImageView
-            android:id="@+id/rv_favorite_item_remove"
+            android:id="@+id/remove_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:src="@drawable/remove_db_title_icon"
-            android:tint="@color/general_text_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/general_text_color" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

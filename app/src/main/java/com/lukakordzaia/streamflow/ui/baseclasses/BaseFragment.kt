@@ -24,7 +24,6 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment() {
     protected val binding: VB
         get() = _binding as VB
 
-
     fun topBarListener(header: String) {
         fragment_top_back.setOnClickListener {
             activity?.onBackPressed()

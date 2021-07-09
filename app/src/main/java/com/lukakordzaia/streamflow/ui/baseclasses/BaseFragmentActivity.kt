@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -25,7 +26,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
+import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
+import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.tv.TvActivity
@@ -39,7 +41,6 @@ import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.sync_continue_watching_alert_dialog.*
 import kotlinx.android.synthetic.main.tv_sidebar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -181,16 +182,18 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
     private fun showSyncDialog() {
         profileViewModel.getContinueWatchingFromRoom(this).observe(this, {
             if (!it.isNullOrEmpty()) {
+                val binding = DialogSyncDatabaseBinding.inflate(LayoutInflater.from(this))
                 val syncDialog = Dialog(this)
-                syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog, null))
-                syncDialog.sync_continue_watching_alert_yes.setOnClickListener { _ ->
+                syncDialog.setContentView(binding.root)
+
+                binding.confirmButton.setOnClickListener { _ ->
                     profileViewModel.addContinueWatchingToFirestore(this, it)
                     val intent = Intent(this, TvActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     this.startActivity(intent)
 
                 }
-                syncDialog.sync_continue_watching_alert_no.setOnClickListener {
+                binding.cancelButton.setOnClickListener {
                     syncDialog.dismiss()
                 }
                 syncDialog.show()

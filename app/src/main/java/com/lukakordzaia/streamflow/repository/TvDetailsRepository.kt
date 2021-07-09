@@ -6,42 +6,45 @@ import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.database.WatchedDao
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingDao
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.network.*
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
+import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import kotlinx.coroutines.tasks.await
 
-class TvDetailsRepository(retrofitBuilder: RetrofitBuilder) : ImoviesCall() {
-    private val service = retrofitBuilder.buildImoviesService()
-
-    suspend fun getSingleTitleData(titleId: Int): Result<SingleTitleData> {
+class TvDetailsRepository(private val service: ImoviesNetwork) : ImoviesCall() {
+    suspend fun getSingleTitleData(titleId: Int): Result<GetSingleTitleResponse> {
         return imoviesCall { service.getSingleTitle(titleId) }
     }
 
-    fun checkContinueWatchingTitleInRoom(watchedDao: WatchedDao, titleId: Int): LiveData<Boolean> {
-        return watchedDao.checkContinueWatchingTitleInRoom(titleId)
+    fun checkContinueWatchingTitleInRoom(continueWatchingDao: ContinueWatchingDao, titleId: Int): LiveData<Boolean> {
+        return continueWatchingDao.checkContinueWatchingTitleInRoom(titleId)
     }
 
-    suspend fun getSingleContinueWatchingFromRoom(watchedDao: WatchedDao, titleId: Int): DbDetails {
-        return watchedDao.getSingleContinueWatchingFromRoom(titleId)
+    suspend fun getSingleContinueWatchingFromRoom(continueWatchingDao: ContinueWatchingDao, titleId: Int): ContinueWatchingRoom {
+        return continueWatchingDao.getSingleContinueWatchingFromRoom(titleId)
     }
 
-    suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<TitleFiles> {
-        return imoviesCall { service.getSingleFiles(titleId, season_number) }
+    suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<GetSingleTitleFilesResponse> {
+        return imoviesCall { service.getSingleTitleFiles(titleId, season_number) }
     }
 
-    suspend fun getSingleTitleCast(titleId: Int, role: String): Result<TitleCast> {
+    suspend fun getSingleTitleCast(titleId: Int, role: String): Result<GetSingleTitleCastResponse> {
         return imoviesCall { service.getSingleTitleCast(titleId, role) }
     }
 
-    suspend fun getSingleTitleRelated(titleId: Int): Result<TitleList> {
+    suspend fun getSingleTitleRelated(titleId: Int): Result<GetTitlesResponse> {
         return imoviesCall { service.getSingleTitleRelated(titleId) }
     }
 
-    suspend fun deleteSingleContinueWatchingFromRoom(watchedDao: WatchedDao, titleId: Int) {
-        watchedDao.deleteSingleContinueWatchingFromRoom(titleId)
+    suspend fun deleteSingleContinueWatchingFromRoom(continueWatchingDao: ContinueWatchingDao, titleId: Int) {
+        continueWatchingDao.deleteSingleContinueWatchingFromRoom(titleId)
     }
 
     suspend fun addFavTitleToFirestore(currentUserUid: String, addTitleToFirestore: AddTitleToFirestore): Boolean {
@@ -105,7 +108,7 @@ class TvDetailsRepository(retrofitBuilder: RetrofitBuilder) : ImoviesCall() {
                 return@addSnapshotListener
             }
             if (snapshot!!.data != null) {
-                val title = DbDetails(
+                val title = ContinueWatchingRoom(
                         snapshot.data!!["id"].toString().toInt(),
                         snapshot.data!!["language"].toString(),
                         snapshot.data!!["continueFrom"] as Long,

@@ -20,11 +20,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
-import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -44,7 +44,7 @@ class TvMainFragment : BrowseSupportFragment() {
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private val page = 1
     lateinit var metrics: DisplayMetrics
-    lateinit var backgroundManager: BackgroundManager
+    private lateinit var backgroundManager: BackgroundManager
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
@@ -179,7 +179,7 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun newMoviesRowsAdapter(newMovies: List<TitleList.Data>) {
+    private fun newMoviesRowsAdapter(newMovies: List<GetTitlesResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
             newMovies.forEach {
                 add(it)
@@ -191,7 +191,7 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun topMoviesRowsAdapter(movies: List<TitleList.Data>) {
+    private fun topMoviesRowsAdapter(movies: List<GetTitlesResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
             movies.forEach {
                 add(it)
@@ -203,7 +203,7 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun topTvShowsRowsAdapter(tvShows: List<TitleList.Data>) {
+    private fun topTvShowsRowsAdapter(tvShows: List<GetTitlesResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
             tvShows.forEach {
                 add(it)
@@ -254,7 +254,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 rowViewHolder: RowPresenter.ViewHolder,
                 row: Row
         ) {
-            if (item is TitleList.Data) {
+            if (item is GetTitlesResponse.Data) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
@@ -291,7 +291,7 @@ class TvMainFragment : BrowseSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
-            if (item is TitleList.Data) {
+            if (item is GetTitlesResponse.Data) {
                 onTitleSelected?.getTitleId(item.id, null)
             } else if (item is DbTitleData) {
                 onTitleSelected?.getTitleId(item.id, item)

@@ -4,17 +4,16 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneFavoritesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
-import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
@@ -29,109 +28,38 @@ class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         if (!hasInitializedRootView) {
-            Log.d("onviewcreated", "true")
             hasInitializedRootView = true
         }
 
         topBarListener("ფავორიტები")
 
+        authCheck()
+        fragmentListeners()
+        fragmentObservers()
+        favMoviesContainer()
+        favTvShowsContainer()
+    }
+
+    private fun authCheck() {
         if (auth.currentUser != null) {
             favoritesViewModel.getFavTitlesFromFirestore()
-            favorite_movies_container.setVisible()
-            favorite_tvshows_container.setVisible()
-            favorite_no_auth.setGone()
+            binding.favoriteMoviesContainer.setVisible()
+            binding.favoriteTvshowsContainer.setVisible()
+            binding.favoriteNoAuth.setGone()
         } else {
-            favorite_movies_container.setGone()
-            favorite_tvshows_container.setGone()
-            favorite_no_auth.setVisible()
-
-            favorite_go_to_profile.setOnClickListener {
-                favoritesViewModel.onProfileButtonPressed()
-            }
+            binding.favoriteMoviesContainer.setGone()
+            binding.favoriteTvshowsContainer.setGone()
+            binding.favoriteNoAuth.setVisible()
         }
+    }
 
-        // Favorite Movies
-        favoritesViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> favorite_movies_progressBar.setVisible()
-                LoadingState.Status.SUCCESS -> favorite_movies_progressBar.setGone()
-            }
-        })
+    private fun fragmentListeners() {
+        binding.profileButton.setOnClickListener {
+            favoritesViewModel.onProfileButtonPressed()
+        }
+    }
 
-        favoritesViewModel.favoriteNoMovies.observe(viewLifecycleOwner, {
-            if (it) {
-                favorite_no_movies.setVisible()
-            }
-        })
-
-        val moviesLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        favoritesMoviesAdapter = FavoritesAdapter(requireContext(),
-                {
-                    favoritesViewModel.onSingleTitlePressed(it)
-                },
-                { titleId: Int ->
-                    val clearDbDialog = Dialog(requireContext())
-                    clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
-                    clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                        favoritesViewModel.removeFavTitleFromFirestore(titleId)
-                        clearDbDialog.dismiss()
-                    }
-                    clearDbDialog.clear_db_alert_no.setOnClickListener {
-                        clearDbDialog.dismiss()
-                    }
-                    clearDbDialog.show()
-                })
-        rv_favorites_movies.layoutManager = moviesLayout
-        rv_favorites_movies.adapter = favoritesMoviesAdapter
-
-
-        favoritesViewModel.movieResult.observe(viewLifecycleOwner, {
-            favoritesMoviesAdapter.setFavoritesTitleList(it)
-        })
-
-
-
-        // Favorite TV Shows
-        favoritesViewModel.favoriteTvShowsLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> favorite_tvshows_progressBar.setVisible()
-                LoadingState.Status.SUCCESS -> favorite_tvshows_progressBar.setGone()
-            }
-        })
-
-        favoritesViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, {
-            if (it) {
-                favorite_no_tvshows.setVisible()
-            }
-        })
-
-        val tvShowsLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        favoriteTvShowsAdapter = FavoritesAdapter(requireContext(),
-                {
-                    favoritesViewModel.onSingleTitlePressed(it)
-                },
-                { titleId: Int ->
-                    val clearDbDialog = Dialog(requireContext())
-                    clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    clearDbDialog.setContentView(layoutInflater.inflate(R.layout.remove_favorite_alert_dialog, null))
-                    clearDbDialog.clear_db_alert_yes.setOnClickListener {
-                        favoritesViewModel.removeFavTitleFromFirestore(titleId)
-                        clearDbDialog.dismiss()
-                    }
-                    clearDbDialog.clear_db_alert_no.setOnClickListener {
-                        clearDbDialog.dismiss()
-                    }
-                    clearDbDialog.show()
-                })
-        rv_favorites_tvshows.layoutManager = tvShowsLayout
-        rv_favorites_tvshows.adapter = favoriteTvShowsAdapter
-
-        favoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
-            favoriteTvShowsAdapter.setFavoritesTitleList(it)
-        })
-
-
+    private fun fragmentObservers() {
         favoritesViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
@@ -139,5 +67,84 @@ class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
         favoritesViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
+    }
+
+    private fun favMoviesContainer() {
+        favoritesViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> binding.favoriteMoviesProgressBar.setVisible()
+                LoadingState.Status.SUCCESS -> binding.favoriteMoviesProgressBar.setGone()
+            }
+        })
+
+        favoritesViewModel.favoriteNoMovies.observe(viewLifecycleOwner, {
+            if (it) {
+                binding.favoriteNoMovies.setVisible()
+            }
+        })
+
+        val moviesLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        favoritesMoviesAdapter = FavoritesAdapter(requireContext(),
+            {
+                favoritesViewModel.onSingleTitlePressed(it)
+            },
+            { titleId: Int ->
+                removeTitleDialog(titleId)
+            }
+        )
+        binding.rvFavoritesMovies.layoutManager = moviesLayout
+        binding.rvFavoritesMovies.adapter = favoritesMoviesAdapter
+
+
+        favoritesViewModel.movieResult.observe(viewLifecycleOwner, {
+            favoritesMoviesAdapter.setItems(it)
+        })
+    }
+
+    private fun favTvShowsContainer() {
+        favoritesViewModel.favoriteTvShowsLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> binding.favoriteTvshowsProgressBar.setVisible()
+                LoadingState.Status.SUCCESS -> binding.favoriteTvshowsProgressBar.setGone()
+            }
+        })
+
+        favoritesViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, {
+            if (it) {
+                binding.favoriteNoTvshows.setVisible()
+            }
+        })
+
+        val tvShowsLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        favoriteTvShowsAdapter = FavoritesAdapter(requireContext(),
+            {
+                favoritesViewModel.onSingleTitlePressed(it)
+            },
+            { titleId: Int ->
+                removeTitleDialog(titleId)
+            }
+        )
+        binding.rvFavoritesTvshows.layoutManager = tvShowsLayout
+        binding.rvFavoritesTvshows.adapter = favoriteTvShowsAdapter
+
+        favoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
+            favoriteTvShowsAdapter.setItems(it)
+        })
+    }
+
+    private fun removeTitleDialog(titleId: Int) {
+        val binding = DialogRemoveFavoriteBinding.inflate(LayoutInflater.from(requireContext()))
+        val removeFavorite = Dialog(requireContext())
+        removeFavorite.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        removeFavorite.setContentView(binding.root)
+
+        binding.confirmButton.setOnClickListener {
+            favoritesViewModel.removeFavTitleFromFirestore(titleId)
+            removeFavorite.dismiss()
+        }
+        binding.cancelButton.setOnClickListener {
+            removeFavorite.dismiss()
+        }
+        removeFavorite.show()
     }
 }

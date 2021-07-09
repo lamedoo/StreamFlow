@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.ui.tv.search
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.ui.customviews.TvDefaultWithTitleCardView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_default_card_view.view.*
@@ -19,7 +19,7 @@ class TvSearchPresenter : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val movie = item as TitleList.Data
+        val movie = item as GetTitlesResponse.Data
         val cardView = viewHolder.view as TvDefaultWithTitleCardView
 
         if (!movie.primaryName.isNullOrBlank()) {

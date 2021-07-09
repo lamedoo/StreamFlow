@@ -1,24 +1,23 @@
 package com.lukakordzaia.streamflow.ui.tv.categories
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
 class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewModel() {
-    private val _newMovieList = MutableLiveData<List<TitleList.Data>>()
-    val newMovieList: LiveData<List<TitleList.Data>> = _newMovieList
+    private val _newMovieList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val newMovieList: LiveData<List<GetTitlesResponse.Data>> = _newMovieList
 
-    private val _topMovieList = MutableLiveData<List<TitleList.Data>>()
-    val topMovieList: LiveData<List<TitleList.Data>> = _topMovieList
+    private val _topMovieList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val topMovieList: LiveData<List<GetTitlesResponse.Data>> = _topMovieList
 
-    private val _tvShowList = MutableLiveData<List<TitleList.Data>>()
-    val tvShowList: LiveData<List<TitleList.Data>> = _tvShowList
+    private val _tvShowList = MutableLiveData<List<GetTitlesResponse.Data>>()
+    val tvShowList: LiveData<List<GetTitlesResponse.Data>> = _tvShowList
 
     fun getNewMoviesTv(page: Int) {
         viewModelScope.launch {

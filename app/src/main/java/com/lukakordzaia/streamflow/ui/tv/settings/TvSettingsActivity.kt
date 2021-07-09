@@ -7,13 +7,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_tv_settings.*
-import kotlinx.android.synthetic.main.tv_settings_fragment.*
+import kotlinx.android.synthetic.main.fragment_tv_settings.*
 
-class TvSettingsActivity: FragmentActivity(), TvSettingsFragment.OnSettingsSelected {
+class TvSettingsActivity: FragmentActivity(), OnSettingsSelected {
     private var googleAccount: GoogleSignInAccount? = null
 
 
@@ -22,10 +23,6 @@ class TvSettingsActivity: FragmentActivity(), TvSettingsFragment.OnSettingsSelec
         setContentView(R.layout.activity_tv_settings)
 
         googleAccount = GoogleSignIn.getLastSignedInAccount(this)
-
-        if (Firebase.auth.currentUser == null) {
-            tv_settings_signout.setGone()
-        }
     }
 
     override fun getSettingsType(type: Int) {

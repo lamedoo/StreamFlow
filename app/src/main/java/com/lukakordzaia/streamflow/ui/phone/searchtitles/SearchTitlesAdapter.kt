@@ -2,73 +2,63 @@ package com.lukakordzaia.streamflow.ui.phone.searchtitles
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.databinding.RvSearchItemBinding
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_search_item.view.*
 
 class SearchTitlesAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SearchTitlesAdapter.ViewHolder>() {
-    private var list: List<TitleList.Data> = ArrayList()
+    private var list: List<GetTitlesResponse.Data> = ArrayList()
 
-    fun setSearchTitleList(list: List<TitleList.Data>) {
+    fun setSearchTitleList(list: List<GetTitlesResponse.Data>) {
         this.list = list
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.rv_search_item, parent, false)
+            RvSearchItemBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listModel = list[position]
 
-        holder.titleRoot.setOnClickListener {
-            listModel.id?.let { titleId -> onTitleClick(titleId) }
-        }
-
-        if (listModel.posters != null) {
-            if (listModel.posters.data != null) {
-                if (!listModel.posters.data.x240.isNullOrEmpty()) {
-                    Picasso.get().load(listModel.posters.data.x240).into(holder.titlePosterImageView)
-                } else {
-                    Picasso.get().load(R.drawable.movie_image_placeholder).into(holder.titlePosterImageView)
-                }
-            }
-        }
-
-        if (!listModel.secondaryName.isNullOrEmpty()) {
-            holder.titleNameGeoTextView.text = listModel.secondaryName
-        } else {
-            holder.titleNameGeoTextView.text = listModel.primaryName
-        }
-
-        holder.titleYearTextView.text = "${listModel.year.toString()}, "
-
-        if (listModel.isTvShow == true) {
-            holder.titleIsTvShowTextView.text = "სერიალი"
-        } else {
-            holder.titleIsTvShowTextView.text = "ფილმი"
-        }
-
+        holder.bind(listModel)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val titleRoot: ConstraintLayout = view.rv_search_item_root
-        val titlePosterImageView: ImageView = view.rv_search_item_poster
-        val titleNameGeoTextView: TextView = view.rv_search_item_name_geo
-        val titleYearTextView: TextView = view.rv_search_item_year
-        val titleIsTvShowTextView: TextView = view.rv_search_item_istvshow
+    inner class ViewHolder(val view: RvSearchItemBinding) : RecyclerView.ViewHolder(view.root) {
+        fun bind(model: GetTitlesResponse.Data) {
+            if (!model.secondaryName.isNullOrEmpty()) {
+                view.rvSearchItemName.text = model.secondaryName
+            } else {
+                view.rvSearchItemName.text = model.primaryName
+            }
+
+            view.rvSearchItemYear.text = "${model.year.toString()}, "
+
+            if (!model.posters?.data?.x240.isNullOrEmpty()) {
+                Picasso.get().load(model.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.rvSearchItemPoster)
+            } else {
+                Picasso.get().load(R.drawable.movie_image_placeholder).placeholder(R.drawable.movie_image_placeholder).into(view.rvSearchItemPoster)
+
+            }
+
+            if (model.isTvShow == true) {
+                view.rvSearchItemIsTvShow.text = "სერიალი"
+            } else {
+                view.rvSearchItemIsTvShow.text = "ფილმი"
+            }
+
+            view.root.setOnClickListener {
+                onTitleClick(model.id)
+            }
+        }
     }
 }
