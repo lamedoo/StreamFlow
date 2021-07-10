@@ -6,6 +6,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsFragment
 
 class TvDetailsActivity : FragmentActivity() {
+    private var currentFragment = TITLE_INFO
     private val tvDetailsFragment = TvDetailsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,4 +18,26 @@ class TvDetailsActivity : FragmentActivity() {
                 .commit()
     }
 
+    override fun onBackPressed() {
+        if (currentFragment == TITLE_DETAILS) {
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_from_top, R.anim.slide_out_down)
+                .replace(R.id.tv_details_fr_nav_host, TvDetailsFragment())
+                .commit()
+            setCurrentFragment(TITLE_INFO)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    fun setCurrentFragment(fragment: Int) {
+        currentFragment = fragment
+    }
+
+    fun getCurrentFragment() = currentFragment
+
+    companion object {
+        const val TITLE_INFO = 0
+        const val TITLE_DETAILS = 1
+    }
 }

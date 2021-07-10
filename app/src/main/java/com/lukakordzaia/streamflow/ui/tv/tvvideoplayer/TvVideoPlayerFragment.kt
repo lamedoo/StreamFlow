@@ -25,6 +25,7 @@ import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerHelpers
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
+import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity.Companion.VIDEO_DETAILS
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setInvisible
 import com.lukakordzaia.streamflow.utils.setVisible
@@ -66,6 +67,10 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         videoPlayerData = activity?.intent!!.getParcelableExtra("videoPlayerData") as VideoPlayerData
+
+        if (!videoPlayerData.isTvShow) {
+            next_details_title.text = "სხვა დეტალები"
+        }
 
         player = SimpleExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
@@ -109,13 +114,17 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
             releasePlayer()
-            if (!tv_title_player.isControllerVisible) {
-                requireActivity().onBackPressed()
+            if ((requireActivity() as TvVideoPlayerActivity).getCurrentFragment() != VIDEO_DETAILS) {
+                if (!tv_title_player.isControllerVisible) {
+                    requireActivity().onBackPressed()
+                } else {
+                    requireActivity().onBackPressed()
+                    requireActivity().onBackPressed()
+                }
+                super.onStop()
             } else {
-                requireActivity().onBackPressed()
-                requireActivity().onBackPressed()
+                super.onStop()
             }
-            super.onStop()
         }
     }
 

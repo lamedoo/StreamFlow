@@ -11,18 +11,6 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
-
-<!--    <ImageButton-->
-<!--        android:id="@id/exo_prev"-->
-<!--        style="@style/ExoMediaButton.Previous"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:background="@drawable/exo_buttons_focused"-->
-<!--        android:src="@drawable/exo_previous"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/exo_next"-->
-<!--        app:layout_constraintEnd_toEndOf="@id/barrier_right"-->
-<!--        app:layout_constraintStart_toStartOf="@id/barrier_left" />-->
-
     <LinearLayout
         android:id="@+id/layout_header_view"
         android:layout_width="0dp"
@@ -131,7 +119,7 @@
         android:nextFocusUp="@id/exo_next"
         android:background="@drawable/exo_buttons_focused"
         android:src="@drawable/exo_play"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/next_details"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/barrier_right"/>
 
@@ -145,7 +133,7 @@
         android:nextFocusUp="@id/exo_next"
         android:background="@drawable/exo_buttons_focused"
         android:src="@drawable/exo_pause"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/next_details"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/barrier_right"/>
 
@@ -218,42 +206,30 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="exo_pause,exo_play" />
 
-<!--    <TextView-->
-<!--        android:id="@id/exo_duration"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="7dp"-->
-<!--        android:layout_marginLeft="7dp"-->
-<!--        android:layout_marginEnd="7dp"-->
-<!--        android:layout_marginRight="7dp"-->
-<!--        android:minWidth="50dp"-->
-<!--        android:textAlignment="viewEnd"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:textSize="14sp"-->
-<!--        tools:text="dssdd"-->
-<!--        app:layout_constraintEnd_toEndOf="@id/exo_progress"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/exo_play"/>-->
-
-    <TextView
-        android:id="@+id/exo_go_live"
+    <LinearLayout
+        android:id="@+id/next_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:focusable="true"
         android:gravity="center"
-        android:minWidth="50dp"
-        android:minHeight="25dp"
-        android:minEms="4"
-        android:paddingLeft="15dp"
-        android:paddingTop="6dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="6dp"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/exo_progress"
-        app:layout_constraintStart_toEndOf="@+id/exo_progress"
-        app:layout_constraintTop_toTopOf="@+id/exo_progress"
-        tools:text="dssdd" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
+        <TextView
+            android:id="@+id/next_details_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/georgian_uppercase"
+            android:text="სხვა ეპიზოდები" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_down_arrow" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
