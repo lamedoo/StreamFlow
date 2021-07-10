@@ -25,7 +25,6 @@ import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerHelpers
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setInvisible
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
 import kotlinx.android.synthetic.main.fragment_phone_video_player.*
@@ -311,8 +310,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {
-        binding.phoneTitlePlayer.subtitleView?.setInvisible()
-        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.phoneSubtitle, phone_subtitle_toggle, player, hasSubs)
+        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.phoneTitlePlayer.subtitleView!!, phone_subtitle_toggle, player, hasSubs)
     }
 
     override fun onDestroy() {

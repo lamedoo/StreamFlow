@@ -154,7 +154,6 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
             }
 
             if (state == Player.STATE_READY) {
-
                 episodeHasEnded = true
                 showContinueWatchingDialog()
                 tracker = ProgressTrackerNew(player, object :
@@ -254,7 +253,6 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {
-//        binding.tvTitlePlayer.subtitleView?.setInvisible()
         VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.tvTitlePlayer.subtitleView!!, tv_subtitle_toggle, player, hasSubs)
     }
 
