@@ -84,55 +84,22 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         val titleId: Int?
         val isTvShow: Boolean?
 
-        val titleId1 = activity?.intent?.getSerializableExtra("titleId") as? Int
-        val isTvShow2 = activity?.intent?.getSerializableExtra("isTvShow") as? Boolean
+        val titleIdFromDetails = activity?.intent?.getSerializableExtra("titleId") as? Int
+        val isTvShowFromDetails = activity?.intent?.getSerializableExtra("isTvShow") as? Boolean
         val videoPlayerData = activity?.intent?.getParcelableExtra("videoPlayerData") as? VideoPlayerData
 
-        if (titleId1 == null) {
+        if (titleIdFromDetails == null) {
             titleId = videoPlayerData?.titleId
             isTvShow = videoPlayerData?.isTvShow
         } else {
-            titleId = titleId1
-            isTvShow = isTvShow2
+            titleId = titleIdFromDetails
+            isTvShow = isTvShowFromDetails
         }
 
         initRowsAdapter(isTvShow!!)
-
-        if (isTvShow) {
-            // For Seasons Number
-            tvTitleFilesViewModel.getSingleTitleData(titleId!!)
-
-            tvTitleFilesViewModel.numOfSeasons.observe(viewLifecycleOwner, {
-                val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
-                seasonsRowsAdapter(seasonCount)
-            })
-
-            tvTitleFilesViewModel.episodeNames.observe(viewLifecycleOwner, {
-                episodesRowsAdapter(it)
-            })
-
-            if (Firebase.auth.currentUser == null) {
-                tvTitleFilesViewModel.checkContinueWatchingTitleInRoom(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
-                    if (exists) {
-                        tvTitleFilesViewModel.getSingleContinueWatchingFromRoom(requireContext(), titleId)
-                    }
-                })
-            } else {
-                tvTitleFilesViewModel.checkContinueWatchingInFirestore(titleId)
-            }
-        }
-
-        tvTitleFilesViewModel.getSingleTitleCast(titleId!!)
-        tvTitleFilesViewModel.getSingleTitleRelated(titleId)
-
-
-        tvTitleFilesViewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
-            castRowsAdapter(it, isTvShow)
-        })
-
-        tvTitleFilesViewModel.singleTitleRelated.observe(viewLifecycleOwner, {
-            relatedRowsAdapter(it, isTvShow)
-        })
+        setSeasonsAndEpisodes(titleId!!, isTvShow)
+        setTitleCast(titleId, isTvShow)
+        setTitleRelated(titleId, isTvShow)
 
         prepareBackgroundManager()
         setupUIElements()
@@ -217,6 +184,47 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         brandColor = ContextCompat.getColor(requireContext(), R.color.green_dark)
         searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.black) }!!
         adapter = rowsAdapter
+    }
+
+    private fun setSeasonsAndEpisodes(titleId: Int, isTvShow: Boolean) {
+        if (isTvShow) {
+            tvTitleFilesViewModel.getSingleTitleData(titleId)
+
+            tvTitleFilesViewModel.numOfSeasons.observe(viewLifecycleOwner, {
+                val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
+                seasonsRowsAdapter(seasonCount)
+            })
+
+            tvTitleFilesViewModel.episodeNames.observe(viewLifecycleOwner, {
+                episodesRowsAdapter(it)
+            })
+
+            if (Firebase.auth.currentUser == null) {
+                tvTitleFilesViewModel.checkContinueWatchingTitleInRoom(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
+                    if (exists) {
+                        tvTitleFilesViewModel.getSingleContinueWatchingFromRoom(requireContext(), titleId)
+                    }
+                })
+            } else {
+                tvTitleFilesViewModel.checkContinueWatchingInFirestore(titleId)
+            }
+        }
+    }
+
+    private fun setTitleCast(titleId: Int, isTvShow: Boolean) {
+        tvTitleFilesViewModel.getSingleTitleCast(titleId)
+
+        tvTitleFilesViewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
+            castRowsAdapter(it, isTvShow)
+        })
+    }
+
+    private fun setTitleRelated(titleId: Int, isTvShow: Boolean) {
+        tvTitleFilesViewModel.getSingleTitleRelated(titleId)
+
+        tvTitleFilesViewModel.singleTitleRelated.observe(viewLifecycleOwner, {
+            relatedRowsAdapter(it, isTvShow)
+        })
     }
 
     private inner class ItemViewClickedListener(val titleId: Int, val isTvShow: Boolean) : OnItemViewClickedListener {

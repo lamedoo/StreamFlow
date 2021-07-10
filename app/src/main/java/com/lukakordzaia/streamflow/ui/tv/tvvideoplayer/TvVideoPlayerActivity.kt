@@ -82,14 +82,17 @@ class TvVideoPlayerActivity : FragmentActivity() {
                             !tv_title_player.isControllerVisible -> {
                                 tv_title_player.showController()
                                 tv_title_player.exo_pause.requestFocus()
+                                return true
                             }
                             exo_play.isFocused || exo_pause.isFocused -> {
                                 setCurrentFragment(VIDEO_DETAILS)
                                 detailsFragment()
                                 supportFragmentManager.beginTransaction()
+                                    .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
                                     .add(R.id.tv_video_player_nav_host, TvVideoPlayerDetailsFragment())
                                     .addToBackStack(null)
                                     .commit()
+                                return true
                             }
                             else -> {
                                 tv_subtitle_toggle.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
@@ -98,7 +101,6 @@ class TvVideoPlayerActivity : FragmentActivity() {
                             }
                         }
                     }
-//                    return true
                 } else {
                     return super.onKeyUp(keyCode, event)
                 }

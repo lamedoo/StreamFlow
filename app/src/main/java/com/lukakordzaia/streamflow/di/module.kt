@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.di
 
+import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
@@ -61,4 +62,5 @@ val generalModule = module {
     single { SpinnerClass(get()) }
     single { BuildMediaSource(get()) }
     single { AuthSharedPreferences(get()) }
+    single { TvSidebarAnimations() }
 }

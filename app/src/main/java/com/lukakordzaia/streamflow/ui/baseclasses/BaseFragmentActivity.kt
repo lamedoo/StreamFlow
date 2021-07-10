@@ -27,6 +27,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
 import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
@@ -43,10 +44,12 @@ import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_sidebar.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCheckFirstItem {
     private val profileViewModel: ProfileViewModel by viewModel()
+    private val sidebarAnimations: TvSidebarAnimations by inject()
     private var googleAccount: GoogleSignInAccount? = null
     private var googleSignInClient: GoogleSignInClient? = null
     protected val auth = Firebase.auth
@@ -83,14 +86,14 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
     fun setSidebarClickListeners(search: View, home: View, favorites: View, movies: View, genres: View, settings: View) {
         search.setOnClickListener {
             startActivity(Intent(this, TvSearchActivity::class.java))
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         home.setOnClickListener {
             val intent = Intent(this, TvActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         favorites.setOnClickListener {
             if (auth.currentUser != null) {
@@ -98,23 +101,23 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             } else {
                 this.createToast("ფავორიტების სანახავად, გაიარეთ ავტორიზაცია")
             }
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         movies.setOnClickListener {
             val intent = Intent(this, TvCategoriesActivity::class.java)
             intent.putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
             this.startActivity(intent)
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         genres.setOnClickListener {
             val intent = Intent(this, TvSingleGenreActivity::class.java)
             this.startActivity(intent)
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         settings.setOnClickListener {
             val intent = Intent(this, TvSettingsActivity::class.java)
             this.startActivity(intent)
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
     }
 
@@ -225,8 +228,6 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             signOutButton.setVisible()
 
 //            signOutButton.requestFocus()
-
-
         } else {
             profileUsername.text = ""
             profilePhoto.setGone()
@@ -242,13 +243,13 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (isFirstItem) {
-                    tv_sidebar.setVisible()
+                    sidebarAnimations.showSideBar(tv_sidebar)
                     currentButton.requestFocus()
                 }
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (tv_sidebar.isVisible) {
-                    tv_sidebar.setGone()
+                    sidebarAnimations.hideSideBar(tv_sidebar)
                     if (rowsSupportFragment != null && rowsPosition != null) {
                         rowsSupportFragment!!.setSelectedPosition(rowsPosition!!, true, ListRowPresenter.SelectItemViewHolderTask(0))
                     }
@@ -260,9 +261,9 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
 
     override fun onBackPressed() {
         if (tv_sidebar.isVisible) {
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         } else {
-            tv_sidebar.setVisible()
+            sidebarAnimations.showSideBar(tv_sidebar)
             currentButton.requestFocus()
         }
 

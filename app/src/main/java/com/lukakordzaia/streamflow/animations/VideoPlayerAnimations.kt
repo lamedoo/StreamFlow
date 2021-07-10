@@ -4,7 +4,6 @@ import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.graphics.Color
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.ImageView
@@ -20,12 +19,6 @@ class VideoPlayerAnimations {
                 ContextCompat.getColor(context, R.color.white),
                 ContextCompat.getColor(context, R.color.accent_color)
             )
-        val subtitleOn1 = ObjectAnimator.ofArgb(
-            view,
-            "backgroundColor",
-            Color.RED,
-            Color.GREEN
-        )
         val setPlayButton = AnimatorSet().apply {
             this.interpolator = AccelerateInterpolator()
             this.duration = duration
@@ -41,12 +34,6 @@ class VideoPlayerAnimations {
                 ArgbEvaluator(),
                 ContextCompat.getColor(context, R.color.accent_color),
                 ContextCompat.getColor(context, R.color.white)
-        )
-        val subtitleOn1 = ObjectAnimator.ofArgb(
-                view,
-                "backgroundColor",
-                Color.RED,
-                Color.GREEN
         )
         val setPlayButton = AnimatorSet().apply {
             this.interpolator = AccelerateInterpolator()
