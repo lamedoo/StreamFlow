@@ -17,6 +17,8 @@ import com.lukakordzaia.streamflow.utils.setVisible
 
 class VideoPlayerHelpers(private val context: Context) {
     fun subtitleFunctions(view: SubtitleView, toggle: ImageButton, player: SimpleExoPlayer, hasSubs: Boolean) {
+        view.setPadding(0, 0, 0, 20)
+
         player.addTextOutput {
             view.onCues(it)
 

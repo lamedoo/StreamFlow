@@ -51,7 +51,7 @@
 
     </LinearLayout>
 
-    <com.lukakordzaia.streamflow.customviews.SearchEditText
+    <com.lukakordzaia.streamflow.customviews.TvCustomSearchInput
         android:id="@+id/search_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -59,10 +59,11 @@
         android:layout_marginStart="30dp"
         android:background="@drawable/phone_search_bar_background"
         android:clipChildren="false"
-        android:drawablePadding="5dp"
+        android:drawablePadding="10dp"
         android:textSize="20sp"
         android:fontFamily="@font/georgian_uppercase"
         android:hint="ფილმები, სერიალები"
+        android:drawableTint="@color/general_text_color"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:maxLines="1"

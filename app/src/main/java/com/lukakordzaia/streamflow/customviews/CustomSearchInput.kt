@@ -13,7 +13,7 @@ import com.lukakordzaia.streamflow.utils.setLeftDrawable
 import com.lukakordzaia.streamflow.utils.setRightDrawable
 import com.lukakordzaia.streamflow.utils.showKeyboard
 
-class SearchEditText
+class CustomSearchInput
 @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,

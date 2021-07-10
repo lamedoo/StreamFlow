@@ -257,10 +257,14 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                     })
                 }
                 is GetTitlesResponse.Data -> {
-                    val intent = Intent(context, TvDetailsActivity::class.java)
-                    intent.putExtra("titleId", item.id)
-                    intent.putExtra("isTvShow", item.isTvShow)
-                    activity?.startActivity(intent)
+                    val intent = Intent(context, TvDetailsActivity::class.java).apply {
+                        putExtra("titleId", item.id)
+                        putExtra("isTvShow", item.isTvShow)
+                    }
+                    requireActivity().startActivity(intent)
+                    if (requireActivity() is TvVideoPlayerActivity) {
+                        requireActivity().finish()
+                    }
                 }
             }
         }

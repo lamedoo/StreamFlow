@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.ui.tv.search
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.customviews.SearchEditText
+import com.lukakordzaia.streamflow.customviews.TvCustomSearchInput
 import com.lukakordzaia.streamflow.databinding.ActivityTvSearchBinding
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.utils.hideKeyboard
@@ -12,6 +12,7 @@ import com.lukakordzaia.streamflow.utils.showKeyboard
 
 class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>() {
     private lateinit var fragment: TvSearchFragmentNew
+    private var firstLoad = true
 
     override fun getViewBinding() = ActivityTvSearchBinding.inflate(layoutInflater)
 
@@ -41,11 +42,18 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>() {
         googleSignOut(binding.tvSidebar.signOut)
         googleProfileDetails(binding.tvSidebar.profilePhoto, binding.tvSidebar.profileUsername)
 
+        searchInput()
+    }
+
+    private fun searchInput() {
         binding.root.viewTreeObserver.addOnGlobalLayoutListener {
-            binding.searchInput.showKeyboard()
+            if (firstLoad) {
+                binding.searchInput.showKeyboard()
+                firstLoad = false
+            }
         }
 
-        binding.searchInput.setQueryTextChangeListener(object : SearchEditText.QueryTextListener {
+        binding.searchInput.setQueryTextChangeListener(object : TvCustomSearchInput.QueryTextListener {
             override fun onQueryTextSubmit(query: String?) {
                 fragment.clearRowsAdapter()
                 if (!query.isNullOrBlank()) {

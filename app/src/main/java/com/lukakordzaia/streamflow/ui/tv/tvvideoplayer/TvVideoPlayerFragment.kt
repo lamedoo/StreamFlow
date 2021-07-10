@@ -27,7 +27,6 @@ import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity.Companion.VIDEO_DETAILS
 import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setInvisible
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
 import kotlinx.android.synthetic.main.fragment_phone_video_player.*
@@ -255,8 +254,8 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {
-        binding.tvTitlePlayer.subtitleView?.setInvisible()
-        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.tvSubtitle, tv_subtitle_toggle, player, hasSubs)
+//        binding.tvTitlePlayer.subtitleView?.setInvisible()
+        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.tvTitlePlayer.subtitleView!!, tv_subtitle_toggle, player, hasSubs)
     }
 
     private fun showContinueWatchingDialog() {

@@ -12,7 +12,7 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <LinearLayout
-        android:id="@+id/layout_header_view"
+        android:id="@+id/player_header_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"

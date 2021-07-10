@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.streamflow.customviews.SearchEditText
+import com.lukakordzaia.streamflow.customviews.CustomSearchInput
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSearchTitlesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -64,7 +64,7 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
     }
 
     private fun searchInput() {
-        binding.searchTitleText.setQueryTextChangeListener(object : SearchEditText.QueryTextListener {
+        binding.searchTitleText.setQueryTextChangeListener(object : CustomSearchInput.QueryTextListener {
             override fun onQueryTextSubmit(query: String?) {}
 
 
