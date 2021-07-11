@@ -3,7 +3,6 @@ package com.lukakordzaia.streamflow.ui.phone.categories.singlegenre
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,10 +33,7 @@ class SingleGenreFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!hasInitializedRootView) {
-            hasInitializedRootView = true
-            singleCategoryViewModel.getSingleGenre(args.genreId, page)
-        }
+        singleCategoryViewModel.getSingleGenre(args.genreId, page)
 
         topBarListener(args.genreName)
 

@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
-import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.ui.phone.categories.SingleCategoryViewModel
+import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -34,10 +34,7 @@ class SingleStudioFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!hasInitializedRootView) {
-            hasInitializedRootView = true
-            singleCategoryViewModel.getSingleStudio(args.studioId, page)
-        }
+        singleCategoryViewModel.getSingleStudio(args.studioId, page)
 
         topBarListener(args.studioName)
 

@@ -48,12 +48,9 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!hasInitializedRootView) {
-            hasInitializedRootView = true
-            singleTitleViewModel.checkTitleInFirestore(args.titleId)
-            singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
-            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
-        }
+        singleTitleViewModel.checkTitleInFirestore(args.titleId)
+        singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+        chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
 
         checkAuth()
         fragmentListeners()

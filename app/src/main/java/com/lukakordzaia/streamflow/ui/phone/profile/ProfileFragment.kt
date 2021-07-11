@@ -23,19 +23,20 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogConnectTraktvAlertBinding
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
-import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileNewBinding
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.connect_traktv_alert_dialog.*
+import kotlinx.android.synthetic.main.dialog_connect_traktv_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
+class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
     private val profileViewModel: ProfileViewModel by viewModel()
     private var googleAccount: GoogleSignInAccount? = null
     private var traktToken: String? = null
@@ -43,30 +44,47 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     private lateinit var traktDialog: Dialog
     private val countdown = object : CountDownTimer(600000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
-            traktDialog.connect_traktv_expire_timer?.text = (millisUntilFinished / 1000).toString()
+            traktDialog.expire_timer?.text = (millisUntilFinished / 1000).toString()
         }
 
         override fun onFinish() {
-            traktDialog.connect_traktv_expire_timer?.text = "განაახლეთ კოდი"
+            traktDialog.expire_timer?.text = "განაახლეთ კოდი"
         }
     }
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneProfileBinding
-        get() = FragmentPhoneProfileBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneProfileNewBinding
+        get() = FragmentPhoneProfileNewBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        topBarListener("პროფილი")
 
-        if (!hasInitializedRootView) {
-            hasInitializedRootView = true
-        }
+        binding.appVersionTitle.text = "V ${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}"
 
         googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
         traktDialog = Dialog(requireContext())
         traktToken = authSharedPreferences.getAccessToken()
 
-        topBarListener("პროფილი")
+        fragmentListeners()
+        fragmentObservers()
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.idToken)
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                Log.w(TAG, "Google sign in failed", e)
+            }
+        }
+    }
+
+    private fun fragmentListeners() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -109,16 +127,17 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         }
 
         binding.connectTraktv.setOnClickListener {
-            traktDialog.setContentView(layoutInflater.inflate(R.layout.connect_traktv_alert_dialog,null))
+            val binding = DialogConnectTraktvAlertBinding.inflate(LayoutInflater.from(requireContext()))
+            traktDialog.setContentView(binding.root)
             traktDialog.show()
             profileViewModel.getDeviceCode()
 
             profileViewModel.traktDeviceCodeResponse.observe(viewLifecycleOwner, {
-                traktDialog.connect_traktv_user_code.text = it.userCode
-                traktDialog.connect_traktv_url.text = it.verificationUrl
+                binding.userCode.text = it.userCode
+                binding.traktvUrl.text = it.verificationUrl
                 countdown.start()
 
-                traktDialog.connect_traktv_user_code.setOnClickListener { _ ->
+                binding.userCode.setOnClickListener { _ ->
                     val clipboard: ClipboardManager =
                         requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clip = ClipData.newPlainText("Copied Code", it.userCode)
@@ -126,7 +145,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                     requireContext().createToast("კოდი კოპირებულია")
                 }
 
-                traktDialog.connect_traktv_url.setOnClickListener { _ ->
+                binding.traktvUrl.setOnClickListener { _ ->
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(it.verificationUrl)
                     startActivity(intent)
@@ -141,7 +160,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                 )
             })
 
-            traktDialog.connect_traktv_dialog_close.setOnClickListener {
+            binding.cancelButton.setOnClickListener {
                 traktDialog.hide()
                 countdown.cancel()
             }
@@ -152,8 +171,9 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
             authSharedPreferences.saveRefreshToken("")
             updateTraktUi(false)
         }
+    }
 
-
+    private fun fragmentObservers() {
         profileViewModel.userUserTokenResponse.observe(viewLifecycleOwner, { userToken ->
             if (userToken != null) {
                 traktDialog.hide()
@@ -190,22 +210,6 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         profileViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.idToken)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                Log.w(TAG, "Google sign in failed", e)
-            }
-        }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
@@ -213,16 +217,12 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
-//                    updateGoogleUI(user)
-                    Snackbar.make(binding.profileRoot,"წარმატებით გაიარეთ ავტორიზაცია", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root,"წარმატებით გაიარეთ ავტორიზაცია", Snackbar.LENGTH_SHORT).show()
                     profileViewModel.createUserFirestore()
 
                     showSyncDialog()
                 } else {
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    Snackbar.make(binding.profileRoot, "ავტორიზაცია ვერ მოხერხდა", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(binding.root, "ავტორიზაცია ვერ მოხერხდა", Snackbar.LENGTH_SHORT)
                         .show()
                     updateGoogleUI(null)
                 }
@@ -270,18 +270,18 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
 
     private fun updateGoogleUI(user: FirebaseUser?) {
         if (user != null) {
-            binding.profilePhoto.setVisible()
+            binding.profileContainer.setVisible()
 
             if (googleAccount != null) {
-                binding.profileUsername.text = "${googleAccount!!.givenName} ${googleAccount!!.familyName}"
+                binding.profileUsername.text = "${googleAccount!!.givenName} ${googleAccount!!.familyName}".toUpperCase()
+                binding.profileEmail.text= googleAccount!!.email
                 Picasso.get().load(googleAccount!!.photoUrl).into(binding.profilePhoto)
             }
 
             binding.googleSignInButton.setGone()
             binding.googleSignOutButton.setVisible()
         } else {
-            binding.profileUsername.text = ""
-            binding.profilePhoto.setGone()
+            binding.profileContainer.setGone()
 
             binding.googleSignInButton.setVisible()
             binding.googleSignOutButton.setGone()

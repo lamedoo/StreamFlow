@@ -105,7 +105,7 @@ class TvMainFragment : BrowseSupportFragment() {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    homeViewModel.refreshContent(page)
+                    homeViewModel.refreshContent()
                 }, 5000)
             }
         })
@@ -122,7 +122,7 @@ class TvMainFragment : BrowseSupportFragment() {
             })
         }
 
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+        Handler(Looper.getMainLooper()).postDelayed({
             homeViewModel.getTopMovies(page)
             homeViewModel.getTopTvShows(page)
             homeViewModel.getNewMovies(page)

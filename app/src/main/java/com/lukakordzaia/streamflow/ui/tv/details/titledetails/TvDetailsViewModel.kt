@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.lukakordzaia.streamflow.database.StreamFlowDatabase
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.repository.TvDetailsRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
@@ -70,7 +70,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     }
 
     fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
-        val database = ImoviesDatabase.getDatabase(context)?.continueWatchingDao()
+        val database = StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
         return repository.checkContinueWatchingTitleInRoom(database!!, titleId)
     }
 
@@ -81,7 +81,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     }
 
     fun deleteSingleContinueWatchingFromRoom(context: Context, titleId: Int) {
-        val database = ImoviesDatabase.getDatabase(context)?.continueWatchingDao()
+        val database = StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
         viewModelScope.launch {
             repository.deleteSingleContinueWatchingFromRoom(database!!, titleId)
         }

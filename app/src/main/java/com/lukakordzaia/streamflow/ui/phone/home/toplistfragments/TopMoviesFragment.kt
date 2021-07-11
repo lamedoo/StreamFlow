@@ -31,10 +31,7 @@ class TopMoviesFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!hasInitializedRootView) {
-            hasInitializedRootView = true
-            viewModel.getTopMovies(page)
-        }
+        viewModel.getTopMovies(page)
 
         topBarListener("ტოპ ფილმები")
 

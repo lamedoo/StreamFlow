@@ -6,10 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
@@ -222,10 +222,10 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         }
     }
 
-    fun refreshContent(page: Int) {
+    fun refreshContent() {
         getMovieDay()
-        getNewMovies(page)
-        getTopMovies(page)
-        getTopTvShows(page)
+        getNewMovies(1)
+        getTopMovies(1)
+        getTopTvShows(1)
     }
 }

@@ -9,7 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:id="@+id/connect_traktv_user_code_title"
+        android:id="@+id/user_code_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="გამოიყენეთ ეს კოდი მითითებულ ბმულზე"
@@ -22,19 +22,19 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/connect_traktv_user_code"
+        android:id="@+id/user_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textColor="@color/accent_color"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/connect_traktv_user_code_title"
+        app:layout_constraintTop_toBottomOf="@id/user_code_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="1231293"/>
 
     <TextView
-        android:id="@+id/connect_traktv_url_title"
+        android:id="@+id/url_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -43,24 +43,24 @@
         android:textSize="15sp"
         android:textColor="@color/general_text_color"
         android:padding="10dp"
-        app:layout_constraintTop_toBottomOf="@id/connect_traktv_user_code"
+        app:layout_constraintTop_toBottomOf="@id/user_code"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/connect_traktv_url"
+        android:id="@+id/traktv_url"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textColor="@color/accent_color"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/connect_traktv_url_title"
+        app:layout_constraintTop_toBottomOf="@id/url_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="https://api.traktv"/>
 
     <TextView
-        android:id="@+id/connect_traktv_expire_title"
+        android:id="@+id/expire_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -69,30 +69,30 @@
         android:textSize="15sp"
         android:textColor="@color/general_text_color"
         android:padding="10dp"
-        app:layout_constraintTop_toBottomOf="@id/connect_traktv_url"
+        app:layout_constraintTop_toBottomOf="@id/traktv_url"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/connect_traktv_expire_timer"
+        android:id="@+id/expire_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textColor="@color/red"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/connect_traktv_expire_title"
+        app:layout_constraintTop_toBottomOf="@id/expire_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="600"/>
 
     <Button
-        android:id="@+id/connect_traktv_dialog_close"
+        android:id="@+id/cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="გათიშვა"
         android:letterSpacing="0"
-        app:layout_constraintTop_toBottomOf="@id/connect_traktv_expire_timer"
+        app:layout_constraintTop_toBottomOf="@id/expire_timer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

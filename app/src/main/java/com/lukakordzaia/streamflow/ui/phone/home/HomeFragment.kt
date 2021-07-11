@@ -13,7 +13,8 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
-import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.*
+import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeDbTitlesAdapter
+import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
@@ -39,10 +40,6 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (!hasInitializedRootView) {
-            hasInitializedRootView = true
-        }
 
         fragmentListeners()
         fragmentObservers()
@@ -75,7 +72,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
             homeViewModel.topTvShowsMorePressed()
         }
 
-        binding.fragmentScroll.setOnScrollChangeListener { v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+        binding.fragmentScroll.setOnScrollChangeListener { _: View, _: Int, scrollY: Int, _: Int, _: Int ->
             if (scrollY > 0) {
                 binding.toolbar.root.setBackgroundColor(Color.parseColor("#282A38"))
                 binding.toolbar.root.background.alpha = 255
@@ -90,7 +87,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    homeViewModel.refreshContent(1)
+                    homeViewModel.refreshContent()
                 }, 5000)
             }
         })

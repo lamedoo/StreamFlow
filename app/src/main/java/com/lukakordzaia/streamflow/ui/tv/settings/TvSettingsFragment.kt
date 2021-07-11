@@ -18,7 +18,6 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
-import kotlinx.android.synthetic.main.fragment_tv_settings.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
@@ -46,10 +45,6 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (!hasInitializedRootView) {
-            hasInitializedRootView = true
-        }
 
         authCheck()
         fragmentFocusListeners()

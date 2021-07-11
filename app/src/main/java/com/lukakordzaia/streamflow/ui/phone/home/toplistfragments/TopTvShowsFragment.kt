@@ -31,10 +31,7 @@ class TopTvShowsFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!hasInitializedRootView) {
-            hasInitializedRootView = true
-            viewModel.getTopTvShows(page)
-        }
+        viewModel.getTopTvShows(page)
 
         topBarListener("ტოპ სერიალები")
 

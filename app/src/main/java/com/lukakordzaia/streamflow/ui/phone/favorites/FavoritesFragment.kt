@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneFavoritesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -26,10 +25,6 @@ class FavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (!hasInitializedRootView) {
-            hasInitializedRootView = true
-        }
 
         topBarListener("ფავორიტები")
 

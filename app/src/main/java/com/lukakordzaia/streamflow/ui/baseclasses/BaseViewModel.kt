@@ -8,7 +8,7 @@ import androidx.navigation.NavDirections
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.database.ImoviesDatabase
+import com.lukakordzaia.streamflow.database.StreamFlowDatabase
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingDao
 import com.lukakordzaia.streamflow.utils.Event
 
@@ -40,6 +40,6 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     fun roomDb(context: Context): ContinueWatchingDao? {
-        return ImoviesDatabase.getDatabase(context)?.continueWatchingDao()
+        return StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
     }
 }
