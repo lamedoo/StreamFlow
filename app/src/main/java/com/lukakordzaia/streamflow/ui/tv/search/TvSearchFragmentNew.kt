@@ -12,88 +12,65 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvSearchInputSelected
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
+import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoryPresenter
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
+import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSearchFragmentNew : BrowseSupportFragment() {
+class TvSearchFragmentNew : VerticalGridSupportFragment() {
     private val searchTitlesViewModel by viewModel<SearchTitlesViewModel>()
-    private lateinit var rowsAdapter: ArrayObjectAdapter
+    private lateinit var gridAdapter: ArrayObjectAdapter
+
     private var page = 1
     private var searchQuery = ""
-    private var hasFocus = false
 
+    var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
+    var searchInputIsSelected: TvSearchInputSelected? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        onTitleSelected = context as? TvCheckTitleSelected
         onFirstItem = context as? TvCheckFirstItem
+        searchInputIsSelected = context as? TvSearchInputSelected
     }
 
     override fun onDetach() {
         super.onDetach()
+        onTitleSelected = null
         onFirstItem = null
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        workaroundFocus()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = super.onCreateView(inflater, container, savedInstanceState)
-        val containerDock = view!!.findViewById<View>(R.id.browse_container_dock) as FrameLayout
-        val params = containerDock.layoutParams as ViewGroup.MarginLayoutParams
-        val resources: Resources = inflater.context.resources
-        val newHeaderMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, resources.displayMetrics).toInt()
-        val offsetToZero: Int = -resources.getDimensionPixelSize(R.dimen.lb_browse_rows_margin_top)
-        params.topMargin = offsetToZero + newHeaderMargin
-        containerDock.layoutParams = params
-
-        return view
+        searchInputIsSelected = null
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        onItemViewClickedListener = ItemViewClickedListener()
-        onItemViewSelectedListener = ItemViewSelectedListener()
 
-        headersState = HEADERS_DISABLED
-
-        setHeaderPresenterSelector(object : PresenterSelector() {
-            override fun getPresenter(item: Any?): Presenter {
-                return TvHeaderItemPresenter()
-            }
-        })
-
-        val listRowPresenter = CustomListRowPresenter().apply {
-            shadowEnabled = false
-            selectEffectEnabled = false
-        }
-        rowsAdapter = ArrayObjectAdapter(listRowPresenter)
+        setupFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        gridAdapter = ArrayObjectAdapter(TvCategoryPresenter(requireContext()))
 
         searchTitlesViewModel.searchList.observe(viewLifecycleOwner, { list ->
-            val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter(requireContext())).apply {
-                list.forEach {
-                    add(it)
-                }
+            list.forEach {
+                gridAdapter.add(it)
             }
-            rowsAdapter.add(page-1, ListRow(listRowAdapter))
-
-            setupUIElements()
         })
+
+        adapter = gridAdapter
     }
 
     fun setSearchQuery(query: String) {
@@ -103,22 +80,19 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
 
     fun clearRowsAdapter() {
         page = 1
-        rowsAdapter.clear()
+        gridAdapter.clear()
     }
 
     fun clearSearchResults() {
         searchTitlesViewModel.clearSearchResults()
     }
 
-    private fun setupUIElements() {
-        isHeadersTransitionOnBackEnabled = true
-        brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
-        adapter = rowsAdapter
-    }
+    private fun setupFragment() {
+        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
+        gridPresenter.numberOfColumns = 6
+        setGridPresenter(gridPresenter)
 
-
-    private inner class ItemViewClickedListener : OnItemViewClickedListener {
-        override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row) {
+        onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
             if (item is SingleTitleModel) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
@@ -126,40 +100,43 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
                 activity?.startActivity(intent)
             }
         }
+        setOnItemViewSelectedListener(ItemViewSelectedListener())
     }
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            val listRow = row as ListRow
-            val currentRowAdapter: ArrayObjectAdapter = listRow.adapter as ArrayObjectAdapter
-            val selectedIndex = currentRowAdapter.indexOf(item)
+            val indexOfRow = gridAdapter.size()
+            val indexOfItem = gridAdapter.indexOf(item)
 
-            if (selectedIndex <= 0) {
-                onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment?.selectedPosition)
-            } else {
-                onFirstItem?.isFirstItem(false, null, null)
+            if (item is SingleTitleModel) {
+                onTitleSelected?.getTitleId(item.id, null)
             }
 
-            if (selectedIndex != -1 && currentRowAdapter.size() - 1 == selectedIndex) {
+            if (indexOfItem in 0 until 6) {
+                searchInputIsSelected?.isSelected(true)
+            } else {
+                searchInputIsSelected?.isSelected(false)
+            }
+
+            val gridSize = Array(gridAdapter.size()) { i -> (i * 1) + 1 }.toList()
+
+            onFirstItem?.isFirstItem(false, null, null)
+
+            if (indexOfItem == 0) {
+                onFirstItem?.isFirstItem(true, null, null)
+            }
+
+            gridSize.forEach {
+                if (it % 6 == 0) {
+                    if (indexOfItem == it) {
+                        onFirstItem?.isFirstItem(true, null, null)
+                    }
+                }
+            }
+
+            if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
                 searchTitlesViewModel.getSearchTitlesTv(searchQuery, page)
-                Log.d("lastitem", "true")
-                rowsSupportFragment!!.setSelectedPosition(1, true, ListRowPresenter.SelectItemViewHolderTask(0))
-            }
-        }
-    }
-
-    private fun workaroundFocus() {
-        if (view != null) {
-            val viewToFocus = requireActivity().findViewById<View>(R.id.search_input)
-            val browseFrameLayout: BrowseFrameLayout = requireView().findViewById(androidx.leanback.R.id.browse_frame)
-            browseFrameLayout.onFocusSearchListener = BrowseFrameLayout.OnFocusSearchListener setOnFocusSearchListener@{ _: View?, direction: Int ->
-                if (direction == View.FOCUS_UP) {
-                    this.hasFocus = true
-                    return@setOnFocusSearchListener viewToFocus
-                } else {
-                    return@setOnFocusSearchListener null
-                }
             }
         }
     }
