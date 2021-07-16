@@ -39,6 +39,7 @@ class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
     private lateinit var tvChooseLanguageAdapter: TvChooseLanguageAdapter
     private lateinit var titleInfo: SingleTitleModel
     private var hasFocus: Boolean = false
+    private var startedWatching = false
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvDetailsBinding
         get() = FragmentTvDetailsBinding::inflate
@@ -220,7 +221,10 @@ class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
                 binding.deleteButton.setVisible()
 
                 if (continueWatching != null) {
-                    binding.continueButton.callOnClick()
+                    if (!startedWatching) {
+                        binding.continueButton.callOnClick()
+                        startedWatching = true
+                    }
                 }
             } else {
                 binding.deleteButton.setGone()
