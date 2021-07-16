@@ -41,9 +41,6 @@
         <argument
             android:name="numOfSeasons"
             app:argType="integer" />
-        <argument
-            android:name="isTvShow"
-            app:argType="boolean" />
         <action
             android:id="@+id/action_chooseTitleDetailsFragment_to_video_player_fragment_nav"
             app:destination="@id/video_player_fragment_nav">

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
@@ -15,7 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvCategoriesFragment : VerticalGridSupportFragment() {
-    private val gridAdapter = ArrayObjectAdapter(TvCategoryPresenter())
+    private lateinit var gridAdapter: ArrayObjectAdapter
     private val tvCategoriesViewModel: TvCategoriesViewModel by viewModel()
     private var page = 1
 
@@ -42,6 +43,8 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        gridAdapter = ArrayObjectAdapter(TvCategoryPresenter(requireContext()))
+
         when (activity?.intent?.getSerializableExtra("type") as Int) {
             AppConstants.TV_CATEGORY_NEW_MOVIES -> {
                 tvCategoriesViewModel.getNewMoviesTv(page)
@@ -58,6 +61,7 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
     }
 
     private fun loadData() {
+
         tvCategoriesViewModel.newMovieList.observe(viewLifecycleOwner, { newMovies ->
             newMovies.forEach {
                 gridAdapter.add(it)
@@ -81,7 +85,7 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
         setGridPresenter(gridPresenter)
 
         onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
-            if (item is GetTitlesResponse.Data) {
+            if (item is SingleTitleModel) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
@@ -96,7 +100,7 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
 
-            if (item is GetTitlesResponse.Data) {
+            if (item is SingleTitleModel) {
                 onTitleSelected?.getTitleId(item.id, null)
             }
 

@@ -4,15 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvHomeItemBinding
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
 
 class SingleTitleRelatedAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<SingleTitleRelatedAdapter.ViewHolder>() {
-    private var list: List<GetTitlesResponse.Data> = ArrayList()
+    private var list: List<SingleTitleModel> = ArrayList()
 
-    fun setRelatedList(list: List<GetTitlesResponse.Data>) {
+    fun setRelatedList(list: List<SingleTitleModel>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -34,14 +36,12 @@ class SingleTitleRelatedAdapter(private val context: Context, private val onTitl
     }
 
     inner class ViewHolder(val view: RvHomeItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: GetTitlesResponse.Data) {
-            if (model.primaryName.isNotEmpty()) {
-                view.itemName.text = model.primaryName
-            } else {
-                view.itemName.text = model.secondaryName
-            }
-
-            Picasso.get().load(model.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.itemPoster)
+        fun bind(model: SingleTitleModel) {
+            view.itemName.text = model.displayName
+            Glide.with(context)
+                .load(model.poster?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(view.itemPoster)
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)

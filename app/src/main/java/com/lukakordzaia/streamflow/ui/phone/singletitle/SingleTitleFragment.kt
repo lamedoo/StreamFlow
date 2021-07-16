@@ -16,12 +16,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleBinding
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -37,6 +39,7 @@ import java.util.concurrent.TimeUnit
 class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
     private val singleTitleViewModel: SingleTitleViewModel by viewModel()
     private val chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel by viewModel()
+    private lateinit var titleInfo: SingleTitleModel
     private lateinit var chooseLanguageAdapter: TvChooseLanguageAdapter
     private lateinit var singleTitleCastAdapter: SingleTitleCastAdapter
     private lateinit var singleTitleRelatedAdapter: SingleTitleRelatedAdapter
@@ -109,7 +112,7 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
             } else {
                 binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
                 binding.singleTitleFavorite.setOnClickListener {
-                    singleTitleViewModel.addTitleToFirestore()
+                    singleTitleViewModel.addTitleToFirestore(titleInfo)
                 }
             }
         })
@@ -146,7 +149,7 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
                     )
 
                     binding.replayButton.setVisible()
-                    binding.replayButton.setOnClickListener {
+                    binding.replayButton.setOnClickListener { _ ->
                         languagePickerDialog()
                     }
                 }
@@ -156,10 +159,6 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
                 }
             }
         })
-
-        binding.episodesButton.setOnClickListener {
-            singleTitleViewModel.onEpisodesPressed(args.titleId)
-        }
     }
 
     private fun fragmentObservers() {
@@ -208,24 +207,27 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
         })
 
         singleTitleViewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
-            if (it.primaryName.isNotBlank()) {
-                binding.singleTitleNameGeo.text = it.primaryName
-            }
-            binding.singleTitleNameEng.text = it.secondaryName
+            titleInfo = it
 
-            Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder_landscape).error(R.drawable.movie_image_placeholder_landscape).into(binding.singleTitleCover)
+            binding.singleTitleNameGeo.text = it.nameGeo
+            binding.singleTitleNameEng.text = it.nameEng
+
+            Glide.with(requireContext())
+                .load(it.cover?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(binding.singleTitleCover)
 
             binding.singleTitleTrailerContainer.setOnClickListener { _ ->
-                if (it.trailers.data.isNotEmpty()) {
+                if (it.trailer != null) {
                     val intent = Intent(context, VideoPlayerActivity::class.java)
                     intent.putExtra("videoPlayerData", VideoPlayerData(
-                        args.titleId,
+                        it.id,
                         it.isTvShow,
                         0,
                         "ENG",
                         0,
                         0L,
-                        it.trailers.data[0].fileUrl
+                        it.trailer
                     ))
                     activity?.startActivity(intent)
                 } else {
@@ -233,22 +235,17 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
                 }
             }
 
-            if (it.plot.data.description.isNotEmpty()) {
-                binding.singleTitleDesc.text = it.plot.data.description
-            }
-
-            if (it.rating.imdb != null) {
-                binding.infoDetails.tvSingleMovieImdbScore.text = it.rating.imdb.score.toString()
-            }
-
-            binding.infoDetails.tvSingleTitleYear.text = it.year.toString()
-            binding.infoDetails.tvSingleTitleDuration.text = "${it.duration} წ."
-            if (it.countries.data.isNotEmpty()) {
-                binding.infoDetails.tvSingleTitleCountry.text = it.countries.data[0].secondaryName
-            }
+            binding.singleTitleDesc.text = it.description
+            binding.infoDetails.tvSingleMovieImdbScore.text = it.imdbScore
+            binding.infoDetails.tvSingleTitleYear.text = it.releaseYear
+            binding.infoDetails.tvSingleTitleDuration.text = it.duration
+            binding.infoDetails.tvSingleTitleCountry.text = it.country
 
             if (it.isTvShow) {
                 binding.episodesButton.setVisible()
+                binding.episodesButton.setOnClickListener { _ ->
+                    singleTitleViewModel.onEpisodesPressed(it.id, it.displayName!!, it.seasonNum!!)
+                }
             }
         })
 
@@ -300,11 +297,11 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
             chooseLanguageDialog.hide()
             val intent = Intent(context, VideoPlayerActivity::class.java)
             intent.putExtra("videoPlayerData", VideoPlayerData(
-                args.titleId,
-                singleTitleViewModel.isTvShow.value!!,
-                if (singleTitleViewModel.isTvShow.value!!) 1 else 0,
+                titleInfo.id,
+                titleInfo.isTvShow,
+                if (titleInfo.isTvShow) 1 else 0,
                 language,
-                if (singleTitleViewModel.isTvShow.value!!) 1 else 0,
+                if (titleInfo.isTvShow) 1 else 0,
                 0L,
                 null
             ))

@@ -99,7 +99,7 @@ class TopMoviesFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
     private fun fetchMoreTopMovies() {
         binding.progressBar.setVisible()
         page++
-        Log.d("currentpage", page.toString())
         viewModel.getTopMovies(page)
+        loading = false
     }
 }

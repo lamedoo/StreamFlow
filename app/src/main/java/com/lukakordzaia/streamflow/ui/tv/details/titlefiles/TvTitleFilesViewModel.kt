@@ -6,8 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
+import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.Result
@@ -38,8 +40,8 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
     private val _castData = MutableLiveData<List<GetSingleTitleCastResponse.Data>>()
     val castResponseDataGetSingle: LiveData<List<GetSingleTitleCastResponse.Data>> = _castData
 
-    private val _singleTitleRelated = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val singleTitleRelated: LiveData<List<GetTitlesResponse.Data>> = _singleTitleRelated
+    private val _singleTitleRelated = MutableLiveData<List<SingleTitleModel>>()
+    val singleTitleRelated: LiveData<List<SingleTitleModel>> = _singleTitleRelated
 
     private val _continueWatchingDetails = MutableLiveData<ContinueWatchingRoom>(null)
     val continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
@@ -109,7 +111,7 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
             when (val related = repository.getSingleTitleRelated(titleId)) {
                 is Result.Success -> {
                     val data = related.data.data
-                    _singleTitleRelated.value = data
+                    _singleTitleRelated.value = MapTitleData().list(data)
                 }
                 is Result.Error -> {
                     newToastMessage("მსგავსი - ${related.exception}")

@@ -4,15 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvSearchItemBinding
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
 
 class SearchTitlesAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SearchTitlesAdapter.ViewHolder>() {
-    private var list: List<GetTitlesResponse.Data> = ArrayList()
+    private var list: List<SingleTitleModel> = ArrayList()
 
-    fun setSearchTitleList(list: List<GetTitlesResponse.Data>) {
+    fun setSearchTitleList(list: List<SingleTitleModel>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -34,27 +36,16 @@ class SearchTitlesAdapter(private val context: Context, private val onTitleClick
     }
 
     inner class ViewHolder(val view: RvSearchItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: GetTitlesResponse.Data) {
-            if (!model.secondaryName.isNullOrEmpty()) {
-                view.rvSearchItemName.text = model.secondaryName
-            } else {
-                view.rvSearchItemName.text = model.primaryName
-            }
+        fun bind(model: SingleTitleModel) {
+            view.rvSearchItemName.text = model.displayName
+            view.rvSearchItemYear.text = "${model.releaseYear}, "
 
-            view.rvSearchItemYear.text = "${model.year.toString()}, "
+            Glide.with(context)
+                .load(model.poster?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(view.rvSearchItemPoster)
 
-            if (!model.posters?.data?.x240.isNullOrEmpty()) {
-                Picasso.get().load(model.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.rvSearchItemPoster)
-            } else {
-                Picasso.get().load(R.drawable.movie_image_placeholder).placeholder(R.drawable.movie_image_placeholder).into(view.rvSearchItemPoster)
-
-            }
-
-            if (model.isTvShow == true) {
-                view.rvSearchItemIsTvShow.text = "სერიალი"
-            } else {
-                view.rvSearchItemIsTvShow.text = "ფილმი"
-            }
+            view.rvSearchItemIsTvShow.text = if (model.isTvShow) "სერიალი" else "ფილმი"
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)

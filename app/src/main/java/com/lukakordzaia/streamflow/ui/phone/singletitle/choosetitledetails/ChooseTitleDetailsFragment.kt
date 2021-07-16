@@ -77,11 +77,7 @@ class ChooseTitleDetailsFragment : BaseBottomSheet<FragmentPhoneChooseTitleDetai
             if (noInternet) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    if (args.isTvShow) {
-                        chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
-                    } else {
-                        chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, args.numOfSeasons)
-                    }
+                    chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
                 }, 5000)
             }
         })
@@ -188,7 +184,7 @@ class ChooseTitleDetailsFragment : BaseBottomSheet<FragmentPhoneChooseTitleDetai
             val intent = Intent(context, VideoPlayerActivity::class.java)
             intent.putExtra("videoPlayerData", VideoPlayerData(
                 args.titleId,
-                args.isTvShow,
+                true,
                 chooseTitleDetailsViewModel.chosenSeason.value!!,
                 language,
                 episode,

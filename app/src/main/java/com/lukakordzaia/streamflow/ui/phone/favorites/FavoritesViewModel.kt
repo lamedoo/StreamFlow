@@ -3,6 +3,8 @@ package com.lukakordzaia.streamflow.ui.phone.favorites
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.interfaces.FavoritesCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -20,11 +22,11 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
     val favoriteNoMovies = MutableLiveData<Boolean>()
     val favoriteNoTvShows = MutableLiveData<Boolean>()
 
-    private val _movieResult = MutableLiveData<List<GetSingleTitleResponse.Data>>()
-    val movieResult: LiveData<List<GetSingleTitleResponse.Data>> = _movieResult
+    private val _movieResult = MutableLiveData<List<SingleTitleModel>>()
+    val movieResult: LiveData<List<SingleTitleModel>> = _movieResult
 
-    private val _tvShowResult = MutableLiveData<List<GetSingleTitleResponse.Data>>()
-    val tvShowResult: LiveData<List<GetSingleTitleResponse.Data>> = _tvShowResult
+    private val _tvShowResult = MutableLiveData<List<SingleTitleModel>>()
+    val tvShowResult: LiveData<List<SingleTitleModel>> = _tvShowResult
 
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(FavoritesFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
@@ -45,13 +47,13 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
                     favoriteNoMovies.value = true
                 } else {
                     favoriteNoMovies.value = false
-                    val fetchMovieResult: MutableList<GetSingleTitleResponse.Data> = ArrayList()
+                    val fetchMovieResult: MutableList<SingleTitleModel> = ArrayList()
                     viewModelScope.launch {
                         movies.forEach {
                             when (val moviesData = favoritesRepository.getSingleTitleData(it)) {
                                 is Result.Success -> {
                                     val data = moviesData.data.data
-                                    fetchMovieResult.add(data)
+                                    fetchMovieResult.add(MapTitleData().single(data))
 
                                     _movieResult.value = fetchMovieResult
                                     favoriteMoviesLoader.value = LoadingState.LOADED
@@ -68,13 +70,13 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
                     favoriteNoTvShows.value = true
                 } else {
                     favoriteNoTvShows.value = false
-                    val fetchTvShowResult: MutableList<GetSingleTitleResponse.Data> = ArrayList()
+                    val fetchTvShowResult: MutableList<SingleTitleModel> = ArrayList()
                     viewModelScope.launch {
                         tvShows.forEach {
                             when (val tvShowsData = favoritesRepository.getSingleTitleData(it)) {
                                 is Result.Success -> {
                                     val data = tvShowsData.data.data
-                                    fetchTvShowResult.add(data)
+                                    fetchTvShowResult.add(MapTitleData().single(data))
 
                                     _tvShowResult.value = fetchTvShowResult
                                     favoriteTvShowsLoader.value = LoadingState.LOADED

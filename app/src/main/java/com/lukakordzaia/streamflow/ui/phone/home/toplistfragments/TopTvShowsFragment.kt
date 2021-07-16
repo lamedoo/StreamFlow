@@ -99,7 +99,7 @@ class TopTvShowsFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
     private fun fetchMoreTopTvShows() {
         binding.progressBar.setVisible()
         page++
-        Log.d("currentpage", page.toString())
         viewModel.getTopTvShows(page)
+        loading = false
     }
 }

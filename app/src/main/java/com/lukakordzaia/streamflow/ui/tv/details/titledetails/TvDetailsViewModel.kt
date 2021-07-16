@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.database.ImoviesDatabase
 import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -19,8 +21,8 @@ import kotlinx.coroutines.launch
 class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseViewModel() {
     val traktFavoriteLoader = MutableLiveData<LoadingState>()
 
-    private val _singleTitleData = MutableLiveData<GetSingleTitleResponse.Data>()
-    val getSingleTitleResponse: LiveData<GetSingleTitleResponse.Data> = _singleTitleData
+    private val _singleTitleData = MutableLiveData<SingleTitleModel>()
+    val getSingleTitleResponse: LiveData<SingleTitleModel> = _singleTitleData
 
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
@@ -41,26 +43,24 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     val titleGenres: LiveData<List<String>> = _titleGenres
     private val fetchTitleGenres: MutableList<String> = ArrayList()
 
-    private val _imdbId = MutableLiveData<String>()
-    private val imdbId: LiveData<String> = _imdbId
-
     fun getSingleTitleData(titleId: Int) {
         fetchTitleGenres.clear()
         viewModelScope.launch {
             _dataLoader.value = LoadingState.LOADING
-            when (val data = repository.getSingleTitleData(titleId)) {
+            when (val info = repository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
-                    _singleTitleData.value = data.data.data
-                    _imdbId.value = data.data.data.imdbUrl.substring(27, data.data.data.imdbUrl.length)
+                    val data = info.data.data
+                    _singleTitleData.value = MapTitleData().single(data)
+
                     _dataLoader.value = LoadingState.LOADED
 
-                    data.data.data.genres.data.forEach {
+                    data.genres.data.forEach {
                         fetchTitleGenres.add(it.primaryName!!)
                     }
                     _titleGenres.value = fetchTitleGenres
                 }
                 is Result.Error -> {
-                    newToastMessage(data.exception)
+                    newToastMessage(info.exception)
                 }
                 is Result.Internet -> {
                     setNoInternet()
@@ -136,15 +136,15 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         }
     }
 
-    fun addTitleToFirestore() {
+    fun addTitleToFirestore(info: SingleTitleModel) {
         if (currentUser() != null) {
             traktFavoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
                 val addToFavorites = repository.addFavTitleToFirestore(currentUser()!!.uid, AddTitleToFirestore(
-                        getSingleTitleResponse.value!!.secondaryName,
-                        getSingleTitleResponse.value!!.isTvShow,
-                        getSingleTitleResponse.value!!.id,
-                        imdbId.value!!
+                        info.nameEng!!,
+                        info.isTvShow,
+                        info.id,
+                        info.imdbId!!
                 ))
                 if (addToFavorites) {
                     newToastMessage("ფილმი დაემატა ფავორიტებში")

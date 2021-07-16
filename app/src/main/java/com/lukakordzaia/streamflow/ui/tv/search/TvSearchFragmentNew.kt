@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
@@ -84,7 +85,7 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         searchTitlesViewModel.searchList.observe(viewLifecycleOwner, { list ->
-            val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter()).apply {
+            val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter(requireContext())).apply {
                 list.forEach {
                     add(it)
                 }
@@ -118,7 +119,7 @@ class TvSearchFragmentNew : BrowseSupportFragment() {
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
         override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any, rowViewHolder: RowPresenter.ViewHolder, row: Row) {
-            if (item is GetTitlesResponse.Data) {
+            if (item is SingleTitleModel) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)

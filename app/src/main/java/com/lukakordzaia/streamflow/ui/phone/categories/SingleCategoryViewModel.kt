@@ -3,6 +3,8 @@ package com.lukakordzaia.streamflow.ui.phone.categories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
@@ -14,33 +16,31 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class SingleCategoryViewModel(private val repository: CategoriesRepository) : BaseViewModel() {
-    private val _singleGenreList = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val singleGenreList: LiveData<List<GetTitlesResponse.Data>> = _singleGenreList
+    private val fetchSingleGenreList: MutableList<SingleTitleModel> = ArrayList()
+    private val _singleGenreList = MutableLiveData<List<SingleTitleModel>>()
+    val singleGenreList: LiveData<List<SingleTitleModel>> = _singleGenreList
 
-    private val fetchSingleGenreList: MutableList<GetTitlesResponse.Data> = ArrayList()
+    private val fetchSingleStudioList: MutableList<SingleTitleModel> = ArrayList()
+    private val _singleStudioList = MutableLiveData<List<SingleTitleModel>>()
+    val singleStudioList: LiveData<List<SingleTitleModel>> = _singleStudioList
 
-    private val _singleStudioList = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val singleStudioList: LiveData<List<GetTitlesResponse.Data>> = _singleStudioList
+    private val _singleGenreAnimation = MutableLiveData<List<SingleTitleModel>>()
+    val singleGenreAnimation: LiveData<List<SingleTitleModel>> = _singleGenreAnimation
 
-    private val fetchSingleStudioList: MutableList<GetTitlesResponse.Data> = ArrayList()
+    private val _singleGenreComedy = MutableLiveData<List<SingleTitleModel>>()
+    val singleGenreComedy: LiveData<List<SingleTitleModel>> = _singleGenreComedy
 
-    private val _singleGenreAnimation = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val singleGenreAnimation: LiveData<List<GetTitlesResponse.Data>> = _singleGenreAnimation
+    private val _singleGenreMelodrama = MutableLiveData<List<SingleTitleModel>>()
+    val singleGenreMelodrama: LiveData<List<SingleTitleModel>> = _singleGenreMelodrama
 
-    private val _singleGenreComedy = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val singleGenreComedy: LiveData<List<GetTitlesResponse.Data>> = _singleGenreComedy
+    private val _singleGenreHorror = MutableLiveData<List<SingleTitleModel>>()
+    val singleGenreHorror: LiveData<List<SingleTitleModel>> = _singleGenreHorror
 
-    private val _singleGenreMelodrama = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val singleGenreMelodrama: LiveData<List<GetTitlesResponse.Data>> = _singleGenreMelodrama
+    private val _singleGenreAdventure = MutableLiveData<List<SingleTitleModel>>()
+    val singleGenreAdventure: LiveData<List<SingleTitleModel>> = _singleGenreAdventure
 
-    private val _singleGenreHorror = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val singleGenreHorror: LiveData<List<GetTitlesResponse.Data>> = _singleGenreHorror
-
-    private val _singleGenreAdventure = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val singleGenreAdventure: LiveData<List<GetTitlesResponse.Data>> = _singleGenreAdventure
-
-    private val _singleGenreAction = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val singleGenreAction: LiveData<List<GetTitlesResponse.Data>> = _singleGenreAction
+    private val _singleGenreAction = MutableLiveData<List<SingleTitleModel>>()
+    val singleGenreAction: LiveData<List<SingleTitleModel>> = _singleGenreAction
 
     private val _hasMorePage = MutableLiveData(true)
     val hasMorePage: LiveData<Boolean> = _hasMorePage
@@ -59,7 +59,8 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
             categoryLoader.value = LoadingState.LOADING
             when (val singleGenre = repository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
-                    fetchSingleGenreList.addAll(singleGenre.data.data)
+                    val data = singleGenre.data.data
+                    fetchSingleGenreList.addAll(MapTitleData().list(data))
                     _singleGenreList.value = fetchSingleGenreList
                     _hasMorePage.value = singleGenre.data.meta.pagination.totalPages!! > singleGenre.data.meta.pagination.currentPage!!
                     categoryLoader.value = LoadingState.LOADED
@@ -80,12 +81,12 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
                 is Result.Success -> {
                     val data = singleGenre.data.data
                     when (genreId) {
-                        265 -> _singleGenreAnimation.value = data
-                        258 -> _singleGenreComedy.value = data
-                        260 -> _singleGenreMelodrama.value = data
-                        255 -> _singleGenreHorror.value = data
-                        266 -> _singleGenreAdventure.value = data
-                        248 -> _singleGenreAction.value = data
+                        265 -> _singleGenreAnimation.value = MapTitleData().list(data)
+                        258 -> _singleGenreComedy.value = MapTitleData().list(data)
+                        260 -> _singleGenreMelodrama.value = MapTitleData().list(data)
+                        255 -> _singleGenreHorror.value = MapTitleData().list(data)
+                        266 -> _singleGenreAdventure.value = MapTitleData().list(data)
+                        248 -> _singleGenreAction.value = MapTitleData().list(data)
                     }
                 }
                 is Result.Error -> {
@@ -103,7 +104,8 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
             categoryLoader.value = LoadingState.LOADING
             when (val singleStudio = repository.getSingleStudio(studioId, page)) {
                 is Result.Success -> {
-                    fetchSingleStudioList.addAll(singleStudio.data.data)
+                    val data = singleStudio.data.data
+                    fetchSingleStudioList.addAll(MapTitleData().list(data))
                     _singleStudioList.value = fetchSingleStudioList
                     _hasMorePage.value = singleStudio.data.meta.pagination.totalPages!! > singleStudio.data.meta.pagination.currentPage!!
                     categoryLoader.value = LoadingState.LOADED

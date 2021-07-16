@@ -3,6 +3,8 @@ package com.lukakordzaia.streamflow.ui.phone.searchtitles
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -15,10 +17,10 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
     val searchLoader = MutableLiveData<LoadingState>()
     val franchisesLoader = MutableLiveData<LoadingState>()
 
-    private val _searchList = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val searchList: LiveData<List<GetTitlesResponse.Data>> = _searchList
+    private val _searchList = MutableLiveData<List<SingleTitleModel>>()
+    val searchList: LiveData<List<SingleTitleModel>> = _searchList
 
-    private val fetchSearchGetTitlesResponse: MutableList<GetTitlesResponse.Data> = ArrayList()
+    private val fetchSearchGetTitlesResponse: MutableList<SingleTitleModel> = ArrayList()
 
     private val _franchiseList = MutableLiveData<List<GetTopFranchisesResponse.Data>>()
     val getTopFranchisesResponse: LiveData<List<GetTopFranchisesResponse.Data>> = _franchiseList
@@ -38,7 +40,7 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
             when (val search = repository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = search.data.data
-                    fetchSearchGetTitlesResponse.addAll(data)
+                    fetchSearchGetTitlesResponse.addAll(MapTitleData().list(data))
                     _searchList.value = fetchSearchGetTitlesResponse
                     searchLoader.value = LoadingState.LOADED
                 }
@@ -57,7 +59,7 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
             when (val searchTv = repository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = searchTv.data.data
-                    _searchList.value = data
+                    _searchList.value = MapTitleData().list(data)
                 }
                 is Result.Error -> {
                     newToastMessage("ძიება - ${searchTv.exception}")

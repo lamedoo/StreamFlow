@@ -102,5 +102,6 @@ class NewMoviesFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
         binding.progressBar.setVisible()
         page++
         viewModel.getNewMovies(page)
+        loading = false
     }
 }
