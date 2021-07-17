@@ -1,18 +1,31 @@
 package com.lukakordzaia.streamflow.ui.tv.search
 
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.KeyEvent
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvCustomSearchInput
 import com.lukakordzaia.streamflow.databinding.ActivityTvSearchBinding
+import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvSearchInputSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
+import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.showKeyboard
+import kotlinx.android.synthetic.main.activity_tv_search.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>() {
+class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSearchInputSelected, TvCheckTitleSelected {
+    private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
+
     private lateinit var fragment: TvSearchFragmentNew
     private var firstLoad = true
+    private var searchInputSelected = true
 
     override fun getViewBinding() = ActivityTvSearchBinding.inflate(layoutInflater)
 
@@ -43,6 +56,43 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>() {
         googleProfileDetails(binding.tvSidebar.profilePhoto, binding.tvSidebar.profileUsername)
 
         searchInput()
+
+        tvDetailsViewModel.getSingleTitleResponse.observe(this, {
+            binding.titleInfo.name.text = it.nameEng
+
+            binding.titleInfo.year.text = "${it.releaseYear}   ·"
+            if (it.isTvShow) {
+                binding.titleInfo.duration.text = "${it.seasonNum} სეზონი   ·"
+            } else {
+                binding.titleInfo.duration.text = "${it.duration}   ·"
+            }
+            binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
+        })
+
+        tvDetailsViewModel.titleGenres.observe(this, {
+            binding.titleInfo.genres.text = TextUtils.join(", ", it)
+        })
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                if (searchInputSelected) {
+                    binding.searchInput.showKeyboard()
+                } else {
+                    return super.onKeyDown(keyCode, event)
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onBackPressed() {
+        if (!binding.searchInput.isFocused && !binding.tvSidebar.root.isVisible) {
+            binding.searchInput.showKeyboard()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun searchInput() {
@@ -64,5 +114,13 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>() {
 
             override fun onQueryTextChange(newText: String?) {}
         })
+    }
+
+    override fun isSelected(selected: Boolean) {
+        searchInputSelected = selected
+    }
+
+    override fun getTitleId(titleId: Int, continueWatchingDetails: DbTitleData?) {
+        tvDetailsViewModel.getSingleTitleData(titleId)
     }
 }

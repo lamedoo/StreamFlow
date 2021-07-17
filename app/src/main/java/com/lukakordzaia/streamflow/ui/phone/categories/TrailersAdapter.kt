@@ -4,17 +4,19 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvTrailerItemBinding
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
 
 class TrailersAdapter(private val context: Context,
                       private val onTrailerClick: (trailerId: Int, trailerUrl: String) -> Unit,
                       private val onTrailerInfoClick: (trailerId: Int) -> Unit) : RecyclerView.Adapter<TrailersAdapter.ViewHolder>() {
-    private var list: List<GetTitlesResponse.Data> = ArrayList()
+    private var list: List<SingleTitleModel> = ArrayList()
 
-    fun setTrailerList(list: List<GetTitlesResponse.Data>) {
+    fun setTrailerList(list: List<SingleTitleModel>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -36,17 +38,15 @@ class TrailersAdapter(private val context: Context,
     }
 
     inner class ViewHolder(val view: RvTrailerItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: GetTitlesResponse.Data) {
-            if (model.primaryName.isNotEmpty()) {
-                view.rvTrailerName.text = model.primaryName
-            } else {
-                view.rvTrailerName.text = model.secondaryName
-            }
-
-            Picasso.get().load(model.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.rvTrailerPoster)
+        fun bind(model: SingleTitleModel) {
+            view.rvTrailerName.text = model.displayName
+            Glide.with(context)
+                .load(model.poster?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(view.rvTrailerPoster)
 
             view.root.setOnClickListener {
-                onTrailerClick(model.id, model.trailers!!.data!![0]!!.fileUrl)
+                onTrailerClick(model.id, model.trailer!!)
             }
 
             view.rvTrailerInfo.setOnClickListener {

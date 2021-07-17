@@ -100,7 +100,7 @@ class SingleStudioFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() 
     private fun fetchMoreTitle() {
         binding.progressBar.setVisible()
         page++
-        Log.d("currentpage", page.toString())
         singleCategoryViewModel.getSingleStudio(args.studioId, page)
+        loading = false
     }
 }

@@ -109,15 +109,15 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
 
     private fun initRowsAdapter(isTvShow: Boolean) {
         if (isTvShow) {
-            val secondHeaderItem = ListRow(HeaderItem(0, "სეზონები"), ArrayObjectAdapter(TvCardPresenter()))
-            val firstHeaderItem = ListRow(HeaderItem(1, "ეპიზოდები"), ArrayObjectAdapter(TvCardPresenter()))
-            val fourthItem = ListRow(HeaderItem(2, "მსახიობები"), ArrayObjectAdapter(TvCardPresenter()))
-            val fifthItem = ListRow(HeaderItem(3, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter()))
+            val secondHeaderItem = ListRow(HeaderItem(0, "სეზონები"), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+            val firstHeaderItem = ListRow(HeaderItem(1, "ეპიზოდები"), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+            val fourthItem = ListRow(HeaderItem(2, "მსახიობები"), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+            val fifthItem = ListRow(HeaderItem(3, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter(requireContext())))
             val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, fourthItem, fifthItem)
             rowsAdapter.addAll(0, initListRows)
         } else {
-            val fourthItem = ListRow(HeaderItem(0, "მსახიობები"), ArrayObjectAdapter(TvCardPresenter()))
-            val fifthItem = ListRow(HeaderItem(1, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter()))
+            val fourthItem = ListRow(HeaderItem(0, "მსახიობები"), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+            val fifthItem = ListRow(HeaderItem(1, "მსგავსი"), ArrayObjectAdapter(TvCardPresenter(requireContext())))
             val initListRows = mutableListOf(fourthItem, fifthItem)
             rowsAdapter.addAll(0, initListRows)
         }
@@ -162,11 +162,9 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         }
     }
 
-    private fun relatedRowsAdapter(relatedList: List<GetTitlesResponse.Data>, isTvShow: Boolean) {
-        val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter()).apply {
-            relatedList.forEach {
-                add(it)
-            }
+    private fun relatedRowsAdapter(relatedList: List<SingleTitleModel>, isTvShow: Boolean) {
+        val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter(requireContext())).apply {
+            addAll(0, relatedList)
         }
         HeaderItem(if (isTvShow) 3 else 1, "მსგავსი"). also {
             rowsAdapter.replace(if (isTvShow) 3 else 1, ListRow(it, listRowAdapter))
@@ -256,7 +254,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                         tvChooseLanguageAdapter.setLanguageList(languages)
                     })
                 }
-                is GetTitlesResponse.Data -> {
+                is SingleTitleModel -> {
                     val intent = Intent(context, TvDetailsActivity::class.java).apply {
                         putExtra("titleId", item.id)
                         putExtra("isTvShow", item.isTvShow)

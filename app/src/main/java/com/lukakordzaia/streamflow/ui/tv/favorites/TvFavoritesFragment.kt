@@ -17,6 +17,7 @@ import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
@@ -121,17 +122,15 @@ class TvFavoritesFragment : BrowseSupportFragment() {
     }
 
     private fun initRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, ""), ArrayObjectAdapter(TvCardPresenter()))
-        val secondHeaderItem = ListRow(HeaderItem(1, ""), ArrayObjectAdapter(TvCardPresenter()))
+        val firstHeaderItem = ListRow(HeaderItem(0, ""), ArrayObjectAdapter(TvFavoritesPresenter(requireContext())))
+        val secondHeaderItem = ListRow(HeaderItem(1, ""), ArrayObjectAdapter(TvFavoritesPresenter(requireContext())))
         val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }
 
-    private fun movieRowsAdapter(movies: List<GetSingleTitleResponse.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter()).apply {
-            movies.forEach {
-                add(it)
-            }
+    private fun movieRowsAdapter(movies: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter(requireContext())).apply {
+            addAll(0, movies)
         }
 
         HeaderItem(0, "ფილმები").also {
@@ -139,11 +138,9 @@ class TvFavoritesFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun tvShowsRowsAdapter(tvShows: List<GetSingleTitleResponse.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter()).apply {
-            tvShows.forEach {
-                add(it)
-            }
+    private fun tvShowsRowsAdapter(tvShows: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter(requireContext())).apply {
+            addAll(0, tvShows)
         }
 
         HeaderItem(1, "სერიალები").also {
@@ -178,7 +175,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
                 rowViewHolder: RowPresenter.ViewHolder,
                 row: Row
         ) {
-            if (item is GetSingleTitleResponse.Data) {
+            if (item is SingleTitleModel) {
                 val intent = Intent(context, TvDetailsActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
@@ -191,7 +188,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
-            if (item is GetSingleTitleResponse.Data) {
+            if (item is SingleTitleModel) {
                 onTitleSelected?.getTitleId(item.id, null)
             }
 

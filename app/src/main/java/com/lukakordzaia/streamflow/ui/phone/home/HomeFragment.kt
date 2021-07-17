@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -114,16 +115,14 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
 
         homeViewModel.movieDayData.observe(viewLifecycleOwner, {
             binding.movieDayContainer.setOnClickListener { _ ->
-                homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it.id)
+                homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it.first().id)
             }
 
-            Picasso.get().load(it.covers?.data?.x1050).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(binding.movieDayCover)
-
-            if (it.primaryName.isNotEmpty()) {
-                binding.movieDayName.text = it.primaryName
-            } else {
-                binding.movieDayName.text = it.secondaryName
-            }
+            binding.movieDayName.text = it.first().displayName
+            Glide.with(requireContext())
+                .load(it.first().cover?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(binding.movieDayCover)
         })
     }
 

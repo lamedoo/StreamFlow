@@ -95,10 +95,10 @@ class SingleGenreFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
         })
     }
 
-
     private fun fetchMoreTitle() {
         binding.progressBar.setVisible()
         page++
         singleCategoryViewModel.getSingleGenre(args.genreId, page)
+        loading = false
     }
 }

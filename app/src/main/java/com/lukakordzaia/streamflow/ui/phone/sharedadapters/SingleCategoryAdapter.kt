@@ -5,16 +5,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvSingleGenreItemBinding
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
 
 class SingleCategoryAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SingleCategoryAdapter.ViewHolder>() {
-    private var list: List<GetTitlesResponse.Data> = ArrayList()
+    private var list: List<SingleTitleModel> = ArrayList()
     private var startPosition = 0
 
-    fun setItems(list: List<GetTitlesResponse.Data>) {
+    fun setItems(list: List<SingleTitleModel>) {
         this.list = list
         startPosition += list.size
         notifyDataSetChanged()
@@ -37,20 +39,14 @@ class SingleCategoryAdapter(private val context: Context, private val onTitleCli
     }
 
     inner class ViewHolder(val view: RvSingleGenreItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: GetTitlesResponse.Data) {
-            if (model.primaryName.isNotEmpty()) {
-                view.itemName.text = model.primaryName
-            } else {
-                view.itemName.text = model.secondaryName
-            }
+        fun bind(model: SingleTitleModel) {
+            view.itemName.text = model.displayName
+            view.isTvShow.text = if (model.isTvShow) "სერიალი" else "ფილმი"
 
-            if (model.isTvShow == true) {
-                view.isTvShow.text = "სერიალი"
-            } else {
-                view.isTvShow.text = "ფილმი"
-            }
-
-            Picasso.get().load(model.posters?.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.itemPoster)
+            Glide.with(context)
+                .load(model.poster?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(view.itemPoster)
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)

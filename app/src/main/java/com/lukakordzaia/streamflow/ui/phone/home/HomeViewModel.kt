@@ -6,10 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.helpers.MapTitleData
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
@@ -22,17 +24,17 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     val topMovieLoader = MutableLiveData<LoadingState>()
     val topTvShowsLoader = MutableLiveData<LoadingState>()
 
-    private val _movieDayData = MutableLiveData<GetTitlesResponse.Data>()
-    val movieDayData: LiveData<GetTitlesResponse.Data> = _movieDayData
+    private val _movieDayData = MutableLiveData<List<SingleTitleModel>>()
+    val movieDayData: LiveData<List<SingleTitleModel>> = _movieDayData
 
-    private val _newMovieList = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val newMovieList: LiveData<List<GetTitlesResponse.Data>> = _newMovieList
+    private val _newMovieList = MutableLiveData<List<SingleTitleModel>>()
+    val newMovieList: LiveData<List<SingleTitleModel>> = _newMovieList
 
-    private val _topMovieList = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val topMovieList: LiveData<List<GetTitlesResponse.Data>> = _topMovieList
+    private val _topMovieList = MutableLiveData<List<SingleTitleModel>>()
+    val topMovieList: LiveData<List<SingleTitleModel>> = _topMovieList
 
-    private val _topTvShowList = MutableLiveData<List<GetTitlesResponse.Data>>()
-    val topTvShowList: LiveData<List<GetTitlesResponse.Data>> = _topTvShowList
+    private val _topTvShowList = MutableLiveData<List<SingleTitleModel>>()
+    val topTvShowList: LiveData<List<SingleTitleModel>> = _topTvShowList
 
     private val _continueWatchingList = MutableLiveData<List<DbTitleData>>()
     val continueWatchingList: LiveData<List<DbTitleData>> = _continueWatchingList
@@ -151,7 +153,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             when (val movieDay = repository.getMovieDay()) {
                 is Result.Success -> {
                     val data = movieDay.data.data
-                    _movieDayData.value = data[0]
+                    _movieDayData.value = MapTitleData().list(listOf(data[0]))
 
                     movieDayLoader.value = LoadingState.LOADED
                 }
@@ -171,7 +173,8 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             when (val newMovies = repository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = newMovies.data.data
-                    _newMovieList.value = data
+
+                    _newMovieList.value = MapTitleData().list(data)
                     newMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -190,7 +193,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             when (val topMovies = repository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
-                    _topMovieList.value = data
+                    _topMovieList.value = MapTitleData().list(data)
                     topMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -209,7 +212,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
             when (val topTvShows = repository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = topTvShows.data.data
-                    _topTvShowList.value = data
+                    _topTvShowList.value = MapTitleData().list(data)
                     topTvShowsLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -222,10 +225,10 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         }
     }
 
-    fun refreshContent() {
+    fun refreshContent(page: Int) {
         getMovieDay()
-        getNewMovies(1)
-        getTopMovies(1)
-        getTopTvShows(1)
+        getNewMovies(page)
+        getTopMovies(page)
+        getTopTvShows(page)
     }
 }

@@ -4,8 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvFavoriteItemBinding
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.squareup.picasso.Picasso
 
@@ -14,9 +16,9 @@ class FavoritesAdapter(
     private val onTitleClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int) -> Unit
 ) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
-    private var list: List<GetSingleTitleResponse.Data> = ArrayList()
+    private var list: List<SingleTitleModel> = ArrayList()
 
-    fun setItems(list: List<GetSingleTitleResponse.Data>) {
+    fun setItems(list: List<SingleTitleModel>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -38,8 +40,11 @@ class FavoritesAdapter(
     }
 
     inner class ViewHolder(val view: RvFavoriteItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: GetSingleTitleResponse.Data) {
-            Picasso.get().load(model.posters.data?.x240).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(view.itemPoster)
+        fun bind(model: SingleTitleModel) {
+            Glide.with(context)
+                .load(model.poster?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(view.itemPoster)
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)

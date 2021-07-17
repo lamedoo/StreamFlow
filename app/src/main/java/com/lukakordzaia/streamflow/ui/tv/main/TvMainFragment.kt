@@ -20,6 +20,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
@@ -159,11 +160,11 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun initRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING), ArrayObjectAdapter(TvCardPresenter()))
-        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TV_TOP_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
-        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TV_TOP_TV_SHOWS), ArrayObjectAdapter(TvCardPresenter()))
-        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvCardPresenter()))
-        val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
+        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TV_TOP_MOVIES), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TV_TOP_TV_SHOWS), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+        val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvCardPresenter(requireContext())))
         val initListRows = mutableListOf(firstHeaderItem, sixthHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }
@@ -180,11 +181,9 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun newMoviesRowsAdapter(newMovies: List<GetTitlesResponse.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
-            newMovies.forEach {
-                add(it)
-            }
+    private fun newMoviesRowsAdapter(newMovies: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+            addAll(0, newMovies)
         }
 
         HeaderItem(1, AppConstants.TV_NEW_MOVIES).also { header ->
@@ -192,11 +191,9 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun topMoviesRowsAdapter(movies: List<GetTitlesResponse.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
-            movies.forEach {
-                add(it)
-            }
+    private fun topMoviesRowsAdapter(movies: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+            addAll(0, movies)
         }
 
         HeaderItem(2, AppConstants.TV_TOP_MOVIES).also { header ->
@@ -204,11 +201,9 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun topTvShowsRowsAdapter(tvShows: List<GetTitlesResponse.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
-            tvShows.forEach {
-                add(it)
-            }
+    private fun topTvShowsRowsAdapter(tvShows: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+            addAll(0, tvShows)
         }
 
         HeaderItem(3, AppConstants.TV_TOP_TV_SHOWS).also { header ->
@@ -253,23 +248,18 @@ class TvMainFragment : BrowseSupportFragment() {
                 rowViewHolder: RowPresenter.ViewHolder,
                 row: Row
         ) {
-            if (item is GetTitlesResponse.Data) {
-                val intent = Intent(context, TvDetailsActivity::class.java)
-                intent.putExtra("titleId", item.id)
-                intent.putExtra("isTvShow", item.isTvShow)
+            if (item is SingleTitleModel) {
+                val intent = Intent(context, TvDetailsActivity::class.java).apply {
+                    putExtra("titleId", item.id)
+                    putExtra("isTvShow", item.isTvShow)
+                }
                 activity?.startActivity(intent)
             } else if (item is DbTitleData) {
-                val trailerUrl: String? = null
-                val intent = Intent(context, TvVideoPlayerActivity::class.java)
-                intent.putExtra("videoPlayerData", VideoPlayerData(
-                    item.id,
-                    item.isTvShow,
-                    item.season,
-                    item.language,
-                    item.episode,
-                    item.watchedDuration,
-                    trailerUrl
-                ))
+                val intent = Intent(context, TvDetailsActivity::class.java).apply {
+                    putExtra("titleId", item.id)
+                    putExtra("isTvShow", item.isTvShow)
+                    putExtra("continue", true)
+                }
                 activity?.startActivity(intent)
             } else if (item is TvCategoriesList) {
                 when (item.categoriesId) {
@@ -292,7 +282,7 @@ class TvMainFragment : BrowseSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
-            if (item is GetTitlesResponse.Data) {
+            if (item is SingleTitleModel) {
                 onTitleSelected?.getTitleId(item.id, null)
             } else if (item is DbTitleData) {
                 onTitleSelected?.getTitleId(item.id, item)
