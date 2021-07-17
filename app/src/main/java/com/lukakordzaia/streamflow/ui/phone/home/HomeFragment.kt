@@ -18,7 +18,6 @@ import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeDbTitlesAdapte
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.main_top_toolbar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -88,7 +87,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    homeViewModel.refreshContent()
+                    homeViewModel.refreshContent(1)
                 }, 5000)
             }
         })

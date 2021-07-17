@@ -22,11 +22,9 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -34,7 +32,6 @@ import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvWatchedCardPresenter
-import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
@@ -106,7 +103,7 @@ class TvMainFragment : BrowseSupportFragment() {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    homeViewModel.refreshContent()
+                    homeViewModel.refreshContent(1)
                 }, 5000)
             }
         })
