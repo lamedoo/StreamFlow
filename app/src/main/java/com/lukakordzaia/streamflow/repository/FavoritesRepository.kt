@@ -4,22 +4,21 @@ import android.content.ContentValues
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
-import com.lukakordzaia.streamflow.datamodels.TitleList
-import com.lukakordzaia.streamflow.network.FavoritesCallBack
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.interfaces.FavoritesCallBack
 import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
+import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import kotlinx.coroutines.tasks.await
 
-class FavoritesRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
-    private val service = retrofitBuilder.buildImoviesService()
+class FavoritesRepository(private val service: ImoviesNetwork): ImoviesCall() {
 
-    suspend fun getSearchFavoriteTitles(keywords: String, page: Int, year: String): Result<TitleList> {
+    suspend fun getSearchFavoriteTitles(keywords: String, page: Int, year: String): Result<GetTitlesResponse> {
         return imoviesCall { service.getSearchFavoriteTitles(keywords, page, year) }
     }
 
-    suspend fun getSingleTitleData(titleId: Int): Result<SingleTitleData> {
+    suspend fun getSingleTitleData(titleId: Int): Result<GetSingleTitleResponse> {
         return imoviesCall { service.getSingleTitle(titleId) }
     }
 

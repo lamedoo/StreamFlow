@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/trueBlack"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.phone.videoplayer.VideoPlayerFragment">
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/tv_title_player"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:show_buffering="always"
+        app:fastforward_increment="10000"
+        app:rewind_increment="10000"
+        app:surface_type="surface_view"
+        app:buffered_color="@color/accent_color"
+        app:controller_layout_id="@layout/tv_exoplayer_controller_layout"/>
+
+    <com.google.android.exoplayer2.ui.SubtitleView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_subtitle"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        android:id="@+id/continue_watching"
+        layout="@layout/continue_watching_dialog"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

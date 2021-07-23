@@ -3,63 +3,66 @@ package com.lukakordzaia.streamflow.ui.tv.categories
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.ActivityTvCategoriesBinding
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.setGone
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.tv_sidebar.*
-import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
-import kotlinx.android.synthetic.main.tv_top_title_header.*
+import kotlinx.android.synthetic.main.tv_default_card_view.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvCategoriesActivity : BaseFragmentActivity(), TvCheckTitleSelected {
+class TvCategoriesActivity : BaseFragmentActivity<ActivityTvCategoriesBinding>(), TvCheckTitleSelected {
     private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
+
+    override fun getViewBinding() = ActivityTvCategoriesBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tv_categories)
 
         setSidebarClickListeners(
-                tv_sidebar_search,
-                tv_sidebar_home,
-                tv_sidebar_favorites,
-                tv_sidebar_movies,
-                tv_sidebar_genres,
-                tv_sidebar_settings
+            binding.tvSidebar.searchButton,
+            binding.tvSidebar.homeButton,
+            binding.tvSidebar.favoritesButton,
+            binding.tvSidebar.moviesButton,
+            binding.tvSidebar.genresButton,
+            binding.tvSidebar.settingsButton
         )
 
-        setCurrentButton(tv_sidebar_movies)
+        setCurrentButton(binding.tvSidebar.moviesButton)
 
-        tv_sidebar_movies.setOnClickListener {
-            tv_sidebar.setGone()
+        binding.tvSidebar.moviesButton.setOnClickListener {
+            binding.tvSidebar.root.setGone()
         }
 
-        tv_sidebar_collapsed_movies_icon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
+        binding.tvSidebarCollapsed.collapsedMoviesIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
-        googleSignIn(tv_sidebar_signin)
-        googleSignOut(tv_sidebar_signout)
-        googleProfileDetails(tv_sidebar_profile_photo, tv_sidebar_profile_username)
+        googleSignIn(binding.tvSidebar.signIn)
+        googleSignOut(binding.tvSidebar.signOut)
+        googleProfileDetails(binding.tvSidebar.profilePhoto, binding.tvSidebar.profileUsername)
 
-        tvDetailsViewModel.singleTitleData.observe(this, {
-            home_top_name.text = it.secondaryName
-            Picasso.get().load(it.covers?.data?.x1050)
-                .error(R.drawable.movie_image_placeholder_landscape).into(home_top_poster)
-            home_top_year.text = "${it.year}   ·"
+        tvDetailsViewModel.getSingleTitleResponse.observe(this, {
+            binding.titleInfo.name.text = it.nameEng
+
+            Glide.with(this)
+                .load(it.cover?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(binding.titleInfo.poster)
+
+            binding.titleInfo.year.text = "${it.releaseYear}   ·"
             if (it.isTvShow) {
-                home_top_duration.text = "${it.seasons?.data?.size} სეზონი   ·"
+                binding.titleInfo.duration.text = "${it.seasonNum} სეზონი   ·"
             } else {
-                home_top_duration.text = "${it.duration.toString()} წთ   ·"
+                binding.titleInfo.duration.text = "${it.duration}   ·"
             }
-            if (it.rating.imdb?.score != null) {
-                home_top_rating.text = "IMDB ${it.rating.imdb.score.toString()}"
-            }
+            binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
         })
 
         tvDetailsViewModel.titleGenres.observe(this, {
-            home_top_genres.text = TextUtils.join(", ", it)
+            binding.titleInfo.genres.text = TextUtils.join(", ", it)
         })
     }
 

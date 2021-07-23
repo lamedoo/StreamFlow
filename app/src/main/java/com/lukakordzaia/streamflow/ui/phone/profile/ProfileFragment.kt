@@ -23,19 +23,20 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.TraktNewList
-import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
+import com.lukakordzaia.streamflow.databinding.DialogConnectTraktvAlertBinding
+import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
+import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileNewBinding
+import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
+import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.connect_traktv_alert_dialog.*
-import kotlinx.android.synthetic.main.phone_profile_framgent.*
-import kotlinx.android.synthetic.main.sync_continue_watching_alert_dialog.*
+import kotlinx.android.synthetic.main.dialog_connect_traktv_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ProfileFragment : BaseFragment() {
+class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
     private val profileViewModel: ProfileViewModel by viewModel()
     private var googleAccount: GoogleSignInAccount? = null
     private var traktToken: String? = null
@@ -43,82 +44,100 @@ class ProfileFragment : BaseFragment() {
     private lateinit var traktDialog: Dialog
     private val countdown = object : CountDownTimer(600000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
-            traktDialog.connect_traktv_expire_timer?.text = (millisUntilFinished / 1000).toString()
+            traktDialog.expire_timer?.text = (millisUntilFinished / 1000).toString()
         }
 
         override fun onFinish() {
-            traktDialog.connect_traktv_expire_timer?.text = "განაახლეთ კოდი"
+            traktDialog.expire_timer?.text = "განაახლეთ კოდი"
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return getPersistentView(inflater, container, savedInstanceState, R.layout.phone_profile_framgent)
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneProfileNewBinding
+        get() = FragmentPhoneProfileNewBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        topBarListener("პროფილი")
 
-        if (!hasInitializedRootView) {
-            Log.d("onviewcreated", "true")
-            hasInitializedRootView = true
-        }
+        binding.appVersionTitle.text = "V ${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}"
 
         googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
         traktDialog = Dialog(requireContext())
         traktToken = authSharedPreferences.getAccessToken()
 
-        topBarListener("პროფილი")
+        fragmentListeners()
+        fragmentObservers()
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.idToken)
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                Log.w(TAG, "Google sign in failed", e)
+            }
+        }
+    }
+
+    private fun fragmentListeners() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
         val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
-        google_sign_in_button.setOnClickListener {
+        binding.googleSignInButton.setOnClickListener {
             val signInIntent: Intent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-        google_sign_out_button.setOnClickListener {
+        binding.googleSignOutButton.setOnClickListener {
             auth.signOut()
             googleSignInClient.signOut()
             updateGoogleUI(null)
         }
 
-        profile_delete_history.setOnClickListener {
-            val clearDbDialog = Dialog(requireContext())
-            clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog,null))
-            clearDbDialog.clear_db_alert_yes.setOnClickListener {
+        binding.deleteHistory.setOnClickListener {
+            val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
+            val clearHistory = Dialog(requireContext())
+            clearHistory.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            clearHistory.setContentView(binding.root)
+
+            binding.continueButton.setOnClickListener {
                 if (auth.currentUser == null) {
                     profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
                 } else {
                     profileViewModel.deleteContinueWatchingFromFirestoreFull()
                 }
-                clearDbDialog.dismiss()
+                clearHistory.dismiss()
             }
-            clearDbDialog.clear_db_alert_no.setOnClickListener {
-                clearDbDialog.dismiss()
+            binding.cancelButton.setOnClickListener {
+                clearHistory.dismiss()
             }
-            clearDbDialog.show()
+            clearHistory.show()
         }
 
         if (traktToken == "") {
             updateTraktUi(false)
         }
 
-        profile_connect_traktv.setOnClickListener {
-            traktDialog.setContentView(layoutInflater.inflate(R.layout.connect_traktv_alert_dialog,null))
+        binding.connectTraktv.setOnClickListener {
+            val binding = DialogConnectTraktvAlertBinding.inflate(LayoutInflater.from(requireContext()))
+            traktDialog.setContentView(binding.root)
             traktDialog.show()
             profileViewModel.getDeviceCode()
 
-            profileViewModel.traktDeviceCode.observe(viewLifecycleOwner, {
-                traktDialog.connect_traktv_user_code.text = it.userCode
-                traktDialog.connect_traktv_url.text = it.verificationUrl
+            profileViewModel.traktDeviceCodeResponse.observe(viewLifecycleOwner, {
+                binding.userCode.text = it.userCode
+                binding.traktvUrl.text = it.verificationUrl
                 countdown.start()
 
-                traktDialog.connect_traktv_user_code.setOnClickListener { _ ->
+                binding.userCode.setOnClickListener { _ ->
                     val clipboard: ClipboardManager =
                         requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clip = ClipData.newPlainText("Copied Code", it.userCode)
@@ -126,14 +145,14 @@ class ProfileFragment : BaseFragment() {
                     requireContext().createToast("კოდი კოპირებულია")
                 }
 
-                traktDialog.connect_traktv_url.setOnClickListener { _ ->
+                binding.traktvUrl.setOnClickListener { _ ->
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(it.verificationUrl)
                     startActivity(intent)
                 }
 
                 profileViewModel.getUserToken(
-                    TraktRequestToken(
+                    GetUserTokenRequestBody(
                         AppConstants.TRAKTV_CLIENT_ID,
                         AppConstants.TRAKTV_CLIENT_SECRET,
                         it.deviceCode
@@ -141,20 +160,21 @@ class ProfileFragment : BaseFragment() {
                 )
             })
 
-            traktDialog.connect_traktv_dialog_close.setOnClickListener {
+            binding.cancelButton.setOnClickListener {
                 traktDialog.hide()
                 countdown.cancel()
             }
         }
 
-        profile_disconnect_traktv.setOnClickListener {
+        binding.disconnectTraktv.setOnClickListener {
             authSharedPreferences.saveAccessToken("")
             authSharedPreferences.saveRefreshToken("")
             updateTraktUi(false)
         }
+    }
 
-
-        profileViewModel.traktUserToken.observe(viewLifecycleOwner, { userToken ->
+    private fun fragmentObservers() {
+        profileViewModel.userUserTokenResponse.observe(viewLifecycleOwner, { userToken ->
             if (userToken != null) {
                 traktDialog.hide()
                 countdown.cancel()
@@ -169,7 +189,7 @@ class ProfileFragment : BaseFragment() {
         profileViewModel.traktSfListExists.observe(viewLifecycleOwner, {
             if (!it) {
                 profileViewModel.createNewList(
-                    TraktNewList(
+                    AddNewListRequestBody(
                         null,
                         null,
                         null,
@@ -190,22 +210,6 @@ class ProfileFragment : BaseFragment() {
         profileViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.idToken)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                Log.w(TAG, "Google sign in failed", e)
-            }
-        }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
@@ -213,16 +217,12 @@ class ProfileFragment : BaseFragment() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
-//                    updateGoogleUI(user)
-                    Snackbar.make(profile_root,"წარმატებით გაიარეთ ავტორიზაცია", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root,"წარმატებით გაიარეთ ავტორიზაცია", Snackbar.LENGTH_SHORT).show()
                     profileViewModel.createUserFirestore()
 
                     showSyncDialog()
                 } else {
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    Snackbar.make(profile_root, "ავტორიზაცია ვერ მოხერხდა", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(binding.root, "ავტორიზაცია ვერ მოხერხდა", Snackbar.LENGTH_SHORT)
                         .show()
                     updateGoogleUI(null)
                 }
@@ -232,13 +232,15 @@ class ProfileFragment : BaseFragment() {
     private fun showSyncDialog() {
         profileViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
+                val binding = DialogSyncDatabaseBinding.inflate(LayoutInflater.from(requireContext()))
                 val syncDialog = Dialog(requireContext())
-                syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog,null))
-                syncDialog.sync_continue_watching_alert_yes.setOnClickListener { _ ->
+                syncDialog.setContentView(binding.root)
+
+                binding.confirmButton.setOnClickListener { _ ->
                     profileViewModel.addContinueWatchingToFirestore(requireContext(), it)
                     syncDialog.dismiss()
                 }
-                syncDialog.sync_continue_watching_alert_no.setOnClickListener {
+                binding.cancelButton.setOnClickListener {
                     syncDialog.dismiss()
                 }
                 syncDialog.show()
@@ -257,34 +259,32 @@ class ProfileFragment : BaseFragment() {
 
     private fun updateTraktUi(isLoggedIn: Boolean) {
         if (isLoggedIn) {
-            profile_disconnect_traktv.setVisible()
-            profile_connect_traktv.setGone()
+            binding.disconnectTraktv.setVisible()
+            binding.connectTraktv.setGone()
         } else {
-            profile_disconnect_traktv.setGone()
-            profile_connect_traktv.setVisible()
+            binding.disconnectTraktv.setGone()
+            binding.connectTraktv.setVisible()
         }
 
     }
 
     private fun updateGoogleUI(user: FirebaseUser?) {
         if (user != null) {
-            profile_photo.setVisible()
+            binding.profileContainer.setVisible()
 
             if (googleAccount != null) {
-                profile_username.text = "${googleAccount!!.givenName} ${googleAccount!!.familyName}"
-                Picasso.get().load(googleAccount!!.photoUrl).into(profile_photo)
+                binding.profileUsername.text = "${googleAccount!!.givenName} ${googleAccount!!.familyName}".toUpperCase()
+                binding.profileEmail.text= googleAccount!!.email
+                Picasso.get().load(googleAccount!!.photoUrl).into(binding.profilePhoto)
             }
 
-            google_sign_in_button.setGone()
-            google_sign_out_button.setVisible()
-
-
+            binding.googleSignInButton.setGone()
+            binding.googleSignOutButton.setVisible()
         } else {
-            profile_username.text = ""
-            profile_photo.setGone()
+            binding.profileContainer.setGone()
 
-            google_sign_in_button.setVisible()
-            google_sign_out_button.setGone()
+            binding.googleSignInButton.setVisible()
+            binding.googleSignOutButton.setGone()
         }
     }
 

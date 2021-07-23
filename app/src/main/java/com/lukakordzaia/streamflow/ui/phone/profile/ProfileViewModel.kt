@@ -1,35 +1,33 @@
 package com.lukakordzaia.streamflow.ui.phone.profile
 
 import android.content.Context
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.datamodels.TraktGetToken
-import com.lukakordzaia.streamflow.datamodels.TraktNewList
-import com.lukakordzaia.streamflow.datamodels.TraktRequestToken
-import com.lukakordzaia.streamflow.datamodels.TraktvDeviceCode
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
+import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
+import com.lukakordzaia.streamflow.network.models.trakttv.response.GetDeviceCodeResponse
+import com.lukakordzaia.streamflow.network.models.trakttv.response.GetUserTokenResponse
 import com.lukakordzaia.streamflow.repository.ProfileRepository
 import com.lukakordzaia.streamflow.repository.TraktRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.streamflow.ui.tv.TvActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val profileRepository: ProfileRepository, private val repository: TraktRepository) : BaseViewModel() {
-    private val _traktDeviceCode = MutableLiveData<TraktvDeviceCode>()
-    val traktDeviceCode: LiveData<TraktvDeviceCode> = _traktDeviceCode
+    private val _traktDeviceCode = MutableLiveData<GetDeviceCodeResponse>()
+    val traktDeviceCodeResponse: LiveData<GetDeviceCodeResponse> = _traktDeviceCode
 
     private var counter: Long = 0
     private val validationCounter = MutableLiveData<Long>(0)
 
-    private val _traktUserToken = MutableLiveData<TraktGetToken>(null)
-    val traktUserToken: LiveData<TraktGetToken> = _traktUserToken
+    private val _traktUserToken = MutableLiveData<GetUserTokenResponse>(null)
+    val userUserTokenResponse: LiveData<GetUserTokenResponse> = _traktUserToken
 
     private val _traktSfListExists = MutableLiveData<Boolean>()
     val traktSfListExists: LiveData<Boolean> = _traktSfListExists
@@ -50,9 +48,9 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
         }
     }
 
-    fun getUserToken(tokenRequest: TraktRequestToken) {
+    fun getUserToken(tokenRequestRequestBody: GetUserTokenRequestBody) {
         viewModelScope.launch {
-            when (val token = repository.getUserToken(tokenRequest)) {
+            when (val token = repository.getUserToken(tokenRequestRequestBody)) {
                 is Result.Success -> {
                     val data = token.data
 
@@ -63,9 +61,9 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
                 is Result.Error -> {
                     when (token.exception) {
                         AppConstants.TRAKT_PENDING_AUTH -> {
-                            if (validationCounter.value!! < "${traktDeviceCode.value!!.expiresIn}00".toLong()) {
+                            if (validationCounter.value!! < "${traktDeviceCodeResponse.value!!.expiresIn}00".toLong()) {
                                 Handler(Looper.getMainLooper()).postDelayed({
-                                    getUserToken(tokenRequest)
+                                    getUserToken(tokenRequestRequestBody)
                                 }, 5000)
 
                                 counter += 5000
@@ -78,7 +76,7 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
         }
     }
 
-    fun createNewList(newList: TraktNewList, accessToken: String) {
+    fun createNewList(newList: AddNewListRequestBody, accessToken: String) {
         viewModelScope.launch {
             when (val list = repository.createNewList(newList, accessToken)) {
                 is Result.Success -> {
@@ -135,25 +133,19 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
         }
     }
 
-    fun onDeletePressedTv(context: Context) {
-        val intent = Intent(context, TvActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-    }
-
     fun createUserFirestore() {
         viewModelScope.launch {
             repository.createUserFirestore(currentUser())
         }
     }
 
-    fun getContinueWatchingFromRoom(context: Context): LiveData<List<DbDetails>> {
+    fun getContinueWatchingFromRoom(context: Context): LiveData<List<ContinueWatchingRoom>> {
         return profileRepository.getContinueWatchingFromRoom(roomDb(context)!!)
     }
 
-    fun addContinueWatchingToFirestore(context: Context, dbDetailsList: List<DbDetails>) {
+    fun addContinueWatchingToFirestore(context: Context, continueWatchingRoomList: List<ContinueWatchingRoom>) {
         viewModelScope.launch {
-            dbDetailsList.forEach {
+            continueWatchingRoomList.forEach {
                 val addToFirestore = profileRepository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, it)
                 if (addToFirestore) {
                     newToastMessage("სინქრონიზაცია წარმატებით დასრულდა")

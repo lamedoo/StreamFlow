@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.DbDetails
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -32,8 +32,8 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
     private val _episodeInfo = MutableLiveData<List<TitleEpisodes>>()
     val episodeInfo: LiveData<List<TitleEpisodes>> = _episodeInfo
 
-    private val _continueWatchingDetails = MutableLiveData<DbDetails>(null)
-    val     continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
+    private val _continueWatchingDetails = MutableLiveData<ContinueWatchingRoom>(null)
+    val     continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
 
     fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
         return repository.checkContinueWatchingTitleInRoom(roomDb(context)!!, titleId)
@@ -47,7 +47,7 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
 
     fun checkContinueWatchingInFirestore1(titleId: Int) {
         repository.checkContinueWatchingInFirestore1(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingListCallBack {
-            override fun continueWatchingList(titleList: MutableList<DbDetails>) {
+            override fun continueWatchingList(titleList: MutableList<ContinueWatchingRoom>) {
                 _continueWatchingDetails.value = titleList[0]
             }
         })
@@ -58,7 +58,7 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
             val checkContinueWatching = repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId)
 
             if (checkContinueWatching!!.data != null) {
-                _continueWatchingDetails.value = DbDetails(
+                _continueWatchingDetails.value = ContinueWatchingRoom(
                         checkContinueWatching.data!!["id"].toString().toInt(),
                         checkContinueWatching.data!!["language"].toString(),
                         checkContinueWatching.data!!["continueFrom"] as Long,

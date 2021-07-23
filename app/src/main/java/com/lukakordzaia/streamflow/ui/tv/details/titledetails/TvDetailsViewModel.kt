@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.database.ImoviesDatabase
+import com.lukakordzaia.streamflow.database.StreamFlowDatabase
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
@@ -19,8 +20,8 @@ import kotlinx.coroutines.launch
 class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseViewModel() {
     val traktFavoriteLoader = MutableLiveData<LoadingState>()
 
-    private val _singleTitleData = MutableLiveData<SingleTitleData.Data>()
-    val singleTitleData: LiveData<SingleTitleData.Data> = _singleTitleData
+    private val _singleTitleData = MutableLiveData<SingleTitleModel>()
+    val getSingleTitleResponse: LiveData<SingleTitleModel> = _singleTitleData
 
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
@@ -31,8 +32,8 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
-    private val _continueWatchingDetails = MutableLiveData<DbDetails>(null)
-    val continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
+    private val _continueWatchingDetails = MutableLiveData<ContinueWatchingRoom>(null)
+    val continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
 
     private val _addToFavorites = MutableLiveData<Boolean>()
     val addToFavorites: LiveData<Boolean> = _addToFavorites
@@ -41,26 +42,24 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     val titleGenres: LiveData<List<String>> = _titleGenres
     private val fetchTitleGenres: MutableList<String> = ArrayList()
 
-    private val _imdbId = MutableLiveData<String>()
-    private val imdbId: LiveData<String> = _imdbId
-
     fun getSingleTitleData(titleId: Int) {
         fetchTitleGenres.clear()
         viewModelScope.launch {
             _dataLoader.value = LoadingState.LOADING
-            when (val data = repository.getSingleTitleData(titleId)) {
+            when (val info = repository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
-                    _singleTitleData.value = data.data.data
-                    _imdbId.value = data.data.data.imdbUrl.substring(27, data.data.data.imdbUrl.length)
+                    val data = info.data.data
+                    _singleTitleData.value = MapTitleData().single(data)
+
                     _dataLoader.value = LoadingState.LOADED
 
-                    data.data.data.genres.data.forEach {
+                    data.genres.data.forEach {
                         fetchTitleGenres.add(it.primaryName!!)
                     }
                     _titleGenres.value = fetchTitleGenres
                 }
                 is Result.Error -> {
-                    newToastMessage(data.exception)
+                    newToastMessage(info.exception)
                 }
                 is Result.Internet -> {
                     setNoInternet()
@@ -70,7 +69,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     }
 
     fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
-        val database = ImoviesDatabase.getDatabase(context)?.getDao()
+        val database = StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
         return repository.checkContinueWatchingTitleInRoom(database!!, titleId)
     }
 
@@ -81,7 +80,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     }
 
     fun deleteSingleContinueWatchingFromRoom(context: Context, titleId: Int) {
-        val database = ImoviesDatabase.getDatabase(context)?.getDao()
+        val database = StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
         viewModelScope.launch {
             repository.deleteSingleContinueWatchingFromRoom(database!!, titleId)
         }
@@ -98,7 +97,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
 
     fun checkContinueWatchingInFirestore(titleId: Int) {
         repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: DbDetails) {
+            override fun continueWatchingTitle(title: ContinueWatchingRoom) {
                 _continueWatchingDetails.value = title
             }
 
@@ -136,15 +135,15 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         }
     }
 
-    fun addTitleToFirestore() {
+    fun addTitleToFirestore(info: SingleTitleModel) {
         if (currentUser() != null) {
             traktFavoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
                 val addToFavorites = repository.addFavTitleToFirestore(currentUser()!!.uid, AddTitleToFirestore(
-                        singleTitleData.value!!.secondaryName,
-                        singleTitleData.value!!.isTvShow,
-                        singleTitleData.value!!.id,
-                        imdbId.value!!
+                        info.nameEng!!,
+                        info.isTvShow,
+                        info.id,
+                        info.imdbId!!
                 ))
                 if (addToFavorites) {
                     newToastMessage("ფილმი დაემატა ფავორიტებში")

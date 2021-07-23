@@ -10,82 +10,86 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneChooseTitleDetailsBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseBottomSheet
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
-import kotlinx.android.synthetic.main.phone_choose_title_details_fragment.*
-import kotlinx.android.synthetic.main.tv_choose_language_dialog.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
+class ChooseTitleDetailsFragment : BaseBottomSheet<FragmentPhoneChooseTitleDetailsBinding>() {
     private val chooseTitleDetailsViewModel: ChooseTitleDetailsViewModel by viewModel()
     private lateinit var chooseTitleDetailsEpisodesAdapter: ChooseTitleDetailsEpisodesAdapter
     private lateinit var chooseTitleDetailsSeasonAdapter: ChooseTitleDetailsSeasonAdapter
     private lateinit var chooseLanguageAdapter: TvChooseLanguageAdapter
     private val args: ChooseTitleDetailsFragmentArgs by navArgs()
 
-//    private var chosenSeasonInAdapter = 0
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneChooseTitleDetailsBinding
+        get() = FragmentPhoneChooseTitleDetailsBinding::inflate
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
-            View? {
-        return inflater.inflate(R.layout.phone_choose_title_details_fragment, container, false)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+
+        dialog.setOnShowListener { bottom ->
+            val bottomSheet =
+                (bottom as BottomSheetDialog).findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                BottomSheetBehavior.from(it).state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+
+        return dialog
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
+        binding.chooseDetailsTitle.text = args.titleName
 
-        val seasonLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseTitleDetailsSeasonAdapter = ChooseTitleDetailsSeasonAdapter(requireContext(),
-            {
-                chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it)
-                chooseTitleDetailsSeasonAdapter.setChosenSeason(it)
+        fragmentListeners()
+        fragmentObservers()
+        checkAuth()
+        seasonsContainer()
+        episodesContainer()
+    }
 
-                if (it == chooseTitleDetailsViewModel.continueWatchingDetails.value?.season) {
-                    chooseTitleDetailsEpisodesAdapter.setChosenEpisode(chooseTitleDetailsViewModel.continueWatchingDetails.value!!.episode+1)
-                } else {
-                    chooseTitleDetailsEpisodesAdapter.setChosenEpisode(-1)
-                    rv_episodes.smoothScrollToPosition(0)
-                }
-            },
-            {
+    private fun fragmentListeners() {
+        binding.closeButton.setOnClickListener {
+            dismiss()
+        }
+    }
 
-            })
-        rv_seasons.layoutManager = seasonLayout
-        rv_seasons.adapter = chooseTitleDetailsSeasonAdapter
-        ViewCompat.setNestedScrollingEnabled(rv_seasons, false)
-
+    private fun fragmentObservers() {
         chooseTitleDetailsViewModel.noInternet.observe(viewLifecycleOwner, EventObserver { noInternet ->
-                if (noInternet) {
-                    requireContext().createToast(AppConstants.NO_INTERNET)
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        if (args.isTvShow) {
-                            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
-                        } else {
-                            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, args.numOfSeasons)
-                        }
-                    }, 5000)
-                }
-            })
+            if (noInternet) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
+                }, 5000)
+            }
+        })
 
         chooseTitleDetailsViewModel.chooseDetailsLoader.observe(viewLifecycleOwner, {
             when (it.status) {
-                LoadingState.Status.RUNNING -> details_progressBar.setVisible()
+                LoadingState.Status.RUNNING -> binding.detailsProgressBar.setVisible()
                 LoadingState.Status.SUCCESS -> {
-                    details_progressBar.setGone()
+                    binding.detailsProgressBar.setGone()
 
                     if (chooseTitleDetailsViewModel.movieNotYetAdded.value == false) {
-                        movie_files_container.setVisible()
+                        binding.filesContainer.setVisible()
                     }
                 }
             }
@@ -93,31 +97,22 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
         chooseTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (it) {
-                title_file_not_yet.setVisible()
-                details_progressBar.setGone()
-                movie_files_container.setGone()
+                binding.noFilesContainer.setVisible()
+                binding.detailsProgressBar.setGone()
+                binding.filesContainer.setGone()
             }
         })
 
-        if (args.isTvShow) {
-            rv_seasons.setVisible()
-            rv_episodes.setVisible()
-            val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
-            chooseTitleDetailsSeasonAdapter.setSeasonList(numOfSeasons)
-        } else {
-            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, args.numOfSeasons)
-        }
-
-        chooseTitleDetailsViewModel.episodeInfo.observe(viewLifecycleOwner, {
-            chooseTitleDetailsEpisodesAdapter.setEpisodeList(it)
+        chooseTitleDetailsViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+            navController(it)
         })
 
-        chooseTitleDetailsEpisodesAdapter = ChooseTitleDetailsEpisodesAdapter(requireContext())
-        {
-            languagePickerDialog(it)
-        }
-        rv_episodes.adapter = chooseTitleDetailsEpisodesAdapter
+        chooseTitleDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
+        })
+    }
 
+    private fun checkAuth() {
         if (Firebase.auth.currentUser == null) {
             chooseTitleDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), args.titleId).observe(viewLifecycleOwner, { exists ->
                 if (exists) {
@@ -130,48 +125,66 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
 
         chooseTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
-
                 chooseTitleDetailsSeasonAdapter.setChosenSeason(it.season)
-                rv_seasons.smoothScrollToPosition(it.season)
+                binding.rvSeasons.smoothScrollToPosition(it.season)
                 chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it.season)
 
                 chooseTitleDetailsEpisodesAdapter.setChosenEpisode(it.episode)
-                rv_episodes.smoothScrollToPosition(it.episode+1)
-
+            } else {
+                chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
             }
         })
+    }
 
-        choose_details_title.text = args.titleName
+    private fun seasonsContainer() {
+        val seasonLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        chooseTitleDetailsSeasonAdapter = ChooseTitleDetailsSeasonAdapter(requireContext()) {
+            chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, it)
+            chooseTitleDetailsSeasonAdapter.setChosenSeason(it)
 
-        choose_details_close.setOnClickListener {
-            dismiss()
+            if (it == chooseTitleDetailsViewModel.continueWatchingDetails.value?.season) {
+                chooseTitleDetailsEpisodesAdapter.setChosenEpisode(chooseTitleDetailsViewModel.continueWatchingDetails.value!!.episode + 1)
+            }
         }
+        binding.rvSeasons.layoutManager = seasonLayout
+        binding.rvSeasons.adapter = chooseTitleDetailsSeasonAdapter
+        ViewCompat.setNestedScrollingEnabled(binding.rvSeasons, false)
 
 
-        chooseTitleDetailsViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
-        })
+        val numOfSeasons = Array(args.numOfSeasons) { i -> (i * 1) + 1 }.toList()
+        chooseTitleDetailsSeasonAdapter.setSeasonList(numOfSeasons)
+    }
 
-        chooseTitleDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
+    private fun episodesContainer() {
+        chooseTitleDetailsEpisodesAdapter = ChooseTitleDetailsEpisodesAdapter(requireContext(),
+            {
+                languagePickerDialog(it)
+            },
+            {
+                binding.rvEpisodes.smoothScrollToPosition(it+1)
+            })
+        binding.rvEpisodes.adapter = chooseTitleDetailsEpisodesAdapter
+
+        chooseTitleDetailsViewModel.episodeInfo.observe(viewLifecycleOwner, {
+            chooseTitleDetailsEpisodesAdapter.setEpisodeList(it)
         })
     }
 
     private fun languagePickerDialog(episode: Int) {
+        val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        chooseLanguageDialog.setContentView(layoutInflater.inflate(R.layout.tv_choose_language_dialog, null))
         chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        chooseLanguageDialog.setContentView(binding.root)
         chooseLanguageDialog.show()
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         chooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) { language ->
             chooseLanguageDialog.hide()
-//            chooseTitleDetailsViewModel.onEpisodePressed(args.titleId, args.isTvShow, episode, language)
             val intent = Intent(context, VideoPlayerActivity::class.java)
             intent.putExtra("videoPlayerData", VideoPlayerData(
                 args.titleId,
-                args.isTvShow,
+                true,
                 chooseTitleDetailsViewModel.chosenSeason.value!!,
                 language,
                 episode,
@@ -181,8 +194,8 @@ class ChooseTitleDetailsFragment : BottomSheetDialogFragment() {
             )
             activity?.startActivity(intent)
         }
-        chooseLanguageDialog.rv_tv_choose_language.layoutManager = chooseLanguageLayout
-        chooseLanguageDialog.rv_tv_choose_language.adapter = chooseLanguageAdapter
+        binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
+        binding.rvChooseLanguage.adapter = chooseLanguageAdapter
 
         chooseTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
             val languages = languageList.reversed()

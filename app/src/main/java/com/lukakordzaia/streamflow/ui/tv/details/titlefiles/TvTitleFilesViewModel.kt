@@ -4,13 +4,14 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.database.ImoviesDatabase
-import com.lukakordzaia.streamflow.datamodels.TitleCast
+import com.lukakordzaia.streamflow.database.StreamFlowDatabase
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.repository.TvDetailsRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
@@ -35,14 +36,14 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
     private val _numOfSeasons = MutableLiveData<Int>()
     val numOfSeasons: LiveData<Int> = _numOfSeasons
 
-    private val _castData = MutableLiveData<List<TitleCast.Data>>()
-    val castData: LiveData<List<TitleCast.Data>> = _castData
+    private val _castData = MutableLiveData<List<GetSingleTitleCastResponse.Data>>()
+    val castResponseDataGetSingle: LiveData<List<GetSingleTitleCastResponse.Data>> = _castData
 
-    private val _singleTitleRelated = MutableLiveData<List<TitleList.Data>>()
-    val singleTitleRelated: LiveData<List<TitleList.Data>> = _singleTitleRelated
+    private val _singleTitleRelated = MutableLiveData<List<SingleTitleModel>>()
+    val singleTitleRelated: LiveData<List<SingleTitleModel>> = _singleTitleRelated
 
-    private val _continueWatchingDetails = MutableLiveData<DbDetails>(null)
-    val continueWatchingDetails: LiveData<DbDetails> = _continueWatchingDetails
+    private val _continueWatchingDetails = MutableLiveData<ContinueWatchingRoom>(null)
+    val continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
 
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
@@ -71,7 +72,7 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
                     val data = files.data.data
 
                     val fetchLanguages: MutableList<String> = ArrayList()
-                    data[0].files!!.forEach {
+                    data[0].files.forEach {
                         fetchLanguages.add(it.lang)
                     }
                     _availableLanguages.value = fetchLanguages
@@ -109,7 +110,7 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
             when (val related = repository.getSingleTitleRelated(titleId)) {
                 is Result.Success -> {
                     val data = related.data.data
-                    _singleTitleRelated.value = data
+                    _singleTitleRelated.value = MapTitleData().list(data)
                 }
                 is Result.Error -> {
                     newToastMessage("მსგავსი - ${related.exception}")
@@ -119,7 +120,7 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
     }
 
     fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
-        val database = ImoviesDatabase.getDatabase(context)?.getDao()
+        val database = StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
         return repository.checkContinueWatchingTitleInRoom(database!!, titleId)
     }
 
@@ -131,7 +132,7 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
 
     fun checkContinueWatchingInFirestore(titleId: Int) {
         repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: DbDetails) {
+            override fun continueWatchingTitle(title: ContinueWatchingRoom) {
                 _continueWatchingDetails.value = title
             }
 

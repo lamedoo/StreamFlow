@@ -7,37 +7,113 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.database.DbDetails
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
+import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
+import com.lukakordzaia.streamflow.databinding.FragmentTvDetailsBinding
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
+import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity.Companion.TITLE_DETAILS
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.TvTitleFilesFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.tv_choose_language_dialog.*
-import kotlinx.android.synthetic.main.tv_details_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
-class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
+class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
     private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
     private lateinit var tvChooseLanguageAdapter: TvChooseLanguageAdapter
-    private var trailerUrl: String? = null
+    private lateinit var titleInfo: SingleTitleModel
     private var hasFocus: Boolean = false
+    private var startedWatching = false
+
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvDetailsBinding
+        get() = FragmentTvDetailsBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
+        val continueWatching = activity?.intent?.getSerializableExtra("continue") as? Boolean
+
+        fragmentListeners(titleId, isTvShow)
+        fragmentObservers(titleId)
+        favoriteContainer(titleId, isTvShow)
+        titleDetails(titleId, isTvShow)
+        checkDatabase(titleId, isTvShow, continueWatching)
+    }
+
+    private fun fragmentListeners(titleId: Int, isTvShow: Boolean) {
+        binding.playButton.setOnClickListener {
+            val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
+            val chooseLanguageDialog = Dialog(requireContext())
+            chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            chooseLanguageDialog.setContentView(binding.root)
+            chooseLanguageDialog.show()
+
+            val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+            tvChooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) {
+                chooseLanguageDialog.hide()
+                playTitleFromStart(titleId, isTvShow, it)
+            }
+            binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
+            binding.rvChooseLanguage.adapter = tvChooseLanguageAdapter
+
+            tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
+                val languages = it.reversed()
+                tvChooseLanguageAdapter.setLanguageList(languages)
+            })
+        }
+
+        if (isTvShow) {
+            binding.nextDetailsTitle.text = "ეპიზოდები და მეტი"
+        } else {
+            binding.nextDetailsTitle.text = "მსხახიობები და მეტი"
+        }
+
+        binding.nextDetails.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                (requireActivity() as TvDetailsActivity).setCurrentFragment(TITLE_DETAILS)
+                parentFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
+                    .replace(R.id.tv_details_fr_nav_host, TvTitleFilesFragment())
+                    .commit()
+            }
+            this.hasFocus = hasFocus
+        }
+    }
+
+    private fun fragmentObservers(titleId: Int) {
+        tvDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
+        })
+
+        tvDetailsViewModel.traktFavoriteLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> {
+                    binding.favoriteProgressBar.setVisible()
+                    binding.favoriteIcon.setGone()
+                }
+                LoadingState.Status.SUCCESS -> {
+                    binding.favoriteProgressBar.setGone()
+                    binding.favoriteIcon.setVisible()
+                }
+            }
+        })
 
         tvDetailsViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
@@ -49,93 +125,38 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
             }
         })
 
-        tvDetailsViewModel.getSingleTitleData(titleId)
-        tvDetailsViewModel.checkTitleInFirestore(titleId)
-
-        // For Languages
-        tvDetailsViewModel.getSingleTitleFiles(titleId)
-
-        tvDetailsViewModel.traktFavoriteLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {
-                    tv_files_title_favorite_progressBar.setVisible()
-                    tv_files_title_favorite_icon.setGone()
-                }
-                LoadingState.Status.SUCCESS -> {
-                    tv_files_title_favorite_progressBar.setGone()
-                    tv_files_title_favorite_icon.setVisible()
-                }
-            }
-        })
-
-        tvDetailsViewModel.addToFavorites.observe(viewLifecycleOwner, {
-            if (it) {
-                tv_files_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
-                tv_files_title_favorite.setOnClickListener {
-                    tvDetailsViewModel.removeTitleFromFirestore(titleId)
-                }
-            } else {
-                tv_files_title_favorite_icon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
-                tv_files_title_favorite.setOnClickListener {
-                    tvDetailsViewModel.addTitleToFirestore()
-                }
-            }
-        })
-
         tvDetailsViewModel.dataLoader.observe(viewLifecycleOwner, {
             when (it) {
-                LoadingState.LOADING -> tv_details_progressBar.setVisible()
+                LoadingState.LOADING -> binding.tvDetailsProgressBar.setVisible()
                 LoadingState.LOADED -> {
-                    tv_details_progressBar.setGone()
-                    tv_details_top.setVisible()
+                    binding.tvDetailsProgressBar.setGone()
+                    binding.mainContainer.setVisible()
                 }
             }
         })
 
         tvDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (!it) {
-                tv_details_no_files.setGone()
-                tv_details_buttons_row.setVisible()
+                binding.noFilesContainer.setGone()
+                binding.buttonsRow.setVisible()
             }
         })
+    }
 
-        tvDetailsViewModel.singleTitleData.observe(viewLifecycleOwner, {
+    private fun favoriteContainer(titleId: Int, isTvShow: Boolean) {
+        tvDetailsViewModel.checkTitleInFirestore(titleId)
 
-            tv_files_trailer.setOnClickListener { _ ->
-                if (!it.trailers.data.isNullOrEmpty()) {
-                    trailerUrl = it.trailers.data.last().fileUrl
-                    playTitleTrailer(titleId, isTvShow, trailerUrl!!)
-                } else {
-                    requireContext().createToast("no trailer")
+        tvDetailsViewModel.addToFavorites.observe(viewLifecycleOwner, {
+            if (it) {
+                binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
+                binding.favoriteContainer.setOnClickListener {
+                    tvDetailsViewModel.removeTitleFromFirestore(titleId)
                 }
-            }
-
-            if (it.covers?.data?.x1050!!.isNotBlank()) {
-                Picasso.get().load(it.covers.data.x1050).error(R.drawable.movie_image_placeholder_landscape).into(tv_files_title_poster)
             } else {
-                Picasso.get().load(R.drawable.movie_image_placeholder_landscape).error(R.drawable.movie_image_placeholder_landscape).into(tv_files_title_poster)
-            }
-
-
-            tv_files_title_year.text = it.year.toString()
-            if (it.rating.imdb?.score != null) {
-                tv_files_title_imdb_score.text = it.rating.imdb.score.toString()
-            }
-            if (it.countries.data.isEmpty()) {
-                tv_files_title_country.text = "N/A"
-            } else {
-                tv_files_title_country.text = it.countries.data[0].secondaryName
-            }
-            tv_files_title_name_eng.text = it.secondaryName
-            if (it.isTvShow) {
-                tv_files_title_duration.text = "${it.seasons?.data?.size} სეზონი"
-            } else {
-                tv_files_title_duration.text = "${it.duration.toString()} წთ."
-            }
-            if (it.plot.data.description.isNotEmpty()) {
-                tv_files_title_desc.text = it.plot.data.description
-            } else {
-                tv_files_title_desc.text = "აღწერა არ მოიძებნა"
+                binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
+                binding.favoriteContainer.setOnClickListener {
+                    tvDetailsViewModel.addTitleToFirestore(titleInfo)
+                }
             }
         })
 
@@ -148,14 +169,18 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
         } else {
             tvDetailsViewModel.checkContinueWatchingInFirestore(titleId)
         }
+    }
 
+    private fun checkDatabase(titleId: Int, isTvShow: Boolean, continueWatching: Boolean?) {
         tvDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
-                tv_files_title_delete.setOnClickListener {
-                    val clearDbDialog = Dialog(requireContext())
-                    clearDbDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
-                    clearDbDialog.clear_db_alert_yes.setOnClickListener {
+                binding.deleteButton.setOnClickListener {
+                    val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
+                    val removeTitle = Dialog(requireContext())
+                    removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    removeTitle.setContentView(binding.root)
+
+                    binding.continueButton.setOnClickListener {
                         tvDetailsViewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
                         tvDetailsViewModel.deleteSingleContinueWatchingFromFirestore(titleId)
 
@@ -165,119 +190,126 @@ class TvDetailsFragment : Fragment(R.layout.tv_details_fragment) {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
                     }
-                    clearDbDialog.clear_db_alert_no.setOnClickListener {
-                        clearDbDialog.dismiss()
+                    binding.cancelButton.setOnClickListener {
+                        removeTitle.dismiss()
                     }
-                    clearDbDialog.show()
-                    clearDbDialog.clear_db_alert_yes.requestFocus()
+                    removeTitle.show()
+                    binding.continueButton.requestFocus()
                 }
 
-                tv_continue_play_button.setOnClickListener { _ ->
+                binding.continueButton.setOnClickListener { _ ->
                     continueTitlePlay(it)
                 }
 
-
                 if (isTvShow) {
-                    tv_continue_play_button?.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d",
-                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    binding.continueButton.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                        TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
                     )
                 } else {
-                    tv_continue_play_button?.text = String.format("განაგრძეთ - %02d:%02d",
-                            TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                            TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
+                    binding.continueButton.text = String.format("განაგრძეთ - %02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
+                        TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
                     )
                 }
 
-                tv_continue_play_button.setVisible()
-                tv_continue_play_button.requestFocus()
-                tv_play_button.text = "თავიდან ყურება"
-                tv_files_title_delete.setVisible()
+                binding.continueButton.setVisible()
+                binding.continueButton.requestFocus()
+                binding.playButton.text = "თავიდან ყურება"
+                binding.deleteButton.setVisible()
+
+                if (continueWatching != null) {
+                    if (!startedWatching) {
+                        binding.continueButton.callOnClick()
+                        startedWatching = true
+                    }
+                }
             } else {
-                tv_files_title_delete.setGone()
-                tv_play_button.requestFocus()
-                tv_continue_play_button.setGone()
+                binding.deleteButton.setGone()
+                binding.playButton.requestFocus()
+                binding.continueButton.setGone()
             }
         })
+    }
 
+    private fun titleDetails(titleId: Int, isTvShow: Boolean) {
+        tvDetailsViewModel.getSingleTitleData(titleId)
+        tvDetailsViewModel.getSingleTitleFiles(titleId)
 
-        tv_play_button.setOnClickListener {
-            val chooseLanguageDialog = Dialog(requireContext())
-            chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            chooseLanguageDialog.setContentView(layoutInflater.inflate(R.layout.tv_choose_language_dialog, null))
-            chooseLanguageDialog.show()
+        tvDetailsViewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
+            titleInfo = it
 
-            val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-            tvChooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) {
-                playTitleFromStart(titleId, isTvShow, it)
+            binding.titleName.text = it.nameEng
+
+            binding.trailerButton.setOnClickListener { _ ->
+                if (it.trailer != null) {
+                    playTitleTrailer(titleId, isTvShow, it.trailer)
+                } else {
+                    requireContext().createToast("no trailer")
+                }
             }
-            chooseLanguageDialog.rv_tv_choose_language.layoutManager = chooseLanguageLayout
-            chooseLanguageDialog.rv_tv_choose_language.adapter = tvChooseLanguageAdapter
 
-            tvDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
-                val languages = it.reversed()
-                tvChooseLanguageAdapter.setLanguageList(languages)
-            })
-        }
+            Glide.with(requireContext())
+                .load(it.cover?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(binding.backgroundPoster)
 
-        if (isTvShow) {
-            tv_details_go_bottom_title.text = "ეპიზოდები და მეტი"
-        } else {
-            tv_details_go_bottom_title.text = "მსხახიობები და მეტი"
-        }
+            binding.year.text = it.releaseYear
+            binding.imdbScore.text = it.imdbScore
+            binding.country.text = it.country
 
-        tv_details_go_bottom.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                parentFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
-                        .replace(R.id.tv_details_fr_nav_host, TvTitleFilesFragment())
-                        .commit()
+            if (it.isTvShow) {
+                binding.duration.text = "${it.seasonNum} სეზონი"
+            } else {
+                binding.duration.text = it.duration
             }
-            this.hasFocus = hasFocus
-        }
 
-        tvDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
+            binding.titleDescription.text = it.description
+
         })
     }
 
     private fun playTitleTrailer(titleId: Int, isTvShow: Boolean, trailerUrl: String) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("titleId", titleId)
-        intent.putExtra("isTvShow", isTvShow)
-        intent.putExtra("chosenLanguage", "ENG")
-        intent.putExtra("chosenSeason", 0)
-        intent.putExtra("chosenEpisode", 0)
-        intent.putExtra("watchedTime", 0L)
-        intent.putExtra("trailerUrl", trailerUrl)
+        intent.putExtra("videoPlayerData", VideoPlayerData(
+            titleId,
+            isTvShow,
+            0,
+            "ENG",
+            0,
+            0L,
+            trailerUrl
+        ))
         activity?.startActivity(intent)
     }
 
     private fun playTitleFromStart(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
-        trailerUrl = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("titleId", titleId)
-        intent.putExtra("isTvShow", isTvShow)
-        intent.putExtra("chosenLanguage", chosenLanguage)
-        intent.putExtra("chosenSeason", if (isTvShow) 1 else 0)
-        intent.putExtra("chosenEpisode", if (isTvShow) 1 else 0)
-        intent.putExtra("watchedTime", 0L)
-        intent.putExtra("trailerUrl", trailerUrl)
+        intent.putExtra("videoPlayerData", VideoPlayerData(
+            titleId,
+            isTvShow,
+            if (isTvShow) 1 else 0,
+            chosenLanguage,
+            if (isTvShow) 1 else 0,
+            0L,
+            null
+        ))
         activity?.startActivity(intent)
     }
 
-    private fun continueTitlePlay(item: DbDetails) {
-        trailerUrl = null
+    private fun continueTitlePlay(item: ContinueWatchingRoom) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("titleId", item.titleId)
-        intent.putExtra("isTvShow", item.isTvShow)
-        intent.putExtra("chosenLanguage", item.language)
-        intent.putExtra("chosenSeason", item.season)
-        intent.putExtra("chosenEpisode", item.episode)
-        intent.putExtra("watchedTime", item.watchedDuration)
-        intent.putExtra("trailerUrl", trailerUrl)
+        intent.putExtra("videoPlayerData", VideoPlayerData(
+            item.titleId,
+            item.isTvShow,
+            item.season,
+            item.language,
+            item.episode,
+            item.watchedDuration,
+            null
+        ))
         activity?.startActivity(intent)
     }
 }

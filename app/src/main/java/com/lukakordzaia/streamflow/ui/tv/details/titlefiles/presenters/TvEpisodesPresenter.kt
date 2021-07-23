@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.customviews.TvEpisodesCardView
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.ui.customviews.TvEpisodesCardView
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.tv_details_episodes_item.view.*

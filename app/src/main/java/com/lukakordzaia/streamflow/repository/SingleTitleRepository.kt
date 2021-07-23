@@ -6,39 +6,41 @@ import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.database.WatchedDao
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingDao
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
+import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import kotlinx.coroutines.tasks.await
 
-class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): ImoviesCall() {
-    private val service = retrofitBuilder.buildImoviesService()
-
-    suspend fun getSingleTitleData(titleId: Int): Result<SingleTitleData> {
+class SingleTitleRepository(private val service: ImoviesNetwork): ImoviesCall() {
+    suspend fun getSingleTitleData(titleId: Int): Result<GetSingleTitleResponse> {
         return imoviesCall { service.getSingleTitle(titleId) }
     }
 
-    fun checkContinueWatchingTitleInRoom(watchedDao: WatchedDao, titleId: Int): LiveData<Boolean> {
-        return watchedDao.checkContinueWatchingTitleInRoom(titleId)
+    fun checkContinueWatchingTitleInRoom(continueWatchingDao: ContinueWatchingDao, titleId: Int): LiveData<Boolean> {
+        return continueWatchingDao.checkContinueWatchingTitleInRoom(titleId)
     }
 
-    suspend fun getSingleContinueWatchingFromRoom(watchedDao: WatchedDao, titleId: Int): DbDetails {
-        return watchedDao.getSingleContinueWatchingFromRoom(titleId)
+    suspend fun getSingleContinueWatchingFromRoom(continueWatchingDao: ContinueWatchingDao, titleId: Int): ContinueWatchingRoom {
+        return continueWatchingDao.getSingleContinueWatchingFromRoom(titleId)
     }
 
-    suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<TitleFiles> {
-        return imoviesCall { service.getSingleFiles(titleId, season_number) }
+    suspend fun getSingleTitleFiles(titleId: Int, season_number: Int = 1): Result<GetSingleTitleFilesResponse> {
+        return imoviesCall { service.getSingleTitleFiles(titleId, season_number) }
     }
 
-    suspend fun getSingleTitleCast(titleId: Int, role: String): Result<TitleCast> {
+    suspend fun getSingleTitleCast(titleId: Int, role: String): Result<GetSingleTitleCastResponse> {
         return imoviesCall { service.getSingleTitleCast(titleId, role) }
     }
 
-    suspend fun getSingleTitleRelated(titleId: Int): Result<TitleList> {
+    suspend fun getSingleTitleRelated(titleId: Int): Result<GetTitlesResponse> {
         return imoviesCall { service.getSingleTitleRelated(titleId) }
     }
 
@@ -95,22 +97,22 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
         }
     }
 
-    suspend fun addContinueWatchingTitleToFirestore(currentUserUid: String, dbDetails: DbDetails): Boolean {
+    suspend fun addContinueWatchingTitleToFirestore(currentUserUid: String, continueWatchingRoom: ContinueWatchingRoom): Boolean {
         return try {
             Firebase.firestore
                     .collection("users")
                     .document(currentUserUid)
                     .collection("continueWatching")
-                    .document(dbDetails.titleId.toString())
+                    .document(continueWatchingRoom.titleId.toString())
                     .set(
                             mapOf(
-                                    "id" to dbDetails.titleId,
-                                    "language" to dbDetails.language,
-                                    "isTvShow" to dbDetails.isTvShow,
-                                    "continueFrom" to dbDetails.watchedDuration,
-                                    "titleDuration" to dbDetails.titleDuration,
-                                    "season" to dbDetails.season,
-                                    "episode" to dbDetails.episode
+                                    "id" to continueWatchingRoom.titleId,
+                                    "language" to continueWatchingRoom.language,
+                                    "isTvShow" to continueWatchingRoom.isTvShow,
+                                    "continueFrom" to continueWatchingRoom.watchedDuration,
+                                    "titleDuration" to continueWatchingRoom.titleDuration,
+                                    "season" to continueWatchingRoom.season,
+                                    "episode" to continueWatchingRoom.episode
                             )
                     )
                     .await()
@@ -145,8 +147,8 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
             }
             if (snapshot?.data != null ) {
                 Log.d(ContentValues.TAG, snapshot.data.toString())
-                val titleList: MutableList<DbDetails> = ArrayList()
-                    titleList.add( DbDetails(
+                val titleList: MutableList<ContinueWatchingRoom> = ArrayList()
+                    titleList.add( ContinueWatchingRoom(
                             snapshot.data?.get("id").toString().toInt(),
                             snapshot.data?.get("language").toString(),
                             snapshot.data?.get("continueFrom") as Long,
@@ -154,7 +156,8 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
                             snapshot.data?.get("isTvShow") as Boolean,
                             snapshot.data?.get("season").toString().toInt(),
                             snapshot.data?.get("episode").toString().toInt()
-                    ))
+                    )
+                    )
                 continueWatchingListCallBack.continueWatchingList(titleList)
             } else {
                 Log.d(ContentValues.TAG, "Current data: null")
@@ -162,21 +165,21 @@ class SingleTitleRepository(private val retrofitBuilder: RetrofitBuilder): Imovi
         }
     }
 
-    suspend fun addWatchedEpisodeToFirestore(currentUserUid: String, dbDetails: DbDetails): Boolean {
+    suspend fun addWatchedEpisodeToFirestore(currentUserUid: String, continueWatchingRoom: ContinueWatchingRoom): Boolean {
         return try {
             Firebase.firestore
                 .collection("users")
                 .document(currentUserUid)
                 .collection("watchedEpisodes")
-                .document(dbDetails.titleId.toString())
-                .collection("season ${dbDetails.season}")
-                .document("episode ${dbDetails.episode}")
+                .document(continueWatchingRoom.titleId.toString())
+                .collection("season ${continueWatchingRoom.season}")
+                .document("episode ${continueWatchingRoom.episode}")
                 .set(
                     mapOf(
-                        "continueFrom" to dbDetails.watchedDuration,
-                        "titleDuration" to dbDetails.titleDuration,
-                        "season" to dbDetails.season,
-                        "episode" to dbDetails.episode
+                        "continueFrom" to continueWatchingRoom.watchedDuration,
+                        "titleDuration" to continueWatchingRoom.titleDuration,
+                        "season" to continueWatchingRoom.season,
+                        "episode" to continueWatchingRoom.episode
                     )
                 )
                 .await()

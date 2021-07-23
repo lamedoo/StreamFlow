@@ -1,66 +1,58 @@
 package com.lukakordzaia.streamflow.ui.tv.settings
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.ActivityTvSettingsBinding
+import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_tv_settings.*
-import kotlinx.android.synthetic.main.tv_settings_fragment.*
 
-class TvSettingsActivity: FragmentActivity(), TvSettingsFragment.OnSettingsSelected {
+class TvSettingsActivity: FragmentActivity(), OnSettingsSelected {
+    private lateinit var binding: ActivityTvSettingsBinding
     private var googleAccount: GoogleSignInAccount? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tv_settings)
-
+        binding = ActivityTvSettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         googleAccount = GoogleSignIn.getLastSignedInAccount(this)
-
-        if (Firebase.auth.currentUser == null) {
-            tv_settings_signout.setGone()
-        }
     }
 
     override fun getSettingsType(type: Int) {
         when (type) {
             0 -> {
-                tv_settings_trakt_container.setVisible()
-                tv_settings_info_container.setGone()
-                tv_settings_delete_container.setGone()
-                tv_settings_signout_container.setGone()
+                binding.traktContainer.setVisible()
+                hideViews(listOf(binding.infoContainer, binding.deleteContainer, binding.signOutContainer))
             }
             1 -> {
-                tv_settings_info_container.setVisible()
-                tv_settings_trakt_container.setGone()
-                tv_settings_delete_container.setGone()
-                tv_settings_signout_container.setGone()
+                binding.infoContainer.setVisible()
+                hideViews(listOf(binding.traktContainer, binding.deleteContainer, binding.signOutContainer))
             }
             2 -> {
-                tv_settings_delete_container.setVisible()
-                tv_settings_trakt_container.setGone()
-                tv_settings_info_container.setGone()
-                tv_settings_signout_container.setGone()
+                binding.deleteContainer.setVisible()
+                hideViews(listOf(binding.traktContainer, binding.infoContainer, binding.signOutContainer))
             }
             3 -> {
-                tv_settings_signout_container.setVisible()
-                tv_settings_delete_container.setGone()
-                tv_settings_trakt_container.setGone()
-                tv_settings_info_container.setGone()
+                binding.signOutContainer.setVisible()
+                hideViews(listOf(binding.traktContainer, binding.infoContainer, binding.deleteContainer))
 
                 if (googleAccount != null) {
-                    tv_settings_profile_name.text = "შესული ხართ, როგორც ${googleAccount!!.givenName!!} ${googleAccount!!.familyName!!}"
-                    tv_settings_profile_email.text = "ელ-ფოსტა: ${googleAccount!!.email}"
-                    Picasso.get().load(googleAccount!!.photoUrl).into(tv_settings_profile_photo)
+                    binding.profileName.text = "შესული ხართ, როგორც ${googleAccount!!.givenName!!} ${googleAccount!!.familyName!!}"
+                    binding.profileEmail.text = "ელ-ფოსტა: ${googleAccount!!.email}"
+                    Picasso.get().load(googleAccount!!.photoUrl).into(binding.profilePhoto)
                 }
 
             }
+        }
+    }
+
+    private fun hideViews(views: List<View>) {
+        views.forEach {
+            it.setGone()
         }
     }
 }

@@ -3,60 +3,44 @@ package com.lukakordzaia.streamflow.repository
 import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.database.WatchedDao
-import com.lukakordzaia.streamflow.datamodels.SingleTitleData
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingDao
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.*
 import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
+import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import kotlinx.coroutines.tasks.await
 
-class HomeRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
-    private val service = retrofitBuilder.buildImoviesService()
-
-    suspend fun getMovieDay(): Result<TitleList> {
+class HomeRepository(private val service: ImoviesNetwork): ImoviesCall() {
+    suspend fun getMovieDay(): Result<GetTitlesResponse> {
         return imoviesCall { service.getMovieDay() }
     }
 
-    suspend fun getNewMovies(page: Int): Result<TitleList> {
+    suspend fun getNewMovies(page: Int): Result<GetTitlesResponse> {
         return imoviesCall { service.getNewMovies(page) }
     }
 
-    suspend fun getTopMovies(page: Int): Result<TitleList> {
+    suspend fun getTopMovies(page: Int): Result<GetTitlesResponse> {
         return imoviesCall { service.getTopMovies(page) }
     }
 
-    suspend fun getTopTvShows(page: Int): Result<TitleList> {
+    suspend fun getTopTvShows(page: Int): Result<GetTitlesResponse> {
         return imoviesCall { service.getTopTvShows(page) }
     }
 
-    suspend fun getSingleTitleData(movieId: Int): Result<SingleTitleData> {
+    suspend fun getSingleTitleData(movieId: Int): Result<GetSingleTitleResponse> {
         return imoviesCall { service.getSingleTitle(movieId) }
     }
 
-    fun getContinueWatchingFromRoom(watchedDao: WatchedDao): LiveData<List<DbDetails>> {
-        return watchedDao.getContinueWatchingFromRoom()
+    fun getContinueWatchingFromRoom(continueWatchingDao: ContinueWatchingDao): LiveData<List<ContinueWatchingRoom>> {
+        return continueWatchingDao.getContinueWatchingFromRoom()
     }
 
-    suspend fun deleteSingleContinueWatchingFromRoom(watchedDao: WatchedDao, titleId: Int) {
-        return watchedDao.deleteSingleContinueWatchingFromRoom(titleId)
-    }
-
-    suspend fun getContinueWatchingFromFirestore1(currentUserUid: String) : QuerySnapshot? {
-        return try {
-            val data = Firebase.firestore
-                    .collection("users")
-                    .document(currentUserUid)
-                    .collection("continueWatching")
-                    .get()
-                    .await()
-            data
-        } catch (e: Exception) {
-            null
-        }
+    suspend fun deleteSingleContinueWatchingFromRoom(continueWatchingDao: ContinueWatchingDao, titleId: Int) {
+        return continueWatchingDao.deleteSingleContinueWatchingFromRoom(titleId)
     }
 
     fun getContinueWatchingFromFirestore(currentUserUid: String, continueWatchingListCallBack: FirebaseContinueWatchingListCallBack) {
@@ -67,9 +51,9 @@ class HomeRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
                 return@addSnapshotListener
             }
             if (snapshot != null ) {
-                val titleList: MutableList<DbDetails> = ArrayList()
+                val titleList: MutableList<ContinueWatchingRoom> = ArrayList()
                 for (title in snapshot) {
-                    titleList.add( DbDetails(
+                    titleList.add( ContinueWatchingRoom(
                             title.data["id"].toString().toInt(),
                             title.data["language"].toString(),
                             title.data["continueFrom"] as Long,
@@ -77,7 +61,8 @@ class HomeRepository(retrofitBuilder: RetrofitBuilder): ImoviesCall() {
                             title.data["isTvShow"] as Boolean,
                             title.data["season"].toString().toInt(),
                             title.data["episode"].toString().toInt()
-                    ))
+                    )
+                    )
                 }
                 continueWatchingListCallBack.continueWatchingList(titleList)
             } else {

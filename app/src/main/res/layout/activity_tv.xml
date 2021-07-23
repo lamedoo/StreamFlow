@@ -5,19 +5,22 @@
     android:layout_width="match_parent"
     android:background="@color/primaryColor"
     android:layout_height="match_parent"
-    tools:context=".ui.tv.TvActivity">
+    tools:context=".ui.tv.main.TvActivity">
 
     <include
+        android:id="@+id/tv_sidebar"
         layout="@layout/tv_sidebar"
         tools:visibility="gone"/>
 
     <include
+        android:id="@+id/tv_sidebar_collapsed"
         layout="@layout/tv_sidebar_collapsed"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <include
+        android:id="@+id/title_info"
         layout="@layout/tv_top_title_header"/>
 
     <fragment

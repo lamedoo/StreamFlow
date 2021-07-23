@@ -3,8 +3,10 @@ package com.lukakordzaia.streamflow.ui.phone.searchtitles
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.FranchiseList
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.helpers.MapTitleData
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SearchTitleRepository
@@ -15,21 +17,21 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
     val searchLoader = MutableLiveData<LoadingState>()
     val franchisesLoader = MutableLiveData<LoadingState>()
 
-    private val _searchList = MutableLiveData<List<TitleList.Data>>()
-    val searchList: LiveData<List<TitleList.Data>> = _searchList
+    private val _searchList = MutableLiveData<List<SingleTitleModel>>()
+    val searchList: LiveData<List<SingleTitleModel>> = _searchList
 
-    private val fetchSearchTitleList: MutableList<TitleList.Data> = ArrayList()
+    private val fetchSearchGetTitlesResponse: MutableList<SingleTitleModel> = ArrayList()
 
-    private val _franchiseList = MutableLiveData<List<FranchiseList.Data>>()
-    val franchiseList: LiveData<List<FranchiseList.Data>> = _franchiseList
+    private val _franchiseList = MutableLiveData<List<GetTopFranchisesResponse.Data>>()
+    val getTopFranchisesResponse: LiveData<List<GetTopFranchisesResponse.Data>> = _franchiseList
 
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(SearchTitlesFragmentDirections.actionSearchTitlesFragmentToSingleTitleFragmentNav(titleId))
     }
 
     fun clearSearchResults() {
-        fetchSearchTitleList.clear()
-        _searchList.value = fetchSearchTitleList
+        fetchSearchGetTitlesResponse.clear()
+        _searchList.value = fetchSearchGetTitlesResponse
     }
 
     fun getSearchTitles(keywords: String, page: Int) {
@@ -38,8 +40,8 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
             when (val search = repository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = search.data.data
-                    fetchSearchTitleList.addAll(data)
-                    _searchList.value = fetchSearchTitleList
+                    fetchSearchGetTitlesResponse.addAll(MapTitleData().list(data))
+                    _searchList.value = fetchSearchGetTitlesResponse
                     searchLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -57,7 +59,7 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
             when (val searchTv = repository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = searchTv.data.data
-                    _searchList.value = data
+                    _searchList.value = MapTitleData().list(data)
                 }
                 is Result.Error -> {
                     newToastMessage("ძიება - ${searchTv.exception}")

@@ -24,26 +24,26 @@
         android:shadowRadius="3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/continue_watching_dialog_yes"
+        app:layout_constraintBottom_toTopOf="@id/confirm_button"
         android:layout_marginBottom="50dp"/>
 
     <TextView
-        android:id="@+id/continue_watching_dialog_yes"
+        android:id="@+id/confirm_button"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:nextFocusUp="@id/continue_watching_dialog_yes"
-        android:nextFocusRight="@id/continue_watching_dialog_yes"
-        android:nextFocusLeft="@id/continue_watching_dialog_yes"
-        android:nextFocusDown="@id/continue_watching_dialog_home"
+        android:nextFocusUp="@id/confirm_button"
+        android:nextFocusRight="@id/confirm_button"
+        android:nextFocusLeft="@id/confirm_button"
+        android:nextFocusDown="@id/go_back_button"
         android:background="@drawable/continue_watching_dialog_button_background"
         android:padding="10dp"
         android:text="ყურების გაგრძელება"
         android:textAlignment="center"
         android:textColor="@color/text_on_accent_color"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/continue_watching_dialog_home"
+        app:layout_constraintBottom_toTopOf="@+id/go_back_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,14 +51,14 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/continue_watching_dialog_home"
+        android:id="@+id/go_back_button"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:focusable="true"
-        android:nextFocusUp="@id/continue_watching_dialog_yes"
-        android:nextFocusDown="@id/continue_watching_dialog_home"
-        android:nextFocusLeft="@id/continue_watching_dialog_home"
-        android:nextFocusRight="@id/continue_watching_dialog_home"
+        android:nextFocusUp="@id/confirm_button"
+        android:nextFocusDown="@id/go_back_button"
+        android:nextFocusLeft="@id/go_back_button"
+        android:nextFocusRight="@id/go_back_button"
         android:layout_marginTop="20dp"
         android:background="@drawable/continue_watching_dialog_button_background"
         android:padding="10dp"
@@ -69,6 +69,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/continue_watching_dialog_yes" />
+        app:layout_constraintTop_toBottomOf="@+id/confirm_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

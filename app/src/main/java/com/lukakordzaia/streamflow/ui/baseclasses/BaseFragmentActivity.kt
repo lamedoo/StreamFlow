@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,6 +16,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ListRowPresenter
+import androidx.viewbinding.ViewBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -25,13 +27,15 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
+import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
+import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
+import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflow.ui.tv.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesActivity
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
+import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.streamflow.ui.tv.settings.TvSettingsActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
@@ -39,12 +43,13 @@ import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.sync_continue_watching_alert_dialog.*
 import kotlinx.android.synthetic.main.tv_sidebar.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
+abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCheckFirstItem {
     private val profileViewModel: ProfileViewModel by viewModel()
+    private val sidebarAnimations: TvSidebarAnimations by inject()
     private var googleAccount: GoogleSignInAccount? = null
     private var googleSignInClient: GoogleSignInClient? = null
     protected val auth = Firebase.auth
@@ -60,8 +65,14 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
     private var rowsSupportFragment: RowsSupportFragment? = null
     private var rowsPosition: Int? = null
 
+    lateinit var binding: VB
+    abstract fun getViewBinding(): VB
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = getViewBinding()
+        setContentView(binding.root)
+
         googleAccount = GoogleSignIn.getLastSignedInAccount(this)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -75,14 +86,14 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
     fun setSidebarClickListeners(search: View, home: View, favorites: View, movies: View, genres: View, settings: View) {
         search.setOnClickListener {
             startActivity(Intent(this, TvSearchActivity::class.java))
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         home.setOnClickListener {
             val intent = Intent(this, TvActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         favorites.setOnClickListener {
             if (auth.currentUser != null) {
@@ -90,23 +101,23 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             } else {
                 this.createToast("ფავორიტების სანახავად, გაიარეთ ავტორიზაცია")
             }
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         movies.setOnClickListener {
             val intent = Intent(this, TvCategoriesActivity::class.java)
             intent.putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
             this.startActivity(intent)
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         genres.setOnClickListener {
             val intent = Intent(this, TvSingleGenreActivity::class.java)
             this.startActivity(intent)
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
         settings.setOnClickListener {
             val intent = Intent(this, TvSettingsActivity::class.java)
             this.startActivity(intent)
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         }
     }
 
@@ -181,16 +192,18 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
     private fun showSyncDialog() {
         profileViewModel.getContinueWatchingFromRoom(this).observe(this, {
             if (!it.isNullOrEmpty()) {
+                val binding = DialogSyncDatabaseBinding.inflate(LayoutInflater.from(this))
                 val syncDialog = Dialog(this)
-                syncDialog.setContentView(layoutInflater.inflate(R.layout.sync_continue_watching_alert_dialog, null))
-                syncDialog.sync_continue_watching_alert_yes.setOnClickListener { _ ->
+                syncDialog.setContentView(binding.root)
+
+                binding.confirmButton.setOnClickListener { _ ->
                     profileViewModel.addContinueWatchingToFirestore(this, it)
                     val intent = Intent(this, TvActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     this.startActivity(intent)
 
                 }
-                syncDialog.sync_continue_watching_alert_no.setOnClickListener {
+                binding.cancelButton.setOnClickListener {
                     syncDialog.dismiss()
                 }
                 syncDialog.show()
@@ -215,8 +228,6 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
             signOutButton.setVisible()
 
 //            signOutButton.requestFocus()
-
-
         } else {
             profileUsername.text = ""
             profilePhoto.setGone()
@@ -232,13 +243,13 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (isFirstItem) {
-                    tv_sidebar.setVisible()
+                    sidebarAnimations.showSideBar(tv_sidebar)
                     currentButton.requestFocus()
                 }
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (tv_sidebar.isVisible) {
-                    tv_sidebar.setGone()
+                    sidebarAnimations.hideSideBar(tv_sidebar)
                     if (rowsSupportFragment != null && rowsPosition != null) {
                         rowsSupportFragment!!.setSelectedPosition(rowsPosition!!, true, ListRowPresenter.SelectItemViewHolderTask(0))
                     }
@@ -250,9 +261,9 @@ open class BaseFragmentActivity : FragmentActivity(), TvCheckFirstItem {
 
     override fun onBackPressed() {
         if (tv_sidebar.isVisible) {
-            tv_sidebar.setGone()
+            sidebarAnimations.hideSideBar(tv_sidebar)
         } else {
-            tv_sidebar.setVisible()
+            sidebarAnimations.showSideBar(tv_sidebar)
             currentButton.requestFocus()
         }
 

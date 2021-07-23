@@ -3,7 +3,9 @@ package com.lukakordzaia.streamflow.ui.phone.home.toplistfragments
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.helpers.MapTitleData
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.HomeRepository
@@ -17,25 +19,17 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
     val topMovieLoader = MutableLiveData<LoadingState>()
     val topTvShowsLoader = MutableLiveData<LoadingState>()
 
-    private val _movieDayData = MutableLiveData<TitleList.Data>()
-    val movieDayData: LiveData<TitleList.Data> = _movieDayData
+    private val fetchNewMoviesList: MutableList<SingleTitleModel> = ArrayList()
+    private val _newMovieList = MutableLiveData<List<SingleTitleModel>>()
+    val newMovieList: LiveData<List<SingleTitleModel>> = _newMovieList
 
-    private val _newMovieList = MutableLiveData<List<TitleList.Data>>()
-    val newMovieList: LiveData<List<TitleList.Data>> = _newMovieList
+    private val fetchTopMoviesList: MutableList<SingleTitleModel> = ArrayList()
+    private val _topMovieList = MutableLiveData<List<SingleTitleModel>>()
+    val topMovieList: LiveData<List<SingleTitleModel>> = _topMovieList
 
-    private val fetchNewMoviesList: MutableList<TitleList.Data> = ArrayList()
-
-    val testMovies = MutableLiveData<TitleList.Data>()
-
-    private val _topMovieList = MutableLiveData<List<TitleList.Data>>()
-    val topMovieList: LiveData<List<TitleList.Data>> = _topMovieList
-
-    private val fetchTopMoviesList: MutableList<TitleList.Data> = ArrayList()
-
-    private val _topTvShowList = MutableLiveData<List<TitleList.Data>>()
-    val topTvShowList: LiveData<List<TitleList.Data>> = _topTvShowList
-
-    private val fetchTopTvShowsList: MutableList<TitleList.Data> = ArrayList()
+    private val fetchTopTvShowsList: MutableList<SingleTitleModel> = ArrayList()
+    private val _topTvShowList = MutableLiveData<List<SingleTitleModel>>()
+    val topTvShowList: LiveData<List<SingleTitleModel>> = _topTvShowList
 
     fun onSingleTitlePressed(start: Int, titleId: Int) {
         when (start) {
@@ -57,7 +51,7 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
             when (val newMovies = repository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = newMovies.data.data
-                    fetchNewMoviesList.addAll(data)
+                    fetchNewMoviesList.addAll(MapTitleData().list(data))
                     _newMovieList.value = fetchNewMoviesList
                     newMovieLoader.value = LoadingState.LOADED
                 }
@@ -77,7 +71,7 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
             when (val topMovies = repository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
-                    fetchTopMoviesList.addAll(data)
+                    fetchTopMoviesList.addAll(MapTitleData().list(data))
                     _topMovieList.value = fetchTopMoviesList
                     topMovieLoader.value = LoadingState.LOADED
                 }
@@ -97,7 +91,7 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
             when (val topTvShows = repository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = topTvShows.data.data
-                    fetchTopTvShowsList.addAll(data)
+                    fetchTopTvShowsList.addAll(MapTitleData().list(data))
                     _topTvShowList.value = fetchTopTvShowsList
                     topTvShowsLoader.value = LoadingState.LOADED
                 }

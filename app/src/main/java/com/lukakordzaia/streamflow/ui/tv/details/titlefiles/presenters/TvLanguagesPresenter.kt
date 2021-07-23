@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflow.ui.tv.details.titlefiles.presenters
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.ui.customviews.TvSeasonsCardView
+import com.lukakordzaia.streamflow.customviews.TvSeasonsCardView
 import kotlinx.android.synthetic.main.tv_details_season_item.view.*
 
 class TvLanguagesPresenter : Presenter() {

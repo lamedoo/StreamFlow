@@ -5,14 +5,14 @@
     "kind": "Directory"
   },
   "applicationId": "com.lukakordzaia.streamflow",
-  "variantName": "processReleaseResources",
+  "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 20,
-      "versionName": "1.5.6",
-      "outputFile": "StreamFlow v1.5.6.apk"
+      "versionCode": 24,
+      "versionName": "1.7.2.1",
+      "outputFile": "StreamFlow v1.7.2.1.apk"
     }
   ]
 }

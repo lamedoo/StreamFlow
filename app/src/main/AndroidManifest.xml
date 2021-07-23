@@ -37,7 +37,7 @@
         <activity android:name="com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity"
             android:screenOrientation="landscape">
         </activity>
-        <activity android:name="com.lukakordzaia.streamflow.ui.tv.TvActivity"
+        <activity android:name="com.lukakordzaia.streamflow.ui.tv.main.TvActivity"
             android:theme="@style/Theme.Leanback">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

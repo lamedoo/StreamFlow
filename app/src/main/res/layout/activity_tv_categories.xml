@@ -6,12 +6,15 @@
     android:layout_height="match_parent">
 
     <include
+        android:id="@+id/tv_sidebar"
         layout="@layout/tv_sidebar"/>
 
     <include
+        android:id="@+id/tv_sidebar_collapsed"
         layout="@layout/tv_sidebar_collapsed"/>
 
     <include
+        android:id="@+id/title_info"
         layout="@layout/tv_top_title_header"/>
 
     <fragment

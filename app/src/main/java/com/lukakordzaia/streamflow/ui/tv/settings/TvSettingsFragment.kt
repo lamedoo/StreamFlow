@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,26 +11,27 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
+import com.lukakordzaia.streamflow.databinding.FragmentTvSettingsBinding
+import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.utils.createToast
-import kotlinx.android.synthetic.main.clear_db_alert_dialog.*
-import kotlinx.android.synthetic.main.tv_settings_fragment.*
+import com.lukakordzaia.streamflow.utils.setGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSettingsFragment : BaseFragment() {
+class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
     private val profileViewModel: ProfileViewModel by viewModel()
     private var googleSignInClient: GoogleSignInClient? = null
+    private var onSettingsSelected: OnSettingsSelected? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onSettingsSelected = context as? OnSettingsSelected
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        onSettingsSelected = null
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvSettingsBinding
+        get() = FragmentTvSettingsBinding::inflate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,62 +43,72 @@ class TvSettingsFragment : BaseFragment() {
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return getPersistentView(inflater, container, savedInstanceState, R.layout.tv_settings_fragment)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!hasInitializedRootView) {
-            Log.d("onviewcreated", "true")
-            hasInitializedRootView = true
-        }
+        authCheck()
+        fragmentFocusListeners()
+        fragmentClickListeners()
+    }
 
-        tv_settings_trakt.setOnFocusChangeListener { _, hasFocus ->
+    private fun authCheck() {
+        if (auth.currentUser == null) {
+            binding.tvSettingsSignout.setGone()
+        }
+    }
+
+    private fun fragmentFocusListeners() {
+        binding.tvSettingsTrakt.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 onSettingsSelected?.getSettingsType(0)
             }
         }
-        tv_settings_info.setOnFocusChangeListener { _, hasFocus ->
+        binding.tvSettingsInfo.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 onSettingsSelected?.getSettingsType(1)
             }
         }
-        tv_settings_delete.setOnFocusChangeListener { _, hasFocus ->
+        binding.tvSettingsDelete.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 onSettingsSelected?.getSettingsType(2)
             }
         }
-        tv_settings_signout.setOnFocusChangeListener { _, hasFocus ->
+        binding.tvSettingsSignout.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 onSettingsSelected?.getSettingsType(3)
             }
         }
+    }
 
-        tv_settings_trakt.setOnClickListener {
+    private fun fragmentClickListeners() {
+        binding.tvSettingsTrakt.setOnClickListener {
             requireContext().createToast("ფუნქცია მალე დაემატება")
         }
-        tv_settings_info.setOnClickListener {
+
+        binding.tvSettingsInfo.setOnClickListener {
             requireContext().createToast("ინფორმაცია აპლიკაციის შესახებ")
         }
-        tv_settings_delete.setOnClickListener {
+
+        binding.tvSettingsDelete.setOnClickListener {
+            val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
             val clearDbDialog = Dialog(requireContext())
-            clearDbDialog.setContentView(layoutInflater.inflate(R.layout.clear_db_alert_dialog, null))
-            clearDbDialog.clear_db_alert_yes.setOnClickListener {
+            clearDbDialog.setContentView(binding.root)
+
+            binding.continueButton.setOnClickListener {
                 profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
                 profileViewModel.deleteContinueWatchingFromFirestoreFull()
 
                 val intent = Intent(requireContext(), TvSettingsActivity::class.java)
                 startActivity(intent)
             }
-            clearDbDialog.clear_db_alert_no.setOnClickListener {
+            binding.cancelButton.setOnClickListener {
                 clearDbDialog.dismiss()
             }
             clearDbDialog.show()
-            clearDbDialog.clear_db_alert_yes.requestFocus()
+            binding.continueButton.requestFocus()
         }
-        tv_settings_signout.setOnClickListener {
+
+        binding.tvSettingsSignout.setOnClickListener {
             auth.signOut()
             googleSignInClient!!.signOut()
             val intent = Intent(requireContext(), TvSettingsActivity::class.java)
@@ -106,8 +116,8 @@ class TvSettingsFragment : BaseFragment() {
         }
     }
 
-    interface OnSettingsSelected {
-        fun getSettingsType(type: Int)
+    override fun onDetach() {
+        super.onDetach()
+        onSettingsSelected = null
     }
-    var onSettingsSelected: OnSettingsSelected? = null
 }

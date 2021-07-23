@@ -4,31 +4,31 @@ import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.database.DbDetails
-import com.lukakordzaia.streamflow.database.WatchedDao
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingDao
 import kotlinx.coroutines.tasks.await
 
 class ProfileRepository {
-    fun getContinueWatchingFromRoom(watchedDao: WatchedDao): LiveData<List<DbDetails>> {
-        return watchedDao.getContinueWatchingFromRoom()
+    fun getContinueWatchingFromRoom(continueWatchingDao: ContinueWatchingDao): LiveData<List<ContinueWatchingRoom>> {
+        return continueWatchingDao.getContinueWatchingFromRoom()
     }
 
-    suspend fun addContinueWatchingTitleToFirestore(currentUserUid: String, dbDetails: DbDetails): Boolean {
+    suspend fun addContinueWatchingTitleToFirestore(currentUserUid: String, continueWatchingRoom: ContinueWatchingRoom): Boolean {
         return try {
             Firebase.firestore
                     .collection("users")
                     .document(currentUserUid)
                     .collection("continueWatching")
-                    .document(dbDetails.titleId.toString())
+                    .document(continueWatchingRoom.titleId.toString())
                     .set(
                             mapOf(
-                                    "id" to dbDetails.titleId,
-                                    "language" to dbDetails.language,
-                                    "isTvShow" to dbDetails.isTvShow,
-                                    "continueFrom" to dbDetails.watchedDuration,
-                                    "titleDuration" to dbDetails.titleDuration,
-                                    "season" to dbDetails.season,
-                                    "episode" to dbDetails.episode
+                                    "id" to continueWatchingRoom.titleId,
+                                    "language" to continueWatchingRoom.language,
+                                    "isTvShow" to continueWatchingRoom.isTvShow,
+                                    "continueFrom" to continueWatchingRoom.watchedDuration,
+                                    "titleDuration" to continueWatchingRoom.titleDuration,
+                                    "season" to continueWatchingRoom.season,
+                                    "episode" to continueWatchingRoom.episode
                             )
                     )
                     .await()

@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
-import android.util.Log
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.ActivityTvFavoritesBinding
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
-import com.lukakordzaia.streamflow.helpers.TvHasFavoritesListener
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.utils.createToast
@@ -17,40 +18,37 @@ import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_tv_favorites.*
-import kotlinx.android.synthetic.main.tv_sidebar.*
-import kotlinx.android.synthetic.main.tv_sidebar_collapsed.*
-import kotlinx.android.synthetic.main.tv_top_title_header.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvFavoritesActivity: BaseFragmentActivity(), TvCheckTitleSelected, TvHasFavoritesListener {
+class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), TvCheckTitleSelected, TvHasFavoritesListener {
     private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
-
     private var hasFavorites = true
+
+    override fun getViewBinding() = ActivityTvFavoritesBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tv_favorites)
 
         setSidebarClickListeners(
-                tv_sidebar_search,
-                tv_sidebar_home,
-                tv_sidebar_favorites,
-                tv_sidebar_movies,
-                tv_sidebar_genres,
-                tv_sidebar_settings
+            binding.tvSidebar.searchButton,
+            binding.tvSidebar.homeButton,
+            binding.tvSidebar.favoritesButton,
+            binding.tvSidebar.moviesButton,
+            binding.tvSidebar.genresButton,
+            binding.tvSidebar.settingsButton
         )
 
-        setCurrentButton(tv_sidebar_favorites)
+        setCurrentButton(binding.tvSidebar.favoritesButton)
 
-        tv_sidebar_favorites.setOnClickListener {
-            tv_sidebar.setGone()
+        binding.tvSidebar.favoritesButton.setOnClickListener {
+            binding.tvSidebar.root.setGone()
         }
 
-        tv_sidebar_collapsed_favorites_icon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
+        binding.tvSidebarCollapsed.collapsedFavoritesIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
-        googleSignIn(tv_sidebar_signin)
-        googleSignOut(tv_sidebar_signout)
-        googleProfileDetails(tv_sidebar_profile_photo, tv_sidebar_profile_username)
+        googleSignIn(binding.tvSidebar.signIn)
+        googleSignOut(binding.tvSidebar.signOut)
+        googleProfileDetails(binding.tvSidebar.profilePhoto, binding.tvSidebar.profileUsername)
 
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
 
@@ -61,23 +59,25 @@ class TvFavoritesActivity: BaseFragmentActivity(), TvCheckTitleSelected, TvHasFa
         }, 2500)
 
 
-        tvDetailsViewModel.singleTitleData.observe(this, {
-            home_top_name.text = it.secondaryName
-            Picasso.get().load(it.covers?.data?.x1050)
-                .error(R.drawable.movie_image_placeholder_landscape).into(home_top_poster)
-            home_top_year.text = "${it.year}   ·"
+        tvDetailsViewModel.getSingleTitleResponse.observe(this, {
+            binding.titleInfo.name.text = it.nameEng
+
+            Glide.with(this)
+                .load(it.cover?: R.drawable.movie_image_placeholder)
+                .placeholder(R.drawable.movie_image_placeholder_landscape)
+                .into(binding.titleInfo.poster)
+
+            binding.titleInfo.year.text = "${it.releaseYear}   ·"
             if (it.isTvShow) {
-                home_top_duration.text = "${it.seasons?.data?.size} სეზონი   ·"
+                binding.titleInfo.duration.text = "${it.seasonNum} სეზონი   ·"
             } else {
-                home_top_duration.text = "${it.duration.toString()} წთ   ·"
+                binding.titleInfo.duration.text = "${it.duration}   ·"
             }
-            if (it.rating.imdb?.score != null) {
-                home_top_rating.text = "IMDB ${it.rating.imdb.score.toString()}"
-            }
+            binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
         })
 
         tvDetailsViewModel.titleGenres.observe(this, {
-            home_top_genres.text = TextUtils.join(", ", it)
+            binding.titleInfo.genres.text = TextUtils.join(", ", it)
         })
     }
 
@@ -86,7 +86,6 @@ class TvFavoritesActivity: BaseFragmentActivity(), TvCheckTitleSelected, TvHasFa
     }
 
     override fun hasFavorites(has: Boolean) {
-        Log.d("hasfavorites", has.toString())
         hasFavorites = has
     }
 }

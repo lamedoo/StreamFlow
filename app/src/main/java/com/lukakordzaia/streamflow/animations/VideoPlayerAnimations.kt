@@ -4,8 +4,6 @@ import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.graphics.Color
-import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -20,12 +18,6 @@ class VideoPlayerAnimations {
                 ContextCompat.getColor(context, R.color.white),
                 ContextCompat.getColor(context, R.color.accent_color)
             )
-        val subtitleOn1 = ObjectAnimator.ofArgb(
-            view,
-            "backgroundColor",
-            Color.RED,
-            Color.GREEN
-        )
         val setPlayButton = AnimatorSet().apply {
             this.interpolator = AccelerateInterpolator()
             this.duration = duration
@@ -42,26 +34,10 @@ class VideoPlayerAnimations {
                 ContextCompat.getColor(context, R.color.accent_color),
                 ContextCompat.getColor(context, R.color.white)
         )
-        val subtitleOn1 = ObjectAnimator.ofArgb(
-                view,
-                "backgroundColor",
-                Color.RED,
-                Color.GREEN
-        )
         val setPlayButton = AnimatorSet().apply {
             this.interpolator = AccelerateInterpolator()
             this.duration = duration
             play(subtitleOff)
-        }
-        setPlayButton.start()
-    }
-
-    fun moveHeaderUp(view: View, container: View, duration: Long) {
-        val collapsedPlayRotate = ObjectAnimator.ofFloat(view, View.Y, view.y, container.y)
-        val setPlayButton = AnimatorSet().apply {
-            this.interpolator = AccelerateInterpolator()
-            this.duration = duration
-            play(collapsedPlayRotate)
         }
         setPlayButton.start()
     }

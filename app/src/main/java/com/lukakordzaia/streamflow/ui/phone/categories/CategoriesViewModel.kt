@@ -3,10 +3,11 @@ package com.lukakordzaia.streamflow.ui.phone.categories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.GenreList
-import com.lukakordzaia.streamflow.datamodels.StudioList
-import com.lukakordzaia.streamflow.datamodels.TitleList
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.helpers.MapTitleData
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.CategoriesRepository
@@ -19,14 +20,14 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
     val genresLoader = MutableLiveData<LoadingState>()
     val studiosLoader = MutableLiveData<LoadingState>()
 
-    private val _allGenresList = MutableLiveData<List<GenreList.Data>>()
-    val allGenresList: LiveData<List<GenreList.Data>> = _allGenresList
+    private val _allGenresList = MutableLiveData<List<GetGenresResponse.Data>>()
+    val allGenresList: LiveData<List<GetGenresResponse.Data>> = _allGenresList
 
-    private val _topStudioList = MutableLiveData<List<StudioList.Data>>()
-    val topStudioList: LiveData<List<StudioList.Data>> = _topStudioList
+    private val _topStudioList = MutableLiveData<List<GetTopStudiosResponse.Data>>()
+    val topGetTopStudiosResponse: LiveData<List<GetTopStudiosResponse.Data>> = _topStudioList
 
-    private val _topTrailerList = MutableLiveData<List<TitleList.Data>>()
-    val topTrailerList: LiveData<List<TitleList.Data>> = _topTrailerList
+    private val _topTrailerList = MutableLiveData<List<SingleTitleModel>>()
+    val topTrailerList: LiveData<List<SingleTitleModel>> = _topTrailerList
 
     fun onSingleGenrePressed(genreId: Int, genreName: String) {
         navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleGenreFragment(genreId, genreName))
@@ -34,20 +35,6 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
 
     fun onSingleStudioPressed(studioId: Int, studioName: String) {
         navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToSingleStudioFragment(studioId, studioName))
-    }
-
-    fun onSingleTrailerPressed(titleId: Int, trailerUrl: String) {
-        navigateToNewFragment(CategoriesFragmentDirections.actionCategoriesFragmentToVideoPlayerFragmentNav(
-                VideoPlayerData(
-                        titleId,
-                        false,
-                        0,
-                        "ENG",
-                        0,
-                        0L,
-                        trailerUrl
-                )
-        ))
     }
 
     fun onSingleTrailerInfoPressed(titleId: Int) {
@@ -95,7 +82,8 @@ class CategoriesViewModel(private val repository: CategoriesRepository) : BaseVi
         viewModelScope.launch {
             when (val trailers = repository.getTopTrailers()) {
                 is Result.Success -> {
-                    _topTrailerList.value = trailers.data.data
+                    val data = trailers.data.data
+                    _topTrailerList.value = MapTitleData().list(data)
                     trailersLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {

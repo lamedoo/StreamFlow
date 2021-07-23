@@ -10,12 +10,14 @@
     android:orientation="vertical"
     android:padding="@dimen/fragment_padding"
     android:translationZ="1dp"
+    android:alpha="0"
+    tools:alpha="1"
     android:visibility="gone"
-    app:layout_constraintStart_toStartOf="parent"
-    tools:visibility="visible">
+    tools:visibility="visible"
+    app:layout_constraintStart_toStartOf="parent">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/tv_sidebar_profile_photo"
+        android:id="@+id/profile_photo"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:focusable="false"
@@ -25,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/tv_sidebar_profile_username"
+        android:id="@+id/profile_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -35,21 +37,21 @@
         android:fontFamily="@font/georgian_uppercase"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/tv_sidebar_profile_photo"
+        app:layout_constraintStart_toEndOf="@id/profile_photo"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="გამარჯობა, LUKA" />
 
     <LinearLayout
-        android:id="@+id/tv_sidebar_signout"
+        android:id="@+id/sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:padding="5dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:nextFocusDown="@id/tv_sidebar_search"
-        app:layout_constraintStart_toEndOf="@id/tv_sidebar_profile_photo"
-        app:layout_constraintTop_toBottomOf="@id/tv_sidebar_profile_username">
+        android:nextFocusDown="@id/search_button"
+        app:layout_constraintStart_toEndOf="@id/profile_photo"
+        app:layout_constraintTop_toBottomOf="@id/profile_username">
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,18 +69,18 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/tv_sidebar_profile_photo"
+        app:layout_constraintTop_toBottomOf="@id/profile_photo"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
-            android:id="@+id/tv_sidebar_signin"
+            android:id="@+id/sign_in"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:padding="10dp"
             android:background="@drawable/tv_google_button_background"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:nextFocusDown="@id/tv_sidebar_search">
+            android:nextFocusDown="@id/search_button">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -102,7 +104,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tv_sidebar_search"
+        android:id="@+id/search_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -110,8 +112,8 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="7dp"
-        android:nextFocusUp="@id/tv_sidebar_signin"
-        app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_home"
+        android:nextFocusUp="@id/sign_in"
+        app:layout_constraintBottom_toTopOf="@+id/home_button"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         tools:layout_editor_absoluteX="25dp">
@@ -126,7 +128,7 @@
             tools:ignore="UseAppTint" />
 
         <TextView
-            android:id="@+id/tv_sidebar_search_text"
+            android:id="@+id/search_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="2dp"
@@ -139,7 +141,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tv_sidebar_home"
+        android:id="@+id/home_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
@@ -148,8 +150,8 @@
         android:paddingBottom="7dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_favorites"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sidebar_search"
+        app:layout_constraintBottom_toTopOf="@+id/favorites_button"
+        app:layout_constraintTop_toBottomOf="@+id/search_button"
         tools:layout_editor_absoluteX="25dp">
 
         <ImageView
@@ -175,7 +177,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tv_sidebar_favorites"
+        android:id="@+id/favorites_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
@@ -184,8 +186,8 @@
         android:paddingBottom="7dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_movies"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sidebar_home"
+        app:layout_constraintBottom_toTopOf="@+id/movies_button"
+        app:layout_constraintTop_toBottomOf="@+id/home_button"
         tools:layout_editor_absoluteX="25dp">
 
         <ImageView
@@ -211,7 +213,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tv_sidebar_movies"
+        android:id="@+id/movies_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
@@ -220,8 +222,8 @@
         android:paddingBottom="7dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        app:layout_constraintBottom_toTopOf="@+id/tv_sidebar_genres"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sidebar_favorites"
+        app:layout_constraintBottom_toTopOf="@+id/genres_button"
+        app:layout_constraintTop_toBottomOf="@+id/favorites_button"
         tools:layout_editor_absoluteX="25dp">
 
         <ImageView
@@ -246,7 +248,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tv_sidebar_genres"
+        android:id="@+id/genres_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
@@ -255,9 +257,9 @@
         android:paddingBottom="7dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:nextFocusDown="@id/tv_sidebar_settings"
+        android:nextFocusDown="@id/settings_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sidebar_movies"
+        app:layout_constraintTop_toBottomOf="@+id/movies_button"
         tools:layout_editor_absoluteX="25dp">
 
         <ImageView
@@ -282,7 +284,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tv_sidebar_settings"
+        android:id="@+id/settings_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
@@ -291,8 +293,8 @@
         android:paddingBottom="7dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:nextFocusUp="@id/tv_sidebar_genres"
-        android:nextFocusDown="@id/tv_sidebar_settings"
+        android:nextFocusUp="@id/genres_button"
+        android:nextFocusDown="@id/settings_button"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView

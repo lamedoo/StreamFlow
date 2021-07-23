@@ -20,11 +20,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
-import com.lukakordzaia.streamflow.datamodels.TitleList
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
-import com.lukakordzaia.streamflow.helpers.TvCheckFirstItem
-import com.lukakordzaia.streamflow.helpers.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
+import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
 import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
@@ -32,7 +32,6 @@ import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvWatchedCardPresenter
-import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
@@ -44,7 +43,7 @@ class TvMainFragment : BrowseSupportFragment() {
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private val page = 1
     lateinit var metrics: DisplayMetrics
-    lateinit var backgroundManager: BackgroundManager
+    private lateinit var backgroundManager: BackgroundManager
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
@@ -104,7 +103,7 @@ class TvMainFragment : BrowseSupportFragment() {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    homeViewModel.refreshContent(page)
+                    homeViewModel.refreshContent(1)
                 }, 5000)
             }
         })
@@ -121,7 +120,7 @@ class TvMainFragment : BrowseSupportFragment() {
             })
         }
 
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+        Handler(Looper.getMainLooper()).postDelayed({
             homeViewModel.getTopMovies(page)
             homeViewModel.getTopTvShows(page)
             homeViewModel.getNewMovies(page)
@@ -158,11 +157,11 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun initRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING), ArrayObjectAdapter(TvCardPresenter()))
-        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TV_TOP_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
-        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TV_TOP_TV_SHOWS), ArrayObjectAdapter(TvCardPresenter()))
-        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvCardPresenter()))
-        val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvCardPresenter()))
+        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TV_TOP_MOVIES), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TV_TOP_TV_SHOWS), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+        val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvCardPresenter(requireContext())))
         val initListRows = mutableListOf(firstHeaderItem, sixthHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }
@@ -179,11 +178,9 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun newMoviesRowsAdapter(newMovies: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
-            newMovies.forEach {
-                add(it)
-            }
+    private fun newMoviesRowsAdapter(newMovies: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+            addAll(0, newMovies)
         }
 
         HeaderItem(1, AppConstants.TV_NEW_MOVIES).also { header ->
@@ -191,11 +188,9 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun topMoviesRowsAdapter(movies: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
-            movies.forEach {
-                add(it)
-            }
+    private fun topMoviesRowsAdapter(movies: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+            addAll(0, movies)
         }
 
         HeaderItem(2, AppConstants.TV_TOP_MOVIES).also { header ->
@@ -203,11 +198,9 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun topTvShowsRowsAdapter(tvShows: List<TitleList.Data>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter()).apply {
-            tvShows.forEach {
-                add(it)
-            }
+    private fun topTvShowsRowsAdapter(tvShows: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+            addAll(0, tvShows)
         }
 
         HeaderItem(3, AppConstants.TV_TOP_TV_SHOWS).also { header ->
@@ -235,8 +228,6 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun setupUIElements() {
-//        badgeDrawable = resources.getDrawable(R.drawable.streamflowlogo)
-//        title = "StreamFlow"
         isHeadersTransitionOnBackEnabled = true
         brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
         adapter = rowsAdapter
@@ -254,21 +245,18 @@ class TvMainFragment : BrowseSupportFragment() {
                 rowViewHolder: RowPresenter.ViewHolder,
                 row: Row
         ) {
-            if (item is TitleList.Data) {
-                val intent = Intent(context, TvDetailsActivity::class.java)
-                intent.putExtra("titleId", item.id)
-                intent.putExtra("isTvShow", item.isTvShow)
+            if (item is SingleTitleModel) {
+                val intent = Intent(context, TvDetailsActivity::class.java).apply {
+                    putExtra("titleId", item.id)
+                    putExtra("isTvShow", item.isTvShow)
+                }
                 activity?.startActivity(intent)
             } else if (item is DbTitleData) {
-                val trailerUrl: String? = null
-                val intent = Intent(context, TvVideoPlayerActivity::class.java)
-                intent.putExtra("titleId", item.id)
-                intent.putExtra("isTvShow", item.isTvShow)
-                intent.putExtra("chosenLanguage", item.language)
-                intent.putExtra("chosenSeason", item.season)
-                intent.putExtra("chosenEpisode", item.episode)
-                intent.putExtra("watchedTime", item.watchedDuration)
-                intent.putExtra("trailerUrl", trailerUrl)
+                val intent = Intent(context, TvDetailsActivity::class.java).apply {
+                    putExtra("titleId", item.id)
+                    putExtra("isTvShow", item.isTvShow)
+                    putExtra("continue", true)
+                }
                 activity?.startActivity(intent)
             } else if (item is TvCategoriesList) {
                 when (item.categoriesId) {
@@ -291,7 +279,7 @@ class TvMainFragment : BrowseSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
-            if (item is TitleList.Data) {
+            if (item is SingleTitleModel) {
                 onTitleSelected?.getTitleId(item.id, null)
             } else if (item is DbTitleData) {
                 onTitleSelected?.getTitleId(item.id, item)

@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.TitleCast
-import com.lukakordzaia.streamflow.ui.customviews.TvCastCardView
+import com.lukakordzaia.streamflow.customviews.TvCastCardView
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import kotlinx.android.synthetic.main.tv_cast_card_item.view.*
 
 class TvCastPresenter(private val context: Context) : Presenter() {
@@ -21,7 +21,7 @@ class TvCastPresenter(private val context: Context) : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val cast = item as TitleCast.Data
+        val cast = item as GetSingleTitleCastResponse.Data
         val cardView = viewHolder.view as TvCastCardView
 
         cardView.cast_item_name.text = cast.originalName

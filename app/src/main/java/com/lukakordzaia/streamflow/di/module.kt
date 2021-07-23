@@ -1,14 +1,17 @@
 package com.lukakordzaia.streamflow.di
 
+import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
-import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerViewModel
-import com.lukakordzaia.streamflow.network.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
+import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
+import com.lukakordzaia.streamflow.network.interceptors.DefaultHeaderInterceptor
+import com.lukakordzaia.streamflow.network.interceptors.NetworkConnectionInterceptor
+import com.lukakordzaia.streamflow.network.trakttv.TraktTvNetwork
 import com.lukakordzaia.streamflow.repository.*
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesViewModel
-import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleCategoryViewModel
+import com.lukakordzaia.streamflow.ui.phone.categories.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.SingleTopListViewModel
@@ -16,6 +19,7 @@ import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleViewModel
 import com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsViewModel
+import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.details.titlefiles.TvTitleFilesViewModel
@@ -50,9 +54,13 @@ val repositoryModule = module {
 }
 
 val generalModule = module {
-    single { RetrofitBuilder(get()) }
     single { NetworkConnectionInterceptor(get()) }
+    single { DefaultHeaderInterceptor() }
+    single { RetrofitBuilder(get(), get()) }
+    single { get<RetrofitBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
+    single { get<RetrofitBuilder>().getRetrofitInstance().create(TraktTvNetwork::class.java) }
     single { SpinnerClass(get()) }
     single { BuildMediaSource(get()) }
     single { AuthSharedPreferences(get()) }
+    single { TvSidebarAnimations() }
 }

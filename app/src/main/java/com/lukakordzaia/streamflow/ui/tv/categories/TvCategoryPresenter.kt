@@ -1,14 +1,17 @@
 package com.lukakordzaia.streamflow.ui.tv.categories
 
+import android.content.Context
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.TitleList
-import com.lukakordzaia.streamflow.ui.customviews.TvDefaultCardView
+import com.lukakordzaia.streamflow.customviews.TvDefaultCardView
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_default_card_view.view.*
 
-class TvCategoryPresenter : Presenter() {
+class TvCategoryPresenter(private val context: Context) : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvDefaultCardView(parent.context, null)
 
@@ -19,24 +22,15 @@ class TvCategoryPresenter : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val movie = item as TitleList.Data
+        val movie = item as SingleTitleModel
         val cardView = viewHolder.view as TvDefaultCardView
 
-        if (movie.primaryName.isNotBlank()) {
-            cardView.tv_default_card_name.text = movie.primaryName
-        } else {
-            cardView.tv_default_card_name.text = movie.secondaryName
-        }
+        cardView.tv_default_card_name.text = movie.displayName
 
-        if (movie.posters != null) {
-            if (movie.posters.data != null) {
-                if (!movie.posters.data.x240.isNullOrEmpty()) {
-                    Picasso.get().load(movie.posters.data.x240).into(cardView.tv_default_card_poster)
-                } else {
-                    Picasso.get().load(R.drawable.movie_image_placeholder).into(cardView.tv_default_card_poster)
-                }
-            }
-        }
+        Glide.with(context)
+            .load(movie.poster?: R.drawable.movie_image_placeholder)
+            .placeholder(R.drawable.movie_image_placeholder_landscape)
+            .into(cardView.tv_default_card_poster)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {
