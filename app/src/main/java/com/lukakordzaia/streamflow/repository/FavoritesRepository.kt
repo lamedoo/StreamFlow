@@ -2,8 +2,10 @@ package com.lukakordzaia.streamflow.repository
 
 import android.content.ContentValues
 import android.util.Log
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.interfaces.FavoritesCallBack
@@ -12,17 +14,61 @@ import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
 import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import kotlinx.coroutines.tasks.await
 
-class FavoritesRepository(private val service: ImoviesNetwork): ImoviesCall() {
-
-    suspend fun getSearchFavoriteTitles(keywords: String, page: Int, year: String): Result<GetTitlesResponse> {
-        return imoviesCall { service.getSearchFavoriteTitles(keywords, page, year) }
+class FavoritesRepository: ImoviesCall() {
+    suspend fun addTitleToFavorites(currentUserUid: String, addTitleToFirestore: AddTitleToFirestore): Boolean {
+        return try {
+            Firebase.firestore
+                .collection("users")
+                .document(currentUserUid)
+                .collection("favMovies")
+                .document(addTitleToFirestore.id.toString())
+                .set(
+                    mapOf(
+                        "name" to addTitleToFirestore.name,
+                        "isTvShow" to addTitleToFirestore.isTvShow,
+                        "id" to addTitleToFirestore.id,
+                        "imdbId" to addTitleToFirestore.imdbId
+                    )
+                )
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    suspend fun getSingleTitleData(titleId: Int): Result<GetSingleTitleResponse> {
-        return imoviesCall { service.getSingleTitle(titleId) }
+    suspend fun removeTitleFromFavorites(currentUserUid: String, titleId: Int): Boolean {
+        return try {
+            Firebase.firestore
+                .collection("users")
+                .document(currentUserUid)
+                .collection("favMovies")
+                .document(titleId.toString())
+                .delete()
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    fun getFavTitlesFromFirestore(currentUserUid: String, favoritesCallBack: FavoritesCallBack) {
+    suspend fun checkTitleInFavorites(currentUserUid: String, titleId: Int): DocumentSnapshot? {
+        return try {
+            val data = Firebase.firestore
+                .collection("users")
+                .document(currentUserUid)
+                .collection("favMovies")
+                .document(titleId.toString())
+                .get()
+                .await()
+
+            data
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun getTitlesFromFavorites(currentUserUid: String, favoritesCallBack: FavoritesCallBack) {
         val docRef = Firebase.firestore.collection("users").document(currentUserUid).collection("favMovies")
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -45,21 +91,6 @@ class FavoritesRepository(private val service: ImoviesNetwork): ImoviesCall() {
             } else {
                 Log.d(ContentValues.TAG, "Current data: null")
             }
-        }
-    }
-
-    suspend fun removeFavTitleFromFirestore(currentUserUid: String, titleId: Int): Boolean {
-        return try {
-            Firebase.firestore
-                .collection("users")
-                .document(currentUserUid)
-                .collection("favMovies")
-                .document(titleId.toString())
-                .delete()
-                .await()
-            true
-        } catch (e: Exception) {
-            false
         }
     }
 }

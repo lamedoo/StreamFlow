@@ -75,17 +75,7 @@ class CategoriesFragment : BaseFragment<FragmentPhoneCategoriesBinding>() {
         val trailerLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         trailersAdapter = TrailersAdapter(requireContext(),
             { titleId, trailerUrl ->
-                val intent = Intent(context, VideoPlayerActivity::class.java)
-                intent.putExtra("videoPlayerData", VideoPlayerData(
-                    titleId,
-                    false,
-                    0,
-                    "ENG",
-                    0,
-                    0L,
-                    trailerUrl
-                ))
-                activity?.startActivity(intent)
+                startVideoPlayer(titleId, trailerUrl)
             },
             {
                 categoriesViewModel.onSingleTrailerInfoPressed(it)
@@ -150,5 +140,22 @@ class CategoriesFragment : BaseFragment<FragmentPhoneCategoriesBinding>() {
         categoriesViewModel.topGetTopStudiosResponse.observe(viewLifecycleOwner, {
             studiosAdapter.setStudioList(it)
         })
+    }
+
+    private fun startVideoPlayer(titleId: Int, trailerUrl: String?) {
+        if (trailerUrl != null) {
+            requireActivity().startActivity(VideoPlayerActivity.startFromTrailers(requireContext(), VideoPlayerData(
+                titleId,
+                false,
+                0,
+                "ENG",
+                0,
+                0L,
+                trailerUrl
+            )
+            ))
+        } else {
+            categoriesViewModel.newToastMessage("ტრეილერი ვერ მოიძებნა")
+        }
     }
 }

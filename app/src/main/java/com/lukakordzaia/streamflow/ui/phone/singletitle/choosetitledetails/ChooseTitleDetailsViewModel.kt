@@ -1,11 +1,12 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails
 
-import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
+import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
@@ -14,7 +15,7 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
+class ChooseTitleDetailsViewModel : BaseViewModel() {
     val chooseDetailsLoader = MutableLiveData<LoadingState>()
 
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
@@ -32,50 +33,38 @@ class ChooseTitleDetailsViewModel(private val repository: SingleTitleRepository)
     private val _episodeInfo = MutableLiveData<List<TitleEpisodes>>()
     val episodeInfo: LiveData<List<TitleEpisodes>> = _episodeInfo
 
-    private val _continueWatchingDetails = MutableLiveData<ContinueWatchingRoom>(null)
-    val     continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
+    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom>()
+    val continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
 
-    fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
-        return repository.checkContinueWatchingTitleInRoom(roomDb(context)!!, titleId)
-    }
-
-    fun getSingleContinueWatchingFromRoom(context: Context, titleId: Int){
-        viewModelScope.launch {
-            _continueWatchingDetails.value = repository.getSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
+    fun checkAuthDatabase(titleId: Int) {
+        if (currentUser() == null) {
+            getSingleContinueWatchingFromRoom(titleId)
+        } else {
+            checkContinueWatchingInFirestore(titleId)
         }
     }
 
-    fun checkContinueWatchingInFirestore1(titleId: Int) {
-        repository.checkContinueWatchingInFirestore1(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingListCallBack {
-            override fun continueWatchingList(titleList: MutableList<ContinueWatchingRoom>) {
-                _continueWatchingDetails.value = titleList[0]
+    private fun getSingleContinueWatchingFromRoom(titleId: Int){
+        val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
+
+        _continueWatchingDetails.addSource(data) {
+            _continueWatchingDetails.value = it
+        }
+    }
+
+    private fun checkContinueWatchingInFirestore(titleId: Int) {
+        environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
+            override fun continueWatchingTitle(title: ContinueWatchingRoom) {
+                _continueWatchingDetails.value = title
             }
         })
-    }
-
-    fun checkContinueWatchingInFirestore(titleId: Int) {
-        viewModelScope.launch {
-            val checkContinueWatching = repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId)
-
-            if (checkContinueWatching!!.data != null) {
-                _continueWatchingDetails.value = ContinueWatchingRoom(
-                        checkContinueWatching.data!!["id"].toString().toInt(),
-                        checkContinueWatching.data!!["language"].toString(),
-                        checkContinueWatching.data!!["continueFrom"] as Long,
-                        checkContinueWatching.data!!["titleDuration"] as Long,
-                        checkContinueWatching.data!!["isTvShow"] as Boolean,
-                        checkContinueWatching.data!!["season"].toString().toInt(),
-                        checkContinueWatching.data!!["episode"].toString().toInt()
-                )
-            }
-        }
     }
 
     fun getSeasonFiles(titleId: Int, season: Int) {
         _chosenSeason.value = season
         viewModelScope.launch {
             chooseDetailsLoader.value = LoadingState.LOADING
-            when (val files = repository.getSingleTitleFiles(titleId, season)) {
+            when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, season)) {
                 is Result.Success -> {
                     val data = files.data.data
                     if (data.isNotEmpty()) {

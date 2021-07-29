@@ -1,10 +1,9 @@
 package com.lukakordzaia.streamflow.ui.tv.details.titlefiles
 
-import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.StreamFlowDatabase
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
@@ -12,11 +11,10 @@ import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
-import com.lukakordzaia.streamflow.repository.TvDetailsRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
-class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseViewModel() {
+class TvTitleFilesViewModel : BaseViewModel() {
 
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
@@ -42,12 +40,12 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
     private val _singleTitleRelated = MutableLiveData<List<SingleTitleModel>>()
     val singleTitleRelated: LiveData<List<SingleTitleModel>> = _singleTitleRelated
 
-    private val _continueWatchingDetails = MutableLiveData<ContinueWatchingRoom>(null)
+    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom>()
     val continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
 
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
-            when (val data = repository.getSingleTitleData(titleId)) {
+            when (val data = environment.singleTitleRepository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
                     if (data.data.data.seasons != null) {
                         _numOfSeasons.value = data.data.data.seasons.data.size
@@ -67,7 +65,7 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
     fun getSeasonFiles(movieId: Int, season: Int) {
         _chosenSeason.value = season
         viewModelScope.launch {
-            when (val files = repository.getSingleTitleFiles(movieId, season)) {
+            when (val files = environment.singleTitleRepository.getSingleTitleFiles(movieId, season)) {
                 is Result.Success -> {
                     val data = files.data.data
 
@@ -92,7 +90,7 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
 
     fun getSingleTitleCast(titleId: Int) {
         viewModelScope.launch {
-            when (val cast = repository.getSingleTitleCast(titleId, "cast")) {
+            when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "cast")) {
                 is Result.Success -> {
                     val data = cast.data.data
 
@@ -107,7 +105,7 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
 
     fun getSingleTitleRelated(titleId: Int) {
         viewModelScope.launch {
-            when (val related = repository.getSingleTitleRelated(titleId)) {
+            when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
                 is Result.Success -> {
                     val data = related.data.data
                     _singleTitleRelated.value = MapTitleData().list(data)
@@ -119,19 +117,24 @@ class TvTitleFilesViewModel(private val repository: TvDetailsRepository) : BaseV
         }
     }
 
-    fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
-        val database = StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
-        return repository.checkContinueWatchingTitleInRoom(database!!, titleId)
-    }
-
-    fun getSingleContinueWatchingFromRoom(context: Context, titleId: Int){
-        viewModelScope.launch {
-            _continueWatchingDetails.value = repository.getSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
+    fun checkAuthDatabase(titleId: Int) {
+        if (currentUser() == null) {
+            getSingleContinueWatchingFromRoom(titleId)
+        } else {
+            checkContinueWatchingInFirestore(titleId)
         }
     }
 
-    fun checkContinueWatchingInFirestore(titleId: Int) {
-        repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
+    private fun getSingleContinueWatchingFromRoom(titleId: Int){
+        val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
+
+        _continueWatchingDetails.addSource(data) {
+            _continueWatchingDetails.value = it
+        }
+    }
+
+    private fun checkContinueWatchingInFirestore(titleId: Int) {
+        environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
             override fun continueWatchingTitle(title: ContinueWatchingRoom) {
                 _continueWatchingDetails.value = title
             }

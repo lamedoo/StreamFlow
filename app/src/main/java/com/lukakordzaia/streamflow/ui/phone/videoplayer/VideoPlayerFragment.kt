@@ -24,6 +24,7 @@ import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerHelpers
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
+import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
@@ -68,7 +69,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        videoPlayerData = activity?.intent!!.getParcelableExtra("videoPlayerData") as VideoPlayerData
+        videoPlayerData = requireActivity().intent!!.getParcelableExtra(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
 
         player = SimpleExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
@@ -171,7 +172,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
                 )
                 if (mediaItem != null) {
                     if (videoPlayerData.trailerUrl == null) {
-                        videoPlayerViewModel.addContinueWatching(requireContext())
+                        videoPlayerViewModel.addContinueWatching()
                     }
                 }
             }, 2000)
@@ -260,7 +261,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
 
     private fun showContinueWatchingDialog() {
         if (mediaItemsPlayed == 3) {
-            videoPlayerViewModel.addContinueWatching(requireContext())
+            videoPlayerViewModel.addContinueWatching()
             player.pause()
 
             binding.continueWatching.root.setVisible()
@@ -305,7 +306,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         }
 
         if (videoPlayerData.trailerUrl == null) {
-            videoPlayerViewModel.addContinueWatching(requireContext())
+            videoPlayerViewModel.addContinueWatching()
         }
     }
 

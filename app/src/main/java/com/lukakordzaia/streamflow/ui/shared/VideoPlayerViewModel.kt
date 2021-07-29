@@ -17,7 +17,7 @@ import com.lukakordzaia.streamflow.repository.SingleTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
-class VideoPlayerViewModel(private val repository: SingleTitleRepository) : BaseViewModel() {
+class VideoPlayerViewModel : BaseViewModel() {
     private val numOfSeasons = MutableLiveData<Int>()
 
     private var getEpisode: String = ""
@@ -40,7 +40,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
         titleDurationForDb.value = playerDurationInfo.titleDuration
     }
 
-    fun addContinueWatching(context: Context) {
+    fun addContinueWatching() {
         val dbDetails = ContinueWatchingRoom(
                 videoPlayerInfo.value!!.titleId,
                 videoPlayerInfo.value!!.chosenLanguage,
@@ -53,7 +53,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
         if (playbackPositionForDb.value!! > 0 && titleDurationForDb.value!! > 0) {
             if (currentUser() != null) {
                 viewModelScope.launch {
-                    repository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, dbDetails)
+                    environment.databaseRepository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, dbDetails)
                 }
 //                if (isTvShow) {
 //                    viewModelScope.launch {
@@ -62,7 +62,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
 //                }
             } else {
                 viewModelScope.launch {
-                    roomDb(context)?.insertContinueWatchingInRoom(dbDetails)
+                    environment.databaseRepository.insertContinueWatchingInRoom(dbDetails)
                 }
             }
         }
@@ -79,7 +79,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
         getEpisode = ""
 
         viewModelScope.launch {
-            when (val files = repository.getSingleTitleFiles(videoPlayerInfo.titleId, videoPlayerInfo.chosenSeason)) {
+            when (val files = environment.singleTitleRepository.getSingleTitleFiles(videoPlayerInfo.titleId, videoPlayerInfo.chosenSeason)) {
                 is Result.Success -> {
                     totalEpisodesInSeason.value = files.data.data.size
 
@@ -146,7 +146,7 @@ class VideoPlayerViewModel(private val repository: SingleTitleRepository) : Base
 
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
-            when (val titleData = repository.getSingleTitleData(titleId)) {
+            when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
                     val data = titleData.data.data
 

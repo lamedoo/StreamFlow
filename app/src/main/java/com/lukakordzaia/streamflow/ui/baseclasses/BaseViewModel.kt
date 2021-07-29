@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.baseclasses
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,11 +7,14 @@ import androidx.navigation.NavDirections
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.database.StreamFlowDatabase
-import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingDao
+import com.lukakordzaia.streamflow.helpers.Environment
 import com.lukakordzaia.streamflow.utils.Event
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-abstract class BaseViewModel : ViewModel() {
+abstract class BaseViewModel : ViewModel(), KoinComponent {
+    protected val environment: Environment by inject()
+
     private val _navigateScreen = MutableLiveData<Event<NavDirections>>()
     val navigateScreen: LiveData<Event<NavDirections>> = _navigateScreen
 
@@ -37,9 +39,5 @@ abstract class BaseViewModel : ViewModel() {
 
     fun currentUser(): FirebaseUser? {
         return Firebase.auth.currentUser
-    }
-
-    fun roomDb(context: Context): ContinueWatchingDao? {
-        return StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
     }
 }

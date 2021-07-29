@@ -110,7 +110,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
 
             binding.continueButton.setOnClickListener {
                 if (auth.currentUser == null) {
-                    profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
+                    profileViewModel.deleteContinueWatchingFromRoomFull()
                 } else {
                     profileViewModel.deleteContinueWatchingFromFirestoreFull()
                 }
@@ -230,14 +230,14 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
     }
 
     private fun showSyncDialog() {
-        profileViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
+        profileViewModel.getContinueWatchingFromRoom().observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 val binding = DialogSyncDatabaseBinding.inflate(LayoutInflater.from(requireContext()))
                 val syncDialog = Dialog(requireContext())
                 syncDialog.setContentView(binding.root)
 
                 binding.confirmButton.setOnClickListener { _ ->
-                    profileViewModel.addContinueWatchingToFirestore(requireContext(), it)
+                    profileViewModel.addContinueWatchingToFirestore(it)
                     syncDialog.dismiss()
                 }
                 binding.cancelButton.setOnClickListener {

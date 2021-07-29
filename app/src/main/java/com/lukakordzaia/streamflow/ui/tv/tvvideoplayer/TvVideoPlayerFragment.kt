@@ -193,7 +193,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
                 )
                 if (mediaItem != null) {
                     if (videoPlayerData.trailerUrl == null) {
-                        videoPlayerViewModel.addContinueWatching(requireContext())
+                        videoPlayerViewModel.addContinueWatching()
                     }
                 }
             }, 2000)
@@ -258,7 +258,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
 
     private fun showContinueWatchingDialog() {
         if (mediaItemsPlayed == 4) {
-            videoPlayerViewModel.addContinueWatching(requireContext())
+            videoPlayerViewModel.addContinueWatching()
             player.pause()
 
             binding.continueWatching.root.setVisible()
@@ -306,7 +306,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
         }
         tracker?.purgeHandler()
         if (videoPlayerData.trailerUrl == null) {
-            videoPlayerViewModel.addContinueWatching(requireContext())
+            videoPlayerViewModel.addContinueWatching()
         }
     }
 

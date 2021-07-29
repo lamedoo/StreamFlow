@@ -15,7 +15,7 @@ import com.lukakordzaia.streamflow.ui.phone.categories.singlestudio.SingleStudio
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class SingleCategoryViewModel(private val repository: CategoriesRepository) : BaseViewModel() {
+class SingleCategoryViewModel : BaseViewModel() {
     private val fetchSingleGenreList: MutableList<SingleTitleModel> = ArrayList()
     private val _singleGenreList = MutableLiveData<List<SingleTitleModel>>()
     val singleGenreList: LiveData<List<SingleTitleModel>> = _singleGenreList
@@ -57,7 +57,7 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
     fun getSingleGenre(genreId: Int, page: Int) {
         viewModelScope.launch {
             categoryLoader.value = LoadingState.LOADING
-            when (val singleGenre = repository.getSingleGenre(genreId, page)) {
+            when (val singleGenre = environment.categoriesRepository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
                     val data = singleGenre.data.data
                     fetchSingleGenreList.addAll(MapTitleData().list(data))
@@ -77,7 +77,7 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
 
     fun getSingleGenreForTv(genreId: Int, page: Int) {
         viewModelScope.launch {
-            when (val singleGenre = repository.getSingleGenre(genreId, page)) {
+            when (val singleGenre = environment.categoriesRepository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
                     val data = singleGenre.data.data
                     when (genreId) {
@@ -102,7 +102,7 @@ class SingleCategoryViewModel(private val repository: CategoriesRepository) : Ba
     fun getSingleStudio(studioId: Int, page: Int) {
         viewModelScope.launch {
             categoryLoader.value = LoadingState.LOADING
-            when (val singleStudio = repository.getSingleStudio(studioId, page)) {
+            when (val singleStudio = environment.categoriesRepository.getSingleStudio(studioId, page)) {
                 is Result.Success -> {
                     val data = singleStudio.data.data
                     fetchSingleStudioList.addAll(MapTitleData().list(data))

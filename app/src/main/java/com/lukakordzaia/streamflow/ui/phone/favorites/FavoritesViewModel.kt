@@ -5,16 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.helpers.MapTitleData
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.interfaces.FavoritesCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.repository.FavoritesRepository
-import com.lukakordzaia.streamflow.repository.TraktRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
-class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, private val traktRepository: TraktRepository) : BaseViewModel() {
+class FavoritesViewModel : BaseViewModel() {
 
     val favoriteMoviesLoader = MutableLiveData<LoadingState>()
     val favoriteTvShowsLoader = MutableLiveData<LoadingState>()
@@ -39,7 +36,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
     fun getFavTitlesFromFirestore() {
         favoriteMoviesLoader.value = LoadingState.LOADING
         favoriteTvShowsLoader.value = LoadingState.LOADING
-        favoritesRepository.getFavTitlesFromFirestore(currentUser()!!.uid, object :
+        environment.favoritesRepository.getTitlesFromFavorites(currentUser()!!.uid, object :
             FavoritesCallBack {
             override fun moviesList(movies: MutableList<Int>) {
                 if (movies.isNullOrEmpty()) {
@@ -50,7 +47,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
                     val fetchMovieResult: MutableList<SingleTitleModel> = ArrayList()
                     viewModelScope.launch {
                         movies.forEach {
-                            when (val moviesData = favoritesRepository.getSingleTitleData(it)) {
+                            when (val moviesData = environment.singleTitleRepository.getSingleTitleData(it)) {
                                 is Result.Success -> {
                                     val data = moviesData.data.data
                                     fetchMovieResult.add(MapTitleData().single(data))
@@ -73,7 +70,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
                     val fetchTvShowResult: MutableList<SingleTitleModel> = ArrayList()
                     viewModelScope.launch {
                         tvShows.forEach {
-                            when (val tvShowsData = favoritesRepository.getSingleTitleData(it)) {
+                            when (val tvShowsData = environment.singleTitleRepository.getSingleTitleData(it)) {
                                 is Result.Success -> {
                                     val data = tvShowsData.data.data
                                     fetchTvShowResult.add(MapTitleData().single(data))
@@ -92,7 +89,7 @@ class FavoritesViewModel(private val favoritesRepository: FavoritesRepository, p
 
     fun removeFavTitleFromFirestore(titleId: Int) {
         viewModelScope.launch {
-            val removeFromFavorites = favoritesRepository.removeFavTitleFromFirestore(currentUser()!!.uid, titleId)
+            val removeFromFavorites = environment.favoritesRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
             if (removeFromFavorites) {
                 newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
             }

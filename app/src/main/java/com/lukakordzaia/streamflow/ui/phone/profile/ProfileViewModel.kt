@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.phone.profile
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -8,18 +7,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.response.GetDeviceCodeResponse
 import com.lukakordzaia.streamflow.network.models.trakttv.response.GetUserTokenResponse
-import com.lukakordzaia.streamflow.repository.ProfileRepository
-import com.lukakordzaia.streamflow.repository.TraktRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(private val profileRepository: ProfileRepository, private val repository: TraktRepository) : BaseViewModel() {
+class ProfileViewModel : BaseViewModel() {
     private val _traktDeviceCode = MutableLiveData<GetDeviceCodeResponse>()
     val traktDeviceCodeResponse: LiveData<GetDeviceCodeResponse> = _traktDeviceCode
 
@@ -38,7 +36,7 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
 
     fun getDeviceCode() {
         viewModelScope.launch {
-            when (val deviceCode = repository.getDeviceCode()) {
+            when (val deviceCode = environment.traktRepository.getDeviceCode()) {
                 is Result.Success -> {
                     val data = deviceCode.data
 
@@ -50,7 +48,7 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
 
     fun getUserToken(tokenRequestRequestBody: GetUserTokenRequestBody) {
         viewModelScope.launch {
-            when (val token = repository.getUserToken(tokenRequestRequestBody)) {
+            when (val token = environment.traktRepository.getUserToken(tokenRequestRequestBody)) {
                 is Result.Success -> {
                     val data = token.data
 
@@ -78,7 +76,7 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
 
     fun createNewList(newList: AddNewListRequestBody, accessToken: String) {
         viewModelScope.launch {
-            when (val list = repository.createNewList(newList, accessToken)) {
+            when (val list = environment.traktRepository.createNewList(newList, accessToken)) {
                 is Result.Success -> {
                     Log.d("traktvlist", "წარმატებულია")
                 }
@@ -88,7 +86,7 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
 
     private fun getSfList(accessToken: String) {
         viewModelScope.launch {
-            when (val sfList = repository.getSfList(accessToken)) {
+            when (val sfList = environment.traktRepository.getSfList(accessToken)) {
                 is Result.Success -> {
                     _traktSfListExists.value = true
                     Log.d("traktvlist", sfList.data.toString())
@@ -104,28 +102,30 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
         }
     }
 
-    fun deleteContinueWatchingFromRoomFull(context: Context) {
+    fun deleteContinueWatchingFromRoomFull() {
         viewModelScope.launch {
-            roomDb(context)!!.deleteContinueWatchingFullFromRoom()
+            environment.databaseRepository.deleteAllFromRoom()
         }
     }
 
     fun deleteContinueWatchingFromFirestoreFull() {
-        viewModelScope.launch {
-            val getTitles = profileRepository.getContinueWatchingFromFirestore(currentUser()!!.uid)
-            if (getTitles!!.documents.isNotEmpty()) {
-                for (title in getTitles.documents) {
-                    deleteContinueWatchingTitleFromFirestore(title.data!!["id"].toString().toInt())
+        environment.databaseRepository.getContinueWatchingFromFirestore(currentUser()!!.uid, object :
+            FirebaseContinueWatchingListCallBack {
+            override fun continueWatchingList(titleList: MutableList<ContinueWatchingRoom>) {
+                if (titleList.isNullOrEmpty()) {
+                    titleList.forEach {
+                        deleteContinueWatchingTitleFromFirestore(it.titleId)
+                    }
+                } else {
+                    newToastMessage("ბაზა უკვე ცარიელია")
                 }
-            } else {
-                newToastMessage("ბაზა უკვე ცარიელია")
             }
-        }
+        })
     }
 
     private fun deleteContinueWatchingTitleFromFirestore(titleId: Int) {
         viewModelScope.launch {
-            val deleteTitles = profileRepository.deleteContinueWatchingFullFromFirestore(currentUser()!!.uid, titleId)
+            val deleteTitles = environment.databaseRepository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
 
             if (deleteTitles) {
                 newToastMessage("ბაზა წარმატებით წაშლილია")
@@ -135,21 +135,21 @@ class ProfileViewModel(private val profileRepository: ProfileRepository, private
 
     fun createUserFirestore() {
         viewModelScope.launch {
-            repository.createUserFirestore(currentUser())
+            environment.databaseRepository.createUserFirestore(currentUser())
         }
     }
 
-    fun getContinueWatchingFromRoom(context: Context): LiveData<List<ContinueWatchingRoom>> {
-        return profileRepository.getContinueWatchingFromRoom(roomDb(context)!!)
+    fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>> {
+        return environment.databaseRepository.getContinueWatchingFromRoom()
     }
 
-    fun addContinueWatchingToFirestore(context: Context, continueWatchingRoomList: List<ContinueWatchingRoom>) {
+    fun addContinueWatchingToFirestore(continueWatchingRoomList: List<ContinueWatchingRoom>) {
         viewModelScope.launch {
             continueWatchingRoomList.forEach {
-                val addToFirestore = profileRepository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, it)
+                val addToFirestore = environment.databaseRepository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, it)
                 if (addToFirestore) {
                     newToastMessage("სინქრონიზაცია წარმატებით დასრულდა")
-                    deleteContinueWatchingFromRoomFull(context)
+                    deleteContinueWatchingFromRoomFull()
                     refreshProfileOnLogin()
                 } else {
                     newToastMessage("სამწუხაროდ, ვერ მოხერხდა სინქრონიზაცია")

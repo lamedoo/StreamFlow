@@ -11,7 +11,7 @@ import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
-class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewModel() {
+class TvCategoriesViewModel : BaseViewModel() {
     private val _newMovieList = MutableLiveData<List<SingleTitleModel>>()
     val newMovieList: LiveData<List<SingleTitleModel>> = _newMovieList
 
@@ -23,7 +23,7 @@ class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewMo
 
     fun getNewMoviesTv(page: Int) {
         viewModelScope.launch {
-            when (val movies = repository.getNewMovies(page)) {
+            when (val movies = environment.homeRepository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = movies.data.data
                     _newMovieList.value = MapTitleData().list(data)
@@ -41,7 +41,7 @@ class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewMo
 
     fun getTopMoviesTv(page: Int) {
         viewModelScope.launch {
-            when (val topMovies = repository.getTopMovies(page)) {
+            when (val topMovies = environment.homeRepository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
                     _topMovieList.value = MapTitleData().list(data)
@@ -59,7 +59,7 @@ class TvCategoriesViewModel(private val repository: HomeRepository) : BaseViewMo
 
     fun getTopTvShowsTv(page: Int) {
         viewModelScope.launch {
-            when (val tvShows = repository.getTopTvShows(page)) {
+            when (val tvShows = environment.homeRepository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = tvShows.data.data
                     _tvShowList.value = MapTitleData().list(data)

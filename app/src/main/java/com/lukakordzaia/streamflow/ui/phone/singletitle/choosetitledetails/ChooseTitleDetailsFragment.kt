@@ -20,6 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneChooseTitleDetailsBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -113,15 +114,7 @@ class ChooseTitleDetailsFragment : BaseBottomSheet<FragmentPhoneChooseTitleDetai
     }
 
     private fun checkAuth() {
-        if (Firebase.auth.currentUser == null) {
-            chooseTitleDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), args.titleId).observe(viewLifecycleOwner, { exists ->
-                if (exists) {
-                    chooseTitleDetailsViewModel.getSingleContinueWatchingFromRoom(requireContext(), args.titleId)
-                }
-            })
-        } else {
-            chooseTitleDetailsViewModel.checkContinueWatchingInFirestore(args.titleId)
-        }
+        chooseTitleDetailsViewModel.checkAuthDatabase(args.titleId)
 
         chooseTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
@@ -181,18 +174,7 @@ class ChooseTitleDetailsFragment : BaseBottomSheet<FragmentPhoneChooseTitleDetai
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         chooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) { language ->
             chooseLanguageDialog.hide()
-            val intent = Intent(context, VideoPlayerActivity::class.java)
-            intent.putExtra("videoPlayerData", VideoPlayerData(
-                args.titleId,
-                true,
-                chooseTitleDetailsViewModel.chosenSeason.value!!,
-                language,
-                episode,
-                0L,
-                null
-            )
-            )
-            activity?.startActivity(intent)
+            startVideoPlayer(language, episode)
         }
         binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
         binding.rvChooseLanguage.adapter = chooseLanguageAdapter
@@ -201,5 +183,18 @@ class ChooseTitleDetailsFragment : BaseBottomSheet<FragmentPhoneChooseTitleDetai
             val languages = languageList.reversed()
             chooseLanguageAdapter.setLanguageList(languages)
         })
+    }
+
+    private fun startVideoPlayer(language: String, episode: Int) {
+        requireActivity().startActivity(VideoPlayerActivity.startFromSingleTitle(requireContext(), VideoPlayerData(
+            args.titleId,
+            true,
+            chooseTitleDetailsViewModel.chosenSeason.value!!,
+            language,
+            episode,
+            0L,
+            null
+        )
+        ))
     }
 }

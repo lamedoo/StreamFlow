@@ -108,18 +108,6 @@ class TvMainFragment : BrowseSupportFragment() {
             }
         })
 
-        if (Firebase.auth.currentUser != null) {
-            homeViewModel.clearContinueWatchingTitleList()
-            homeViewModel.getContinueWatchingFromFirestore()
-        } else {
-            homeViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
-                homeViewModel.clearContinueWatchingTitleList()
-                if (!it.isNullOrEmpty()) {
-                    homeViewModel.getContinueWatchingTitlesFromApi(it)
-                }
-            })
-        }
-
         Handler(Looper.getMainLooper()).postDelayed({
             homeViewModel.getTopMovies(page)
             homeViewModel.getTopTvShows(page)
@@ -127,28 +115,10 @@ class TvMainFragment : BrowseSupportFragment() {
             startEntranceTransition()
         }, 2000)
 
-        homeViewModel.continueWatchingList.observe(viewLifecycleOwner, {
-            watchedListRowsAdapter(it)
-
-            if (it.isNullOrEmpty()) {
-                setSelectedPosition(1, true)
-            } else {
-                setSelectedPosition(0, true)
-            }
-        })
-
-        homeViewModel.topMovieList.observe(viewLifecycleOwner, {
-            topMoviesRowsAdapter(it)
-        })
-
-        homeViewModel.newMovieList.observe(viewLifecycleOwner, {
-            newMoviesRowsAdapter(it)
-        })
-
-        homeViewModel.topTvShowList.observe(viewLifecycleOwner, {
-            topTvShowsRowsAdapter(it)
-        })
-
+        watchedListRowsAdapter()
+        newMoviesRowsAdapter()
+        topMoviesRowsAdapter()
+        topTvShowsRowsAdapter()
         categoriesRowsAdapter()
 
         prepareBackgroundManager()
@@ -166,46 +136,60 @@ class TvMainFragment : BrowseSupportFragment() {
         rowsAdapter.addAll(0, initListRows)
     }
 
-    private fun watchedListRowsAdapter(dbList: List<DbTitleData>) {
-        val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
-            dbList.forEach {
-                add(it)
+    private fun watchedListRowsAdapter() {
+        homeViewModel.checkAuthDatabase()
+        homeViewModel.contWatchingData.observe(viewLifecycleOwner, {
+            homeViewModel.getContinueWatchingTitlesFromApi(it)
+        })
+
+        homeViewModel.continueWatchingList.observe(viewLifecycleOwner, {
+            setSelectedPosition(if (it.isNullOrEmpty()) 1 else 0, it.isNullOrEmpty())
+
+            val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
+                it.forEach { titles ->
+                    add(titles)
+                }
             }
-        }
-
-        HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING).also {
-            rowsAdapter.replace(0, ListRow(it, listRowAdapter))
-        }
+            HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING).also {
+                rowsAdapter.replace(0, ListRow(it, listRowAdapter))
+            }
+        })
     }
 
-    private fun newMoviesRowsAdapter(newMovies: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
-            addAll(0, newMovies)
-        }
+    private fun newMoviesRowsAdapter() {
+        homeViewModel.newMovieList.observe(viewLifecycleOwner, {
+            val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+                addAll(0, it)
+            }
 
-        HeaderItem(1, AppConstants.TV_NEW_MOVIES).also { header ->
-            rowsAdapter.replace(1, ListRow(header, listRowAdapter))
-        }
+            HeaderItem(1, AppConstants.TV_NEW_MOVIES).also { header ->
+                rowsAdapter.replace(1, ListRow(header, listRowAdapter))
+            }
+        })
     }
 
-    private fun topMoviesRowsAdapter(movies: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
-            addAll(0, movies)
-        }
+    private fun topMoviesRowsAdapter() {
+        homeViewModel.topMovieList.observe(viewLifecycleOwner, {
+            val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+                addAll(0, it)
+            }
 
-        HeaderItem(2, AppConstants.TV_TOP_MOVIES).also { header ->
-            rowsAdapter.replace(2, ListRow(header, listRowAdapter))
-        }
+            HeaderItem(2, AppConstants.TV_TOP_MOVIES).also { header ->
+                rowsAdapter.replace(2, ListRow(header, listRowAdapter))
+            }
+        })
     }
 
-    private fun topTvShowsRowsAdapter(tvShows: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
-            addAll(0, tvShows)
-        }
+    private fun topTvShowsRowsAdapter() {
+        homeViewModel.topTvShowList.observe(viewLifecycleOwner, {
+            val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+                addAll(0, it)
+            }
 
-        HeaderItem(3, AppConstants.TV_TOP_TV_SHOWS).also { header ->
-            rowsAdapter.replace(3, ListRow(header, listRowAdapter))
-        }
+            HeaderItem(3, AppConstants.TV_TOP_TV_SHOWS).also { header ->
+                rowsAdapter.replace(3, ListRow(header, listRowAdapter))
+            }
+        })
     }
 
     private fun categoriesRowsAdapter() {

@@ -95,7 +95,7 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
             clearDbDialog.setContentView(binding.root)
 
             binding.continueButton.setOnClickListener {
-                profileViewModel.deleteContinueWatchingFromRoomFull(requireContext())
+                profileViewModel.deleteContinueWatchingFromRoomFull()
                 profileViewModel.deleteContinueWatchingFromFirestoreFull()
 
                 val intent = Intent(requireContext(), TvSettingsActivity::class.java)
