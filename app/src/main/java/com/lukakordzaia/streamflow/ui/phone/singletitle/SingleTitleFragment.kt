@@ -1,8 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.singletitle
 
 import android.app.Dialog
-import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -18,9 +16,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
@@ -31,7 +28,6 @@ import com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.Choos
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.phone_single_title_info.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -50,12 +46,11 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        singleTitleViewModel.checkTitleInFirestore(args.titleId)
-        singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
-        chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
+        binding.singleTitleAppbar.setExpanded(true)
 
         checkAuth()
+        checkFavorites()
+
         fragmentListeners()
         fragmentObservers()
         titleDetailsContainer()
@@ -64,70 +59,11 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
     }
 
     private fun checkAuth() {
-        if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            binding.singleTitleAppbar.setExpanded(true)
-            if (Firebase.auth.currentUser == null) {
-                chooseTitleDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), args.titleId).observe(viewLifecycleOwner, { exists ->
-                    if (exists) {
-                        chooseTitleDetailsViewModel.getSingleContinueWatchingFromRoom(requireContext(), args.titleId)
-                    }
-                })
-            } else {
-                chooseTitleDetailsViewModel.checkContinueWatchingInFirestore1(args.titleId)
-            }
-        }
-    }
-
-    private fun fragmentListeners() {
-        binding.singleTitleAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            if (kotlin.math.abs(verticalOffset) == binding.singleTitleAppbar.totalScrollRange) {
-                binding.singleTitleDetailsScroll.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.primaryColor
-                    )
-                )
-            } else {
-                binding.singleTitleDetailsScroll.background = ResourcesCompat.getDrawable(
-                    requireContext().resources,
-                    R.drawable.single_title_tabs_background,
-                    null
-                )
-            }
-        })
-
-        binding.singleTitleBackButton.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-
-        singleTitleViewModel.addToFavorites.observe(viewLifecycleOwner, {
-            if (it) {
-                binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
-                binding.singleTitleFavorite.setOnClickListener {
-                    singleTitleViewModel.removeTitleFromFirestore(args.titleId)
-                }
-            } else {
-                binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
-                binding.singleTitleFavorite.setOnClickListener {
-                    singleTitleViewModel.addTitleToFirestore(titleInfo)
-                }
-            }
-        })
-
+        chooseTitleDetailsViewModel.checkAuthDatabase(args.titleId)
         chooseTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
                 binding.playButton.setOnClickListener { _ ->
-                    val intent = Intent(context, VideoPlayerActivity::class.java)
-                    intent.putExtra("videoPlayerData", VideoPlayerData(
-                        it.titleId,
-                        it.isTvShow,
-                        it.season,
-                        it.language,
-                        it.episode,
-                        it.watchedDuration,
-                        null
-                    ))
-                    activity?.startActivity(intent)
+                    startVideoPlayer(it, null)
                 }
 
                 if (it.isTvShow) {
@@ -158,17 +94,24 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
         })
     }
 
-    private fun fragmentObservers() {
-        singleTitleViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+    private fun checkFavorites() {
+        singleTitleViewModel.checkTitleInFavorites(args.titleId)
+
+        singleTitleViewModel.addToFavorites.observe(viewLifecycleOwner, {
             if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
-                }, 5000)
+                binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
+                binding.singleTitleFavorite.setOnClickListener {
+                    singleTitleViewModel.removeTitleFromFavorites(args.titleId)
+                }
+            } else {
+                binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
+                binding.singleTitleFavorite.setOnClickListener {
+                    singleTitleViewModel.addTitleToFirestore(titleInfo)
+                }
             }
         })
 
-        singleTitleViewModel.traktFavoriteLoader.observe(viewLifecycleOwner, {
+        singleTitleViewModel.favoriteLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
                     binding.singleTitleFavoriteProgressBar.setVisible()
@@ -178,6 +121,40 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
                     binding.singleTitleFavoriteProgressBar.setGone()
                     binding.singleTitleFavoriteIcon.setVisible()
                 }
+            }
+        })
+    }
+
+    private fun fragmentListeners() {
+        binding.singleTitleAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            if (kotlin.math.abs(verticalOffset) == binding.singleTitleAppbar.totalScrollRange) {
+                binding.singleTitleDetailsScroll.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.primaryColor
+                    )
+                )
+            } else {
+                binding.singleTitleDetailsScroll.background = ResourcesCompat.getDrawable(
+                    requireContext().resources,
+                    R.drawable.single_title_tabs_background,
+                    null
+                )
+            }
+        })
+
+        binding.singleTitleBackButton.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+    }
+
+    private fun fragmentObservers() {
+        singleTitleViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+                }, 5000)
             }
         })
 
@@ -191,6 +168,8 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
     }
 
     private fun titleDetailsContainer() {
+        singleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+
         singleTitleViewModel.singleTitleLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
@@ -215,21 +194,7 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
                 .into(binding.singleTitleCover)
 
             binding.singleTitleTrailerContainer.setOnClickListener { _ ->
-                if (it.trailer != null) {
-                    val intent = Intent(context, VideoPlayerActivity::class.java)
-                    intent.putExtra("videoPlayerData", VideoPlayerData(
-                        it.id,
-                        it.isTvShow,
-                        0,
-                        "ENG",
-                        0,
-                        0L,
-                        it.trailer
-                    ))
-                    activity?.startActivity(intent)
-                } else {
-                    requireContext().createToast("ტრეილერი არ არის")
-                }
+                startTrailer(it)
             }
 
             binding.singleTitleDesc.text = it.description
@@ -282,6 +247,8 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
     }
 
     private fun languagePickerDialog() {
+        chooseTitleDetailsViewModel.getSeasonFiles(args.titleId, 1)
+
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -292,17 +259,7 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         chooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) { language ->
             chooseLanguageDialog.hide()
-            val intent = Intent(context, VideoPlayerActivity::class.java)
-            intent.putExtra("videoPlayerData", VideoPlayerData(
-                titleInfo.id,
-                titleInfo.isTvShow,
-                if (titleInfo.isTvShow) 1 else 0,
-                language,
-                if (titleInfo.isTvShow) 1 else 0,
-                0L,
-                null
-            ))
-            activity?.startActivity(intent)
+            startVideoPlayer(null, language)
         }
         binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
         binding.rvChooseLanguage.adapter = chooseLanguageAdapter
@@ -311,5 +268,35 @@ class SingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
             val languages = languageList.reversed()
             chooseLanguageAdapter.setLanguageList(languages)
         })
+    }
+
+    private fun startTrailer(data: SingleTitleModel) {
+        if (data.trailer != null) {
+            requireActivity().startActivity(VideoPlayerActivity.startFromTrailers(requireContext(), VideoPlayerData(
+                data.id,
+                false,
+                0,
+                "ENG",
+                0,
+                0L,
+                data.trailer
+            )
+            ))
+        } else {
+            singleTitleViewModel.newToastMessage("ტრეილერი ვერ მოიძებნა")
+        }
+    }
+
+    private fun startVideoPlayer(contWatching: ContinueWatchingRoom?, language: String?) {
+        requireActivity().startActivity(VideoPlayerActivity.startFromSingleTitle(requireContext(), VideoPlayerData(
+            contWatching?.titleId ?: titleInfo.id,
+            contWatching?.isTvShow ?: titleInfo.isTvShow,
+            contWatching?.season ?: if (titleInfo.isTvShow) 1 else 0,
+            contWatching?.language ?: language!!,
+            contWatching?.episode ?: if (titleInfo.isTvShow) 1 else 0,
+             contWatching?.watchedDuration ?: 0L,
+            null
+        )
+        ))
     }
 }

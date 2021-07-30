@@ -123,6 +123,23 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         }
     }
 
+    private fun setSeasonsAndEpisodes(titleId: Int, isTvShow: Boolean) {
+        if (isTvShow) {
+            tvTitleFilesViewModel.getSingleTitleData(titleId)
+
+            tvTitleFilesViewModel.numOfSeasons.observe(viewLifecycleOwner, {
+                val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
+                seasonsRowsAdapter(seasonCount)
+            })
+
+            tvTitleFilesViewModel.episodeNames.observe(viewLifecycleOwner, {
+                episodesRowsAdapter(it)
+            })
+
+            tvTitleFilesViewModel.checkAuthDatabase(titleId)
+        }
+    }
+
     private fun seasonsRowsAdapter(seasonList: List<Int>) {
         val listRowAdapter = ArrayObjectAdapter(TvSeasonsPresenter()).apply {
             seasonList.forEach {
@@ -182,31 +199,6 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         brandColor = ContextCompat.getColor(requireContext(), R.color.green_dark)
         searchAffordanceColor = context?.let { ContextCompat.getColor(it, R.color.black) }!!
         adapter = rowsAdapter
-    }
-
-    private fun setSeasonsAndEpisodes(titleId: Int, isTvShow: Boolean) {
-        if (isTvShow) {
-            tvTitleFilesViewModel.getSingleTitleData(titleId)
-
-            tvTitleFilesViewModel.numOfSeasons.observe(viewLifecycleOwner, {
-                val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
-                seasonsRowsAdapter(seasonCount)
-            })
-
-            tvTitleFilesViewModel.episodeNames.observe(viewLifecycleOwner, {
-                episodesRowsAdapter(it)
-            })
-
-            if (Firebase.auth.currentUser == null) {
-                tvTitleFilesViewModel.checkContinueWatchingTitleInRoom(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
-                    if (exists) {
-                        tvTitleFilesViewModel.getSingleContinueWatchingFromRoom(requireContext(), titleId)
-                    }
-                })
-            } else {
-                tvTitleFilesViewModel.checkContinueWatchingInFirestore(titleId)
-            }
-        }
     }
 
     private fun setTitleCast(titleId: Int, isTvShow: Boolean) {
@@ -284,9 +276,9 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         intent.putExtra("videoPlayerData", VideoPlayerData(
             titleId,
             isTvShow,
-            this.tvTitleFilesViewModel.chosenSeason.value!!,
+            tvTitleFilesViewModel.chosenSeason.value!!,
             chosenLanguage,
-            this.tvTitleFilesViewModel.chosenEpisode.value!!,
+            tvTitleFilesViewModel.chosenEpisode.value!!,
             0L,
             trailerUrl
         ))

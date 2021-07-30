@@ -1,10 +1,9 @@
 package com.lukakordzaia.streamflow.ui.tv.details.titledetails
 
-import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.StreamFlowDatabase
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
@@ -12,12 +11,11 @@ import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.repository.TvDetailsRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseViewModel() {
+class TvDetailsViewModel : BaseViewModel() {
     val traktFavoriteLoader = MutableLiveData<LoadingState>()
 
     private val _singleTitleData = MutableLiveData<SingleTitleModel>()
@@ -32,7 +30,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
-    private val _continueWatchingDetails = MutableLiveData<ContinueWatchingRoom>(null)
+    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom>()
     val continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
 
     private val _addToFavorites = MutableLiveData<Boolean>()
@@ -46,7 +44,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         fetchTitleGenres.clear()
         viewModelScope.launch {
             _dataLoader.value = LoadingState.LOADING
-            when (val info = repository.getSingleTitleData(titleId)) {
+            when (val info = environment.singleTitleRepository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
                     val data = info.data.data
                     _singleTitleData.value = MapTitleData().single(data)
@@ -68,35 +66,24 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         }
     }
 
-    fun checkContinueWatchingTitleInRoom(context: Context, titleId: Int): LiveData<Boolean> {
-        val database = StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
-        return repository.checkContinueWatchingTitleInRoom(database!!, titleId)
-    }
-
-    fun getSingleContinueWatchingFromRoom(context: Context, titleId: Int){
-        viewModelScope.launch {
-            _continueWatchingDetails.value = repository.getSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
+    fun checkAuthDatabase(titleId: Int) {
+        if (currentUser() == null) {
+            getSingleContinueWatchingFromRoom(titleId)
+        } else {
+            checkContinueWatchingInFirestore(titleId)
         }
     }
 
-    fun deleteSingleContinueWatchingFromRoom(context: Context, titleId: Int) {
-        val database = StreamFlowDatabase.getDatabase(context)?.continueWatchingDao()
-        viewModelScope.launch {
-            repository.deleteSingleContinueWatchingFromRoom(database!!, titleId)
+    private fun getSingleContinueWatchingFromRoom(titleId: Int) {
+        val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
+
+        _continueWatchingDetails.addSource(data) {
+            _continueWatchingDetails.value = it
         }
     }
 
-    fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
-        viewModelScope.launch {
-            val deleteTitle = repository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
-            if (!deleteTitle) {
-                newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
-            }
-        }
-    }
-
-    fun checkContinueWatchingInFirestore(titleId: Int) {
-        repository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
+    private fun checkContinueWatchingInFirestore(titleId: Int) {
+        environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
             override fun continueWatchingTitle(title: ContinueWatchingRoom) {
                 _continueWatchingDetails.value = title
             }
@@ -104,9 +91,24 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         })
     }
 
+    fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
+        viewModelScope.launch {
+            environment.databaseRepository.deleteSingleContinueWatchingFromRoom(titleId)
+        }
+    }
+
+    fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
+        viewModelScope.launch {
+            val deleteTitle = environment.databaseRepository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
+            if (!deleteTitle) {
+                newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
+            }
+        }
+    }
+
     fun getSingleTitleFiles(movieId: Int) {
         viewModelScope.launch {
-            when (val files = repository.getSingleTitleFiles(movieId)) {
+            when (val files = environment.singleTitleRepository.getSingleTitleFiles(movieId)) {
                 is Result.Success -> {
                     val data = files.data.data
                     if (data.isNotEmpty()) {
@@ -139,7 +141,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         if (currentUser() != null) {
             traktFavoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
-                val addToFavorites = repository.addFavTitleToFirestore(currentUser()!!.uid, AddTitleToFirestore(
+                val addToFavorites = environment.favoritesRepository.addTitleToFavorites(currentUser()!!.uid, AddTitleToFirestore(
                         info.nameEng!!,
                         info.isTvShow,
                         info.id,
@@ -163,7 +165,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
     fun removeTitleFromFirestore(titleId: Int) {
         traktFavoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            val removeFromFavorites = repository.removeFavTitleFromFirestore(currentUser()!!.uid, titleId)
+            val removeFromFavorites = environment.favoritesRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
             if (removeFromFavorites) {
                 _addToFavorites.value = false
                 traktFavoriteLoader.value = LoadingState.LOADED
@@ -179,7 +181,7 @@ class TvDetailsViewModel(private val repository: TvDetailsRepository) : BaseView
         if (currentUser() != null) {
             traktFavoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
-                val checkTitle = repository.checkTitleInFirestore(currentUser()!!.uid, titleId)
+                val checkTitle = environment.favoritesRepository.checkTitleInFavorites(currentUser()!!.uid, titleId)
                 _addToFavorites.value = checkTitle!!.data != null
                 traktFavoriteLoader.value = LoadingState.LOADED
             }

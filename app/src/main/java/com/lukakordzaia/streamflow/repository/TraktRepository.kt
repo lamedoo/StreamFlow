@@ -52,19 +52,4 @@ class TraktRepository(private val service: TraktTvNetwork): TraktTvCall() {
     suspend fun removeTvShowFromTraktList(tvShowToTraktListRequestBody: AddTvShowToTraktListRequestBody, accessToken: String): Result<RemoveFromTraktListResponse> {
         return traktvCall { service.removeTvShowFromList(tvShowToTraktListRequestBody, accessToken) }
     }
-
-    suspend fun createUserFirestore(user: FirebaseUser?): Boolean {
-        return try {
-            val db = Firebase.firestore
-
-            db.collection("users").document(user!!.uid).set(
-                mapOf(
-                    "email" to user.email!!
-                )
-            ).await()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
 }

@@ -52,7 +52,7 @@ class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
 
         fragmentListeners(titleId, isTvShow)
         fragmentObservers(titleId)
-        favoriteContainer(titleId, isTvShow)
+        favoriteContainer(titleId)
         titleDetails(titleId, isTvShow)
         checkDatabase(titleId, isTvShow, continueWatching)
     }
@@ -143,7 +143,7 @@ class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
         })
     }
 
-    private fun favoriteContainer(titleId: Int, isTvShow: Boolean) {
+    private fun favoriteContainer(titleId: Int) {
         tvDetailsViewModel.checkTitleInFirestore(titleId)
 
         tvDetailsViewModel.addToFavorites.observe(viewLifecycleOwner, {
@@ -159,19 +159,10 @@ class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
                 }
             }
         })
-
-        if (Firebase.auth.currentUser == null) {
-            tvDetailsViewModel.checkContinueWatchingTitleInRoom(requireContext(), titleId).observe(viewLifecycleOwner, { exists ->
-                if (exists) {
-                    tvDetailsViewModel.getSingleContinueWatchingFromRoom(requireContext(), titleId)
-                }
-            })
-        } else {
-            tvDetailsViewModel.checkContinueWatchingInFirestore(titleId)
-        }
     }
 
     private fun checkDatabase(titleId: Int, isTvShow: Boolean, continueWatching: Boolean?) {
+        tvDetailsViewModel.checkAuthDatabase(titleId)
         tvDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
                 binding.deleteButton.setOnClickListener {
@@ -181,7 +172,7 @@ class TvDetailsFragment : BaseFragment<FragmentTvDetailsBinding>() {
                     removeTitle.setContentView(binding.root)
 
                     binding.continueButton.setOnClickListener {
-                        tvDetailsViewModel.deleteSingleContinueWatchingFromRoom(requireContext(), titleId)
+                        tvDetailsViewModel.deleteSingleContinueWatchingFromRoom(titleId)
                         tvDetailsViewModel.deleteSingleContinueWatchingFromFirestore(titleId)
 
                         val intent = Intent(requireContext(), TvDetailsActivity::class.java)

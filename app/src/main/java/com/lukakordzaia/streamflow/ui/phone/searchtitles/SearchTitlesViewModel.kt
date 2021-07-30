@@ -13,7 +13,7 @@ import com.lukakordzaia.streamflow.repository.SearchTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
-class SearchTitlesViewModel(private val repository: SearchTitleRepository) : BaseViewModel() {
+class SearchTitlesViewModel : BaseViewModel() {
     val searchLoader = MutableLiveData<LoadingState>()
     val franchisesLoader = MutableLiveData<LoadingState>()
 
@@ -37,7 +37,7 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
     fun getSearchTitles(keywords: String, page: Int) {
         viewModelScope.launch {
             searchLoader.value = LoadingState.LOADING
-            when (val search = repository.getSearchTitles(keywords, page)) {
+            when (val search = environment.searchTitleRepository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = search.data.data
                     fetchSearchGetTitlesResponse.addAll(MapTitleData().list(data))
@@ -56,7 +56,7 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
 
     fun getSearchTitlesTv(keywords: String, page: Int) {
         viewModelScope.launch {
-            when (val searchTv = repository.getSearchTitles(keywords, page)) {
+            when (val searchTv = environment.searchTitleRepository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = searchTv.data.data
                     _searchList.value = MapTitleData().list(data)
@@ -71,7 +71,7 @@ class SearchTitlesViewModel(private val repository: SearchTitleRepository) : Bas
     fun getTopFranchises() {
         viewModelScope.launch {
             franchisesLoader.value = LoadingState.LOADING
-            when (val franchises = repository.getTopFranchises()) {
+            when (val franchises = environment.searchTitleRepository.getTopFranchises()) {
                 is Result.Success -> {
                     val data = franchises.data.data
                     _franchiseList.value = data

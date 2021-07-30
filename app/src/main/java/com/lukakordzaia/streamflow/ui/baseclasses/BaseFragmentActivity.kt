@@ -190,14 +190,14 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
     }
 
     private fun showSyncDialog() {
-        profileViewModel.getContinueWatchingFromRoom(this).observe(this, {
+        profileViewModel.getContinueWatchingFromRoom().observe(this, {
             if (!it.isNullOrEmpty()) {
                 val binding = DialogSyncDatabaseBinding.inflate(LayoutInflater.from(this))
                 val syncDialog = Dialog(this)
                 syncDialog.setContentView(binding.root)
 
                 binding.confirmButton.setOnClickListener { _ ->
-                    profileViewModel.addContinueWatchingToFirestore(this, it)
+                    profileViewModel.addContinueWatchingToFirestore(it)
                     val intent = Intent(this, TvActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     this.startActivity(intent)

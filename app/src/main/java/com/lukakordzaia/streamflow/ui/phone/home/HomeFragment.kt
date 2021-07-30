@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.*
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
+import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -74,7 +76,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
 
         binding.fragmentScroll.setOnScrollChangeListener { _: View, _: Int, scrollY: Int, _: Int, _: Int ->
             if (scrollY > 0) {
-                binding.toolbar.root.setBackgroundColor(Color.parseColor("#282A38"))
+                binding.toolbar.root.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.primaryColor, null))
                 binding.toolbar.root.background.alpha = 255
             } else {
                 binding.toolbar.root.background.alpha = 0
@@ -126,20 +128,15 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
     }
 
     private fun continueWatchingContainer() {
+        homeViewModel.checkAuthDatabase()
+        homeViewModel.contWatchingData.observe(viewLifecycleOwner, {
+            homeViewModel.getContinueWatchingTitlesFromApi(it)
+        })
+
         val dbLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeDbTitlesAdapter = HomeDbTitlesAdapter(requireContext(),
             {
-                val intent = Intent(context, VideoPlayerActivity::class.java)
-                intent.putExtra("videoPlayerData", VideoPlayerData(
-                    it.id,
-                    it.isTvShow,
-                    it.season,
-                    it.language,
-                    it.episode,
-                    it.watchedDuration,
-                    null
-                ))
-                activity?.startActivity(intent)
+                startVideoPlayer(it)
             },
             {
                 homeViewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
@@ -149,16 +146,6 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
             })
         binding.rvContinueWatchingTitles.adapter = homeDbTitlesAdapter
         binding.rvContinueWatchingTitles.layoutManager = dbLayout
-
-        if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if (auth.currentUser == null) {
-                homeViewModel.getContinueWatchingFromRoom(requireContext()).observe(viewLifecycleOwner, {
-                    homeViewModel.getContinueWatchingTitlesFromApi(it)
-                })
-            } else {
-                homeViewModel.getContinueWatchingFromFirestore()
-            }
-        }
 
         homeViewModel.continueWatchingList.observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
@@ -228,6 +215,19 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         homeViewModel.topTvShowList.observe(viewLifecycleOwner, {
             homeTvShowAdapter.setItems(it)
         })
+    }
+
+    private fun startVideoPlayer(data: DbTitleData) {
+        requireActivity().startActivity(VideoPlayerActivity.startFromHomeScreen(requireContext(), VideoPlayerData(
+            data.id,
+            data.isTvShow,
+            data.season,
+            data.language,
+            data.episode,
+            data.watchedDuration,
+            null
+        )
+        ))
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -42,6 +42,8 @@ class AppConstants {
         const val TRAKT_CODE_EXPIRED = "410 კოდის გამოყენების დრო ამოიწურა"
         const val TRAKT_UNKNOWN_ERROR = "გაუკრვეველი პრობლემა"
 
+        const val VIDEO_PLAYER_DATA = "video player data"
+
         const val NO_INTERNET = "შეამოწმეთ ინტერნეტთან კავშირი"
     }
 }

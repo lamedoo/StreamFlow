@@ -13,7 +13,7 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewModel() {
+class SingleTopListViewModel : BaseViewModel() {
 
     val newMovieLoader = MutableLiveData<LoadingState>()
     val topMovieLoader = MutableLiveData<LoadingState>()
@@ -48,7 +48,7 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
     fun getNewMovies(page: Int) {
         viewModelScope.launch {
             newMovieLoader.value = LoadingState.LOADING
-            when (val newMovies = repository.getNewMovies(page)) {
+            when (val newMovies = environment.homeRepository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = newMovies.data.data
                     fetchNewMoviesList.addAll(MapTitleData().list(data))
@@ -68,7 +68,7 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
     fun getTopMovies(page: Int) {
         viewModelScope.launch {
             topMovieLoader.value = LoadingState.LOADING
-            when (val topMovies = repository.getTopMovies(page)) {
+            when (val topMovies = environment.homeRepository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
                     fetchTopMoviesList.addAll(MapTitleData().list(data))
@@ -88,7 +88,7 @@ class SingleTopListViewModel(private val repository: HomeRepository) : BaseViewM
     fun getTopTvShows(page: Int) {
         viewModelScope.launch {
             topTvShowsLoader.value = LoadingState.LOADING
-            when (val topTvShows = repository.getTopTvShows(page)) {
+            when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = topTvShows.data.data
                     fetchTopTvShowsList.addAll(MapTitleData().list(data))

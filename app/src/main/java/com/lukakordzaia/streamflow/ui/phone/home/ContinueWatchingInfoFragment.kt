@@ -49,7 +49,7 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
             removeTitle.setContentView(binding.root)
 
            binding.continueButton.setOnClickListener {
-                homeViewModel.deleteContinueWatching(requireContext(), args.titleId)
+                homeViewModel.deleteContinueWatching(args.titleId)
                 removeTitle.dismiss()
                 dismiss()
             }

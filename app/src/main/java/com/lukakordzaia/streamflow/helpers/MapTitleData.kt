@@ -25,7 +25,7 @@ class MapTitleData {
                     duration = null,
                     seasonNum = null,
                     country = null,
-                    trailer = null
+                    trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null
                 )
             )
         }

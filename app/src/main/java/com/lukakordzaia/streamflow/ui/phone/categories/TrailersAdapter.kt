@@ -12,7 +12,7 @@ import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTit
 import com.squareup.picasso.Picasso
 
 class TrailersAdapter(private val context: Context,
-                      private val onTrailerClick: (trailerId: Int, trailerUrl: String) -> Unit,
+                      private val onTrailerClick: (trailerId: Int, trailerUrl: String?) -> Unit,
                       private val onTrailerInfoClick: (trailerId: Int) -> Unit) : RecyclerView.Adapter<TrailersAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
 
@@ -41,12 +41,12 @@ class TrailersAdapter(private val context: Context,
         fun bind(model: SingleTitleModel) {
             view.rvTrailerName.text = model.displayName
             Glide.with(context)
-                .load(model.poster?: R.drawable.movie_image_placeholder)
+                .load(model.cover?: R.drawable.movie_image_placeholder)
                 .placeholder(R.drawable.movie_image_placeholder_landscape)
                 .into(view.rvTrailerPoster)
 
             view.root.setOnClickListener {
-                onTrailerClick(model.id, model.trailer!!)
+                onTrailerClick(model.id, model.trailer)
             }
 
             view.rvTrailerInfo.setOnClickListener {

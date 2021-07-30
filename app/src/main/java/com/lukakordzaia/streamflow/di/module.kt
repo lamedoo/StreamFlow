@@ -1,6 +1,8 @@
 package com.lukakordzaia.streamflow.di
 
 import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
+import com.lukakordzaia.streamflow.database.StreamFlowDatabase
+import com.lukakordzaia.streamflow.helpers.Environment
 import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
@@ -27,19 +29,19 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { HomeViewModel(get()) }
-    viewModel { SingleTitleViewModel(get(), get()) }
-    viewModel { CategoriesViewModel(get()) }
-    viewModel { SingleCategoryViewModel(get()) }
-    viewModel { SearchTitlesViewModel(get()) }
-    viewModel { TvDetailsViewModel(get()) }
-    viewModel { TvCategoriesViewModel(get()) }
-    viewModel { ChooseTitleDetailsViewModel(get()) }
-    viewModel { ProfileViewModel(get(), get()) }
-    viewModel { TvTitleFilesViewModel(get()) }
-    viewModel { FavoritesViewModel(get(), get()) }
-    viewModel { SingleTopListViewModel(get()) }
-    viewModel { VideoPlayerViewModel(get()) }
+    viewModel { HomeViewModel() }
+    viewModel { SingleTitleViewModel() }
+    viewModel { CategoriesViewModel() }
+    viewModel { SingleCategoryViewModel() }
+    viewModel { SearchTitlesViewModel() }
+    viewModel { TvDetailsViewModel() }
+    viewModel { TvCategoriesViewModel() }
+    viewModel { ChooseTitleDetailsViewModel() }
+    viewModel { ProfileViewModel() }
+    viewModel { TvTitleFilesViewModel() }
+    viewModel { FavoritesViewModel() }
+    viewModel { SingleTopListViewModel() }
+    viewModel { VideoPlayerViewModel() }
 }
 
 val repositoryModule = module {
@@ -47,10 +49,9 @@ val repositoryModule = module {
     single { SingleTitleRepository(get()) }
     single { CategoriesRepository(get()) }
     single { SearchTitleRepository(get()) }
-    single { TvDetailsRepository(get()) }
     single { TraktRepository(get()) }
-    single { FavoritesRepository(get()) }
-    single { ProfileRepository() }
+    single { FavoritesRepository() }
+    single { DatabaseRepository(get()) }
 }
 
 val generalModule = module {
@@ -63,4 +64,6 @@ val generalModule = module {
     single { BuildMediaSource(get()) }
     single { AuthSharedPreferences(get()) }
     single { TvSidebarAnimations() }
+    single { StreamFlowDatabase.getDatabase(get()) }
+    single { Environment(get(), get(), get(), get(), get(), get(), get()) }
 }

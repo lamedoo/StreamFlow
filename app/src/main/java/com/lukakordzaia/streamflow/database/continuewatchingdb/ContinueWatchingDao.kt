@@ -12,16 +12,13 @@ interface ContinueWatchingDao {
     fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>>
 
     @Query("SELECT * FROM continuewatchingroom WHERE titleId = :titleId")
-    suspend fun getSingleContinueWatchingFromRoom(titleId: Int) : ContinueWatchingRoom
+    fun getSingleContinueWatchingFromRoom(titleId: Int) : LiveData<ContinueWatchingRoom>
 
     @Query("SELECT * FROM continuewatchingroom WHERE titleId = :titleId")
     fun getTvSingleWatchedTitles(titleId: Int) : LiveData<ContinueWatchingRoom>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertContinueWatchingInRoom(continueWatchingRoom: ContinueWatchingRoom)
-
-    @Query("SELECT EXISTS (SELECT 1 FROM continuewatchingroom WHERE titleId = :titleId)")
-    fun checkContinueWatchingTitleInRoom(titleId: Int): LiveData<Boolean>
 
     @Query("UPDATE continuewatchingroom SET watchedDuration = (:watchedTime) WHERE titleId = (:titleId)")
     suspend fun updateTitleInDb(watchedTime: Long, titleId: Int)

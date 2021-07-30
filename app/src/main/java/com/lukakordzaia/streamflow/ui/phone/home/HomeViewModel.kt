@@ -2,6 +2,7 @@ package com.lukakordzaia.streamflow.ui.phone.home
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
@@ -17,7 +18,7 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
+class HomeViewModel : BaseViewModel() {
 
     val movieDayLoader = MutableLiveData<LoadingState>()
     val newMovieLoader = MutableLiveData<LoadingState>()
@@ -38,6 +39,9 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
 
     private val _continueWatchingList = MutableLiveData<List<DbTitleData>>()
     val continueWatchingList: LiveData<List<DbTitleData>> = _continueWatchingList
+
+    private val _contWatchingData = MediatorLiveData<List<ContinueWatchingRoom>>()
+    val contWatchingData: LiveData<List<ContinueWatchingRoom>> = _contWatchingData
 
     init {
         getMovieDay()
@@ -73,31 +77,44 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToContinueWatchingInfoFragment(titleId, titleName))
     }
 
-    fun getContinueWatchingFromFirestore() {
-        repository.getContinueWatchingFromFirestore(currentUser()!!.uid, object : FirebaseContinueWatchingListCallBack {
-            override fun continueWatchingList(titleList: MutableList<ContinueWatchingRoom>) {
-                getContinueWatchingTitlesFromApi(titleList)
-            }
-        })
+    fun checkAuthDatabase() {
+        clearContinueWatchingTitleList()
+        if (currentUser() != null) {
+            getContinueWatchingFromFirestore()
+        } else {
+            getContinueWatchingFromRoom()
+        }
     }
 
-    fun getContinueWatchingFromRoom(context: Context): LiveData<List<ContinueWatchingRoom>> {
-        return repository.getContinueWatchingFromRoom(roomDb(context)!!)
+    private fun getContinueWatchingFromRoom() {
+        val data = environment.databaseRepository.getContinueWatchingFromRoom()
+
+        _contWatchingData.addSource(data) {
+            _contWatchingData.value = it
+        }
+    }
+
+    private fun getContinueWatchingFromFirestore() {
+        environment.databaseRepository.getContinueWatchingFromFirestore(currentUser()!!.uid, object : FirebaseContinueWatchingListCallBack {
+            override fun continueWatchingList(titleList: MutableList<ContinueWatchingRoom>) {
+                _contWatchingData.value = titleList
+            }
+        })
     }
 
     fun getContinueWatchingTitlesFromApi(dbDetails: List<ContinueWatchingRoom>) {
         val dbTitles: MutableList<DbTitleData> = mutableListOf()
         viewModelScope.launch {
             dbDetails.forEach {
-                when (val databaseTitles = repository.getSingleTitleData(it.titleId)) {
+                when (val databaseTitles = environment.singleTitleRepository.getSingleTitleData(it.titleId)) {
                     is Result.Success -> {
                         val data = databaseTitles.data.data
                         dbTitles.add(
                             DbTitleData(
                                 data.posters.data!!.x240,
                                 data.duration,
-                                data.id,
-                                data.isTvShow,
+                                it.titleId,
+                                it.isTvShow,
                                 data.primaryName,
                                 data.originalName,
                                 it.watchedDuration,
@@ -118,23 +135,23 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         }
     }
 
-    fun deleteContinueWatching(context: Context, titleId: Int) {
+    fun deleteContinueWatching(titleId: Int) {
         if (currentUser() == null) {
-            deleteSingleContinueWatchingFromRoom(context, titleId)
+            deleteSingleContinueWatchingFromRoom(titleId)
         } else {
             deleteSingleContinueWatchingFromFirestore(titleId)
         }
     }
 
-    private fun deleteSingleContinueWatchingFromRoom(context: Context, titleId: Int) {
+    private fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
         viewModelScope.launch {
-            repository.deleteSingleContinueWatchingFromRoom(roomDb(context)!!, titleId)
+            environment.databaseRepository.deleteSingleContinueWatchingFromRoom(titleId)
         }
     }
 
     private fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
         viewModelScope.launch {
-            val deleteTitle = repository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
+            val deleteTitle = environment.databaseRepository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
             if (deleteTitle) {
                 newToastMessage("წაიშალა განაგრძეთ ყურებიდან")
             } else {
@@ -143,14 +160,14 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
         }
     }
 
-    fun clearContinueWatchingTitleList() {
+    private fun clearContinueWatchingTitleList() {
         _continueWatchingList.value = mutableListOf()
     }
 
     fun getMovieDay() {
         viewModelScope.launch {
             movieDayLoader.value = LoadingState.LOADING
-            when (val movieDay = repository.getMovieDay()) {
+            when (val movieDay = environment.homeRepository.getMovieDay()) {
                 is Result.Success -> {
                     val data = movieDay.data.data
                     _movieDayData.value = MapTitleData().list(listOf(data[0]))
@@ -170,7 +187,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     fun getNewMovies(page: Int) {
         viewModelScope.launch {
             newMovieLoader.value = LoadingState.LOADING
-            when (val newMovies = repository.getNewMovies(page)) {
+            when (val newMovies = environment.homeRepository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = newMovies.data.data
 
@@ -190,7 +207,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     fun getTopMovies(page: Int) {
         viewModelScope.launch {
             topMovieLoader.value = LoadingState.LOADING
-            when (val topMovies = repository.getTopMovies(page)) {
+            when (val topMovies = environment.homeRepository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
                     _topMovieList.value = MapTitleData().list(data)
@@ -209,7 +226,7 @@ class HomeViewModel(private val repository: HomeRepository) : BaseViewModel() {
     fun getTopTvShows(page: Int) {
         viewModelScope.launch {
             topTvShowsLoader.value = LoadingState.LOADING
-            when (val topTvShows = repository.getTopTvShows(page)) {
+            when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = topTvShows.data.data
                     _topTvShowList.value = MapTitleData().list(data)
