@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.interfaces.FavoritesCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.toSingleTitleModel
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel : BaseViewModel() {
@@ -49,8 +49,8 @@ class FavoritesViewModel : BaseViewModel() {
                         movies.forEach {
                             when (val moviesData = environment.singleTitleRepository.getSingleTitleData(it)) {
                                 is Result.Success -> {
-                                    val data = moviesData.data.data
-                                    fetchMovieResult.add(MapTitleData().single(data))
+                                    val data = moviesData.data
+                                    fetchMovieResult.add(data.toSingleTitleModel())
 
                                     _movieResult.value = fetchMovieResult
                                     favoriteMoviesLoader.value = LoadingState.LOADED
@@ -72,8 +72,8 @@ class FavoritesViewModel : BaseViewModel() {
                         tvShows.forEach {
                             when (val tvShowsData = environment.singleTitleRepository.getSingleTitleData(it)) {
                                 is Result.Success -> {
-                                    val data = tvShowsData.data.data
-                                    fetchTvShowResult.add(MapTitleData().single(data))
+                                    val data = tvShowsData.data
+                                    fetchTvShowResult.add(data.toSingleTitleModel())
 
                                     _tvShowResult.value = fetchTvShowResult
                                     favoriteTvShowsLoader.value = LoadingState.LOADED

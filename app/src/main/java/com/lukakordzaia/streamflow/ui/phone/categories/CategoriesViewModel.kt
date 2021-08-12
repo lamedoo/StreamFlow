@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
@@ -12,6 +11,7 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.CategoriesRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class CategoriesViewModel : BaseViewModel() {
@@ -83,7 +83,7 @@ class CategoriesViewModel : BaseViewModel() {
             when (val trailers = environment.categoriesRepository.getTopTrailers()) {
                 is Result.Success -> {
                     val data = trailers.data.data
-                    _topTrailerList.value = MapTitleData().list(data)
+                    _topTrailerList.value = data.toTitleListModel()
                     trailersLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {

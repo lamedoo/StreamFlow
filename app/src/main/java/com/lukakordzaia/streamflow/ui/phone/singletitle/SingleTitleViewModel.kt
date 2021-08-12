@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SingleTitleRepository
 import com.lukakordzaia.streamflow.repository.TraktRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.toSingleTitleModel
+import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -59,8 +60,8 @@ class SingleTitleViewModel : BaseViewModel() {
                 launch {
                     when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
                         is Result.Success -> {
-                            val data = titleData.data.data
-                            _singleTitleData.value = MapTitleData().single(data)
+                            val data = titleData.data
+                            _singleTitleData.value = data.toSingleTitleModel()
 
 //                            if (data.isTvShow) {
 //                                checkTitleInTraktList("show", accessToken)
@@ -68,7 +69,7 @@ class SingleTitleViewModel : BaseViewModel() {
 //                                checkTitleInTraktList("movie", accessToken)
 //                            }
 
-                            data.genres.data.forEach {
+                            data.data.genres.data.forEach {
                                 fetchTitleGenres.add(it.primaryName!!)
                             }
                             _titleGenres.value = fetchTitleGenres
@@ -121,7 +122,7 @@ class SingleTitleViewModel : BaseViewModel() {
                     when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
                         is Result.Success -> {
                             val data = related.data.data
-                            _singleTitleRelated.value = MapTitleData().list(data)
+                            _singleTitleRelated.value = data.toTitleListModel()
 
                             singleTitleLoader.value = LoadingState.LOADED
                         }

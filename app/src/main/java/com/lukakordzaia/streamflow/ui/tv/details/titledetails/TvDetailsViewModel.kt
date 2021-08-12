@@ -7,12 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.toSingleTitleModel
 import kotlinx.coroutines.launch
 
 class TvDetailsViewModel : BaseViewModel() {
@@ -46,12 +46,12 @@ class TvDetailsViewModel : BaseViewModel() {
             _dataLoader.value = LoadingState.LOADING
             when (val info = environment.singleTitleRepository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
-                    val data = info.data.data
-                    _singleTitleData.value = MapTitleData().single(data)
+                    val data = info.data
+                    _singleTitleData.value = data.toSingleTitleModel()
 
                     _dataLoader.value = LoadingState.LOADED
 
-                    data.genres.data.forEach {
+                    data.data.genres.data.forEach {
                         fetchTitleGenres.add(it.primaryName!!)
                     }
                     _titleGenres.value = fetchTitleGenres

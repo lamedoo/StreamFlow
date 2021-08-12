@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
@@ -13,6 +12,7 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleGenreFragmentDirections
 import com.lukakordzaia.streamflow.ui.phone.categories.singlestudio.SingleStudioFragmentDirections
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class SingleCategoryViewModel : BaseViewModel() {
@@ -60,7 +60,7 @@ class SingleCategoryViewModel : BaseViewModel() {
             when (val singleGenre = environment.categoriesRepository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
                     val data = singleGenre.data.data
-                    fetchSingleGenreList.addAll(MapTitleData().list(data))
+                    fetchSingleGenreList.addAll(data.toTitleListModel())
                     _singleGenreList.value = fetchSingleGenreList
                     _hasMorePage.value = singleGenre.data.meta.pagination.totalPages!! > singleGenre.data.meta.pagination.currentPage!!
                     categoryLoader.value = LoadingState.LOADED
@@ -81,12 +81,12 @@ class SingleCategoryViewModel : BaseViewModel() {
                 is Result.Success -> {
                     val data = singleGenre.data.data
                     when (genreId) {
-                        265 -> _singleGenreAnimation.value = MapTitleData().list(data)
-                        258 -> _singleGenreComedy.value = MapTitleData().list(data)
-                        260 -> _singleGenreMelodrama.value = MapTitleData().list(data)
-                        255 -> _singleGenreHorror.value = MapTitleData().list(data)
-                        266 -> _singleGenreAdventure.value = MapTitleData().list(data)
-                        248 -> _singleGenreAction.value = MapTitleData().list(data)
+                        265 -> _singleGenreAnimation.value = data.toTitleListModel()
+                        258 -> _singleGenreComedy.value = data.toTitleListModel()
+                        260 -> _singleGenreMelodrama.value = data.toTitleListModel()
+                        255 -> _singleGenreHorror.value = data.toTitleListModel()
+                        266 -> _singleGenreAdventure.value = data.toTitleListModel()
+                        248 -> _singleGenreAction.value = data.toTitleListModel()
                     }
                 }
                 is Result.Error -> {
@@ -105,7 +105,7 @@ class SingleCategoryViewModel : BaseViewModel() {
             when (val singleStudio = environment.categoriesRepository.getSingleStudio(studioId, page)) {
                 is Result.Success -> {
                     val data = singleStudio.data.data
-                    fetchSingleStudioList.addAll(MapTitleData().list(data))
+                    fetchSingleStudioList.addAll(data.toTitleListModel())
                     _singleStudioList.value = fetchSingleStudioList
                     _hasMorePage.value = singleStudio.data.meta.pagination.totalPages!! > singleStudio.data.meta.pagination.currentPage!!
                     categoryLoader.value = LoadingState.LOADED

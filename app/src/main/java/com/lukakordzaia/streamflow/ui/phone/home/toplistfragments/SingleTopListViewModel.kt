@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class SingleTopListViewModel : BaseViewModel() {
@@ -51,7 +51,7 @@ class SingleTopListViewModel : BaseViewModel() {
             when (val newMovies = environment.homeRepository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = newMovies.data.data
-                    fetchNewMoviesList.addAll(MapTitleData().list(data))
+                    fetchNewMoviesList.addAll(data.toTitleListModel())
                     _newMovieList.value = fetchNewMoviesList
                     newMovieLoader.value = LoadingState.LOADED
                 }
@@ -71,7 +71,7 @@ class SingleTopListViewModel : BaseViewModel() {
             when (val topMovies = environment.homeRepository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
-                    fetchTopMoviesList.addAll(MapTitleData().list(data))
+                    fetchTopMoviesList.addAll(data.toTitleListModel())
                     _topMovieList.value = fetchTopMoviesList
                     topMovieLoader.value = LoadingState.LOADED
                 }
@@ -91,7 +91,7 @@ class SingleTopListViewModel : BaseViewModel() {
             when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = topTvShows.data.data
-                    fetchTopTvShowsList.addAll(MapTitleData().list(data))
+                    fetchTopTvShowsList.addAll(data.toTitleListModel())
                     _topTvShowList.value = fetchTopTvShowsList
                     topTvShowsLoader.value = LoadingState.LOADED
                 }

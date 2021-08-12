@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class TvTitleFilesViewModel : BaseViewModel() {
@@ -108,7 +108,7 @@ class TvTitleFilesViewModel : BaseViewModel() {
             when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
                 is Result.Success -> {
                     val data = related.data.data
-                    _singleTitleRelated.value = MapTitleData().list(data)
+                    _singleTitleRelated.value = data.toTitleListModel()
                 }
                 is Result.Error -> {
                     newToastMessage("მსგავსი - ${related.exception}")

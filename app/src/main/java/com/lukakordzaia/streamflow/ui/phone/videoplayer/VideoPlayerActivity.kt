@@ -15,7 +15,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_phone_video_player)
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.video_player_fragment, VideoPlayerFragment())
+            .add(R.id.tv_video_player_fragment, VideoPlayerFragment())
             .commit()
     }
 

@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.DbTitleData
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -16,10 +15,10 @@ import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
-
     val movieDayLoader = MutableLiveData<LoadingState>()
     val newMovieLoader = MutableLiveData<LoadingState>()
     val topMovieLoader = MutableLiveData<LoadingState>()
@@ -170,7 +169,7 @@ class HomeViewModel : BaseViewModel() {
             when (val movieDay = environment.homeRepository.getMovieDay()) {
                 is Result.Success -> {
                     val data = movieDay.data.data
-                    _movieDayData.value = MapTitleData().list(listOf(data[0]))
+                    _movieDayData.value = listOf(data[0]).toTitleListModel()
 
                     movieDayLoader.value = LoadingState.LOADED
                 }
@@ -191,7 +190,7 @@ class HomeViewModel : BaseViewModel() {
                 is Result.Success -> {
                     val data = newMovies.data.data
 
-                    _newMovieList.value = MapTitleData().list(data)
+                    _newMovieList.value = data.toTitleListModel()
                     newMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -210,7 +209,7 @@ class HomeViewModel : BaseViewModel() {
             when (val topMovies = environment.homeRepository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
-                    _topMovieList.value = MapTitleData().list(data)
+                    _topMovieList.value = data.toTitleListModel()
                     topMovieLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
@@ -229,7 +228,7 @@ class HomeViewModel : BaseViewModel() {
             when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = topTvShows.data.data
-                    _topTvShowList.value = MapTitleData().list(data)
+                    _topTvShowList.value = data.toTitleListModel()
                     topTvShowsLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
