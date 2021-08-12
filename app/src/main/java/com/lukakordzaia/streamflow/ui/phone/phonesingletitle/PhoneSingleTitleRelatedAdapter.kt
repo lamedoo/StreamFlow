@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvHomeItemBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.utils.setImage
 
 class PhoneSingleTitleRelatedAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<PhoneSingleTitleRelatedAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
@@ -36,10 +37,7 @@ class PhoneSingleTitleRelatedAdapter(private val context: Context, private val o
     inner class ViewHolder(val view: RvHomeItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: SingleTitleModel) {
             view.itemName.text = model.displayName
-            Glide.with(context)
-                .load(model.poster?: R.drawable.movie_image_placeholder)
-                .placeholder(R.drawable.movie_image_placeholder_landscape)
-                .into(view.itemPoster)
+            view.itemPoster.setImage(model.poster, true)
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)

@@ -9,6 +9,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvHomeItemBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.utils.setImage
 import com.squareup.picasso.Picasso
 
 class HomeTitlesAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeTitlesAdapter.ViewHolder>() {
@@ -38,10 +39,7 @@ class HomeTitlesAdapter(private val context: Context, private val onTitleClick: 
     inner class ViewHolder(val view: RvHomeItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: SingleTitleModel) {
             view.itemName.text = model.displayName
-            Glide.with(context)
-                .load(model.poster?: R.drawable.movie_image_placeholder)
-                .placeholder(R.drawable.movie_image_placeholder_landscape)
-                .into(view.itemPoster)
+            view.itemPoster.setImage(model.poster, true)
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)

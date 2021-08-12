@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
@@ -112,4 +115,11 @@ fun GetSingleTitleResponse.toSingleTitleModel(): SingleTitleModel {
         country = if (title.countries.data.isNotEmpty()) title.countries.data[0].secondaryName else "N/A",
         trailer = if (title.trailers.data.isNotEmpty()) title.trailers.data[0].fileUrl else null
     )
+}
+
+fun ImageView.setImage(image: String?, isPhone: Boolean) {
+    Glide.with(context)
+        .load(image ?: if (isPhone) R.drawable.movie_image_placeholder else R.drawable.movie_image_placeholder_landscape)
+        .placeholder(if (isPhone) R.drawable.movie_image_placeholder else R.drawable.movie_image_placeholder_landscape)
+        .into(this)
 }

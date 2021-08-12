@@ -9,6 +9,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvFavoriteItemBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.utils.setImage
 import com.squareup.picasso.Picasso
 
 class FavoritesAdapter(
@@ -41,10 +42,7 @@ class FavoritesAdapter(
 
     inner class ViewHolder(val view: RvFavoriteItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: SingleTitleModel) {
-            Glide.with(context)
-                .load(model.poster?: R.drawable.movie_image_placeholder)
-                .placeholder(R.drawable.movie_image_placeholder_landscape)
-                .into(view.itemPoster)
+            view.itemPoster.setImage(model.poster, true)
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)

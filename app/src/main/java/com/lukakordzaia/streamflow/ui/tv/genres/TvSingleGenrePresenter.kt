@@ -9,6 +9,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvGenresCardView
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.utils.setImage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_default_card_view.view.*
 import kotlinx.android.synthetic.main.tv_genres_card_view.view.*
@@ -32,10 +33,7 @@ class TvSingleGenrePresenter(private val context: Context) : Presenter() {
 
         cardView.tv_genres_card_name.text = movie.displayName
 
-        Glide.with(context)
-            .load(movie.poster?: R.drawable.movie_image_placeholder)
-            .placeholder(R.drawable.movie_image_placeholder_landscape)
-            .into(cardView.tv_genres_card_poster)
+        cardView.tv_genres_card_poster.setImage(movie.poster, true)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {

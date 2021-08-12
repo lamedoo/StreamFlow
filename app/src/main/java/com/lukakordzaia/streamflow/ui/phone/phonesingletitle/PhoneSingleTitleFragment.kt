@@ -188,10 +188,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
             binding.singleTitleNameGeo.text = it.nameGeo
             binding.singleTitleNameEng.text = it.nameEng
 
-            Glide.with(requireContext())
-                .load(it.cover?: R.drawable.movie_image_placeholder)
-                .placeholder(R.drawable.movie_image_placeholder_landscape)
-                .into(binding.singleTitleCover)
+            binding.singleTitleCover.setImage(it.cover, false)
 
             binding.singleTitleTrailerContainer.setOnClickListener { _ ->
                 startTrailer(it)

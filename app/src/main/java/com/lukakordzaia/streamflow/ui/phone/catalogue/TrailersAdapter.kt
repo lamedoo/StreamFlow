@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvTrailerItemBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
+import com.lukakordzaia.streamflow.utils.setImage
 
 class TrailersAdapter(private val context: Context,
                       private val onTrailerClick: (trailerId: Int, trailerUrl: String?) -> Unit,
@@ -38,10 +39,7 @@ class TrailersAdapter(private val context: Context,
     inner class ViewHolder(val view: RvTrailerItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: SingleTitleModel) {
             view.rvTrailerName.text = model.displayName
-            Glide.with(context)
-                .load(model.cover?: R.drawable.movie_image_placeholder)
-                .placeholder(R.drawable.movie_image_placeholder_landscape)
-                .into(view.rvTrailerPoster)
+            view.rvTrailerPoster.setImage(model.poster, true)
 
             view.root.setOnClickListener {
                 onTrailerClick(model.id, model.trailer)

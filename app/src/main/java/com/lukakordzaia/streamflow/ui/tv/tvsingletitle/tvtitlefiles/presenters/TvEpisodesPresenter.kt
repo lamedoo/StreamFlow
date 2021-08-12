@@ -8,6 +8,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvEpisodesCardView
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
 import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setImage
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.tv_details_episodes_item.view.*
 
@@ -40,7 +41,7 @@ class TvEpisodesPresenter(private val context: Context) : Presenter() {
 
         cardView.rv_tv_files_episode_container.setOnFocusChangeListener { _, _ ->  }
 
-        Glide.with(context).load(movie.episodePoster).error(R.drawable.movie_image_placeholder_landscape).into(cardView.rv_tv_files_episode_poster)
+        cardView.rv_tv_files_episode_poster.setImage(movie.episodePoster, false)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {

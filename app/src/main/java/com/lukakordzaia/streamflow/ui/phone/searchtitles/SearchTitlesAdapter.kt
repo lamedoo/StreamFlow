@@ -9,6 +9,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvSearchItemBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.utils.setImage
 import com.squareup.picasso.Picasso
 
 class SearchTitlesAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SearchTitlesAdapter.ViewHolder>() {
@@ -40,10 +41,7 @@ class SearchTitlesAdapter(private val context: Context, private val onTitleClick
             view.rvSearchItemName.text = model.displayName
             view.rvSearchItemYear.text = "${model.releaseYear}, "
 
-            Glide.with(context)
-                .load(model.poster?: R.drawable.movie_image_placeholder)
-                .placeholder(R.drawable.movie_image_placeholder_landscape)
-                .into(view.rvSearchItemPoster)
+            view.rvSearchItemPoster.setImage(model.poster, true)
 
             view.rvSearchItemIsTvShow.text = if (model.isTvShow) "სერიალი" else "ფილმი"
 

@@ -117,10 +117,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
             }
 
             binding.movieDayName.text = it.first().displayName
-            Glide.with(requireContext())
-                .load(it.first().cover?: R.drawable.movie_image_placeholder)
-                .placeholder(R.drawable.movie_image_placeholder_landscape)
-                .into(binding.movieDayCover)
+            binding.movieDayCover.setImage(it.first().cover, false)
         })
     }
 

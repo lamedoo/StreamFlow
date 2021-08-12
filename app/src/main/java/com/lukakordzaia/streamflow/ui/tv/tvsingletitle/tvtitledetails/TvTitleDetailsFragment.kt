@@ -239,10 +239,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                 }
             }
 
-            Glide.with(requireContext())
-                .load(it.cover?: R.drawable.movie_image_placeholder)
-                .placeholder(R.drawable.movie_image_placeholder_landscape)
-                .into(binding.backgroundPoster)
+            binding.backgroundPoster.setImage(it.cover, false)
 
             binding.year.text = it.releaseYear
             binding.imdbScore.text = it.imdbScore

@@ -11,6 +11,7 @@ import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setImage
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.tv_sidebar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,10 +49,7 @@ class TvActivity : BaseFragmentActivity<ActivityTvBinding>(), TvCheckTitleSelect
         tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
             binding.titleInfo.name.text = it.nameEng
 
-            Glide.with(this)
-                .load(it.cover?: R.drawable.movie_image_placeholder)
-                .placeholder(R.drawable.movie_image_placeholder_landscape)
-                .into(binding.titleInfo.poster)
+            binding.titleInfo.poster.setImage(it.cover, false)
 
             binding.titleInfo.year.text = "${it.releaseYear}   ·"
             if (it.isTvShow) {

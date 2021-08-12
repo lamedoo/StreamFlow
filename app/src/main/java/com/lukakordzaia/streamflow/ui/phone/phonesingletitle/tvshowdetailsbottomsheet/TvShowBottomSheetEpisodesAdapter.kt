@@ -9,6 +9,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvChooseDetailsEpisodesItemBinding
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
 import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setImage
 import com.lukakordzaia.streamflow.utils.setVisible
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import kotlinx.android.synthetic.main.rv_choose_details_episodes_item.view.*
@@ -57,7 +58,7 @@ class TvShowBottomSheetEpisodesAdapter(
             view.rvEpisodesNumber.text = "ეპიზოდი ${model.episodeNum}"
             view.rvEpisodesName.text = model.episodeName
 
-            Glide.with(context).load(model.episodePoster).error(R.drawable.movie_image_placeholder_landscape).into(view.rvEpisodesPoster)
+            view.rvEpisodesPoster.setImage(model.episodePoster, false)
 
             view.rvEpisodesContainer.setOnClickListener {
                 onEpisodeClick(model.episodeNum)
