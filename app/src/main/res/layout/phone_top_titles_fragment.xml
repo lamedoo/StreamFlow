@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/fragment_padding"
-    tools:context=".ui.phone.categories.singlegenre.SingleGenreFragment">
+    tools:context=".ui.phone.catalogue.cataloguedetails.singlegenre.SingleGenreFragment">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/single_category_nested_scroll"

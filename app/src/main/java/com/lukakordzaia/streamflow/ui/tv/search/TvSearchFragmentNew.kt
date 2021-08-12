@@ -2,30 +2,17 @@ package com.lukakordzaia.streamflow.ui.tv.search
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
-import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
-import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvSearchInputSelected
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoryPresenter
-import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
-import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSearchFragmentNew : VerticalGridSupportFragment() {
@@ -94,7 +81,7 @@ class TvSearchFragmentNew : VerticalGridSupportFragment() {
 
         onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
             if (item is SingleTitleModel) {
-                val intent = Intent(context, TvDetailsActivity::class.java)
+                val intent = Intent(context, TvSingleTitleActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
                 activity?.startActivity(intent)

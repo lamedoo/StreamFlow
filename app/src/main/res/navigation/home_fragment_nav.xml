@@ -98,7 +98,7 @@
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesFragment"
         android:label="FavoritesFragment" >
         <action
             android:id="@+id/action_favoritesFragment_to_single_title_fragment_nav"

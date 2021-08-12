@@ -5,29 +5,24 @@ import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.datamodels.AddTitleToFirestore
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.datamodels.AddFavoritesModel
 import com.lukakordzaia.streamflow.interfaces.FavoritesCallBack
-import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
-import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import kotlinx.coroutines.tasks.await
 
-class FavoritesRepository: ImoviesCall() {
-    suspend fun addTitleToFavorites(currentUserUid: String, addTitleToFirestore: AddTitleToFirestore): Boolean {
+class FavoritesRepository {
+    suspend fun addTitleToFavorites(currentUserUid: String, addFavoritesModel: AddFavoritesModel): Boolean {
         return try {
             Firebase.firestore
                 .collection("users")
                 .document(currentUserUid)
                 .collection("favMovies")
-                .document(addTitleToFirestore.id.toString())
+                .document(addFavoritesModel.id.toString())
                 .set(
                     mapOf(
-                        "name" to addTitleToFirestore.name,
-                        "isTvShow" to addTitleToFirestore.isTvShow,
-                        "id" to addTitleToFirestore.id,
-                        "imdbId" to addTitleToFirestore.imdbId
+                        "name" to addFavoritesModel.name,
+                        "isTvShow" to addFavoritesModel.isTvShow,
+                        "id" to addFavoritesModel.id,
+                        "imdbId" to addFavoritesModel.imdbId
                     )
                 )
                 .await()

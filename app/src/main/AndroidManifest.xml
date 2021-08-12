@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity"
+            android:name="com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity"
             android:theme="@style/Theme.Leanback"/>
         <activity
             android:name="com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity"

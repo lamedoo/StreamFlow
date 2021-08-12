@@ -14,18 +14,18 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.ui.phone.categories.CategoriesFragment
-import com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleGenreFragment
-import com.lukakordzaia.streamflow.ui.phone.categories.singlestudio.SingleStudioFragment
-import com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesFragment
+import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueFragment
+import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre.SingleGenreFragment
+import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlestudio.SingleStudioFragment
+import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.NewMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesFragment
-import com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleFragment
-import com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment
+import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleFragment
+import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerFragment
 import com.lukakordzaia.streamflow.utils.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
@@ -48,13 +48,13 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
                 when (f) {
-                    is HomeFragment, is CategoriesFragment, is SearchTitlesFragment -> {
+                    is HomeFragment, is CatalogueFragment, is SearchTitlesFragment -> {
                         showBottomNavigation()
                     }
-                    is ProfileFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment, is NewMoviesFragment, is FavoritesFragment, is SingleStudioFragment -> {
+                    is ProfileFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment, is NewMoviesFragment, is PhoneFavoritesFragment, is SingleStudioFragment -> {
                         hideBottomNavigation()
                     }
-                    is SingleTitleFragment, is ChooseTitleDetailsFragment -> {
+                    is PhoneSingleTitleFragment, is TvShowBottomSheetFragment -> {
                         hideBottomNavigation()
                     }
                     is VideoPlayerFragment -> {

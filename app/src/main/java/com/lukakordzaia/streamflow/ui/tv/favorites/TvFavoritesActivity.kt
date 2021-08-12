@@ -8,20 +8,19 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvFavoritesBinding
-import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
-import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_tv_favorites.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), TvCheckTitleSelected, TvHasFavoritesListener {
-    private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
+    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
     private var hasFavorites = true
 
     override fun getViewBinding() = ActivityTvFavoritesBinding.inflate(layoutInflater)
@@ -59,7 +58,7 @@ class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), T
         }, 2500)
 
 
-        tvDetailsViewModel.getSingleTitleResponse.observe(this, {
+        tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
             binding.titleInfo.name.text = it.nameEng
 
             Glide.with(this)
@@ -76,13 +75,13 @@ class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), T
             binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
         })
 
-        tvDetailsViewModel.titleGenres.observe(this, {
+        tvTitleDetailsViewModel.titleGenres.observe(this, {
             binding.titleInfo.genres.text = TextUtils.join(", ", it)
         })
     }
 
-    override fun getTitleId(titleId: Int, continueWatchingDetails: DbTitleData?) {
-        tvDetailsViewModel.getSingleTitleData(titleId)
+    override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {
+        tvTitleDetailsViewModel.getSingleTitleData(titleId)
     }
 
     override fun hasFavorites(has: Boolean) {

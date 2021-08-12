@@ -18,19 +18,17 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
-import com.lukakordzaia.streamflow.ui.phone.favorites.FavoritesViewModel
-import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
+import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesViewModel
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvFavoritesFragment : BrowseSupportFragment() {
-    private val favoritesViewModel: FavoritesViewModel by viewModel()
+    private val phoneFavoritesViewModel: PhoneFavoritesViewModel by viewModel()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
@@ -92,25 +90,25 @@ class TvFavoritesFragment : BrowseSupportFragment() {
         initRowsAdapter()
 
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            favoritesViewModel.getFavTitlesFromFirestore()
+            phoneFavoritesViewModel.getFavTitlesFromFirestore()
             startEntranceTransition()
         }, 2000)
 
-        favoritesViewModel.favoriteNoMovies.observe(viewLifecycleOwner, { noMovies ->
-            favoritesViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, { noTvShows ->
+        phoneFavoritesViewModel.favoriteNoMovies.observe(viewLifecycleOwner, { noMovies ->
+            phoneFavoritesViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, { noTvShows ->
                 if (noMovies && noTvShows) {
                     hasFavorites?.hasFavorites(false)
                 }
             })
         })
 
-        favoritesViewModel.movieResult.observe(viewLifecycleOwner, {
+        phoneFavoritesViewModel.movieResult.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 movieRowsAdapter(it)
             }
         })
 
-        favoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
+        phoneFavoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 tvShowsRowsAdapter(it)
             }
@@ -176,7 +174,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
                 row: Row
         ) {
             if (item is SingleTitleModel) {
-                val intent = Intent(context, TvDetailsActivity::class.java)
+                val intent = Intent(context, TvSingleTitleActivity::class.java)
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
                 activity?.startActivity(intent)

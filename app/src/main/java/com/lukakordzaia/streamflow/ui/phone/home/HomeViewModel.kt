@@ -1,18 +1,15 @@
 package com.lukakordzaia.streamflow.ui.phone.home
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.toTitleListModel
@@ -36,8 +33,8 @@ class HomeViewModel : BaseViewModel() {
     private val _topTvShowList = MutableLiveData<List<SingleTitleModel>>()
     val topTvShowList: LiveData<List<SingleTitleModel>> = _topTvShowList
 
-    private val _continueWatchingList = MutableLiveData<List<DbTitleData>>()
-    val continueWatchingList: LiveData<List<DbTitleData>> = _continueWatchingList
+    private val _continueWatchingList = MutableLiveData<List<ContinueWatchingModel>>()
+    val continueWatchingList: LiveData<List<ContinueWatchingModel>> = _continueWatchingList
 
     private val _contWatchingData = MediatorLiveData<List<ContinueWatchingRoom>>()
     val contWatchingData: LiveData<List<ContinueWatchingRoom>> = _contWatchingData
@@ -102,14 +99,14 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun getContinueWatchingTitlesFromApi(dbDetails: List<ContinueWatchingRoom>) {
-        val dbTitles: MutableList<DbTitleData> = mutableListOf()
+        val dbTitles: MutableList<ContinueWatchingModel> = mutableListOf()
         viewModelScope.launch {
             dbDetails.forEach {
                 when (val databaseTitles = environment.singleTitleRepository.getSingleTitleData(it.titleId)) {
                     is Result.Success -> {
                         val data = databaseTitles.data.data
                         dbTitles.add(
-                            DbTitleData(
+                            ContinueWatchingModel(
                                 data.posters.data!!.x240,
                                 data.duration,
                                 it.titleId,

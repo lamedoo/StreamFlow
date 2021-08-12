@@ -5,7 +5,7 @@ import androidx.leanback.widget.HorizontalGridView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvWatchedCardView
-import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_watched_card_view.view.*
 
@@ -24,7 +24,7 @@ class TvWatchedCardPresenter : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val dbTitle = item as DbTitleData
+        val dbTitle = item as ContinueWatchingModel
         val cardView = viewHolder.view as TvWatchedCardView
 
         Picasso.get().load(dbTitle.cover).into(cardView.tv_watched_card_poster)

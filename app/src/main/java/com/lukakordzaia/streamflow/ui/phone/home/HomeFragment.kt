@@ -1,8 +1,5 @@
 package com.lukakordzaia.streamflow.ui.phone.home
 
-import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
-import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -217,7 +214,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         })
     }
 
-    private fun startVideoPlayer(data: DbTitleData) {
+    private fun startVideoPlayer(data: ContinueWatchingModel) {
         requireActivity().startActivity(VideoPlayerActivity.startFromHomeScreen(requireContext(), VideoPlayerData(
             data.id,
             data.isTvShow,

@@ -6,17 +6,15 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvCategoriesBinding
-import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
-import com.lukakordzaia.streamflow.ui.tv.details.titledetails.TvDetailsViewModel
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import com.lukakordzaia.streamflow.utils.setGone
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.tv_default_card_view.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvCategoriesActivity : BaseFragmentActivity<ActivityTvCategoriesBinding>(), TvCheckTitleSelected {
-    private val tvDetailsViewModel: TvDetailsViewModel by viewModel()
+    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
 
     override fun getViewBinding() = ActivityTvCategoriesBinding.inflate(layoutInflater)
 
@@ -44,7 +42,7 @@ class TvCategoriesActivity : BaseFragmentActivity<ActivityTvCategoriesBinding>()
         googleSignOut(binding.tvSidebar.signOut)
         googleProfileDetails(binding.tvSidebar.profilePhoto, binding.tvSidebar.profileUsername)
 
-        tvDetailsViewModel.getSingleTitleResponse.observe(this, {
+        tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
             binding.titleInfo.name.text = it.nameEng
 
             Glide.with(this)
@@ -61,12 +59,12 @@ class TvCategoriesActivity : BaseFragmentActivity<ActivityTvCategoriesBinding>()
             binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
         })
 
-        tvDetailsViewModel.titleGenres.observe(this, {
+        tvTitleDetailsViewModel.titleGenres.observe(this, {
             binding.titleInfo.genres.text = TextUtils.join(", ", it)
         })
     }
 
-    override fun getTitleId(titleId: Int, continueWatchingDetails: DbTitleData?) {
-        tvDetailsViewModel.getSingleTitleData(titleId)
+    override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {
+        tvTitleDetailsViewModel.getSingleTitleData(titleId)
     }
 }

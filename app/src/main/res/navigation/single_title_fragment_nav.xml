@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/singleTitleFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.singletitle.SingleTitleFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleFragment"
         android:label="fragment_single_title"
         tools:layout="@layout/fragment_phone_single_title">
         <action
@@ -29,9 +29,9 @@
     </fragment>
     <dialog
         android:id="@+id/chooseTitleDetailsFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.singletitle.choosetitledetails.ChooseTitleDetailsFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment"
         android:label="fragment_choose_title_details"
-        tools:layout="@layout/fragment_phone_choose_title_details" >
+        tools:layout="@layout/fragment_phone_tv_show_bottom_sheet" >
         <argument
             android:name="titleId"
             app:argType="integer" />
