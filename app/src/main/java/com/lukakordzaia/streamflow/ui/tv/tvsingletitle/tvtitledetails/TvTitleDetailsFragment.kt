@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -160,6 +161,11 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
 
     private fun checkDatabase(titleId: Int, isTvShow: Boolean, continueWatching: Boolean?) {
         tvTitleDetailsViewModel.checkAuthDatabase(titleId)
+
+        binding.deleteButton.setGone()
+        binding.playButton.requestFocus()
+        binding.continueButton.setGone()
+
         tvTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
                 binding.deleteButton.setOnClickListener {
@@ -214,10 +220,6 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                         startedWatching = true
                     }
                 }
-            } else {
-                binding.deleteButton.setGone()
-                binding.playButton.requestFocus()
-                binding.continueButton.setGone()
             }
         })
     }

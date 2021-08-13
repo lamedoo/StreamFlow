@@ -246,7 +246,9 @@
                 android:layout_gravity="center"
                 android:padding="13dp"
                 android:nextFocusDown="@id/next_details"
-                android:background="@drawable/tv_details_button_background">
+                android:background="@drawable/tv_details_button_background"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <ImageView
                     android:layout_width="wrap_content"

@@ -6,6 +6,8 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -41,6 +43,8 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var metrics: DisplayMetrics
     private var hasFocus = false
+
+    private var focusedSeason = 0
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -131,13 +135,6 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
             })
 
             episodesRowsAdapter(null)
-
-            tvTitleFilesViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-                if (it != null) {
-                    rowsSupportFragment.setSelectedPosition(0, true, ListRowPresenter.SelectItemViewHolderTask(it.season-1))
-                    episodesRowsAdapter(it.episode)
-                }
-            })
         }
     }
 
@@ -150,13 +147,21 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         HeaderItem(0, "სეზონები"). also {
             rowsAdapter.replace(0, ListRow(it, listRowAdapter))
         }
+
+        tvTitleFilesViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            if (it != null) {
+                rowsSupportFragment.setSelectedPosition(0, true, ListRowPresenter.SelectItemViewHolderTask(it.season-1))
+                focusedSeason = it.season
+                episodesRowsAdapter(it.episode, it.season)
+            }
+        })
     }
 
-    private fun episodesRowsAdapter(currentEpisode: Int?) {
+    private fun episodesRowsAdapter(currentEpisode: Int?, currentSeason: Int? = null) {
         var isFirst = true
 
         tvTitleFilesViewModel.episodeNames.observe(viewLifecycleOwner, { episodeList ->
-            val listRowAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext(), currentEpisode)).apply {
+            val listRowAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext(), currentEpisode, currentSeason == focusedSeason)).apply {
                 episodeList.forEach {
                     add(it)
                 }
@@ -167,7 +172,9 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
             }
 
             if (currentEpisode != null && isFirst) {
-                rowsSupportFragment.setSelectedPosition(1, true, ListRowPresenter.SelectItemViewHolderTask(currentEpisode))
+                Handler(Looper.myLooper()!!).postDelayed({
+                    rowsSupportFragment.setSelectedPosition(1, true, ListRowPresenter.SelectItemViewHolderTask(currentEpisode-1))
+                }, 200)
                 isFirst = false
             }
         })
@@ -269,6 +276,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             if (item is Int) {
                 tvTitleFilesViewModel.getSeasonFiles(titleId, item)
+                focusedSeason = item
             } else if (item is TitleEpisodes) {
                 tvTitleFilesViewModel.getEpisodeFile(item.episodeNum)
             }

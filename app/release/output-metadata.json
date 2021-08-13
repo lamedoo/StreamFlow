@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
@@ -10,9 +10,11 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 24,
-      "versionName": "1.7.2.1",
-      "outputFile": "StreamFlow v1.7.2.1.apk"
+      "attributes": [],
+      "versionCode": 25,
+      "versionName": "1.7.3",
+      "outputFile": "StreamFlow v1.7.3.apk"
     }
-  ]
+  ],
+  "elementType": "File"
 }

@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
