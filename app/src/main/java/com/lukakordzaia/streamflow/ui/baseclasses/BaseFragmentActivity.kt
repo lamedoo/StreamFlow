@@ -17,18 +17,19 @@ import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ListRowPresenter
 import androidx.viewbinding.ViewBinding
+import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
 import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
+import com.lukakordzaia.streamflow.databinding.TvSidebarBinding
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
@@ -40,9 +41,7 @@ import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.streamflow.ui.tv.settings.TvSettingsActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.createToast
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
-import com.squareup.picasso.Picasso
+import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import kotlinx.android.synthetic.main.tv_sidebar.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -83,77 +82,72 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
 
     }
 
-    fun setSidebarClickListeners(search: View, home: View, favorites: View, movies: View, genres: View, settings: View) {
-        search.setOnClickListener {
+    fun setSidebarClickListeners(view: TvSidebarBinding) {
+        view.searchButton.setOnClickListener {
             startActivity(Intent(this, TvSearchActivity::class.java))
-            sidebarAnimations.hideSideBar(tv_sidebar)
         }
-        home.setOnClickListener {
-            val intent = Intent(this, TvActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        view.homeButton.setOnClickListener {
+            val intent = Intent(this, TvActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
             startActivity(intent)
-            sidebarAnimations.hideSideBar(tv_sidebar)
         }
-        favorites.setOnClickListener {
+        view.favoritesButton.setOnClickListener {
             if (auth.currentUser != null) {
                 startActivity(Intent(this, TvFavoritesActivity::class.java))
             } else {
                 this.createToast("ფავორიტების სანახავად, გაიარეთ ავტორიზაცია")
             }
-            sidebarAnimations.hideSideBar(tv_sidebar)
         }
-        movies.setOnClickListener {
-            val intent = Intent(this, TvCategoriesActivity::class.java)
-            intent.putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
-            this.startActivity(intent)
-            sidebarAnimations.hideSideBar(tv_sidebar)
+        view.moviesButton.setOnClickListener {
+            val intent = Intent(this, TvCategoriesActivity::class.java).apply {
+                putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
+            }
+            startActivity(intent)
         }
-        genres.setOnClickListener {
+        view.genresButton.setOnClickListener {
             val intent = Intent(this, TvSingleGenreActivity::class.java)
-            this.startActivity(intent)
-            sidebarAnimations.hideSideBar(tv_sidebar)
+            startActivity(intent)
         }
-        settings.setOnClickListener {
+        view.settingsButton.setOnClickListener {
             val intent = Intent(this, TvSettingsActivity::class.java)
-            this.startActivity(intent)
-            sidebarAnimations.hideSideBar(tv_sidebar)
+            startActivity(intent)
         }
+
+        sidebarAnimations.hideSideBar(view.tvSidebar)
     }
 
     fun setCurrentButton(currentButton: View) {
         this.currentButton = currentButton
     }
 
-    fun googleSignIn(view: View) {
-        signInButton = view
-        view.setOnClickListener {
-            this.createToast("ავტორიზაცია")
+    fun googleViews(view: TvSidebarBinding) {
+        signInButton = view.signIn
+        signOutButton = view.signOut
+        profilePhoto = view.profilePhoto
+        profileUsername = view.profileUsername
+
+        googleListeners()
+    }
+
+    private fun googleListeners() {
+        updateGoogleUI(auth.currentUser != null)
+
+        signInButton.setOnClickListener {
             val signInIntent: Intent = googleSignInClient!!.signInIntent
             startActivityForResult(signInIntent, ProfileFragment.RC_SIGN_IN)
         }
-    }
 
-    fun googleSignOut(view: View) {
-        signOutButton = view
-        view.setOnClickListener {
+        signOutButton.setOnClickListener {
             auth.signOut()
             googleSignInClient!!.signOut()
-            updateGoogleUI(null)
-            val intent = Intent(this, TvActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            this.startActivity(intent)
-        }
-    }
+            updateGoogleUI(false)
 
-    fun googleProfileDetails(photo: ImageView, username: TextView) {
-        profilePhoto = photo
-        profileUsername = username
-
-        if (auth.currentUser == null) {
-            updateGoogleUI(null)
-        } else {
-            updateGoogleUI(auth.currentUser)
+            val intent = Intent(this, TvActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
         }
     }
 
@@ -164,10 +158,10 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
-                Log.d(ContentValues.TAG, "firebaseAuthWithGoogle:" + account.idToken)
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 Log.w(ContentValues.TAG, "Google sign in failed", e)
+                this.createToast("დაფიქსირა შეცდომა ავტორიზაციის დროს")
             }
         }
     }
@@ -184,7 +178,8 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
                         showSyncDialog()
                     } else {
                         Log.w(ContentValues.TAG, "signInWithCredential:failure", task.exception)
-                        updateGoogleUI(null)
+                        this.createToast("დაფიქსირა შეცდომა ავტორიზაციის დროს")
+                        updateGoogleUI(false)
                     }
                 }
     }
@@ -215,27 +210,19 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         })
     }
 
-    private fun updateGoogleUI(user: FirebaseUser?) {
-        if (user != null) {
-            profilePhoto.setVisible()
+    private fun updateGoogleUI(isLoggedIn: Boolean) {
+        profilePhoto.setVisibleOrGone(isLoggedIn)
+        signInButton.setVisibleOrGone(!isLoggedIn)
+        signOutButton.setVisibleOrGone(isLoggedIn)
 
-            if (googleAccount != null) {
-                profileUsername.text = "გამარჯობა, ${googleAccount!!.givenName!!.toUpperCase()}"
-                Picasso.get().load(googleAccount!!.photoUrl).into(profilePhoto)
-            }
-
-            signInButton.setGone()
-            signOutButton.setVisible()
-
-//            signOutButton.requestFocus()
+        profileUsername.text = if (isLoggedIn && googleAccount != null) {
+            "გამარჯობა, ${googleAccount!!.givenName!!.toUpperCase()}"
         } else {
-            profileUsername.text = ""
-            profilePhoto.setGone()
+            ""
+        }
 
-            signInButton.setVisible()
-            signOutButton.setGone()
-
-//            signInButton.requestFocus()
+        if (isLoggedIn) {
+            Glide.with(this).load(googleAccount?.photoUrl).into(profilePhoto)
         }
     }
 

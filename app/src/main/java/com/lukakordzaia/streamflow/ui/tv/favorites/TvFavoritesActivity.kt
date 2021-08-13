@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvFavoritesBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
@@ -29,16 +28,9 @@ class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), T
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setSidebarClickListeners(
-            binding.tvSidebar.searchButton,
-            binding.tvSidebar.homeButton,
-            binding.tvSidebar.favoritesButton,
-            binding.tvSidebar.moviesButton,
-            binding.tvSidebar.genresButton,
-            binding.tvSidebar.settingsButton
-        )
-
+        setSidebarClickListeners(binding.tvSidebar)
         setCurrentButton(binding.tvSidebar.favoritesButton)
+        googleViews(binding.tvSidebar)
 
         binding.tvSidebar.favoritesButton.setOnClickListener {
             binding.tvSidebar.root.setGone()
@@ -46,9 +38,6 @@ class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), T
 
         binding.tvSidebarCollapsed.collapsedFavoritesIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
-        googleSignIn(binding.tvSidebar.signIn)
-        googleSignOut(binding.tvSidebar.signOut)
-        googleProfileDetails(binding.tvSidebar.profilePhoto, binding.tvSidebar.profileUsername)
 
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
 
@@ -57,7 +46,10 @@ class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), T
                 this.createToast("სამწუხაროდ, არ გაქვთ ფავორიტები არჩეული")
             }
         }, 2500)
+    }
 
+    override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {
+        tvTitleDetailsViewModel.getSingleTitleData(titleId)
 
         tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
             binding.titleInfo.name.text = it.nameEng
@@ -65,21 +57,18 @@ class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), T
             binding.titleInfo.poster.setImage(it.cover, false)
 
             binding.titleInfo.year.text = "${it.releaseYear}   ·"
-            if (it.isTvShow) {
-                binding.titleInfo.duration.text = "${it.seasonNum} სეზონი   ·"
+            binding.titleInfo.duration.text = if (it.isTvShow) {
+                "${it.seasonNum} სეზონი   ·"
             } else {
-                binding.titleInfo.duration.text = "${it.duration}   ·"
+                "${it.duration}   ·"
             }
+
             binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
         })
 
         tvTitleDetailsViewModel.titleGenres.observe(this, {
             binding.titleInfo.genres.text = TextUtils.join(", ", it)
         })
-    }
-
-    override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {
-        tvTitleDetailsViewModel.getSingleTitleData(titleId)
     }
 
     override fun hasFavorites(has: Boolean) {

@@ -32,16 +32,9 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSear
 
         fragment = supportFragmentManager.findFragmentById(R.id.tv_search_fragment) as TvSearchFragmentNew
 
-        setSidebarClickListeners(
-            binding.tvSidebar.searchButton,
-            binding.tvSidebar.homeButton,
-            binding.tvSidebar.favoritesButton,
-            binding.tvSidebar.moviesButton,
-            binding.tvSidebar.genresButton,
-            binding.tvSidebar.settingsButton
-        )
-
+        setSidebarClickListeners(binding.tvSidebar)
         setCurrentButton(binding.tvSidebar.searchButton)
+        googleViews(binding.tvSidebar)
 
         binding.tvSidebar.searchButton.setOnClickListener {
             binding.tvSidebar.root.setGone()
@@ -49,27 +42,7 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSear
 
         binding.tvSidebarCollapsed.collapsedSearchIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
-        googleSignIn(binding.tvSidebar.signIn)
-        googleSignOut(binding.tvSidebar.signOut)
-        googleProfileDetails(binding.tvSidebar.profilePhoto, binding.tvSidebar.profileUsername)
-
         searchInput()
-
-        tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
-            binding.titleInfo.name.text = it.nameEng
-
-            binding.titleInfo.year.text = "${it.releaseYear}   ·"
-            if (it.isTvShow) {
-                binding.titleInfo.duration.text = "${it.seasonNum} სეზონი   ·"
-            } else {
-                binding.titleInfo.duration.text = "${it.duration}   ·"
-            }
-            binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
-        })
-
-        tvTitleDetailsViewModel.titleGenres.observe(this, {
-            binding.titleInfo.genres.text = TextUtils.join(", ", it)
-        })
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -120,5 +93,22 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSear
 
     override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {
         tvTitleDetailsViewModel.getSingleTitleData(titleId)
+
+        tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
+            binding.titleInfo.name.text = it.nameEng
+
+            binding.titleInfo.year.text = "${it.releaseYear}   ·"
+            binding.titleInfo.duration.text = if (it.isTvShow) {
+                "${it.seasonNum} სეზონი   ·"
+            } else {
+                "${it.duration}   ·"
+            }
+
+            binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
+        })
+
+        tvTitleDetailsViewModel.titleGenres.observe(this, {
+            binding.titleInfo.genres.text = TextUtils.join(", ", it)
+        })
     }
 }

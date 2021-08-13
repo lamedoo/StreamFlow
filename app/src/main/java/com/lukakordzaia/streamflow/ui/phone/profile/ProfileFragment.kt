@@ -15,12 +15,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogConnectTraktvAlertBinding
@@ -31,7 +31,6 @@ import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequ
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dialog_connect_traktv_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -99,7 +98,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
         binding.googleSignOutButton.setOnClickListener {
             auth.signOut()
             googleSignInClient.signOut()
-            updateGoogleUI(null)
+            updateGoogleUI(false)
         }
 
         binding.deleteHistory.setOnClickListener {
@@ -224,7 +223,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
                 } else {
                     Snackbar.make(binding.root, "ავტორიზაცია ვერ მოხერხდა", Snackbar.LENGTH_SHORT)
                         .show()
-                    updateGoogleUI(null)
+                    updateGoogleUI(false)
                 }
             }
     }
@@ -253,8 +252,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
     override fun onStart() {
         super.onStart()
 
-        val currentUser = auth.currentUser
-        updateGoogleUI(currentUser)
+        updateGoogleUI(auth.currentUser != null)
     }
 
     private fun updateTraktUi(isLoggedIn: Boolean) {
@@ -268,29 +266,24 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
 
     }
 
-    private fun updateGoogleUI(user: FirebaseUser?) {
-        if (user != null) {
-            binding.profileContainer.setVisible()
+    private fun updateGoogleUI(isLoggedIn: Boolean) {
+        binding.profileContainer.setVisibleOrGone(isLoggedIn)
+        binding.googleSignInButton.setVisibleOrGone(!isLoggedIn)
+        binding.googleSignOutButton.setVisibleOrGone(isLoggedIn)
 
-            if (googleAccount != null) {
-                binding.profileUsername.text = "${googleAccount!!.givenName} ${googleAccount!!.familyName}".toUpperCase()
-                binding.profileEmail.text= googleAccount!!.email
-                Picasso.get().load(googleAccount!!.photoUrl).into(binding.profilePhoto)
-            }
-
-            binding.googleSignInButton.setGone()
-            binding.googleSignOutButton.setVisible()
+        binding.profileUsername.text = if (isLoggedIn && googleAccount != null) {
+            "გამარჯობა, ${googleAccount!!.givenName!!.toUpperCase()}"
         } else {
-            binding.profileContainer.setGone()
+            ""
+        }
+        binding.profileEmail.text= if (isLoggedIn) googleAccount!!.email else ""
 
-            binding.googleSignInButton.setVisible()
-            binding.googleSignOutButton.setGone()
+        if (isLoggedIn) {
+            Glide.with(this).load(googleAccount?.photoUrl).into(binding.profilePhoto)
         }
     }
 
     companion object {
-
         const val RC_SIGN_IN = 13
-
     }
 }
