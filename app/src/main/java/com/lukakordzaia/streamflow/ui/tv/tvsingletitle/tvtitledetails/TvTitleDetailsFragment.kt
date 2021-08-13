@@ -28,12 +28,13 @@ import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity.Com
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.TvTitleFilesFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
 class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
-    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
+    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by sharedViewModel()
     private lateinit var tvChooseLanguageAdapter: TvChooseLanguageAdapter
     private lateinit var titleInfo: SingleTitleModel
     private var hasFocus: Boolean = false
@@ -96,6 +97,10 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
     }
 
     private fun fragmentObservers(titleId: Int) {
+        tvTitleDetailsViewModel.startedWatching.observe(viewLifecycleOwner, {
+            startedWatching = it
+        })
+
         tvTitleDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
@@ -215,10 +220,12 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                 binding.deleteButton.setVisible()
 
                 if (continueWatching != null) {
-                    if (!startedWatching) {
-                        binding.continueButton.callOnClick()
-                        startedWatching = true
-                    }
+                    tvTitleDetailsViewModel.startedWatching.observe(viewLifecycleOwner, {
+                        if (!it) {
+                            binding.continueButton.callOnClick()
+                            tvTitleDetailsViewModel.setStartedWatching(true)
+                        }
+                    })
                 }
             }
         })
@@ -237,7 +244,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                 if (it.trailer != null) {
                     playTitleTrailer(titleId, isTvShow, it.trailer)
                 } else {
-                    requireContext().createToast("no trailer")
+                    requireContext().createToast("ტრეილერი ვერ მოიძებნა")
                 }
             }
 

@@ -41,6 +41,9 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     val titleGenres: LiveData<List<String>> = _titleGenres
     private val fetchTitleGenres: MutableList<String> = ArrayList()
 
+    private val _startedWatching = MutableLiveData<Boolean>(false)
+    val startedWatching: LiveData<Boolean> = _startedWatching
+
     fun getSingleTitleData(titleId: Int) {
         fetchTitleGenres.clear()
         viewModelScope.launch {
@@ -189,5 +192,9 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         } else {
             _addToFavorites.value = false
         }
+    }
+
+    fun setStartedWatching(started: Boolean) {
+        _startedWatching.value = started
     }
 }

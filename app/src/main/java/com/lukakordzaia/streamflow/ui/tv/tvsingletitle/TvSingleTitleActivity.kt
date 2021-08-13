@@ -4,8 +4,12 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsFragment
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSingleTitleActivity : FragmentActivity() {
+    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
+
     private var currentFragment = TITLE_INFO
     private val tvDetailsFragment = TvTitleDetailsFragment()
 
@@ -33,8 +37,6 @@ class TvSingleTitleActivity : FragmentActivity() {
     fun setCurrentFragment(fragment: Int) {
         currentFragment = fragment
     }
-
-    fun getCurrentFragment() = currentFragment
 
     companion object {
         const val TITLE_INFO = 0
