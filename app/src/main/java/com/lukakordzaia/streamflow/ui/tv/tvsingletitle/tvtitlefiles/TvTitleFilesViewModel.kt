@@ -15,7 +15,6 @@ import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class TvTitleFilesViewModel : BaseViewModel() {
-
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 

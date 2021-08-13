@@ -6,7 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.lukakordzaia.streamflow.R
 import kotlinx.android.synthetic.main.tv_watched_card_view.view.*
 
-open class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     init {
         inflate(context, R.layout.tv_details_episodes_item, this)
     }

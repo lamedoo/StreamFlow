@@ -39,7 +39,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class TvMainFragment : BrowseSupportFragment() {
     private val homeViewModel: HomeViewModel by viewModel()
     private lateinit var rowsAdapter: ArrayObjectAdapter
-    private val page = 1
     lateinit var metrics: DisplayMetrics
     private lateinit var backgroundManager: BackgroundManager
 
@@ -101,17 +100,10 @@ class TvMainFragment : BrowseSupportFragment() {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    homeViewModel.refreshContent(1)
+                    homeViewModel.fetchContent(1)
                 }, 5000)
             }
         })
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            homeViewModel.getTopMovies(page)
-            homeViewModel.getTopTvShows(page)
-            homeViewModel.getNewMovies(page)
-            startEntranceTransition()
-        }, 2000)
 
         watchedListRowsAdapter()
         newMoviesRowsAdapter()
@@ -156,6 +148,10 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun newMoviesRowsAdapter() {
         homeViewModel.newMovieList.observe(viewLifecycleOwner, {
+            if (!it.isNullOrEmpty()) {
+                startEntranceTransition()
+            }
+
             val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
                 addAll(0, it)
             }

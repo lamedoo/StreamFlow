@@ -2,9 +2,9 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/accent_color"/>
+            <solid android:color="@color/secondary_color"/>
             <stroke
-                android:color="#55FFB700"
+                android:color="#553C3F4D"
                 android:width="6dp"/>
             <size android:width="10dp" android:height="10dp" />
         </shape>

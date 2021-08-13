@@ -123,17 +123,21 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     private fun setSeasonsAndEpisodes(titleId: Int, isTvShow: Boolean) {
         if (isTvShow) {
             tvTitleFilesViewModel.getSingleTitleData(titleId)
+            tvTitleFilesViewModel.checkAuthDatabase(titleId)
 
             tvTitleFilesViewModel.numOfSeasons.observe(viewLifecycleOwner, {
                 val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
                 seasonsRowsAdapter(seasonCount)
             })
 
-            tvTitleFilesViewModel.episodeNames.observe(viewLifecycleOwner, {
-                episodesRowsAdapter(it)
-            })
+            episodesRowsAdapter(null)
 
-            tvTitleFilesViewModel.checkAuthDatabase(titleId)
+            tvTitleFilesViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+                if (it != null) {
+                    rowsSupportFragment.setSelectedPosition(0, true, ListRowPresenter.SelectItemViewHolderTask(it.season-1))
+                    episodesRowsAdapter(it.episode)
+                }
+            })
         }
     }
 
@@ -146,23 +150,27 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         HeaderItem(0, "სეზონები"). also {
             rowsAdapter.replace(0, ListRow(it, listRowAdapter))
         }
-
-        tvTitleFilesViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-            if (it != null) {
-                rowsSupportFragment.setSelectedPosition(0, true, ListRowPresenter.SelectItemViewHolderTask(it.season-1))
-            }
-        })
     }
 
-    private fun episodesRowsAdapter(episodeList: List<TitleEpisodes>) {
-        val listRowAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext())).apply {
-            episodeList.forEach {
-                add(it)
+    private fun episodesRowsAdapter(currentEpisode: Int?) {
+        var isFirst = true
+
+        tvTitleFilesViewModel.episodeNames.observe(viewLifecycleOwner, { episodeList ->
+            val listRowAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext(), currentEpisode)).apply {
+                episodeList.forEach {
+                    add(it)
+                }
             }
-        }
-        HeaderItem(1, "ეპიზოდები"). also {
-            rowsAdapter.replace(1, ListRow(it, listRowAdapter))
-        }
+
+            HeaderItem(1, "ეპიზოდები"). also {
+                rowsAdapter.replace(1, ListRow(it, listRowAdapter))
+            }
+
+            if (currentEpisode != null && isFirst) {
+                rowsSupportFragment.setSelectedPosition(1, true, ListRowPresenter.SelectItemViewHolderTask(currentEpisode))
+                isFirst = false
+            }
+        })
     }
 
     private fun castRowsAdapter(castResponseListGetSingle: List<GetSingleTitleCastResponse.Data>, isTvShow: Boolean) {

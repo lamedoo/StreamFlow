@@ -40,10 +40,7 @@ class HomeViewModel : BaseViewModel() {
     val contWatchingData: LiveData<List<ContinueWatchingRoom>> = _contWatchingData
 
     init {
-        getMovieDay()
-        getNewMovies(1)
-        getTopMovies(1)
-        getTopTvShows(1)
+        fetchContent(1)
     }
 
     fun onSingleTitlePressed(start: Int, titleId: Int) {
@@ -238,7 +235,7 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    fun refreshContent(page: Int) {
+    fun fetchContent(page: Int) {
         getMovieDay()
         getNewMovies(page)
         getTopMovies(page)

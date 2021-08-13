@@ -6,7 +6,6 @@ import android.os.Looper
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
@@ -86,7 +85,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    homeViewModel.refreshContent(1)
+                    homeViewModel.fetchContent(1)
                 }, 5000)
             }
         })
