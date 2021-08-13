@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class TvCategoriesViewModel : BaseViewModel() {
@@ -26,7 +26,7 @@ class TvCategoriesViewModel : BaseViewModel() {
             when (val movies = environment.homeRepository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = movies.data.data
-                    _newMovieList.value = MapTitleData().list(data)
+                    _newMovieList.value = data.toTitleListModel()
                 }
                 is Result.Error -> {
                     newToastMessage(movies.exception)
@@ -44,7 +44,7 @@ class TvCategoriesViewModel : BaseViewModel() {
             when (val topMovies = environment.homeRepository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
-                    _topMovieList.value = MapTitleData().list(data)
+                    _topMovieList.value = data.toTitleListModel()
                 }
                 is Result.Error -> {
                     newToastMessage(topMovies.exception)
@@ -62,7 +62,7 @@ class TvCategoriesViewModel : BaseViewModel() {
             when (val tvShows = environment.homeRepository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = tvShows.data.data
-                    _tvShowList.value = MapTitleData().list(data)
+                    _tvShowList.value = data.toTitleListModel()
                 }
                 is Result.Error -> {
                     newToastMessage(tvShows.exception)

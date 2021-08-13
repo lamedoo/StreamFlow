@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.MapTitleData
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.repository.SearchTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class SearchTitlesViewModel : BaseViewModel() {
@@ -40,7 +40,7 @@ class SearchTitlesViewModel : BaseViewModel() {
             when (val search = environment.searchTitleRepository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = search.data.data
-                    fetchSearchGetTitlesResponse.addAll(MapTitleData().list(data))
+                    fetchSearchGetTitlesResponse.addAll(data.toTitleListModel())
                     _searchList.value = fetchSearchGetTitlesResponse
                     searchLoader.value = LoadingState.LOADED
                 }
@@ -59,7 +59,7 @@ class SearchTitlesViewModel : BaseViewModel() {
             when (val searchTv = environment.searchTitleRepository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = searchTv.data.data
-                    _searchList.value = MapTitleData().list(data)
+                    _searchList.value = data.toTitleListModel()
                 }
                 is Result.Error -> {
                     newToastMessage("ძიება - ${searchTv.exception}")

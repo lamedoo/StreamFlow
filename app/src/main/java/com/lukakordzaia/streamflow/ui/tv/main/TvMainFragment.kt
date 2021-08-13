@@ -16,10 +16,8 @@ import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
@@ -27,7 +25,7 @@ import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
-import com.lukakordzaia.streamflow.ui.tv.details.TvDetailsActivity
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
@@ -230,13 +228,13 @@ class TvMainFragment : BrowseSupportFragment() {
                 row: Row
         ) {
             if (item is SingleTitleModel) {
-                val intent = Intent(context, TvDetailsActivity::class.java).apply {
+                val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                     putExtra("titleId", item.id)
                     putExtra("isTvShow", item.isTvShow)
                 }
                 activity?.startActivity(intent)
-            } else if (item is DbTitleData) {
-                val intent = Intent(context, TvDetailsActivity::class.java).apply {
+            } else if (item is ContinueWatchingModel) {
+                val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                     putExtra("titleId", item.id)
                     putExtra("isTvShow", item.isTvShow)
                     putExtra("continue", true)
@@ -265,7 +263,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
             if (item is SingleTitleModel) {
                 onTitleSelected?.getTitleId(item.id, null)
-            } else if (item is DbTitleData) {
+            } else if (item is ContinueWatchingModel) {
                 onTitleSelected?.getTitleId(item.id, item)
             }
 

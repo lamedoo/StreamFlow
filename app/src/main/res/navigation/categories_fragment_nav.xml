@@ -6,9 +6,9 @@
     app:startDestination="@id/categoriesFragment">
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.categories.CategoriesFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueFragment"
         android:label="fragment_genres_categories"
-        tools:layout="@layout/fragment_phone_categories" >
+        tools:layout="@layout/fragment_phone_catalogue" >
         <action
             android:id="@+id/action_categoriesFragment_to_singleGenreFragment"
             app:destination="@id/singleGenreFragment"
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/singleGenreFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.categories.singlegenre.SingleGenreFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre.SingleGenreFragment"
         android:label="fragment_single_genre"
         tools:layout="@layout/fragment_phone_single_category" >
         <argument
@@ -58,7 +58,7 @@
     <include app:graph="@navigation/single_title_fragment_nav" />
     <fragment
         android:id="@+id/singleStudioFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.categories.singlestudio.SingleStudioFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlestudio.SingleStudioFragment"
         android:label="SingleStudioFragment" >
         <argument
             android:name="studioId"

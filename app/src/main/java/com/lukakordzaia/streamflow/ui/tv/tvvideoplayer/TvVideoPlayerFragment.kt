@@ -65,7 +65,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        videoPlayerData = activity?.intent!!.getParcelableExtra("videoPlayerData") as VideoPlayerData
+        videoPlayerData = activity?.intent!!.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
 
         if (!videoPlayerData.isTvShow) {
             next_details_title.text = "სხვა დეტალები"

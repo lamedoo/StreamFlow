@@ -10,20 +10,20 @@ import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.datamodels.DbTitleData
+import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.rv_db_title_item.view.*
 import java.util.concurrent.TimeUnit
 
 class HomeDbTitlesAdapter(
     private val context: Context,
-    private val onWatchedTitleClick: (dbTitleData: DbTitleData) -> Unit,
+    private val onWatchedTitleClick: (continueWatchingModel: ContinueWatchingModel) -> Unit,
     private val onInfoClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int, titleName: String) -> Unit
 ) : RecyclerView.Adapter<HomeDbTitlesAdapter.ViewHolder>() {
-    private var list: List<DbTitleData> = ArrayList()
+    private var list: List<ContinueWatchingModel> = ArrayList()
 
-    fun setWatchedTitlesList(list: List<DbTitleData>) {
+    fun setWatchedTitlesList(list: List<ContinueWatchingModel>) {
         this.list = list
         notifyDataSetChanged()
     }
