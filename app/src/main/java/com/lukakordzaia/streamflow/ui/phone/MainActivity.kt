@@ -76,13 +76,10 @@ class MainActivity : AppCompatActivity() {
                     is TopMoviesFragment,
                     is TopTvShowsFragment,
                     is NewMoviesFragment,
-                    is PhoneFavoritesFragment, is SingleStudioFragment -> {
-                        hideBottomNavigation()
-                    }
-                    is PhoneSingleTitleFragment, is TvShowBottomSheetFragment -> {
-                        hideBottomNavigation()
-                    }
-                    is VideoPlayerFragment -> {
+                    is PhoneFavoritesFragment,
+                    is SingleStudioFragment,
+                    is PhoneSingleTitleFragment,
+                    is TvShowBottomSheetFragment, is VideoPlayerFragment -> {
                         hideBottomNavigation()
                     }
                 }
