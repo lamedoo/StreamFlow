@@ -9,8 +9,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lukakordzaia.streamflow.R
@@ -27,41 +30,59 @@ import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerFragment
-import com.lukakordzaia.streamflow.utils.setupWithNavController
+//import com.lukakordzaia.streamflow.utils.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private var currentNavController: LiveData<NavController>? = null
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null) {
-            setBottomNav()
-        }
+        setUpNavigation()
+        observeFragments()
 
         val appToolbar: MaterialToolbar = findViewById(R.id.app_main_toolbar)
         setSupportActionBar(appToolbar)
+    }
 
+    private fun setUpNavigation() {
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            R.id.fr_nav_host
+        ) as NavHostFragment
+        navController = navHostFragment.navController
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_main_bottom)
+        bottomNavigationView.setupWithNavController(navController)
+
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.homeFragment, R.id.categoriesFragment,  R.id.searchTitlesFragment)
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+    }
+
+    private fun observeFragments() {
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
                 when (f) {
                     is HomeFragment, is CatalogueFragment, is SearchTitlesFragment -> {
                         showBottomNavigation()
                     }
-                    is ProfileFragment, is SingleGenreFragment, is TopMoviesFragment, is TopTvShowsFragment, is NewMoviesFragment, is PhoneFavoritesFragment, is SingleStudioFragment -> {
+                    is ProfileFragment,
+                    is SingleGenreFragment,
+                    is TopMoviesFragment,
+                    is TopTvShowsFragment,
+                    is NewMoviesFragment,
+                    is PhoneFavoritesFragment, is SingleStudioFragment -> {
                         hideBottomNavigation()
                     }
                     is PhoneSingleTitleFragment, is TvShowBottomSheetFragment -> {
                         hideBottomNavigation()
                     }
                     is VideoPlayerFragment -> {
-//                        window.setFlags(
-//                                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-//                                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-//                        )
                         hideBottomNavigation()
                     }
                 }
@@ -69,36 +90,8 @@ class MainActivity : AppCompatActivity() {
         }, true)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        setBottomNav()
-    }
-
-    private fun setBottomNav() {
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_main_bottom)
-        val navGraphIds = listOf(R.navigation.home_fragment_nav, R.navigation.categories_fragment_nav, R.navigation.search_fragment_nav)
-        val appBarConfiguration = AppBarConfiguration(
-            topLevelDestinationIds = setOf(
-                R.id.homeFragment,
-                R.id.categoriesFragment,
-                R.id.searchTitlesFragment,
-            )
-        )
-
-        val controller = bottomNavigationView.setupWithNavController(
-            navGraphIds = navGraphIds,
-            fragmentManager = supportFragmentManager,
-            containerId = R.id.fr_nav_host,
-            intent = intent
-        )
-        controller.observe(this, Observer { navController ->
-            setupActionBarWithNavController(navController, appBarConfiguration)
-        })
-        currentNavController = controller
-    }
-
     override fun onSupportNavigateUp(): Boolean {
-        return currentNavController?.value?.navigateUp() ?: false
+        return navController.navigateUp(appBarConfiguration)
     }
 
     private fun hideBottomNavigation() {
