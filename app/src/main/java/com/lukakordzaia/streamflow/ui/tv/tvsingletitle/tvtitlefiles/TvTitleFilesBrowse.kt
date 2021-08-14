@@ -175,7 +175,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
             if (currentEpisode != null && isFirst) {
                 Handler(Looper.myLooper()!!).postDelayed({
                     rowsSupportFragment.setSelectedPosition(1, true, ListRowPresenter.SelectItemViewHolderTask(currentEpisode-1))
-                }, 200)
+                }, 1000)
                 isFirst = false
             }
         })

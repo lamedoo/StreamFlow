@@ -39,7 +39,7 @@ class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), T
         binding.tvSidebarCollapsed.collapsedFavoritesIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
 
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+        Handler(Looper.getMainLooper()).postDelayed({
 
             if (!hasFavorites) {
                 no_favorites_container.setVisible()

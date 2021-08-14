@@ -87,12 +87,9 @@ class TvFavoritesFragment : BrowseSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRowsAdapter()
+        phoneFavoritesViewModel.getFavTitlesFromFirestore()
 
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            phoneFavoritesViewModel.getFavTitlesFromFirestore()
-            startEntranceTransition()
-        }, 2000)
+        initRowsAdapter()
 
         phoneFavoritesViewModel.favoriteNoMovies.observe(viewLifecycleOwner, { noMovies ->
             phoneFavoritesViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, { noTvShows ->
@@ -134,6 +131,8 @@ class TvFavoritesFragment : BrowseSupportFragment() {
         HeaderItem(0, "ფილმები").also {
             rowsAdapter.replace(0, ListRow(it, listRowAdapter))
         }
+
+        startEntranceTransition()
     }
 
     private fun tvShowsRowsAdapter(tvShows: List<SingleTitleModel>) {

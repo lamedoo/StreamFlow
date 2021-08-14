@@ -12,7 +12,6 @@ import com.lukakordzaia.streamflow.utils.toSingleTitleModel
 import kotlinx.coroutines.launch
 
 class PhoneFavoritesViewModel : BaseViewModel() {
-
     val favoriteMoviesLoader = MutableLiveData<LoadingState>()
     val favoriteTvShowsLoader = MutableLiveData<LoadingState>()
 
