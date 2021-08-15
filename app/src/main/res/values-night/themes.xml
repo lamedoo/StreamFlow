@@ -30,9 +30,4 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10dp</item>
     </style>
-
-<!--    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">-->
-<!--        <item name="android:radius">20dp</item>-->
-<!--        <item name="android:background">@drawable/alert_dialog_background</item>-->
-<!--    </style>-->
 </resources>

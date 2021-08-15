@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/primaryColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         android:id="@+id/tv_sidebar"
-        layout="@layout/tv_sidebar"/>
+        layout="@layout/tv_sidebar"
+        tools:visibility="gone"/>
 
     <include
         android:id="@+id/tv_sidebar_collapsed"
@@ -18,7 +20,7 @@
         layout="@layout/tv_top_title_header"/>
 
     <fragment
-        android:name="com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesFragment"
+        android:name="com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueFragment"
         android:id="@+id/tv_details_left_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"

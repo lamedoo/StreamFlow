@@ -1,17 +1,15 @@
-package com.lukakordzaia.streamflow.ui.tv.categories
+package com.lukakordzaia.streamflow.ui.tv.tvcatalogue
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.repository.HomeRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
-class TvCategoriesViewModel : BaseViewModel() {
+class TvCatalogueViewModel : BaseViewModel() {
     private val _newMovieList = MutableLiveData<List<SingleTitleModel>>()
     val newMovieList: LiveData<List<SingleTitleModel>> = _newMovieList
 

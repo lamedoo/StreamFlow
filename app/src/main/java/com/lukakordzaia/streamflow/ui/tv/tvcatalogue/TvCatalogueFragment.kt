@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.tv.categories
+package com.lukakordzaia.streamflow.ui.tv.tvcatalogue
 
 import android.content.Context
 import android.content.Intent
@@ -14,9 +14,9 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TvCategoriesFragment : VerticalGridSupportFragment() {
+class TvCatalogueFragment : VerticalGridSupportFragment() {
     private lateinit var gridAdapter: ArrayObjectAdapter
-    private val tvCategoriesViewModel: TvCategoriesViewModel by viewModel()
+    private val tvCatalogueViewModel: TvCatalogueViewModel by viewModel()
     private var page = 1
 
     var onTitleSelected: TvCheckTitleSelected? = null
@@ -42,17 +42,17 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        gridAdapter = ArrayObjectAdapter(TvCategoryPresenter(requireContext()))
+        gridAdapter = ArrayObjectAdapter(TvCataloguePresenter(requireContext()))
 
         when (activity?.intent?.getSerializableExtra("type") as Int) {
             AppConstants.TV_CATEGORY_NEW_MOVIES -> {
-                tvCategoriesViewModel.getNewMoviesTv(page)
+                tvCatalogueViewModel.getNewMoviesTv(page)
             }
             AppConstants.TV_CATEGORY_TOP_MOVIES -> {
-                tvCategoriesViewModel.getTopMoviesTv(page)
+                tvCatalogueViewModel.getTopMoviesTv(page)
             }
             AppConstants.TV_CATEGORY_TOP_TV_SHOWS -> {
-                tvCategoriesViewModel.getTopTvShowsTv(page)
+                tvCatalogueViewModel.getTopTvShowsTv(page)
             }
         }
         loadData()
@@ -61,17 +61,17 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
 
     private fun loadData() {
 
-        tvCategoriesViewModel.newMovieList.observe(viewLifecycleOwner, { newMovies ->
+        tvCatalogueViewModel.newMovieList.observe(viewLifecycleOwner, { newMovies ->
             newMovies.forEach {
                 gridAdapter.add(it)
             }
         })
-        tvCategoriesViewModel.topMovieList.observe(viewLifecycleOwner, { topMovies ->
+        tvCatalogueViewModel.topMovieList.observe(viewLifecycleOwner, { topMovies ->
             topMovies.forEach {
                 gridAdapter.add(it)
             }
         })
-        tvCategoriesViewModel.tvShowList.observe(viewLifecycleOwner, { topTvShows ->
+        tvCatalogueViewModel.tvShowList.observe(viewLifecycleOwner, { topTvShows ->
             topTvShows.forEach {
                 gridAdapter.add(it)
             }
@@ -123,13 +123,13 @@ class TvCategoriesFragment : VerticalGridSupportFragment() {
                 page++
                 when (activity?.intent?.getSerializableExtra("type") as Int) {
                     AppConstants.TV_CATEGORY_NEW_MOVIES -> {
-                        tvCategoriesViewModel.getNewMoviesTv(page)
+                        tvCatalogueViewModel.getNewMoviesTv(page)
                     }
                     AppConstants.TV_CATEGORY_TOP_MOVIES -> {
-                        tvCategoriesViewModel.getTopMoviesTv(page)
+                        tvCatalogueViewModel.getTopMoviesTv(page)
                     }
                     AppConstants.TV_CATEGORY_TOP_TV_SHOWS -> {
-                        tvCategoriesViewModel.getTopTvShowsTv(page)
+                        tvCatalogueViewModel.getTopTvShowsTv(page)
                     }
                 }
             }

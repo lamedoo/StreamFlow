@@ -1,18 +1,14 @@
-package com.lukakordzaia.streamflow.ui.tv.categories
+package com.lukakordzaia.streamflow.ui.tv.tvcatalogue
 
 import android.content.Context
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
-import com.bumptech.glide.Glide
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvDefaultCardView
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.utils.setImage
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_default_card_view.view.*
 
-class TvCategoryPresenter(private val context: Context) : Presenter() {
+class TvCataloguePresenter(private val context: Context) : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvDefaultCardView(parent.context, null)
 

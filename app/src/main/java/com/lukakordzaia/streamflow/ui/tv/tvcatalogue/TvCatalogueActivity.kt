@@ -1,10 +1,10 @@
-package com.lukakordzaia.streamflow.ui.tv.categories
+package com.lukakordzaia.streamflow.ui.tv.tvcatalogue
 
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.databinding.ActivityTvCategoriesBinding
+import com.lukakordzaia.streamflow.databinding.ActivityTvCatalogueBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
@@ -13,10 +13,10 @@ import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setImage
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvCategoriesActivity : BaseFragmentActivity<ActivityTvCategoriesBinding>(), TvCheckTitleSelected {
+class TvCatalogueActivity : BaseFragmentActivity<ActivityTvCatalogueBinding>(), TvCheckTitleSelected {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
 
-    override fun getViewBinding() = ActivityTvCategoriesBinding.inflate(layoutInflater)
+    override fun getViewBinding() = ActivityTvCatalogueBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

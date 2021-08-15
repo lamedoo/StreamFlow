@@ -33,7 +33,7 @@ import com.lukakordzaia.streamflow.databinding.TvSidebarBinding
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
+import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
 import com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesActivity
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
@@ -101,7 +101,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             }
         }
         view.moviesButton.setOnClickListener {
-            val intent = Intent(this, TvCategoriesActivity::class.java).apply {
+            val intent = Intent(this, TvCatalogueActivity::class.java).apply {
                 putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
             }
             startActivity(intent)

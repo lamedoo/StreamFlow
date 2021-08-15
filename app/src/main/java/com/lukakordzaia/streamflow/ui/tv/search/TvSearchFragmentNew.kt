@@ -11,7 +11,7 @@ import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvSearchInputSelected
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
-import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoryPresenter
+import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCataloguePresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -49,7 +49,7 @@ class TvSearchFragmentNew : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        gridAdapter = ArrayObjectAdapter(TvCategoryPresenter(requireContext()))
+        gridAdapter = ArrayObjectAdapter(TvCataloguePresenter(requireContext()))
 
         searchTitlesViewModel.searchList.observe(viewLifecycleOwner, { list ->
             list.forEach {

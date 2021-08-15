@@ -24,7 +24,7 @@ import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
-import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesActivity
+import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
@@ -239,12 +239,12 @@ class TvMainFragment : BrowseSupportFragment() {
             } else if (item is TvCategoriesList) {
                 when (item.categoriesId) {
                     0 -> {
-                        val intent = Intent(context, TvCategoriesActivity::class.java)
+                        val intent = Intent(context, TvCatalogueActivity::class.java)
                         intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_MOVIES)
                         activity?.startActivity(intent)
                     }
                     1 -> {
-                        val intent = Intent(context, TvCategoriesActivity::class.java)
+                        val intent = Intent(context, TvCatalogueActivity::class.java)
                         intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_TV_SHOWS)
                         activity?.startActivity(intent)
                     }

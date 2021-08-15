@@ -22,7 +22,7 @@ import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
-import com.lukakordzaia.streamflow.ui.tv.categories.TvCategoriesViewModel
+import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueViewModel
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.TvTitleFilesViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -35,7 +35,7 @@ val viewModelModule = module {
     viewModel { SingleCategoryViewModel() }
     viewModel { SearchTitlesViewModel() }
     viewModel { TvTitleDetailsViewModel() }
-    viewModel { TvCategoriesViewModel() }
+    viewModel { TvCatalogueViewModel() }
     viewModel { TvShowBottomSheetViewModel() }
     viewModel { ProfileViewModel() }
     viewModel { TvTitleFilesViewModel() }
