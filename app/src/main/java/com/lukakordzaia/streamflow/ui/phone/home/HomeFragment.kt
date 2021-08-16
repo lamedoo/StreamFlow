@@ -58,15 +58,15 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
             navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
         }
 
-        binding.newMoviesMore.setOnClickListener {
+        binding.newMoviesHeader.setOnClickListener {
             homeViewModel.newMoviesMorePressed()
         }
 
-        binding.topMoviesMore.setOnClickListener {
+        binding.topMoviesHeader.setOnClickListener {
             homeViewModel.topMoviesMorePressed()
         }
 
-        binding.topTvShowsMore.setOnClickListener {
+        binding.topTvShowsHeader.setOnClickListener {
             homeViewModel.topTvShowsMorePressed()
         }
 

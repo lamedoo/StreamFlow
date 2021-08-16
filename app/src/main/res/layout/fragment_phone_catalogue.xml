@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".ui.phone.catalogue.CatalogueFragment">
 
     <include layout="@layout/main_top_toolbar" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/fragment_padding"
-        tools:context=".ui.phone.catalogue.CatalogueFragment">
+        android:padding="@dimen/fragment_padding">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_trailers"
@@ -32,25 +32,15 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/categories_genres_title"
-            android:layout_width="wrap_content"
+        <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+            android:id="@+id/genres_header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
-            android:text="@string/genres"
-            android:textColor="@color/general_text_color"
-            android:textSize="15sp"
+            app:title="@string/genres"
+            app:arrow_visibility="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_trailers" />
-
-        <View
-            android:layout_width="80dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/accent_color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/categories_genres_title" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_genres"
@@ -58,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/categories_genres_title" />
+            app:layout_constraintTop_toBottomOf="@id/genres_header" />
 
         <ProgressBar
             android:id="@+id/genres_progressBar"
@@ -70,27 +60,17 @@
             android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/categories_genres_title" />
+            app:layout_constraintTop_toBottomOf="@id/genres_header" />
 
-        <TextView
-            android:id="@+id/categories_studios_title"
-            android:layout_width="wrap_content"
+        <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+            android:id="@+id/studios_header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
-            android:text="@string/studios"
-            android:textColor="@color/general_text_color"
-            android:textSize="15sp"
+            app:title="@string/studios"
+            app:arrow_visibility="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_genres" />
-
-        <View
-            android:layout_width="80dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/accent_color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/categories_studios_title" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_studios"
@@ -98,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/categories_studios_title" />
+            app:layout_constraintTop_toBottomOf="@id/studios_header" />
 
         <ProgressBar
             android:id="@+id/studios_progressBar"
@@ -110,7 +90,7 @@
             android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/categories_studios_title" />
+            app:layout_constraintTop_toBottomOf="@id/studios_header" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".ui.phone.home.HomeFragment">
 
     <include android:id="@+id/toolbar"
         layout="@layout/main_top_toolbar"
@@ -11,11 +13,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:id="@+id/fragment_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.phone.home.HomeFragment"
         android:overScrollMode="never"
         app:layout_constraintTop_toTopOf="parent"
         android:translationZ="-1dp">
@@ -113,25 +114,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/continue_watching_title"
+                    <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+                        android:id="@+id/continue_watching_header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
-                        android:text="@string/continue_watching"
-                        android:textColor="@color/general_text_color"
-                        android:textSize="15sp"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <View
-                        android:id="@+id/continue_watching_title_line"
-                        android:layout_width="80dp"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/accent_color"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/continue_watching_title" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:title="@string/continue_watching"
+                        app:arrow_visibility="false"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_continue_watching_titles"
@@ -141,7 +130,7 @@
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/continue_watching_title"
+                        app:layout_constraintTop_toBottomOf="@id/continue_watching_header"
                         app:spanCount="2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -151,34 +140,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/new_movies_title"
-                        android:layout_width="wrap_content"
+                    <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+                        android:id="@+id/new_movies_header"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
-                        android:text="@string/new_movies"
-                        android:textColor="@color/general_text_color"
-                        android:textSize="15sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/new_movies_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_arrow_right"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <View
-                        android:layout_width="80dp"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/accent_color"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/new_movies_title" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:title="@string/new_movies"
+                        app:arrow_visibility="true"/>
 
                     <ProgressBar
                         android:id="@+id/newMovie_progressBar"
@@ -190,7 +158,7 @@
                         android:visibility="visible"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/new_movies_title" />
+                        app:layout_constraintTop_toBottomOf="@id/new_movies_header" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_new_movies"
@@ -200,7 +168,7 @@
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/new_movies_title"
+                        app:layout_constraintTop_toBottomOf="@id/new_movies_header"
                         app:spanCount="2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -210,34 +178,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/top_movies_title"
-                        android:layout_width="wrap_content"
+                    <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+                        android:id="@+id/top_movies_header"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
-                        android:text="@string/top_movies"
-                        android:textColor="@color/general_text_color"
-                        android:textSize="15sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/top_movies_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_arrow_right"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <View
-                        android:layout_width="80dp"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/accent_color"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/top_movies_title" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:title="@string/top_movies"
+                        app:arrow_visibility="true"/>
 
                     <ProgressBar
                         android:id="@+id/topMovie_progressBar"
@@ -249,7 +196,7 @@
                         android:visibility="visible"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/top_movies_title" />
+                        app:layout_constraintTop_toBottomOf="@id/top_movies_header" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_top_movies"
@@ -259,7 +206,7 @@
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/top_movies_title"
+                        app:layout_constraintTop_toBottomOf="@id/top_movies_header"
                         app:spanCount="2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -269,34 +216,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/top_tvShows_title"
-                        android:layout_width="wrap_content"
+                    <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+                        android:id="@+id/top_tvShows_header"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
-                        android:text="@string/top_tv_shows"
-                        android:textColor="@color/general_text_color"
-                        android:textSize="15sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-
-                    <ImageView
-                        android:id="@+id/top_tvShows_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_arrow_right"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-
-                    <View
-                        android:layout_width="80dp"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/accent_color"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_title" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:title="@string/new_movies"
+                        app:arrow_visibility="true"/>
 
                     <ProgressBar
                         android:id="@+id/topTvShow_progressBar"
@@ -308,7 +234,7 @@
                         android:visibility="visible"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_title" />
+                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_header" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_top_tvShows"
@@ -318,7 +244,7 @@
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_title"
+                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_header"
                         app:spanCount="2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

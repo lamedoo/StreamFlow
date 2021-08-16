@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CPhoneHeaderView">
+        <attr name="title" format="string"/>
+        <attr name="arrow_visibility" format="boolean"/>
+    </declare-styleable>
+</resources>
