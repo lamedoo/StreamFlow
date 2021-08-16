@@ -24,6 +24,14 @@
     <string name="parameters_about_body">Streamflow შეიქმნა იმ მიზნით, რომ ყველამ შეძლოს უფასოდ ფილმების და სერიალების ყურება ანდროიდის მოწყობილობებზე. არ ელოდოთ ამ აპლიკაციას iPhone-ზე</string>
     <string name="parameters_clear_history_body">გაასუფთავეთ ნახვების ისტორია. გაითვალისწინეთ: მთლიანად წაიშლება "განაგძრეთ ყურების" სია</string>
     <string name="title_will_be_added_soon">ფილმი/სერიალი მალე დაემატება</string>
+    <string name="movie_of_the_day">დღის ფილმი</string>
+    <string name="title_name">ფილმის სახელი</string>
+    <string name="top_movies">ტოპ ფილმები</string>
+    <string name="top_tv_shows">ტოპ სერიალები</string>
+    <string name="details_and_more">დეტალები და მეტი</string>
+    <string name="delete_from_list">სიიდან წაშლა</string>
+    <string name="studios">სტუდიები</string>
+    <string name="search_movies_tv_shows">მოძებნეთ ფილმები, სერიალები</string>
 
     <!--    <string name="default_web_client_id">700559852856-68iooe5pueka6q1k3oejuc46h4fh9dai.apps.googleusercontent.com</string>-->
 </resources>

@@ -35,6 +35,7 @@
             android:maxLines="2"
             android:textColor="@color/general_text_color"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
             tools:text="ფილმის სახელი"/>
 
     </LinearLayout>

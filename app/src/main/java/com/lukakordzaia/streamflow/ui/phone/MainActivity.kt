@@ -1,13 +1,12 @@
 package com.lukakordzaia.streamflow.ui.phone
 
+//import com.lukakordzaia.streamflow.utils.setupWithNavController
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -25,12 +24,11 @@ import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.NewMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragment
-import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
-import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment
+import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
+import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesFragment
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerFragment
-//import com.lukakordzaia.streamflow.utils.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -42,11 +40,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setUpNavigation()
-        observeFragments()
-
         val appToolbar: MaterialToolbar = findViewById(R.id.app_main_toolbar)
         setSupportActionBar(appToolbar)
+
+        setUpNavigation()
+        observeFragments()
     }
 
     private fun setUpNavigation() {

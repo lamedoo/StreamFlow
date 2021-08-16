@@ -37,8 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:fontFamily="@font/georgian_uppercase"
-            android:text="ჟანრის მიხედვით"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+            android:text="@string/genres"
             android:textColor="@color/general_text_color"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,6 +47,7 @@
         <View
             android:layout_width="80dp"
             android:layout_height="2dp"
+            android:layout_marginTop="5dp"
             android:background="@color/accent_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/categories_genres_title" />
@@ -76,8 +77,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:fontFamily="@font/georgian_uppercase"
-            android:text="სტუდიის მიხედვით"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+            android:text="@string/studios"
             android:textColor="@color/general_text_color"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,6 +87,7 @@
         <View
             android:layout_width="80dp"
             android:layout_height="2dp"
+            android:layout_marginTop="5dp"
             android:background="@color/accent_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/categories_studios_title" />

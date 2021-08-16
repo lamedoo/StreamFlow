@@ -18,38 +18,15 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <LinearLayout
-        android:id="@+id/tv_back"
-        android:layout_width="250dp"
+    <include
+        android:id="@+id/back_button_info"
+        layout="@layout/tv_back_button_info_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:gravity="center"
+        android:layout_marginStart="30dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_sidebar_collapsed">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="დააჭირეთ "
-            android:textColor="@color/general_text_color"
-            android:textSize="10sp" />
-
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/ic_arrow_back" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text=" უკან გასასვლელად"
-            android:textColor="@color/general_text_color"
-            android:textSize="10sp" />
-
-    </LinearLayout>
+        app:layout_constraintStart_toEndOf="@id/tv_sidebar_collapsed"/>
 
     <com.lukakordzaia.streamflow.customviews.TvCustomSearchInput
         android:id="@+id/search_input"
@@ -61,15 +38,15 @@
         android:clipChildren="false"
         android:drawablePadding="10dp"
         android:textSize="20sp"
-        android:fontFamily="@font/georgian_uppercase"
-        android:hint="ფილმები, სერიალები"
+        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+        android:hint="@string/search_movies_tv_shows"
         android:drawableTint="@color/general_text_color"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:maxLines="1"
         android:padding="10dp"
         android:translationZ="0.5dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_back"
+        app:layout_constraintTop_toBottomOf="@id/back_button_info"
         app:layout_constraintStart_toEndOf="@id/tv_sidebar_collapsed"
         app:layout_constraintWidth_percent="0.5"/>
 

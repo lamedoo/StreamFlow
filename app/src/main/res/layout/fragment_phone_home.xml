@@ -59,6 +59,7 @@
                     android:padding="5dp"
                     android:textColor="@color/general_text_color"
                     android:textSize="22sp"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
                     android:shadowColor="@color/trueBlack"
                     android:shadowDx="3"
                     android:shadowDy="3"
@@ -66,7 +67,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/movie_day_tag"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="ფილმის სახელი" />
+                    android:text="@string/title_name" />
 
                 <TextView
                     android:id="@+id/movie_day_tag"
@@ -74,12 +75,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/georgian_uppercase"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_caps_65_medium"
+                    android:textSize="15sp"
                     android:paddingStart="8dp"
                     android:paddingTop="8dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="5dp"
-                    android:text="დღის ფილმი"
+                    android:text="@string/movie_of_the_day"
                     android:textColor="@color/accent_color"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
@@ -116,8 +118,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/georgian_uppercase"
-                        android:text="განაგრძეთ ყურება"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+                        android:text="@string/continue_watching"
                         android:textColor="@color/general_text_color"
                         android:textSize="15sp"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -126,6 +128,7 @@
                         android:id="@+id/continue_watching_title_line"
                         android:layout_width="80dp"
                         android:layout_height="2dp"
+                        android:layout_marginTop="5dp"
                         android:background="@color/accent_color"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/continue_watching_title" />
@@ -153,8 +156,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/georgian_uppercase"
-                        android:text="ახალი დამატებული"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+                        android:text="@string/new_movies"
                         android:textColor="@color/general_text_color"
                         android:textSize="15sp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -172,6 +175,7 @@
                     <View
                         android:layout_width="80dp"
                         android:layout_height="2dp"
+                        android:layout_marginTop="5dp"
                         android:background="@color/accent_color"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/new_movies_title" />
@@ -211,8 +215,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/georgian_uppercase"
-                        android:text="ტოპ ფილმები"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+                        android:text="@string/top_movies"
                         android:textColor="@color/general_text_color"
                         android:textSize="15sp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -230,6 +234,7 @@
                     <View
                         android:layout_width="80dp"
                         android:layout_height="2dp"
+                        android:layout_marginTop="5dp"
                         android:background="@color/accent_color"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/top_movies_title" />
@@ -269,8 +274,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/georgian_uppercase"
-                        android:text="ტოპ სერიალები"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+                        android:text="@string/top_tv_shows"
                         android:textColor="@color/general_text_color"
                         android:textSize="15sp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -288,6 +293,7 @@
                     <View
                         android:layout_width="80dp"
                         android:layout_height="2dp"
+                        android:layout_marginTop="5dp"
                         android:background="@color/accent_color"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/top_tvShows_title" />
