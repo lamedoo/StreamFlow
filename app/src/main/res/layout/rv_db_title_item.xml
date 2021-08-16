@@ -61,7 +61,7 @@
         android:paddingTop="5dp"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
-        android:text="ს1 ე24"
+        tools:text="ს1 ე24"
         android:textStyle="bold"
         android:textColor="@color/general_text_color"
         app:layout_constraintBottom_toTopOf="@id/rv_db_item_seekbar"

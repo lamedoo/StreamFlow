@@ -20,6 +20,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleBinding
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleNewBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -32,7 +33,7 @@ import kotlinx.android.synthetic.main.phone_single_title_info.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
+class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding>() {
     private val phoneSingleTitleViewModel: PhoneSingleTitleViewModel by viewModel()
     private val tvShowBottomSheetViewModel: TvShowBottomSheetViewModel by viewModel()
     private lateinit var titleInfo: SingleTitleModel
@@ -41,8 +42,8 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
     private lateinit var phoneSingleTitleRelatedAdapter: PhoneSingleTitleRelatedAdapter
     private val args: PhoneSingleTitleFragmentArgs by navArgs()
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleBinding
-        get() = FragmentPhoneSingleTitleBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleNewBinding
+        get() = FragmentPhoneSingleTitleNewBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -173,10 +174,10 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
         phoneSingleTitleViewModel.singleTitleLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
-                    binding.singleTitleProgressBar.setVisible()
+                    binding.progressBar.setVisible()
                 }
                 LoadingState.Status.SUCCESS -> {
-                    binding.singleTitleProgressBar.setGone()
+                    binding.progressBar.setGone()
                     binding.singleTitleMainContainer.setVisible()
                 }
             }
@@ -190,7 +191,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
 
             binding.singleTitleCover.setImage(it.cover, false)
 
-            binding.singleTitleTrailerContainer.setOnClickListener { _ ->
+            binding.titleTrailer.setOnClickListener { _ ->
                 startTrailer(it)
             }
 
