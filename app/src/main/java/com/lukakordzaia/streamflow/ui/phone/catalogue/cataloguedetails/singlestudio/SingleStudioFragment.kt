@@ -35,7 +35,7 @@ class SingleStudioFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() 
 
         singleCategoryViewModel.getSingleStudio(args.studioId, page)
 
-        topBarListener(args.studioName)
+        topBarListener(args.studioName, binding.toolbar)
 
         fragmentObservers()
         studiosContainer()

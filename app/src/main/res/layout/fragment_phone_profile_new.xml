@@ -7,7 +7,9 @@
     android:orientation="vertical"
     tools:context=".ui.phone.profile.ProfileFragment">
 
-    <include layout="@layout/fragment_top_toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/fragment_top_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"

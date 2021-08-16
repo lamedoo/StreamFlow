@@ -3,12 +3,12 @@ package com.lukakordzaia.streamflow.ui.phone.home.toplistfragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -33,7 +33,7 @@ class TopTvShowsFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
 
         viewModel.getTopTvShows(page)
 
-        topBarListener("ტოპ სერიალები")
+        topBarListener(resources.getString(R.string.top_tv_shows), binding.toolbar)
 
         fragmentObservers()
         topTvShowsContainer()

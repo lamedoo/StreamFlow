@@ -50,11 +50,11 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
     }
 
     private fun fragmentListeners() {
-        home_favorites.setOnClickListener {
+        binding.toolbar.homeFavorites.setOnClickListener {
             navController(HomeFragmentDirections.actionHomeFragmentToFavoritesFragment())
         }
 
-        home_profile.setOnClickListener {
+        binding.toolbar.homeProfile.setOnClickListener {
             navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
         }
 

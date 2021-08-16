@@ -23,10 +23,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.GoogleAuthProvider
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.databinding.DialogConnectTraktvAlertBinding
-import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
-import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
-import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileNewBinding
+import com.lukakordzaia.streamflow.databinding.*
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -35,7 +32,7 @@ import kotlinx.android.synthetic.main.dialog_connect_traktv_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
+class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     private val profileViewModel: ProfileViewModel by viewModel()
     private var googleAccount: GoogleSignInAccount? = null
     private var traktToken: String? = null
@@ -51,14 +48,14 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
         }
     }
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneProfileNewBinding
-        get() = FragmentPhoneProfileNewBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneProfileBinding
+        get() = FragmentPhoneProfileBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topBarListener("პროფილი")
+        topBarListener(resources.getString(R.string.account), binding.toolbar)
 
-        binding.appVersionTitle.text = "V ${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}"
+        binding.aboutTitle.text = "V ${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}"
 
         googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
         traktDialog = Dialog(requireContext())
@@ -90,18 +87,18 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
             .build()
         val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
-        binding.googleSignInButton.setOnClickListener {
+        binding.gSignIn.setOnClickListener {
             val signInIntent: Intent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-        binding.googleSignOutButton.setOnClickListener {
+        binding.gSignOut.setOnClickListener {
             auth.signOut()
             googleSignInClient.signOut()
             updateGoogleUI(false)
         }
 
-        binding.deleteHistory.setOnClickListener {
+        binding.clearContainer.setOnClickListener {
             val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
             val clearHistory = Dialog(requireContext())
             clearHistory.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -125,7 +122,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
             updateTraktUi(false)
         }
 
-        binding.connectTraktv.setOnClickListener {
+        binding.traktContainer.setOnClickListener {
             val binding = DialogConnectTraktvAlertBinding.inflate(LayoutInflater.from(requireContext()))
             traktDialog.setContentView(binding.root)
             traktDialog.show()
@@ -165,11 +162,11 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
             }
         }
 
-        binding.disconnectTraktv.setOnClickListener {
-            authSharedPreferences.saveAccessToken("")
-            authSharedPreferences.saveRefreshToken("")
-            updateTraktUi(false)
-        }
+//        binding.disconnectTraktv.setOnClickListener {
+//            authSharedPreferences.saveAccessToken("")
+//            authSharedPreferences.saveRefreshToken("")
+//            updateTraktUi(false)
+//        }
     }
 
     private fun fragmentObservers() {
@@ -256,27 +253,27 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileNewBinding>() {
     }
 
     private fun updateTraktUi(isLoggedIn: Boolean) {
-        if (isLoggedIn) {
-            binding.disconnectTraktv.setVisible()
-            binding.connectTraktv.setGone()
-        } else {
-            binding.disconnectTraktv.setGone()
-            binding.connectTraktv.setVisible()
-        }
-
+//        if (isLoggedIn) {
+//            binding.disconnectTraktv.setVisible()
+//            binding.connectTraktv.setGone()
+//        } else {
+//            binding.disconnectTraktv.setGone()
+//            binding.connectTraktv.setVisible()
+//        }
     }
 
     private fun updateGoogleUI(isLoggedIn: Boolean) {
         binding.profileContainer.setVisibleOrGone(isLoggedIn)
-        binding.googleSignInButton.setVisibleOrGone(!isLoggedIn)
-        binding.googleSignOutButton.setVisibleOrGone(isLoggedIn)
+        binding.gSignIn.setVisibleOrGone(!isLoggedIn)
+        binding.gSignOut.setVisibleOrGone(isLoggedIn)
+        binding.lastLine.setVisibleOrGone(isLoggedIn)
+        binding.firstLine.setVisibleOrGone(!isLoggedIn)
 
         binding.profileUsername.text = if (isLoggedIn && googleAccount != null) {
             "გამარჯობა, ${googleAccount!!.givenName!!.toUpperCase()}"
         } else {
             ""
         }
-        binding.profileEmail.text= if (isLoggedIn) googleAccount!!.email else ""
 
         if (isLoggedIn) {
             Glide.with(this).load(googleAccount?.photoUrl).into(binding.profilePhoto)

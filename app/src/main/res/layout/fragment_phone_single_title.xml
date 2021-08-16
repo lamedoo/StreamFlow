@@ -81,8 +81,8 @@
                     android:id="@+id/single_title_cover"
                     android:layout_width="match_parent"
                     android:layout_height="325dp"
-                    android:src="@drawable/movie_image_placeholder_landscape"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/movie_image_placeholder_landscape" />
 
                 <LinearLayout
                     android:id="@+id/single_title_favorite"

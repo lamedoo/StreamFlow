@@ -35,7 +35,7 @@ class SingleGenreFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
 
         singleCategoryViewModel.getSingleGenre(args.genreId, page)
 
-        topBarListener(args.genreName)
+        topBarListener(args.genreName, binding.toolbar)
 
         fragmentObservers()
         genresContainer()

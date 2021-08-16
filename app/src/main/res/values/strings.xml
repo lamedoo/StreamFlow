@@ -32,6 +32,7 @@
     <string name="delete_from_list">სიიდან წაშლა</string>
     <string name="studios">სტუდიები</string>
     <string name="search_movies_tv_shows">მოძებნეთ ფილმები, სერიალები</string>
+    <string name="account">ანგარიში</string>
 
     <!--    <string name="default_web_client_id">700559852856-68iooe5pueka6q1k3oejuc46h4fh9dai.apps.googleusercontent.com</string>-->
 </resources>

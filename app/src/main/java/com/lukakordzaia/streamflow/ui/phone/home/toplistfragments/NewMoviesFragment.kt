@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -32,7 +33,7 @@ class NewMoviesFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
 
         viewModel.getNewMovies(page)
 
-        topBarListener("ახალი ფილმები")
+        topBarListener(resources.getString(R.string.new_movies), binding.toolbar)
 
         fragmentObservers()
         newMoviesContainer()

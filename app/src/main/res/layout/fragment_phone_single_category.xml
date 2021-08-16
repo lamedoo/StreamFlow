@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/fragment_top_toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/fragment_top_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_single_category"
