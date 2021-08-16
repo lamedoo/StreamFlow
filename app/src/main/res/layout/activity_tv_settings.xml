@@ -47,18 +47,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="დაუკავშირდით TRAKT.TV-ს"
+                android:text="@string/connect_trakt"
                 android:textColor="@color/secondary_text_color"
                 android:textSize="20sp"
-                android:fontFamily="@font/georgian_uppercase"/>
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"/>
 
             <TextView
                 android:layout_width="440dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="Trakt.tv-ს სერვისებთან დაკავშირების შემდეგ, შეძლებთ კალენდრის ფუნქციის ჩართვას აპლიკაციაში და ახალი სერიების თარიღების ნახვას."
+                android:text="@string/parameters_trakt_body"
                 android:textColor="@color/secondary_text_color"
-                android:textSize="17sp" />
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                android:textSize="16sp" />
             
         </LinearLayout>
 
@@ -74,18 +75,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="STREAMFLOW-ს შესახებ"
+                android:text="@string/about_streamflow"
                 android:textColor="@color/secondary_text_color"
                 android:textSize="20sp"
-                android:fontFamily="@font/georgian_uppercase"/>
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"/>
 
             <TextView
                 android:layout_width="440dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="Streamflow შეიქმნა იმ მიზნით, რომ ყველამ შეძლოს უფასოდ ფილმების და სერიალების ყურება ანდროიდის მოწყობილობებზე. არ ელოდოთ ამ აპლიკაციას iPhone-ზე"
+                android:text="@string/parameters_about_body"
                 android:textColor="@color/secondary_text_color"
-                android:textSize="17sp" />
+                android:textSize="16sp"
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"/>
 
         </LinearLayout>
 
@@ -101,18 +103,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="განაგრძეთ ყურების გასუფთავება"
+                android:text="@string/clear_history"
                 android:textColor="@color/secondary_text_color"
                 android:textSize="20sp"
-                android:fontFamily="@font/georgian_uppercase"/>
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"/>
 
             <TextView
                 android:layout_width="440dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="გაასუფთავეთ 'განაგრძეთ ყურების' სია და დაიწყეთ ყველაფრის ყურება თავიდან"
+                android:text="@string/parameters_clear_history_body"
                 android:textColor="@color/secondary_text_color"
-                android:textSize="17sp" />
+                android:textSize="16sp"
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"/>
 
         </LinearLayout>
 
@@ -127,10 +130,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ანგარიშიდან გასვლა"
+                android:text="@string/log_out_of_profile"
                 android:textColor="@color/secondary_text_color"
                 android:textSize="20sp"
-                android:fontFamily="@font/georgian_uppercase"/>
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_photo"
@@ -148,9 +151,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
-                android:text="შესული ხართ, როგორც Luka Kordzaia"
+                tools:text="შესული ხართ, როგორც Luka Kordzaia"
                 android:textColor="@color/secondary_text_color"
-                android:textSize="17sp"/>
+                android:textSize="16sp"
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"/>
 
             <TextView
                 android:id="@+id/profile_email"
@@ -158,9 +162,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="ელ-ფოსტა: kordzaialuka@gmail.com"
+                tools:text="ელ-ფოსტა: kordzaialuka@gmail.com"
                 android:textColor="@color/secondary_text_color"
-                android:textSize="17sp"/>
+                android:textSize="16sp"
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"/>
 
         </LinearLayout>
 

@@ -97,11 +97,11 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSear
         tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
             binding.titleInfo.name.text = it.nameEng
 
-            binding.titleInfo.year.text = "${it.releaseYear}   ·"
+            binding.titleInfo.year.text = "${it.releaseYear}"
             binding.titleInfo.duration.text = if (it.isTvShow) {
-                "${it.seasonNum} სეზონი   ·"
+                "${it.seasonNum} სეზონი"
             } else {
-                "${it.duration}   ·"
+                "${it.duration}"
             }
 
             binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"

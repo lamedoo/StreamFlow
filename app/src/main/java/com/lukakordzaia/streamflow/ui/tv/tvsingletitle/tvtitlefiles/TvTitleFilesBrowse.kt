@@ -25,17 +25,16 @@ import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.datamodels.*
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
+import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
+import com.lukakordzaia.streamflow.ui.tv.search.TvSearchPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvCastPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvEpisodesPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvSeasonsPresenter
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
-import com.lukakordzaia.streamflow.ui.tv.search.TvSearchPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import kotlinx.android.synthetic.main.tv_details_season_item.view.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvTitleFilesBrowse : BrowseSupportFragment() {
@@ -193,7 +192,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     }
 
     private fun relatedRowsAdapter(relatedList: List<SingleTitleModel>, isTvShow: Boolean) {
-        val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter(requireContext())).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSearchPresenter()).apply {
             addAll(0, relatedList)
         }
         HeaderItem(if (isTvShow) 3 else 1, "მსგავსი"). also {

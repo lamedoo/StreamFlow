@@ -23,12 +23,13 @@
 
         <ImageButton
             android:id="@+id/tv_exo_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_back"
             android:background="@drawable/exo_buttons_focused"
-            app:tint="@color/white" />
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
 
         <ImageButton
             android:id="@+id/tv_subtitle_toggle"
@@ -71,7 +72,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/secondary_text_color"
+            android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
             android:textSize="18sp"
             android:shadowColor="@color/trueBlack"
             android:shadowDx="1"

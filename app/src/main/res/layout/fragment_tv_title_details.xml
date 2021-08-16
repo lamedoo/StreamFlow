@@ -49,6 +49,14 @@
             app:layout_constraintHeight_default="percent"
             app:layout_constraintHeight_percent="0.6">
 
+            <include
+                android:id="@+id/back_button_info"
+                layout="@layout/tv_back_button_info_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/title_name"
+                app:layout_constraintStart_toStartOf="@id/title_name"/>
+
             <TextView
                 android:id="@+id/title_name"
                 android:layout_width="0dp"
@@ -56,7 +64,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="50dp"
                 android:focusable="false"
-                android:textColor="@color/white"
+                android:textColor="@color/secondary_text_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
                 android:textSize="35sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -97,7 +106,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/default_data"
                         android:textStyle="bold"
-                        tools:text="9.0" />
+                        tools:text="9.0"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color" />
 
                 </LinearLayout>
 
@@ -126,7 +137,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/default_data"
                         android:textStyle="bold"
-                        tools:text="1987" />
+                        tools:text="1987"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color" />
 
                 </LinearLayout>
 
@@ -155,7 +168,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/default_data"
                         android:textStyle="bold"
-                        tools:text="99" />
+                        tools:text="99"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color" />
 
                 </LinearLayout>
 
@@ -184,7 +199,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/default_data"
                         android:textStyle="bold"
-                        tools:text="USA" />
+                        tools:text="USA"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color" />
 
                 </LinearLayout>
 
@@ -198,6 +215,8 @@
                 android:maxLines="5"
                 android:padding="10dp"
                 android:textSize="15sp"
+                android:textColor="@color/secondary_text_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_details"
                 app:layout_constraintWidth_default="percent"
@@ -206,24 +225,21 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
         <TextView
             android:id="@+id/no_files_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:text="ფილმი/სერიალი მალე დაემატება"
+            android:text="@string/title_will_be_added_soon"
             android:textSize="25sp"
-            android:fontFamily="@font/georgian_uppercase"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
             android:textStyle="bold"
             android:layout_gravity="center"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title_info"
-            tools:visibility="gone"/>
+            app:layout_constraintTop_toTopOf="@id/buttons_row"
+            app:layout_constraintBottom_toBottomOf="@id/buttons_row"
+            tools:visibility="visible"/>
 
         <LinearLayout
             android:id="@+id/buttons_row"
@@ -233,7 +249,7 @@
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_info"
-            android:visibility="gone"
+            android:visibility="invisible"
             tools:visibility="visible">
 
             <LinearLayout
@@ -268,11 +284,9 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:layout_marginStart="10dp"
-                android:fontFamily="@font/georgian_uppercase"
-                android:letterSpacing="0"
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
                 android:padding="15dp"
-                android:text="განაგრძეთ ყურება"
-                android:textStyle="bold"
+                android:text="@string/continue_watching"
                 android:textColor="@color/secondary_text_color"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -286,43 +300,27 @@
                 android:background="@drawable/tv_details_button_background"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:fontFamily="@font/georgian_uppercase"
-                android:textStyle="bold"
-                android:letterSpacing="0"
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
                 android:textColor="@color/secondary_text_color"
                 android:padding="15dp"
-                android:text="ყურება"
+                android:text="@string/watch"
                 android:nextFocusDown="@id/next_details" />
 
-            <LinearLayout
+            <TextView
                 android:id="@+id/trailer_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:textColor="@color/secondary_text_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+                android:text="@string/trailer"
+                android:drawableEnd="@drawable/tv_play_trailer"
                 android:layout_marginStart="10dp"
                 android:layout_gravity="center"
-                android:padding="13dp"
+                android:padding="15dp"
                 android:background="@drawable/tv_details_button_background"
-                android:nextFocusDown="@id/next_details">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:focusable="false"
-                    android:paddingTop="3dp"
-                    android:focusableInTouchMode="false"
-                    android:textColor="@color/secondary_text_color"
-                    android:fontFamily="@font/georgian_uppercase"
-                    android:text="ტრეილერი" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/tv_play_trailer"/>
-
-            </LinearLayout>
+                android:nextFocusDown="@id/next_details"/>
 
         </LinearLayout>
 
@@ -378,8 +376,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:fontFamily="@font/georgian_uppercase"
-                android:text="აირჩიეთ სეზონი" />
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+                android:text="@string/episodes_and_more"
+                android:textColor="@color/general_text_color" />
 
             <ImageView
                 android:layout_width="wrap_content"

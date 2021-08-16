@@ -1,18 +1,13 @@
 package com.lukakordzaia.streamflow.ui.tv.search
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
-import com.bumptech.glide.Glide
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvDefaultWithTitleCardView
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.utils.setImage
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.tv_default_card_view.view.*
 
-class TvSearchPresenter(private val context: Context) : Presenter() {
+class TvSearchPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvDefaultWithTitleCardView(parent.context, null)
 

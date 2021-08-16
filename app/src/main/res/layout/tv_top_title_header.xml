@@ -45,15 +45,15 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="3"
-            android:fontFamily="@font/archivo_narrow_bold"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
             android:textSize="35sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/secondary_text_color"
             app:layout_constraintWidth_percent="0.8"
             app:layout_constraintTop_toTopOf="@id/poster"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -63,9 +63,16 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 tools:text="2015"
-                android:textColor="@color/general_text_color"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                android:textColor="@color/general_text_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:text="@string/middle_dot"
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                android:textColor="@color/general_text_color"/>
 
             <TextView
                 android:id="@+id/duration"
@@ -73,9 +80,16 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 tools:text="1:37:43"
-                android:textColor="@color/general_text_color"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/year" />
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                android:textColor="@color/general_text_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:text="@string/middle_dot"
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                android:textColor="@color/general_text_color"/>
 
             <TextView
                 android:id="@+id/imdb_score"
@@ -83,11 +97,10 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 tools:text="8.6"
-                android:textColor="@color/accent_color"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/duration" />
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                android:textColor="@color/accent_color" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/genres"
@@ -96,10 +109,9 @@
             android:padding="5dp"
             tools:text="დრამა, კომედია, აზარტული"
             android:shadowColor="@color/trueBlack"
-            android:shadowDx="1"
-            android:shadowDy="2"
             android:shadowRadius="3"
-            android:textColor="@color/general_text_color"
+            android:textColor="@color/secondary_text_color"
+            android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
             app:layout_constraintTop_toBottomOf="@id/year"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_default="percent"
@@ -107,19 +119,18 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:id="@+id/continue_watching_season"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/georgian_uppercase"
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
                 android:textColor="@color/general_text_color"
-                android:textSize="11sp"
-                android:layout_marginTop="20dp"
-                android:paddingTop="5dp"
+                android:textSize="13sp"
                 android:paddingStart="5dp"
-                android:text="ს1 ე24"
+                tools:text="ს1 ე24"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -129,8 +140,7 @@
             <SeekBar
                 android:id="@+id/continue_watching_seekBar"
                 android:layout_width="200dp"
-                android:layout_height="10dp"
-                android:paddingTop="2dp"
+                android:layout_height="wrap_content"
                 android:thumbTint="@color/general_text_color"
                 android:thumb="@color/accent_color"
                 android:progressTint="@color/accent_color"
@@ -153,7 +163,8 @@
             android:layout_marginTop="20dp"
             android:background="@color/accent_color"
             android:textColor="@color/text_on_accent_color"
-            android:text="სერიალი"
+            android:text="@string/tv_show"
+            android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
             android:padding="5dp"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="5dp"

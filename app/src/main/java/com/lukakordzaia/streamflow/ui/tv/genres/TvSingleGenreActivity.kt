@@ -47,11 +47,11 @@ class TvSingleGenreActivity: BaseFragmentActivity<ActivityTvSingleGenreBinding>(
 
             binding.titleInfo.poster.setImage(it.cover, false)
 
-            binding.titleInfo.year.text = "${it.releaseYear}   ·"
+            binding.titleInfo.year.text = "${it.releaseYear}"
             binding.titleInfo.duration.text = if (it.isTvShow) {
-                "${it.seasonNum} სეზონი   ·"
+                "${it.seasonNum} სეზონი"
             } else {
-                "${it.duration}   ·"
+                "${it.duration}"
             }
             binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
         })

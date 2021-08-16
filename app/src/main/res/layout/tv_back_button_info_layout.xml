@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/tv_settings_back"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="70dp"
+    android:orientation="horizontal"
+    app:layout_constraintBottom_toTopOf="@+id/tv_settings_name"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_chainStyle="packed"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/click"
+        android:textColor="@color/general_text_color"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        android:textSize="11sp" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginHorizontal="5dp"
+        android:src="@drawable/ic_arrow_back" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/to_return"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        android:textColor="@color/general_text_color"
+        android:textSize="11sp" />
+
+</LinearLayout>
