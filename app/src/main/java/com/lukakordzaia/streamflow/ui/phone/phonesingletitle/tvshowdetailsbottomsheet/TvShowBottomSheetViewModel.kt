@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,8 +32,8 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
     private val _episodeInfo = MutableLiveData<List<TitleEpisodes>>()
     val episodeInfo: LiveData<List<TitleEpisodes>> = _episodeInfo
 
-    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom>()
-    val continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
+    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom?>()
+    val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
 
     fun checkAuthDatabase(titleId: Int) {
         if (currentUser() == null) {
@@ -46,13 +47,14 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
         val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
 
         _continueWatchingDetails.addSource(data) {
+            Log.d("dasdsadasdA", it.toString())
             _continueWatchingDetails.value = it
         }
     }
 
     private fun checkContinueWatchingInFirestore(titleId: Int) {
         environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: ContinueWatchingRoom) {
+            override fun continueWatchingTitle(title: ContinueWatchingRoom?) {
                 _continueWatchingDetails.value = title
             }
         })

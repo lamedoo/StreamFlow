@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -88,7 +87,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
 
     private fun checkContinueWatchingInFirestore(titleId: Int) {
         environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: ContinueWatchingRoom) {
+            override fun continueWatchingTitle(title: ContinueWatchingRoom?) {
                 _continueWatchingDetails.value = title
             }
 

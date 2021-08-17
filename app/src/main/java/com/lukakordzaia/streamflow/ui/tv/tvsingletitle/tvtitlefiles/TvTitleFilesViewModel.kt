@@ -134,7 +134,7 @@ class TvTitleFilesViewModel : BaseViewModel() {
 
     private fun checkContinueWatchingInFirestore(titleId: Int) {
         environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: ContinueWatchingRoom) {
+            override fun continueWatchingTitle(title: ContinueWatchingRoom?) {
                 _continueWatchingDetails.value = title
             }
 

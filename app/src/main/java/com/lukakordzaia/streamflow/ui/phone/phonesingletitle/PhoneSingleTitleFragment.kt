@@ -14,12 +14,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
-import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleNewBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -68,14 +66,14 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
                 }
 
                 if (it.isTvShow) {
-                    binding.playButton.text = String.format(
+                    binding.playButton1.text = String.format(
                         "ს:${it.season} ე:${it.episode} / %02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                         TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
                     )
                 } else {
-                    binding.playButton.text = String.format(
+                    binding.playButton1.text = String.format(
                         "%02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                         TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -

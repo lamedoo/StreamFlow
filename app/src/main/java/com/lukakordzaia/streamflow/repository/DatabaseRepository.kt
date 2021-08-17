@@ -135,6 +135,7 @@ class DatabaseRepository(private val database: StreamFlowDatabase) {
                 )
                 continueWatchingCallBack.continueWatchingTitle(title)
             } else {
+                continueWatchingCallBack.continueWatchingTitle(null)
                 Log.d(ContentValues.TAG, "Current data: null")
             }
         }
