@@ -1,130 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:layout_marginTop="10dp"
-    android:gravity="center"
-    android:orientation="horizontal"
-    android:padding="10dp"
-    app:layout_constraintTop_toBottomOf="@id/single_title_name_geo"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/single_title_score_container"
+    <TextView
+        android:id="@+id/year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/single_title_year_container"
-        app:layout_constraintEnd_toStartOf="@+id/single_title_year_container"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/single_title_year_container">
+        android:padding="5dp"
+        tools:text="2015"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        android:textColor="@color/general_text_color" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/phone_imdb_logo" />
-
-        <TextView
-            android:id="@+id/tv_single_movie_imdb_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/default_data"
-            android:textStyle="bold"
-            tools:text="9.0" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/single_title_year_container"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/single_title_duration_container"
-        app:layout_constraintEnd_toStartOf="@+id/single_title_duration_container"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/single_title_score_container"
-        app:layout_constraintTop_toTopOf="@+id/single_title_duration_container">
+        android:layout_marginHorizontal="5dp"
+        android:text="@string/middle_dot"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        android:textColor="@color/general_text_color"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/info_calendar_icon" />
-
-        <TextView
-            android:id="@+id/tv_single_title_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/default_data"
-            android:textStyle="bold"
-            tools:text="1987" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/single_title_duration_container"
+    <TextView
+        android:id="@+id/duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/single_title_country_container"
-        app:layout_constraintEnd_toStartOf="@+id/single_title_country_container"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/single_title_year_container"
-        app:layout_constraintTop_toTopOf="@+id/single_title_country_container">
+        android:padding="5dp"
+        tools:text="1:37:43"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        android:textColor="@color/general_text_color" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/info_duration_icon" />
-
-        <TextView
-            android:id="@+id/tv_single_title_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/default_data"
-            android:textStyle="bold"
-            tools:text="99" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/single_title_country_container"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/single_title_duration_container"
-        app:layout_constraintTop_toBottomOf="@id/single_title_duration_container"
-        app:layout_constraintTop_toTopOf="@+id/single_title_duration_container">
+        android:layout_marginHorizontal="5dp"
+        android:text="@string/middle_dot"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        android:textColor="@color/general_text_color"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/info_country_icon" />
+    <TextView
+        android:id="@+id/imdb_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        tools:text="8.6"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        android:textColor="@color/accent_color" />
 
-        <TextView
-            android:id="@+id/tv_single_title_country"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/default_data"
-            android:textStyle="bold"
-            tools:text="USA" />
+</LinearLayout>
 
-    </LinearLayout>
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_marginTop="10dp"-->
+<!--    android:gravity="center"-->
+<!--    android:orientation="horizontal"-->
+<!--    android:padding="10dp"-->
+<!--    app:layout_constraintTop_toBottomOf="@id/single_title_name_geo"-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools">-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+<!--    <LinearLayout-->
+<!--        android:id="@+id/single_title_score_container"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="10dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/single_title_year_container"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/single_title_year_container"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/single_title_year_container">-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="24dp"-->
+<!--            android:layout_height="24dp"-->
+<!--            android:src="@drawable/phone_imdb_logo" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_single_movie_imdb_score"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/default_data"-->
+<!--            android:textStyle="bold"-->
+<!--            tools:text="9.0" />-->
+
+<!--    </LinearLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/single_title_year_container"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="10dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/single_title_duration_container"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/single_title_duration_container"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/single_title_score_container"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/single_title_duration_container">-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/info_calendar_icon" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_single_title_year"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/default_data"-->
+<!--            android:textStyle="bold"-->
+<!--            tools:text="1987" />-->
+
+<!--    </LinearLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/single_title_duration_container"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="10dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/single_title_country_container"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/single_title_country_container"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/single_title_year_container"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/single_title_country_container">-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/info_duration_icon" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_single_title_duration"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/default_data"-->
+<!--            android:textStyle="bold"-->
+<!--            tools:text="99" />-->
+
+<!--    </LinearLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/single_title_country_container"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="10dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/single_title_duration_container"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/single_title_duration_container"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/single_title_duration_container">-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/info_country_icon" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_single_title_country"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/default_data"-->
+<!--            android:textStyle="bold"-->
+<!--            tools:text="USA" />-->
+
+<!--    </LinearLayout>-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

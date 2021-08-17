@@ -27,9 +27,9 @@ import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottom
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
-import kotlinx.android.synthetic.main.phone_single_title_info.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding>() {
     private val phoneSingleTitleViewModel: PhoneSingleTitleViewModel by viewModel()
@@ -60,31 +60,50 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
     private fun checkAuth() {
         tvShowBottomSheetViewModel.checkAuthDatabase(args.titleId)
         tvShowBottomSheetViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            binding.continueWatchingInfo.setVisibleOrGone(it != null)
+            binding.continueWatchingSeekBar.setVisibleOrGone(it != null)
+
+            binding.continueWatchingInfoBottom.setVisibleOrGone(it != null)
+            binding.continueWatchingSeekBarBottom.setVisibleOrGone(it != null)
+
             if (it != null) {
                 binding.playButton.setOnClickListener { _ ->
                     startVideoPlayer(it, null)
                 }
 
                 if (it.isTvShow) {
-                    binding.playButton1.text = String.format(
-                        "ს:${it.season} ე:${it.episode} / %02d:%02d",
+                    val info = String.format(
+                        "ს${it.season} ე${it.episode} / %02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                         TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
                     )
+
+                    binding.continueWatchingInfo.text = info
+                    binding.continueWatchingInfoBottom.text = info
                 } else {
-                    binding.playButton1.text = String.format(
+                    val info = String.format(
                         "%02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
                         TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
                     )
 
+                    binding.continueWatchingInfo.text = info
+                    binding.continueWatchingInfoBottom.text = info
+
                     binding.replayButton.setVisible()
+                    binding.replayButtonBottom.setVisible()
                     binding.replayButton.setOnClickListener { _ ->
                         languagePickerDialog()
                     }
                 }
+
+                binding.continueWatchingSeekBar.max = it.titleDuration.toInt()
+                binding.continueWatchingSeekBar.progress = it.watchedDuration.toInt()
+
+                binding.continueWatchingSeekBarBottom.max = it.titleDuration.toInt()
+                binding.continueWatchingSeekBarBottom.progress = it.watchedDuration.toInt()
             } else {
                 binding.playButton.setOnClickListener { _ ->
                     languagePickerDialog()
@@ -125,8 +144,20 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
     }
 
     private fun fragmentListeners() {
+        binding.playButtonBottom.setOnClickListener {
+            binding.playButton.callOnClick()
+        }
+
+        binding.episodesButtonBottom.setOnClickListener {
+            binding.episodesButton.callOnClick()
+        }
+
+        binding.replayButtonBottom.setOnClickListener {
+            binding.replayButton.callOnClick()
+        }
+
         binding.singleTitleAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            if (kotlin.math.abs(verticalOffset) == binding.singleTitleAppbar.totalScrollRange) {
+            if (abs(verticalOffset) == binding.singleTitleAppbar.totalScrollRange) {
                 binding.singleTitleDetailsScroll.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
@@ -164,6 +195,40 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
         phoneSingleTitleViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
+
+        binding.singleTitleAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appbar, verticalOffset ->
+            var offsetPercent = 0F
+            var playButtonAlpha = 0F
+
+            try {
+                offsetPercent = (abs(verticalOffset).toFloat() * 100F) / (appbar.totalScrollRange.toFloat())
+                playButtonAlpha = 1F - ((offsetPercent) / 80F)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+
+            val playButtonBottomAlpha = if (offsetPercent >= 80F) {
+                (-4F) + ((offsetPercent) / 20F)
+            } else {
+                0F
+            }
+
+            if (abs(verticalOffset) == appbar.totalScrollRange) {
+                binding.playButton.alpha = 0F
+                binding.episodesButton.alpha = 0F
+                binding.replayButton.alpha = 0F
+                binding.continueWatchingInfo.alpha = 0F
+                binding.continueWatchingSeekBar.alpha = 0F
+                binding.playButtonBottomContainer.alpha = 1F
+            } else {
+                binding.playButton.alpha = playButtonAlpha
+                binding.episodesButton.alpha = playButtonAlpha
+                binding.replayButton.alpha = playButtonAlpha
+                binding.continueWatchingInfo.alpha = playButtonAlpha
+                binding.continueWatchingSeekBar.alpha = playButtonAlpha
+                binding.playButtonBottomContainer.alpha = playButtonBottomAlpha
+            }
+        })
     }
 
     private fun titleDetailsContainer() {
@@ -184,8 +249,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
         phoneSingleTitleViewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
             titleInfo = it
 
-            binding.singleTitleNameGeo.text = it.nameGeo
-            binding.singleTitleNameEng.text = it.nameEng
+            binding.titleName.text = it.displayName
 
             binding.singleTitleCover.setImage(it.cover, false)
 
@@ -193,14 +257,14 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
                 startTrailer(it)
             }
 
-            binding.singleTitleDesc.text = it.description
-            binding.infoDetails.tvSingleMovieImdbScore.text = it.imdbScore
-            binding.infoDetails.tvSingleTitleYear.text = it.releaseYear
-            binding.infoDetails.tvSingleTitleDuration.text = it.duration
-            binding.infoDetails.tvSingleTitleCountry.text = it.country
+            binding.titleDescription.text = it.description
+            binding.infoDetails.imdbScore.text = "IMDB ${it.imdbScore}"
+            binding.infoDetails.year.text = it.releaseYear
+            binding.infoDetails.duration.text = it.duration
 
             if (it.isTvShow) {
                 binding.episodesButton.setVisible()
+                binding.episodesButtonBottom.setVisible()
                 binding.episodesButton.setOnClickListener { _ ->
                     phoneSingleTitleViewModel.onEpisodesPressed(it.id, it.displayName!!, it.seasonNum!!)
                 }
@@ -208,11 +272,11 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
         })
 
         phoneSingleTitleViewModel.titleGenres.observe(viewLifecycleOwner, {
-            single_title_genre_names.text = TextUtils.join(", ", it)
+            binding.titleGenre.text = TextUtils.join(", ", it)
         })
 
         phoneSingleTitleViewModel.getSingleTitleDirectorResponse.observe(viewLifecycleOwner, {
-            single_title_director_name.text = it.originalName
+            binding.titleDirector.text = it.originalName
         })
     }
 
@@ -221,8 +285,8 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
         phoneSingleTitleCastAdapter = PhoneSingleTitleCastAdapter(requireContext()) {
             requireContext().createToast(it)
         }
-        rv_single_title_cast.layoutManager = castLayout
-        rv_single_title_cast.adapter = phoneSingleTitleCastAdapter
+        binding.singleTitleCastSimilar.rvSingleTitleCast.layoutManager = castLayout
+        binding.singleTitleCastSimilar.rvSingleTitleCast.adapter = phoneSingleTitleCastAdapter
 
         phoneSingleTitleViewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
             phoneSingleTitleCastAdapter.setCastList(it)
@@ -234,8 +298,8 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
         phoneSingleTitleRelatedAdapter = PhoneSingleTitleRelatedAdapter(requireContext()) {
             phoneSingleTitleViewModel.onRelatedTitlePressed(it)
         }
-        rv_single_title_related.layoutManager = relatedLayout
-        rv_single_title_related.adapter = phoneSingleTitleRelatedAdapter
+        binding.singleTitleCastSimilar.rvSingleTitleRelated.layoutManager = relatedLayout
+        binding.singleTitleCastSimilar.rvSingleTitleRelated.adapter = phoneSingleTitleRelatedAdapter
 
         phoneSingleTitleViewModel.singleTitleRelated.observe(viewLifecycleOwner, {
             phoneSingleTitleRelatedAdapter.setRelatedList(it)

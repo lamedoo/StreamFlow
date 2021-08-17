@@ -226,7 +226,7 @@
 
                     <include
                         android:id="@+id/single_title_cast_similar"
-                        layout="@layout/phone_single_title_info"
+                        layout="@layout/phone_single_title_cast_similar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp"
