@@ -30,8 +30,8 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
-    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom>()
-    val continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
+    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom?>()
+    val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
 
     private val _addToFavorites = MutableLiveData<Boolean>()
     val addToFavorites: LiveData<Boolean> = _addToFavorites

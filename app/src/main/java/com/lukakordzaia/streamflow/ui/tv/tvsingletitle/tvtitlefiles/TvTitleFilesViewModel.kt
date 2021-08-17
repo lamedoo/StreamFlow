@@ -39,8 +39,8 @@ class TvTitleFilesViewModel : BaseViewModel() {
     private val _singleTitleRelated = MutableLiveData<List<SingleTitleModel>>()
     val singleTitleRelated: LiveData<List<SingleTitleModel>> = _singleTitleRelated
 
-    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom>()
-    val continueWatchingDetails: LiveData<ContinueWatchingRoom> = _continueWatchingDetails
+    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom?>()
+    val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
 
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
