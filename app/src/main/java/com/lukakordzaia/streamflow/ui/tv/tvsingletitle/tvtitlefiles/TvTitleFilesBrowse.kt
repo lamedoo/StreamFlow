@@ -29,7 +29,7 @@ import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvMainPresenter
 import com.lukakordzaia.streamflow.ui.tv.search.TvSimilarPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
-import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvChooseLanguageAdapter
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.ChooseLanguageAdapter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvCastPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvEpisodesPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvSeasonsPresenter
@@ -39,7 +39,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvTitleFilesBrowse : BrowseSupportFragment() {
     private val tvTitleFilesViewModel: TvTitleFilesViewModel by viewModel()
-    private lateinit var tvChooseLanguageAdapter: TvChooseLanguageAdapter
+    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var metrics: DisplayMetrics
     private var hasFocus = false
@@ -246,16 +246,16 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                     chooseLanguageDialog.show()
 
                     val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-                    tvChooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) {
+                    chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
                         chooseLanguageDialog.hide()
                         playEpisode(titleId, isTvShow, it)
                     }
                     binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
-                    binding.rvChooseLanguage.adapter = tvChooseLanguageAdapter
+                    binding.rvChooseLanguage.adapter = chooseLanguageAdapter
 
                     tvTitleFilesViewModel.availableLanguages.observe(viewLifecycleOwner, {
                         val languages = it.reversed()
-                        tvChooseLanguageAdapter.setLanguageList(languages)
+                        chooseLanguageAdapter.setLanguageList(languages)
                     })
                 }
                 is SingleTitleModel -> {

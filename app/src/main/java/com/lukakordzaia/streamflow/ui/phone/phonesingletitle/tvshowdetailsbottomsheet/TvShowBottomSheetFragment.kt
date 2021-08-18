@@ -21,7 +21,7 @@ import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseBottomSheet
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
-import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvChooseLanguageAdapter
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.ChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -30,7 +30,7 @@ class TvShowBottomSheetFragment : BaseBottomSheet<FragmentPhoneTvShowBottomSheet
     private val tvShowBottomSheetViewModel: TvShowBottomSheetViewModel by viewModel()
     private lateinit var tvShowBottomSheetEpisodesAdapter: TvShowBottomSheetEpisodesAdapter
     private lateinit var tvShowBottomSheetSeasonAdapter: TvShowBottomSheetSeasonAdapter
-    private lateinit var chooseLanguageAdapter: TvChooseLanguageAdapter
+    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private val args: TvShowBottomSheetFragmentArgs by navArgs()
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneTvShowBottomSheetBinding
@@ -166,7 +166,7 @@ class TvShowBottomSheetFragment : BaseBottomSheet<FragmentPhoneTvShowBottomSheet
         chooseLanguageDialog.show()
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) { language ->
+        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) { language ->
             chooseLanguageDialog.hide()
             startVideoPlayer(language, episode)
         }

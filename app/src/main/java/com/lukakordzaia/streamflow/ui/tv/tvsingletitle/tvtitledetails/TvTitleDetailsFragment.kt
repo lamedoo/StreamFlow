@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit
 
 class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by sharedViewModel()
-    private lateinit var tvChooseLanguageAdapter: TvChooseLanguageAdapter
+    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var titleInfo: SingleTitleModel
     private var hasFocus: Boolean = false
     private var startedWatching = false
@@ -62,16 +62,16 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
             chooseLanguageDialog.show()
 
             val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-            tvChooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) {
+            chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
                 chooseLanguageDialog.hide()
                 playTitleFromStart(titleId, isTvShow, it)
             }
             binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
-            binding.rvChooseLanguage.adapter = tvChooseLanguageAdapter
+            binding.rvChooseLanguage.adapter = chooseLanguageAdapter
 
             tvTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
                 val languages = it.reversed()
-                tvChooseLanguageAdapter.setLanguageList(languages)
+                chooseLanguageAdapter.setLanguageList(languages)
             })
         }
 

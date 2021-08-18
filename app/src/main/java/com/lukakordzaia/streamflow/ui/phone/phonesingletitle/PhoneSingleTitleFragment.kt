@@ -25,7 +25,7 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
-import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvChooseLanguageAdapter
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.ChooseLanguageAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -35,7 +35,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
     private val phoneSingleTitleViewModel: PhoneSingleTitleViewModel by viewModel()
     private val tvShowBottomSheetViewModel: TvShowBottomSheetViewModel by viewModel()
     private lateinit var titleInfo: SingleTitleModel
-    private lateinit var chooseLanguageAdapter: TvChooseLanguageAdapter
+    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var phoneSingleTitleCastAdapter: PhoneSingleTitleCastAdapter
     private lateinit var phoneSingleTitleRelatedAdapter: PhoneSingleTitleRelatedAdapter
     private val args: PhoneSingleTitleFragmentArgs by navArgs()
@@ -317,7 +317,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
         chooseLanguageDialog.show()
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseLanguageAdapter = TvChooseLanguageAdapter(requireContext()) { language ->
+        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) { language ->
             chooseLanguageDialog.hide()
             startVideoPlayer(null, language)
         }

@@ -45,6 +45,13 @@
     <string name="add_favorite_tv_shows_body">სამწუხაროდ, სიცარიელეა. დაამატეთ სერიალები ფავორიტებში</string>
     <string name="details">დეტალები</string>
     <string name="no_favorites_add_tv_or_movie">თქვენ არ გაქვთ ფავორიტები. აირჩიეთ ნებისმიერი ფილმი ან სერიალი და დაამატეთ აქ</string>
+    <string name="dialog_remove_history_title">ნამდვილად გსურთ ნახვების ისტორიის წაშლა?</string>
+    <string name="no">არა</string>
+    <string name="yes">დიახ</string>
+    <string name="dialog_remove_favorite_title">ნამდვილად გსურთ ფავორიტებიდან წაშლა?</string>
+    <string name="dialog_sync_title">გსურთ ნახვების ისტორიის სინქრონიზაცია თქვენს ანგარიშთან?</string>
+    <string name="dialog_sync_alert">*სინქრონიზაციის შემდეგ, მოწოყობილობის ისტორია წაიშლება</string>
+    <string name="choose_language">აირჩიეთ ენა:</string>
 
     <!--    <string name="default_web_client_id">700559852856-68iooe5pueka6q1k3oejuc46h4fh9dai.apps.googleusercontent.com</string>-->
 </resources>
