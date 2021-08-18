@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.repository
+package com.lukakordzaia.streamflow.repository.favoritesrepository
 
 import android.content.ContentValues
 import android.util.Log
@@ -9,8 +9,8 @@ import com.lukakordzaia.streamflow.datamodels.AddFavoritesModel
 import com.lukakordzaia.streamflow.interfaces.FavoritesCallBack
 import kotlinx.coroutines.tasks.await
 
-class FavoritesRepository {
-    suspend fun addTitleToFavorites(currentUserUid: String, addFavoritesModel: AddFavoritesModel): Boolean {
+class DefaultFavoritesRepository: FavoritesRepository {
+    override suspend fun addTitleToFavorites(currentUserUid: String, addFavoritesModel: AddFavoritesModel): Boolean {
         return try {
             Firebase.firestore
                 .collection("users")
@@ -32,7 +32,7 @@ class FavoritesRepository {
         }
     }
 
-    suspend fun removeTitleFromFavorites(currentUserUid: String, titleId: Int): Boolean {
+    override suspend fun removeTitleFromFavorites(currentUserUid: String, titleId: Int): Boolean {
         return try {
             Firebase.firestore
                 .collection("users")
@@ -47,7 +47,7 @@ class FavoritesRepository {
         }
     }
 
-    suspend fun checkTitleInFavorites(currentUserUid: String, titleId: Int): DocumentSnapshot? {
+    override suspend fun checkTitleInFavorites(currentUserUid: String, titleId: Int): DocumentSnapshot? {
         return try {
             val data = Firebase.firestore
                 .collection("users")
@@ -63,7 +63,7 @@ class FavoritesRepository {
         }
     }
 
-    fun getTitlesFromFavorites(currentUserUid: String, favoritesCallBack: FavoritesCallBack) {
+    override fun getTitlesFromFavorites(currentUserUid: String, favoritesCallBack: FavoritesCallBack) {
         val docRef = Firebase.firestore.collection("users").document(currentUserUid).collection("favMovies")
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {

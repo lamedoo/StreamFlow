@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.repository.SearchTitleRepository
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
@@ -37,7 +35,7 @@ class SearchTitlesViewModel : BaseViewModel() {
     fun getSearchTitles(keywords: String, page: Int) {
         viewModelScope.launch {
             searchLoader.value = LoadingState.LOADING
-            when (val search = environment.searchTitleRepository.getSearchTitles(keywords, page)) {
+            when (val search = environment.searchRepository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = search.data.data
                     fetchSearchGetTitlesResponse.addAll(data.toTitleListModel())
@@ -56,7 +54,7 @@ class SearchTitlesViewModel : BaseViewModel() {
 
     fun getSearchTitlesTv(keywords: String, page: Int) {
         viewModelScope.launch {
-            when (val searchTv = environment.searchTitleRepository.getSearchTitles(keywords, page)) {
+            when (val searchTv = environment.searchRepository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = searchTv.data.data
                     _searchList.value = data.toTitleListModel()
@@ -71,7 +69,7 @@ class SearchTitlesViewModel : BaseViewModel() {
     fun getTopFranchises() {
         viewModelScope.launch {
             franchisesLoader.value = LoadingState.LOADING
-            when (val franchises = environment.searchTitleRepository.getTopFranchises()) {
+            when (val franchises = environment.searchRepository.getTopFranchises()) {
                 is Result.Success -> {
                     val data = franchises.data.data
                     _franchiseList.value = data

@@ -55,7 +55,7 @@ class SingleCategoryViewModel : BaseViewModel() {
     fun getSingleGenre(genreId: Int, page: Int) {
         viewModelScope.launch {
             categoryLoader.value = LoadingState.LOADING
-            when (val singleGenre = environment.categoriesRepository.getSingleGenre(genreId, page)) {
+            when (val singleGenre = environment.catalogueRepository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
                     val data = singleGenre.data.data
                     fetchSingleGenreList.addAll(data.toTitleListModel())
@@ -75,7 +75,7 @@ class SingleCategoryViewModel : BaseViewModel() {
 
     fun getSingleGenreForTv(genreId: Int, page: Int) {
         viewModelScope.launch {
-            when (val singleGenre = environment.categoriesRepository.getSingleGenre(genreId, page)) {
+            when (val singleGenre = environment.catalogueRepository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
                     val data = singleGenre.data.data
                     when (genreId) {
@@ -100,7 +100,7 @@ class SingleCategoryViewModel : BaseViewModel() {
     fun getSingleStudio(studioId: Int, page: Int) {
         viewModelScope.launch {
             categoryLoader.value = LoadingState.LOADING
-            when (val singleStudio = environment.categoriesRepository.getSingleStudio(studioId, page)) {
+            when (val singleStudio = environment.catalogueRepository.getSingleStudio(studioId, page)) {
                 is Result.Success -> {
                     val data = singleStudio.data.data
                     fetchSingleStudioList.addAll(data.toTitleListModel())

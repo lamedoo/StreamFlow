@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.repository
+package com.lukakordzaia.streamflow.repository.databaserepository
 
 import android.content.ContentValues
 import android.util.Log
@@ -12,28 +12,28 @@ import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import kotlinx.coroutines.tasks.await
 
-class DatabaseRepository(private val database: StreamFlowDatabase) {
-    fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>> {
+class DefaultDatabaseRepository(private val database: StreamFlowDatabase): DatabaseRepository {
+    override fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>> {
         return database.continueWatchingDao().getContinueWatchingFromRoom()
     }
 
-    suspend fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
+    override suspend fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
         return database.continueWatchingDao().deleteSingleContinueWatchingFromRoom(titleId)
     }
 
-    fun getSingleContinueWatchingFromRoom(titleId: Int): LiveData<ContinueWatchingRoom> {
+    override fun getSingleContinueWatchingFromRoom(titleId: Int): LiveData<ContinueWatchingRoom> {
         return database.continueWatchingDao().getSingleContinueWatchingFromRoom(titleId)
     }
 
-    suspend fun insertContinueWatchingInRoom(continueWatchingRoom: ContinueWatchingRoom) {
+    override suspend fun insertContinueWatchingInRoom(continueWatchingRoom: ContinueWatchingRoom) {
         database.continueWatchingDao().insertContinueWatchingInRoom(continueWatchingRoom)
     }
 
-    suspend fun deleteAllFromRoom() {
+    override suspend fun deleteAllFromRoom() {
         database.continueWatchingDao().deleteContinueWatchingFullFromRoom()
     }
 
-    suspend fun createUserFirestore(user: FirebaseUser?): Boolean {
+    override suspend fun createUserFirestore(user: FirebaseUser?): Boolean {
         return try {
             val db = Firebase.firestore
 
@@ -48,7 +48,7 @@ class DatabaseRepository(private val database: StreamFlowDatabase) {
         }
     }
 
-    fun getContinueWatchingFromFirestore(currentUserUid: String, continueWatchingListCallBack: FirebaseContinueWatchingListCallBack) {
+    override fun getContinueWatchingFromFirestore(currentUserUid: String, continueWatchingListCallBack: FirebaseContinueWatchingListCallBack) {
         val docRef = Firebase.firestore.collection("users").document(currentUserUid).collection("continueWatching")
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -76,7 +76,7 @@ class DatabaseRepository(private val database: StreamFlowDatabase) {
         }
     }
 
-    suspend fun deleteSingleContinueWatchingFromFirestore(currentUserUid: String, titleId: Int): Boolean {
+    override suspend fun deleteSingleContinueWatchingFromFirestore(currentUserUid: String, titleId: Int): Boolean {
         return try {
             Firebase.firestore
                 .collection("users")
@@ -91,7 +91,7 @@ class DatabaseRepository(private val database: StreamFlowDatabase) {
         }
     }
 
-    suspend fun addContinueWatchingTitleToFirestore(currentUserUid: String, continueWatchingRoom: ContinueWatchingRoom): Boolean {
+    override suspend fun addContinueWatchingTitleToFirestore(currentUserUid: String, continueWatchingRoom: ContinueWatchingRoom): Boolean {
         return try {
             Firebase.firestore
                 .collection("users")
@@ -116,7 +116,7 @@ class DatabaseRepository(private val database: StreamFlowDatabase) {
         }
     }
 
-    fun checkContinueWatchingInFirestore(currentUserUid: String, titleId: Int, continueWatchingCallBack: FirebaseContinueWatchingCallBack) {
+    override fun checkContinueWatchingInFirestore(currentUserUid: String, titleId: Int, continueWatchingCallBack: FirebaseContinueWatchingCallBack) {
         val docRef = Firebase.firestore.collection("users").document(currentUserUid).collection("continueWatching").document(titleId.toString())
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -141,7 +141,7 @@ class DatabaseRepository(private val database: StreamFlowDatabase) {
         }
     }
 
-    suspend fun addWatchedEpisodeToFirestore(currentUserUid: String, continueWatchingRoom: ContinueWatchingRoom): Boolean {
+    override suspend fun addWatchedEpisodeToFirestore(currentUserUid: String, continueWatchingRoom: ContinueWatchingRoom): Boolean {
         return try {
             Firebase.firestore
                 .collection("users")

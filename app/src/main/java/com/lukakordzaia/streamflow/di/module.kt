@@ -10,17 +10,30 @@ import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import com.lukakordzaia.streamflow.network.interceptors.DefaultHeaderInterceptor
 import com.lukakordzaia.streamflow.network.interceptors.NetworkConnectionInterceptor
 import com.lukakordzaia.streamflow.network.trakttv.TraktTvNetwork
-import com.lukakordzaia.streamflow.repository.*
+import com.lukakordzaia.streamflow.repository.cataloguerepository.CatalogueRepository
+import com.lukakordzaia.streamflow.repository.cataloguerepository.DefaultCatalogueRepository
+import com.lukakordzaia.streamflow.repository.databaserepository.DatabaseRepository
+import com.lukakordzaia.streamflow.repository.databaserepository.DefaultDatabaseRepository
+import com.lukakordzaia.streamflow.repository.favoritesrepository.DefaultFavoritesRepository
+import com.lukakordzaia.streamflow.repository.favoritesrepository.FavoritesRepository
+import com.lukakordzaia.streamflow.repository.homerepistory.DefaultHomeRepository
+import com.lukakordzaia.streamflow.repository.homerepistory.HomeRepository
+import com.lukakordzaia.streamflow.repository.searchrepository.DefaultSearchRepository
+import com.lukakordzaia.streamflow.repository.searchrepository.SearchRepository
+import com.lukakordzaia.streamflow.repository.singletitlerepository.DefaultSingleTitleRepository
+import com.lukakordzaia.streamflow.repository.singletitlerepository.SingleTitleRepository
+import com.lukakordzaia.streamflow.repository.traktrepository.DefaultTraktRepository
+import com.lukakordzaia.streamflow.repository.traktrepository.TraktRepository
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueViewModel
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.SingleTopListViewModel
-import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
+import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
+import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueViewModel
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
@@ -45,13 +58,13 @@ val viewModelModule = module {
 }
 
 val repositoryModule = module {
-    single { HomeRepository(get()) }
-    single { SingleTitleRepository(get()) }
-    single { CategoriesRepository(get()) }
-    single { SearchTitleRepository(get()) }
-    single { TraktRepository(get()) }
-    single { FavoritesRepository() }
-    single { DatabaseRepository(get()) }
+    single<HomeRepository> { DefaultHomeRepository(get()) }
+    single<SingleTitleRepository> { DefaultSingleTitleRepository(get()) }
+    single<CatalogueRepository> { DefaultCatalogueRepository(get()) }
+    single<SearchRepository> { DefaultSearchRepository(get()) }
+    single<TraktRepository> { DefaultTraktRepository(get()) }
+    single<FavoritesRepository> { DefaultFavoritesRepository() }
+    single<DatabaseRepository> { DefaultDatabaseRepository(get()) }
 }
 
 val generalModule = module {

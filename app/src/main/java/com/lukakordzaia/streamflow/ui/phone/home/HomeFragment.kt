@@ -123,10 +123,10 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         homeViewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
-                    binding.rvContinueWatchingTitles.setGone()
+                    binding.continueWatchingContainer.setGone()
                 }
                 LoadingState.Status.SUCCESS -> {
-                    binding.rvContinueWatchingTitles.setVisible()
+                    binding.continueWatchingContainer.setVisible()
                 }
             }
         })

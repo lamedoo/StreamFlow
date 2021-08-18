@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
-import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
@@ -42,7 +42,7 @@ class CatalogueViewModel : BaseViewModel() {
     fun getAllGenres() {
         viewModelScope.launch {
             genresLoader.value = LoadingState.LOADING
-            when (val genres = environment.categoriesRepository.getAllGenres()) {
+            when (val genres = environment.catalogueRepository.getAllGenres()) {
                 is Result.Success -> {
                     _allGenresList.value = genres.data.data
                     genresLoader.value = LoadingState.LOADED
@@ -60,7 +60,7 @@ class CatalogueViewModel : BaseViewModel() {
     fun getTopStudios() {
         viewModelScope.launch {
             studiosLoader.value = LoadingState.LOADING
-            when (val studios = environment.categoriesRepository.getTopStudios()) {
+            when (val studios = environment.catalogueRepository.getTopStudios()) {
                 is Result.Success -> {
                     _topStudioList.value = studios.data.data
                     studiosLoader.value = LoadingState.LOADED
@@ -78,7 +78,7 @@ class CatalogueViewModel : BaseViewModel() {
     fun getTopTrailers() {
         trailersLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (val trailers = environment.categoriesRepository.getTopTrailers()) {
+            when (val trailers = environment.catalogueRepository.getTopTrailers()) {
                 is Result.Success -> {
                     val data = trailers.data.data
                     _topTrailerList.value = data.toTitleListModel()
