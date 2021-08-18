@@ -23,6 +23,7 @@ import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
@@ -132,17 +133,25 @@ class TvMainFragment : BrowseSupportFragment() {
             homeViewModel.getContinueWatchingTitlesFromApi(it)
         })
 
-        homeViewModel.continueWatchingList.observe(viewLifecycleOwner, {
-            setSelectedPosition(if (it.isNullOrEmpty()) 1 else 0, it.isNullOrEmpty())
+        homeViewModel.continueWatchingList.observe(viewLifecycleOwner, { continueWatching ->
+            setSelectedPosition(if (continueWatching.isNullOrEmpty()) 1 else 0, continueWatching.isNullOrEmpty())
 
-            val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
-                it.forEach { titles ->
-                    add(titles)
+            homeViewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
+                when (it.status) {
+                    LoadingState.Status.RUNNING -> {}
+                    LoadingState.Status.SUCCESS -> {
+                        val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
+                            continueWatching.forEach { titles ->
+                                add(titles)
+                            }
+                        }
+
+                        HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING).also {
+                            rowsAdapter.replace(0, ListRow(it, listRowAdapter))
+                        }
+                    }
                 }
-            }
-            HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING).also {
-                rowsAdapter.replace(0, ListRow(it, listRowAdapter))
-            }
+            })
         })
     }
 

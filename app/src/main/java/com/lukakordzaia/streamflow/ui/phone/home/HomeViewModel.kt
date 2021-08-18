@@ -16,6 +16,7 @@ import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
+    val continueWatchingLoader = MutableLiveData<LoadingState>()
     val movieDayLoader = MutableLiveData<LoadingState>()
     val newMovieLoader = MutableLiveData<LoadingState>()
     val topMovieLoader = MutableLiveData<LoadingState>()
@@ -96,6 +97,7 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun getContinueWatchingTitlesFromApi(dbDetails: List<ContinueWatchingRoom>) {
+        continueWatchingLoader.value = LoadingState.LOADING
         val dbTitles: MutableList<ContinueWatchingModel> = mutableListOf()
         viewModelScope.launch {
             dbDetails.forEach {
@@ -125,6 +127,7 @@ class HomeViewModel : BaseViewModel() {
                     }
                 }
             }
+            continueWatchingLoader.value = LoadingState.LOADED
         }
     }
 

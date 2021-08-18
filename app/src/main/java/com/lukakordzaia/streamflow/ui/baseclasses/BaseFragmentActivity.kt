@@ -85,6 +85,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
     fun setSidebarClickListeners(view: TvSidebarBinding) {
         view.searchButton.setOnClickListener {
             startActivity(Intent(this, TvSearchActivity::class.java))
+            sidebarAnimations.hideSideBar(view.tvSidebar)
         }
         view.homeButton.setOnClickListener {
             val intent = Intent(this, TvActivity::class.java).apply {
@@ -92,6 +93,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             startActivity(intent)
+            sidebarAnimations.hideSideBar(view.tvSidebar)
         }
         view.favoritesButton.setOnClickListener {
             if (auth.currentUser != null) {
@@ -99,24 +101,25 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             } else {
                 this.createToast("ფავორიტების სანახავად, გაიარეთ ავტორიზაცია")
             }
+            sidebarAnimations.hideSideBar(view.tvSidebar)
         }
         view.moviesButton.setOnClickListener {
             val intent = Intent(this, TvCatalogueActivity::class.java).apply {
                 putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
             }
             startActivity(intent)
+            sidebarAnimations.hideSideBar(view.tvSidebar)
         }
         view.genresButton.setOnClickListener {
             val intent = Intent(this, TvSingleGenreActivity::class.java)
             startActivity(intent)
+            sidebarAnimations.hideSideBar(view.tvSidebar)
         }
         view.settingsButton.setOnClickListener {
             val intent = Intent(this, TvSettingsActivity::class.java)
             startActivity(intent)
             sidebarAnimations.hideSideBar(view.tvSidebar)
         }
-
-//        sidebarAnimations.hideSideBar(view.tvSidebar)
     }
 
     fun setCurrentButton(currentButton: View) {

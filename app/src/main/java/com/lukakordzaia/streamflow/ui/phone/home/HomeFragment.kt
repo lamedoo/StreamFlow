@@ -16,7 +16,6 @@ import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeDbTitlesAdapte
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
-import kotlinx.android.synthetic.main.main_top_toolbar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -121,6 +120,17 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
     }
 
     private fun continueWatchingContainer() {
+        homeViewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> {
+                    binding.rvContinueWatchingTitles.setGone()
+                }
+                LoadingState.Status.SUCCESS -> {
+                    binding.rvContinueWatchingTitles.setVisible()
+                }
+            }
+        })
+
         homeViewModel.checkAuthDatabase()
         homeViewModel.contWatchingData.observe(viewLifecycleOwner, {
             homeViewModel.getContinueWatchingTitlesFromApi(it)

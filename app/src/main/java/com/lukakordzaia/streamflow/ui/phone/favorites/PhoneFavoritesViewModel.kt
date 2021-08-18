@@ -33,11 +33,10 @@ class PhoneFavoritesViewModel : BaseViewModel() {
     }
 
     fun getFavTitlesFromFirestore() {
-        favoriteMoviesLoader.value = LoadingState.LOADING
-        favoriteTvShowsLoader.value = LoadingState.LOADING
         environment.favoritesRepository.getTitlesFromFavorites(currentUser()!!.uid, object :
             FavoritesCallBack {
             override fun moviesList(movies: MutableList<Int>) {
+                favoriteMoviesLoader.value = LoadingState.LOADING
                 if (movies.isNullOrEmpty()) {
                     favoriteMoviesLoader.value = LoadingState.LOADED
                     favoriteNoMovies.value = true
@@ -61,6 +60,7 @@ class PhoneFavoritesViewModel : BaseViewModel() {
             }
 
             override fun tvShowsList(tvShows: MutableList<Int>) {
+                favoriteTvShowsLoader.value = LoadingState.LOADING
                 if (tvShows.isNullOrEmpty()) {
                     favoriteTvShowsLoader.value = LoadingState.LOADED
                     favoriteNoTvShows.value = true

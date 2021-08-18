@@ -102,7 +102,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
             if (!movies.isNullOrEmpty()) {
                 phoneFavoritesViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
                     when (it.status) {
-                        LoadingState.Status.RUNNING -> { }
+                        LoadingState.Status.RUNNING -> {}
                         LoadingState.Status.SUCCESS -> {
                             movieRowsAdapter(movies)
                         }
