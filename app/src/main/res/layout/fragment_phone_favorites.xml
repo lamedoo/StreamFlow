@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ფავორიტების სანახავად, გთხოვ გაიაროთ ავტორიზაცია"
+                    android:text="@string/log_in_to_see_favorites"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_75_bold"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
@@ -45,11 +46,8 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/button_background"
-                    android:fontFamily="@font/georgian_uppercase"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="7dp"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
+                    android:padding="10dp"
                     android:text="პროფილის პანელი"
                     android:textColor="@color/text_on_accent_color" />
 
@@ -63,25 +61,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/georgian_uppercase"
-                    android:text="ფავორიტი ფილმები"
-                    android:textColor="@color/general_text_color"
-                    android:textSize="15sp" />
-
-                <View
-                    android:layout_width="80dp"
-                    android:layout_height="2dp"
-                    android:background="@color/accent_color" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:title="@string/favorite_movies"
+                    app:arrow_visibility="false"/>
 
                 <TextView
                     android:id="@+id/favorite_no_movies"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="სამწუხაროდ, სიცარიელეა. დაამატეთ ფილმები ფავორიტებში"
+                    android:text="@string/add_favorite_movies_body"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
                     android:visibility="gone" />
 
                 <ProgressBar
@@ -109,25 +102,20 @@
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/favorite_movies_container">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/georgian_uppercase"
-                    android:text="ფავორიტი სერიალები"
-                    android:textColor="@color/general_text_color"
-                    android:textSize="15sp" />
-
-                <View
-                    android:layout_width="80dp"
-                    android:layout_height="2dp"
-                    android:background="@color/accent_color" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:title="@string/favorite_tv_shows"
+                    app:arrow_visibility="false"/>
 
                 <TextView
                     android:id="@+id/favorite_no_tvshows"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="სამწუხაროდ, სიცარიელეა. დაამატეთ სერიალები ფავორიტებში"
+                    android:text="@string/add_favorite_tv_shows_body"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
                     android:visibility="gone" />
 
                 <ProgressBar

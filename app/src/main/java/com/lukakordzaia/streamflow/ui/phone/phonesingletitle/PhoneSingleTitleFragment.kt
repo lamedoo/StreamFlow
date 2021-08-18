@@ -18,7 +18,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
-import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleNewBinding
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -31,7 +31,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
-class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding>() {
+class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>() {
     private val phoneSingleTitleViewModel: PhoneSingleTitleViewModel by viewModel()
     private val tvShowBottomSheetViewModel: TvShowBottomSheetViewModel by viewModel()
     private lateinit var titleInfo: SingleTitleModel
@@ -40,8 +40,8 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleNewBinding
     private lateinit var phoneSingleTitleRelatedAdapter: PhoneSingleTitleRelatedAdapter
     private val args: PhoneSingleTitleFragmentArgs by navArgs()
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleNewBinding
-        get() = FragmentPhoneSingleTitleNewBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleBinding
+        get() = FragmentPhoneSingleTitleBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

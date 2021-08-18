@@ -22,8 +22,6 @@ class TvCataloguePresenter(private val context: Context) : Presenter() {
         val movie = item as SingleTitleModel
         val cardView = viewHolder.view as TvDefaultCardView
 
-        cardView.tv_default_card_name.text = movie.displayName
-
         cardView.tv_default_card_poster.setImage(movie.poster, true)
     }
 

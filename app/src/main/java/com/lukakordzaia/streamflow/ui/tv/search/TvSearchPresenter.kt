@@ -21,8 +21,6 @@ class TvSearchPresenter : Presenter() {
         val movie = item as SingleTitleModel
         val cardView = viewHolder.view as TvDefaultWithTitleCardView
 
-        cardView.tv_default_card_name.text = movie.displayName
-
         cardView.tv_default_card_poster.setImage(movie.poster, true)
     }
 

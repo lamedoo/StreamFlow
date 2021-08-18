@@ -38,6 +38,13 @@
     <string name="genre">ჟანრი:</string>
     <string name="cast">მსახიობები</string>
     <string name="similar">მსგავსი</string>
+    <string name="favorite_movies">ფავორიტი ფილმები</string>
+    <string name="favorite_tv_shows">ფავორიტი სერიალები</string>
+    <string name="log_in_to_see_favorites">ფავორიტების სანახავად, გთხოვ გაიაროთ ავტორიზაცია</string>
+    <string name="add_favorite_movies_body">სამწუხაროდ, სიცარიელეა. დაამატეთ ფილმები ფავორიტებში</string>
+    <string name="add_favorite_tv_shows_body">სამწუხაროდ, სიცარიელეა. დაამატეთ სერიალები ფავორიტებში</string>
+    <string name="details">დეტალები</string>
+    <string name="no_favorites_add_tv_or_movie">თქვენ არ გაქვთ ფავორიტები. აირჩიეთ ნებისმიერი ფილმი ან სერიალი და დაამატეთ აქ</string>
 
     <!--    <string name="default_web_client_id">700559852856-68iooe5pueka6q1k3oejuc46h4fh9dai.apps.googleusercontent.com</string>-->
 </resources>

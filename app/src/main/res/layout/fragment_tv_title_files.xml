@@ -32,8 +32,8 @@
                     android:id="@+id/go_top_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/georgian_uppercase"
-                    android:text="დეტალები" />
+                    android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+                    android:text="@string/details" />
 
         </LinearLayout>
 

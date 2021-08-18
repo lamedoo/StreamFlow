@@ -18,9 +18,9 @@
         android:paddingBottom="3dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="სეზონი 1"
-        android:fontFamily="@font/georgian_uppercase"
-        android:textSize="12dp"
+        tools:text="სეზონი 1"
+        android:fontFamily="@font/helvetica_neue_lt_geo_caps_65_medium"
+        android:textSize="12sp"
         android:textStyle="bold"
         android:textColor="@color/text_on_accent_color"
         app:layout_constraintTop_toTopOf="parent"/>

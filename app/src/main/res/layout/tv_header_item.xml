@@ -11,9 +11,9 @@
         android:id="@+id/header_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="სათაური"
+        tools:text="სათაური"
         android:textColor="@color/white"
-        android:fontFamily="@font/georgian_uppercase"
+        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
         app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

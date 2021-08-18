@@ -86,9 +86,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
             android:textAlignment="center"
-            android:text="თქვენ არ გაქვთ ფავორიტები. აირჩიეთ ნებისმიერი ფილმი ან სერიალი და დაამატეთ აქ"
+            android:text="@string/no_favorites_add_tv_or_movie"
             android:textColor="@color/white"
-            android:fontFamily="@font/georgian_uppercase"/>
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"/>
 
     </LinearLayout>
 

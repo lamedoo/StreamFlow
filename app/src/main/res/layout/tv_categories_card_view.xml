@@ -34,8 +34,9 @@
             android:id="@+id/tv_categories_card_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="პარამეტრები"
-            android:fontFamily="@font/georgian_uppercase"/>
+            tools:text="@string/top_movies"
+            android:textSize="14sp"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"/>
 
     </LinearLayout>
 
