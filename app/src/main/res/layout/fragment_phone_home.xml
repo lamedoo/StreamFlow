@@ -223,7 +223,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:title="@string/new_movies"
+                        app:title="@string/top_tv_shows"
                         app:arrow_visibility="true"/>
 
                     <ProgressBar

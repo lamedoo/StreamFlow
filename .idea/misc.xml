@@ -4,8 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.6177083333333333" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/bottom_nav_background.xml" value="0.33055555555555555" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/ic_banner_foreground.xml" value="0.33055555555555555" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/phone_profile_item.xml" value="0.33055555555555555" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/remove_db_title_icon.xml" value="0.33055555555555555" />
-        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/title_favorite_icon_full.xml" value="0.2324074074074074" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_tv_settings.xml" value="0.287962962962963" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/dialog_choose_language.xml" value="0.287962962962963" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/dialog_connect_traktv_alert.xml" value="0.32592592592592595" />
@@ -14,8 +18,12 @@
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/dialog_sync_database.xml" value="0.287962962962963" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_phone_continue_watching_info.xml" value="0.287962962962963" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_phone_home.xml" value="0.32146118721461187" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_phone_profile.xml" value="0.287962962962963" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_phone_search_titles.xml" value="0.287962962962963" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_phone_single_title.xml" value="0.287962962962963" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_tv_settings.xml" value="0.287962962962963" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/rv_tv_choose_language_item.xml" value="0.32592592592592595" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.32592592592592595" />
         <entry key="app/src/main/res/drawable/exo_buttons_focused.xml" value="0.29375" />
         <entry key="app/src/main/res/drawable/exo_next.xml" value="0.29375" />
         <entry key="app/src/main/res/drawable/ic_arrow_back.xml" value="0.29375" />

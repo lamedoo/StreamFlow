@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/genres_fragment_nav"
+    android:id="@+id/catalogue_fragment_nav"
     app:startDestination="@id/categoriesFragment">
     <fragment
         android:id="@+id/categoriesFragment"

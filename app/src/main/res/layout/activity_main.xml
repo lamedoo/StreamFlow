@@ -46,14 +46,15 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/nav_main_bottom"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_main_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/secondary_color"
-        app:elevation="0dp"
+        android:padding="5dp"
+        android:background="@drawable/bottom_nav_background"
+        app:elevation="10dp"
         app:itemBackground="@null"
         app:itemRippleColor="@null"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +63,7 @@
         app:itemIconTint="@color/top_nav_colors"
         app:itemTextColor="@color/top_nav_colors"
         app:labelVisibilityMode="unlabeled"
-        app:itemIconSize="32dp"
+        app:itemIconSize="28dp"
         app:menu="@menu/bottom_navigation_menu"/>
 
 
