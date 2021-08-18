@@ -137,6 +137,10 @@
                             android:textSize="13sp"
                             android:layout_marginTop="10dp"
                             tools:text="ს1 ე24"
+                            android:shadowColor="@color/trueBlack"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="3"
                             android:textStyle="bold"
                             android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
                             android:textColor="@color/general_text_color"
@@ -358,7 +362,7 @@
             android:src="@drawable/play_button_new"
             android:background="@drawable/play_button_background"
             android:tint="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="UseAppTint" />
 
@@ -367,12 +371,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/playlist_icon"
             android:background="@drawable/phone_button_secondary_background"
             android:tint="@color/general_text_color"
             app:layout_constraintBottom_toBottomOf="@id/play_button_bottom"
-            app:layout_constraintStart_toEndOf="@id/play_button_bottom"
+            app:layout_constraintEnd_toStartOf="@id/play_button_bottom"
             tools:ignore="UseAppTint"
             android:visibility="gone"
             tools:visibility="visible"/>
@@ -382,12 +386,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/replay_icon"
             android:background="@drawable/phone_button_secondary_background"
             android:tint="@color/general_text_color"
             app:layout_constraintBottom_toBottomOf="@id/play_button_bottom"
-            app:layout_constraintStart_toEndOf="@id/play_button_bottom"
+            app:layout_constraintEnd_toStartOf="@id/play_button_bottom"
             tools:ignore="UseAppTint"
             android:visibility="invisible"
             tools:visibility="visible"/>
@@ -417,7 +421,7 @@
             android:progressBackgroundTint="@color/general_text_color"
             app:layout_constraintBottom_toBottomOf="@id/replay_button_bottom"
             app:layout_constraintTop_toTopOf="@id/replay_button_bottom"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

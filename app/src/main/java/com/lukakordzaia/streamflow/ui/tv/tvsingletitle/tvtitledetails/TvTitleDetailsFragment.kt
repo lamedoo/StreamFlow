@@ -7,13 +7,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
@@ -29,7 +27,6 @@ import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.TvTitleFiles
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
@@ -142,6 +139,8 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
             if (!it) {
                 binding.noFilesContainer.setGone()
                 binding.buttonsRow.setVisible()
+            } else {
+                binding.favoriteContainer.requestFocus()
             }
         })
     }
@@ -251,7 +250,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
             binding.backgroundPoster.setImage(it.cover, false)
 
             binding.year.text = it.releaseYear
-            binding.imdbScore.text = it.imdbScore
+            binding.imdbScore.text = "IMDB ${it.imdbScore}"
             binding.country.text = it.country
 
             if (it.isTvShow) {
