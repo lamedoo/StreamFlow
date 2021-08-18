@@ -4,10 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvSingleTitleCastItemBinding
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
-import com.squareup.picasso.Picasso
+import com.lukakordzaia.streamflow.utils.setImage
 
 class PhoneSingleTitleCastAdapter(private val context: Context, private val onCastClick: (name: String) -> Unit) : RecyclerView.Adapter<PhoneSingleTitleCastAdapter.ViewHolder>() {
     private var list: List<GetSingleTitleCastResponse.Data> = ArrayList()
@@ -36,9 +37,11 @@ class PhoneSingleTitleCastAdapter(private val context: Context, private val onCa
     inner class ViewHolder(val view: RvSingleTitleCastItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: GetSingleTitleCastResponse.Data) {
             if (model.poster.isNotEmpty()) {
-                Picasso.get().load(model.poster).into(view.rvCastItemPoster)
+                view.rvCastItemPoster.setImage(model.poster, true)
             } else {
-                Picasso.get().load(R.drawable.no_profile_picture).into(view.rvCastItemPoster)
+                Glide.with(context)
+                    .load(R.drawable.no_profile_picture)
+                    .into(view.rvCastItemPoster)
             }
 
             if (model.primaryName.isNotEmpty()) {

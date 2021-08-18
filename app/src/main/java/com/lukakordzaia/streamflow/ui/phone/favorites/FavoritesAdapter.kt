@@ -4,13 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvFavoriteItemBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.utils.setImage
-import com.squareup.picasso.Picasso
 
 class FavoritesAdapter(
     private val context: Context,

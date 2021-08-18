@@ -2,17 +2,11 @@ package com.lukakordzaia.streamflow.ui.phone.home.homeadapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatSeekBar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.RvDbTitleItemBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.rv_db_title_item.view.*
+import com.lukakordzaia.streamflow.utils.setImage
 import java.util.concurrent.TimeUnit
 
 class HomeDbTitlesAdapter(
@@ -30,57 +24,54 @@ class HomeDbTitlesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.rv_db_title_item, parent, false)
+            RvDbTitleItemBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listModel = list[position]
 
-        holder.dbTitleRoot.setOnClickListener {
-            onWatchedTitleClick(listModel)
-        }
-
-        if (listModel.isTvShow) {
-            holder.dbTitleSeason.text = String.format("ს${listModel.season} ე${listModel.episode} / %02d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(listModel.watchedDuration),
-                    TimeUnit.MILLISECONDS.toSeconds(listModel.watchedDuration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(listModel.watchedDuration))
-            )
-        } else {
-            holder.dbTitleSeason.text = String.format("%02d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(listModel.watchedDuration),
-                    TimeUnit.MILLISECONDS.toMinutes(listModel.watchedDuration) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(listModel.watchedDuration)),
-                    TimeUnit.MILLISECONDS.toSeconds(listModel.watchedDuration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(listModel.watchedDuration))
-            )
-        }
-
-        Picasso.get().load(listModel.cover).placeholder(R.drawable.movie_image_placeholder).error(R.drawable.movie_image_placeholder).into(holder.dbTitlePosterImageView)
-
-        holder.dbTitleInfo.setOnClickListener {
-            onInfoClick(listModel.id)
-        }
-
-        holder.dbTitleMore.setOnClickListener {
-            onMoreMenuClick(listModel.id, if (listModel.originalName.isNullOrEmpty()) listModel.primaryName!! else listModel.originalName)
-        }
-
-        holder.dbTitleSeekBar.max = listModel.titleDuration.toInt()
-        holder.dbTitleSeekBar.progress = listModel.watchedDuration.toInt()
+        holder.bind(listModel)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val dbTitleRoot: ConstraintLayout = view.rv_watchedtitle_item_root
-        val dbTitlePosterImageView: ImageView = view.rv_watchedtitle_item_poster
-        val dbTitleSeason: TextView = view.rv_watchedtitle_item_season
-        val dbTitleMore: ImageView = view.rv_watchedtitle_item_more
-        val dbTitleInfo: ImageView = view.rv_watchedtitle_item_info
-        val dbTitleSeekBar: AppCompatSeekBar = view.rv_db_item_seekbar
+    inner class ViewHolder(val view: RvDbTitleItemBinding) : RecyclerView.ViewHolder(view.root) {
+        fun bind(model: ContinueWatchingModel) {
+            view.itemPoster.setImage(model.cover, true)
+
+            if (model.isTvShow) {
+                view.continueWatchingInfo.text = String.format("ს${model.season} ე${model.episode} / %02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(model.watchedDuration),
+                    TimeUnit.MILLISECONDS.toSeconds(model.watchedDuration) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(model.watchedDuration))
+                )
+            } else {
+                view.continueWatchingInfo.text = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(model.watchedDuration),
+                    TimeUnit.MILLISECONDS.toMinutes(model.watchedDuration) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(model.watchedDuration)),
+                    TimeUnit.MILLISECONDS.toSeconds(model.watchedDuration) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(model.watchedDuration))
+                )
+            }
+
+            view.itemSeekBar.max = model.titleDuration.toInt()
+            view.itemSeekBar.progress = model.watchedDuration.toInt()
+
+            view.root.setOnClickListener {
+                onWatchedTitleClick(model)
+            }
+
+            view.itemDetails.setOnClickListener {
+                onInfoClick(model.id)
+            }
+
+            view.itemMore.setOnClickListener {
+                onMoreMenuClick(model.id, if (model.originalName.isNullOrEmpty()) model.primaryName!! else model.originalName)
+            }
+        }
     }
 }

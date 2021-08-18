@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.RvStudioItemBinding
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
-import com.squareup.picasso.Picasso
+import com.lukakordzaia.streamflow.utils.setImage
 
 class StudiosAdapter(private val context: Context, private val onStudiosClick: (studioId: Int, studioName: String) -> Unit) : RecyclerView.Adapter<StudiosAdapter.ViewHolder>() {
     private var list: List<GetTopStudiosResponse.Data> = ArrayList()
@@ -34,7 +34,7 @@ class StudiosAdapter(private val context: Context, private val onStudiosClick: (
 
     inner class ViewHolder(val view: RvStudioItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: GetTopStudiosResponse.Data) {
-            Picasso.get().load(model.poster).into(view.rvStudioPoster)
+            view.rvStudioPoster.setImage(model.poster, true)
             view.rvStudioPoster.setOnClickListener {
                 onStudiosClick(model.id, model.name)
             }
