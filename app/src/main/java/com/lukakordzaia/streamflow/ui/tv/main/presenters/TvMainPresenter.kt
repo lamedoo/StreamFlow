@@ -1,21 +1,18 @@
 package com.lukakordzaia.streamflow.ui.tv.main.presenters
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.leanback.widget.HorizontalGridView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvDefaultCardView
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.utils.setImage
-import kotlinx.android.synthetic.main.tv_default_card_view.view.*
 
-class TvCardPresenter(private val context: Context) : Presenter() {
+class TvMainPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val cardView = TvDefaultCardView(parent.context, null)
-
-        cardView.isFocusable = true
-        cardView.isFocusableInTouchMode = true
+        val cardView = TvDefaultCardView(parent.context, null).apply {
+            isFocusable = true
+            isFocusableInTouchMode = true
+        }
 
         val horizontalGridView: HorizontalGridView = parent.findViewById(R.id.row_content)
         horizontalGridView.setItemSpacing(1)
@@ -27,7 +24,7 @@ class TvCardPresenter(private val context: Context) : Presenter() {
         val movie = item as SingleTitleModel
         val cardView = viewHolder.view as TvDefaultCardView
 
-        cardView.tv_default_card_poster.setImage(movie.poster, true)
+        cardView.setPoster(movie.poster)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {

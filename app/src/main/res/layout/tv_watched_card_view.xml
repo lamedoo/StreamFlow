@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:id="@+id/tv_watched_card_poster"
+        android:id="@+id/card_poster"
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:scaleType="fitXY"
@@ -21,10 +21,10 @@
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:background="@drawable/rv_continue_watching_background"
-        app:layout_constraintStart_toStartOf="@id/tv_watched_card_poster"
-        app:layout_constraintEnd_toEndOf="@id/tv_watched_card_poster"
-        app:layout_constraintTop_toTopOf="@id/tv_watched_card_poster"
-        app:layout_constraintBottom_toBottomOf="@id/tv_watched_card_poster"/>
+        app:layout_constraintStart_toStartOf="@id/card_poster"
+        app:layout_constraintEnd_toEndOf="@id/card_poster"
+        app:layout_constraintTop_toTopOf="@id/card_poster"
+        app:layout_constraintBottom_toBottomOf="@id/card_poster"/>
 
     <ImageView
         android:layout_width="40dp"
@@ -35,10 +35,10 @@
         android:src="@drawable/play_button_new"
         android:tint="@color/white"
         android:background="@drawable/phone_db_title_play_button_background"
-        app:layout_constraintStart_toStartOf="@id/tv_watched_card_poster"
-        app:layout_constraintEnd_toEndOf="@id/tv_watched_card_poster"
-        app:layout_constraintTop_toTopOf="@id/tv_watched_card_poster"
-        app:layout_constraintBottom_toBottomOf="@id/tv_watched_card_poster"
+        app:layout_constraintStart_toStartOf="@id/card_poster"
+        app:layout_constraintEnd_toEndOf="@id/card_poster"
+        app:layout_constraintTop_toTopOf="@id/card_poster"
+        app:layout_constraintBottom_toBottomOf="@id/card_poster"
         tools:ignore="UseAppTint"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

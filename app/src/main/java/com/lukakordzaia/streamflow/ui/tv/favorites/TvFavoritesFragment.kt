@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -23,8 +21,8 @@ import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesViewModel
-import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvFavoritesFragment : BrowseSupportFragment() {
@@ -117,14 +115,14 @@ class TvFavoritesFragment : BrowseSupportFragment() {
     }
 
     private fun initRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, ""), ArrayObjectAdapter(TvFavoritesPresenter(requireContext())))
-        val secondHeaderItem = ListRow(HeaderItem(1, ""), ArrayObjectAdapter(TvFavoritesPresenter(requireContext())))
+        val firstHeaderItem = ListRow(HeaderItem(0, ""), ArrayObjectAdapter(TvFavoritesPresenter()))
+        val secondHeaderItem = ListRow(HeaderItem(1, ""), ArrayObjectAdapter(TvFavoritesPresenter()))
         val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }
 
     private fun movieRowsAdapter(movies: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter(requireContext())).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter()).apply {
             addAll(0, movies)
         }
 
@@ -136,7 +134,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
     }
 
     private fun tvShowsRowsAdapter(tvShows: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter(requireContext())).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvFavoritesPresenter()).apply {
             addAll(0, tvShows)
         }
 

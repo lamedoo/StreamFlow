@@ -1,19 +1,18 @@
 package com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters
 
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvSeasonsCardView
-import kotlinx.android.synthetic.main.tv_details_season_item.view.*
 
-class TvSeasonsPresenter() : Presenter() {
+class TvSeasonsPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvSeasonsCardView(parent.context, null)
 
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
-        cardView.background = parent.resources.getDrawable(R.drawable.rv_tv_default_card_view_background)
-
+        cardView.background = ResourcesCompat.getDrawable(parent.resources, R.drawable.rv_tv_default_card_view_background, null)
         return ViewHolder(cardView)
     }
 
@@ -21,7 +20,7 @@ class TvSeasonsPresenter() : Presenter() {
         val movie = item as Int
         val cardView = viewHolder.view as TvSeasonsCardView
 
-        cardView.rv_tv_files_season_number.text = "სეზონი $movie"
+        cardView.setSeason("სეზონი $movie")
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {

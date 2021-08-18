@@ -1,20 +1,42 @@
 package com.lukakordzaia.streamflow.customviews
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.lukakordzaia.streamflow.R
-import kotlinx.android.synthetic.main.tv_watched_card_view.view.*
+import com.lukakordzaia.streamflow.databinding.TvDetailsEpisodesItemBinding
+import com.lukakordzaia.streamflow.utils.setImage
+import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
-    init {
-        inflate(context, R.layout.tv_details_episodes_item, this)
+    val binding = TvDetailsEpisodesItemBinding.inflate(LayoutInflater.from(context), this, true)
+
+    fun setPoster(poster: String?) {
+        binding.cardPoster.setImage(poster, false)
     }
 
-    fun setPosterDimensions(width: Int, height: Int) {
-        val posterLp = tv_watched_card_poster.layoutParams
-        posterLp.width = width
-        posterLp.height = height
-        tv_watched_card_poster.layoutParams = posterLp
+    fun setName(title: String?) {
+        binding.episodeName.text = title
+    }
+
+    fun setNumber(number: String) {
+        binding.episodeNumber.text = number
+    }
+
+    fun currentIndicatorVisibility(visibility: Boolean) {
+        binding.currentIndicator.setVisibleOrGone(visibility)
+    }
+
+    fun posterDimVisibility(visibility: Boolean) {
+        binding.posterDim.setVisibleOrGone(visibility)
+    }
+
+    fun nameVisibility(visibility: Boolean) {
+        binding.episodeName.setVisibleOrGone(visibility)
+    }
+
+    fun setIndicatorDrawable(drawable: Drawable?) {
+        binding.currentIndicator.setImageDrawable(drawable)
     }
 }

@@ -49,7 +49,7 @@ class TvSearchFragmentNew : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        gridAdapter = ArrayObjectAdapter(TvCataloguePresenter(requireContext()))
+        gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
 
         searchTitlesViewModel.searchList.observe(viewLifecycleOwner, { list ->
             list.forEach {

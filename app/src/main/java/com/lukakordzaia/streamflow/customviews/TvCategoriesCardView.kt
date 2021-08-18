@@ -2,20 +2,22 @@ package com.lukakordzaia.streamflow.customviews
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
-import kotlinx.android.synthetic.main.tv_categories_card_view.view.*
-import kotlinx.android.synthetic.main.tv_watched_card_view.view.*
-
+import com.lukakordzaia.streamflow.databinding.TvCategoriesCardViewBinding
 open class TvCategoriesCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
-    init {
-        inflate(context, R.layout.tv_categories_card_view, this)
+    val binding = TvCategoriesCardViewBinding.inflate(LayoutInflater.from(context), this, true)
+
+    fun setPoster(poster: Int?) {
+        Glide.with(context)
+            .load(poster ?: R.drawable.movie_image_placeholder_landscape)
+            .placeholder( R.drawable.movie_image_placeholder_landscape)
+            .into(binding.cardPoster)
     }
 
-    fun setPosterDimensions(width: Int, height: Int) {
-        val posterLp = tv_categories_card_poster.layoutParams
-        posterLp.width = width
-        posterLp.height = height
-        tv_watched_card_poster.layoutParams = posterLp
+    fun setTitle(title: String) {
+        binding.cardTitle.text = title
     }
 }

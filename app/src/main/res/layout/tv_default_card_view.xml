@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:id="@+id/tv_default_card_poster"
+        android:id="@+id/card_poster"
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:scaleType="fitXY"

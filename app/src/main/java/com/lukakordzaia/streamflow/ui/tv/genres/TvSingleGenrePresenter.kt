@@ -5,14 +5,12 @@ import android.view.ViewGroup
 import androidx.leanback.widget.HorizontalGridView
 import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.customviews.TvGenresCardView
+import com.lukakordzaia.streamflow.customviews.TvDefaultCardView
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.utils.setImage
-import kotlinx.android.synthetic.main.tv_genres_card_view.view.*
 
 class TvSingleGenrePresenter(private val context: Context) : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val cardView = TvGenresCardView(parent.context, null)
+        val cardView = TvDefaultCardView(parent.context, null)
 
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
@@ -25,9 +23,9 @@ class TvSingleGenrePresenter(private val context: Context) : Presenter() {
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val movie = item as SingleTitleModel
-        val cardView = viewHolder.view as TvGenresCardView
+        val cardView = viewHolder.view as TvDefaultCardView
 
-        cardView.tv_genres_card_poster.setImage(movie.poster, true)
+        cardView.setPoster(movie.poster)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {

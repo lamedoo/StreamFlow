@@ -24,12 +24,12 @@ import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
-import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
-import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
+import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvMainPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvWatchedCardPresenter
+import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
@@ -117,11 +117,11 @@ class TvMainFragment : BrowseSupportFragment() {
     }
 
     private fun initRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING), ArrayObjectAdapter(TvCardPresenter(requireContext())))
-        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TV_TOP_MOVIES), ArrayObjectAdapter(TvCardPresenter(requireContext())))
-        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TV_TOP_TV_SHOWS), ArrayObjectAdapter(TvCardPresenter(requireContext())))
-        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvCardPresenter(requireContext())))
-        val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvCardPresenter(requireContext())))
+        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING), ArrayObjectAdapter(TvMainPresenter()))
+        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TV_TOP_MOVIES), ArrayObjectAdapter(TvMainPresenter()))
+        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TV_TOP_TV_SHOWS), ArrayObjectAdapter(TvMainPresenter()))
+        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvMainPresenter()))
+        val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvMainPresenter()))
         val initListRows = mutableListOf(firstHeaderItem, sixthHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }
@@ -152,7 +152,7 @@ class TvMainFragment : BrowseSupportFragment() {
                 startEntranceTransition()
             }
 
-            val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+            val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
                 addAll(0, it)
             }
 
@@ -164,7 +164,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun topMoviesRowsAdapter() {
         homeViewModel.topMovieList.observe(viewLifecycleOwner, {
-            val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+            val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
                 addAll(0, it)
             }
 
@@ -176,7 +176,7 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun topTvShowsRowsAdapter() {
         homeViewModel.topTvShowList.observe(viewLifecycleOwner, {
-            val listRowAdapter = ArrayObjectAdapter(TvCardPresenter(requireContext())).apply {
+            val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
                 addAll(0, it)
             }
 

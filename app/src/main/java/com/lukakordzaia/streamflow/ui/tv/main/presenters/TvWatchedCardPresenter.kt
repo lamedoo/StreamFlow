@@ -6,16 +6,13 @@ import androidx.leanback.widget.Presenter
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvWatchedCardView
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.tv_watched_card_view.view.*
 
 class TvWatchedCardPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val cardView = object : TvWatchedCardView(parent.context, null) {
+        val cardView = TvWatchedCardView(parent.context, null).apply {
+            isFocusable = true
+            isFocusableInTouchMode = true
         }
-
-        cardView.isFocusable = true
-        cardView.isFocusableInTouchMode = true
 
         val horizontalGridView: HorizontalGridView = parent.findViewById(R.id.row_content)
         horizontalGridView.setItemSpacing(1)
@@ -27,10 +24,9 @@ class TvWatchedCardPresenter : Presenter() {
         val dbTitle = item as ContinueWatchingModel
         val cardView = viewHolder.view as TvWatchedCardView
 
-        Picasso.get().load(dbTitle.cover).into(cardView.tv_watched_card_poster)
+        cardView.setPoster(dbTitle.cover)
     }
 
-    override fun onUnbindViewHolder(viewHolder: ViewHolder) {
-    }
+    override fun onUnbindViewHolder(viewHolder: ViewHolder) {}
 
 }

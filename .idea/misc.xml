@@ -15,6 +15,7 @@
         <entry key="app/src/main/res/drawable/playlist_icon.xml" value="0.5114035087719299" />
         <entry key="app/src/main/res/drawable/title_favorite_icon_full.xml" value="0.5114035087719299" />
         <entry key="app/src/main/res/drawable/traktv_icon.xml" value="0.5208333333333334" />
+        <entry key="app/src/main/res/drawable/tv_cast_card_view_background.xml" value="0.5114035087719299" />
         <entry key="app/src/main/res/drawable/tv_play_trailer.xml" value="0.5208333333333334" />
         <entry key="app/src/main/res/layout/activity_phone_video_player.xml" value="0.5182648401826484" />
         <entry key="app/src/main/res/layout/activity_tv.xml" value="0.5182648401826484" />
@@ -47,6 +48,8 @@
         <entry key="app/src/main/res/layout/rv_tv_choose_language_item.xml" value="0.3013157894736842" />
         <entry key="app/src/main/res/layout/search_fragment_bar.xml" value="0.3013157894736842" />
         <entry key="app/src/main/res/layout/tv_back_button_info_layout.xml" value="0.2359375" />
+        <entry key="app/src/main/res/layout/tv_cast_card_item.xml" value="0.49780701754385964" />
+        <entry key="app/src/main/res/layout/tv_catalogue_card_view.xml" value="0.49780701754385964" />
         <entry key="app/src/main/res/layout/tv_categories_card_view.xml" value="0.3013157894736842" />
         <entry key="app/src/main/res/layout/tv_default_card_view.xml" value="0.2708333333333333" />
         <entry key="app/src/main/res/layout/tv_default_with_title_card_view.xml" value="0.2708333333333333" />
@@ -58,6 +61,7 @@
         <entry key="app/src/main/res/layout/tv_sidebar.xml" value="0.4979166666666667" />
         <entry key="app/src/main/res/layout/tv_title_files_fragment_old.xml" value="0.5254629629629629" />
         <entry key="app/src/main/res/layout/tv_top_title_header.xml" value="0.5651041666666666" />
+        <entry key="app/src/main/res/layout/tv_watched_card_view.xml" value="0.28888888888888886" />
       </map>
     </option>
   </component>

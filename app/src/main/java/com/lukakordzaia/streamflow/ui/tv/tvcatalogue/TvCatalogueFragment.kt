@@ -42,7 +42,7 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        gridAdapter = ArrayObjectAdapter(TvCataloguePresenter(requireContext()))
+        gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
 
         when (activity?.intent?.getSerializableExtra("type") as Int) {
             AppConstants.TV_CATEGORY_NEW_MOVIES -> {
