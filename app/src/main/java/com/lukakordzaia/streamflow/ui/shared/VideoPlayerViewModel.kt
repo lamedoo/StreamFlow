@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.shared
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -13,7 +12,6 @@ import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
-import com.lukakordzaia.streamflow.repository.SingleTitleRepository
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -102,9 +100,6 @@ class VideoPlayerViewModel : BaseViewModel() {
                         newToastMessage("${videoPlayerInfo.chosenLanguage} - ვერ მოიძებნა. ავტომატურად ჩაირთო - ${season.files[0].lang}")
                         MediaItem.fromUri(Uri.parse(getEpisode))
                     }
-
-                    Log.d("episodlink", getEpisode)
-
 
                     val mediaItems = TitleMediaItemsUri(episodeIntoUri, getSubtitles)
                     mediaAndSubtitle.value = mediaItems

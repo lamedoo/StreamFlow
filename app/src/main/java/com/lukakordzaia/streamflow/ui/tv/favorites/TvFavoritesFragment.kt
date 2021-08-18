@@ -20,6 +20,7 @@ import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
@@ -97,15 +98,29 @@ class TvFavoritesFragment : BrowseSupportFragment() {
             })
         })
 
-        phoneFavoritesViewModel.movieResult.observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) {
-                movieRowsAdapter(it)
+        phoneFavoritesViewModel.movieResult.observe(viewLifecycleOwner, { movies ->
+            if (!movies.isNullOrEmpty()) {
+                phoneFavoritesViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
+                    when (it.status) {
+                        LoadingState.Status.RUNNING -> { }
+                        LoadingState.Status.SUCCESS -> {
+                            movieRowsAdapter(movies)
+                        }
+                    }
+                })
             }
         })
 
-        phoneFavoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) {
-                tvShowsRowsAdapter(it)
+        phoneFavoritesViewModel.tvShowResult.observe(viewLifecycleOwner, { tvShows ->
+            if (!tvShows.isNullOrEmpty()) {
+                phoneFavoritesViewModel.favoriteTvShowsLoader.observe(viewLifecycleOwner, {
+                    when (it.status) {
+                        LoadingState.Status.RUNNING -> {}
+                        LoadingState.Status.SUCCESS -> {
+                            tvShowsRowsAdapter(tvShows)
+                        }
+                    }
+                })
             }
         })
 

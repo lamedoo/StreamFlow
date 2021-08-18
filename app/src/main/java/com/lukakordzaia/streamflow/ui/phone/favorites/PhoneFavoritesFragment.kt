@@ -68,8 +68,14 @@ class PhoneFavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
     private fun favMoviesContainer() {
         phoneFavoritesViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
             when (it.status) {
-                LoadingState.Status.RUNNING -> binding.favoriteMoviesProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.favoriteMoviesProgressBar.setGone()
+                LoadingState.Status.RUNNING -> {
+                    binding.favoriteMoviesProgressBar.setVisible()
+                    binding.rvFavoritesMovies.setGone()
+                }
+                LoadingState.Status.SUCCESS -> {
+                    binding.favoriteMoviesProgressBar.setGone()
+                    binding.rvFavoritesMovies.setVisible()
+                }
             }
         })
 
@@ -100,8 +106,14 @@ class PhoneFavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
     private fun favTvShowsContainer() {
         phoneFavoritesViewModel.favoriteTvShowsLoader.observe(viewLifecycleOwner, {
             when (it.status) {
-                LoadingState.Status.RUNNING -> binding.favoriteTvshowsProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.favoriteTvshowsProgressBar.setGone()
+                LoadingState.Status.RUNNING -> {
+                    binding.favoriteTvshowsProgressBar.setVisible()
+                    binding.rvFavoritesTvshows.setGone()
+                }
+                LoadingState.Status.SUCCESS -> {
+                    binding.favoriteTvshowsProgressBar.setGone()
+                    binding.rvFavoritesTvshows.setVisible()
+                }
             }
         })
 

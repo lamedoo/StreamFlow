@@ -23,7 +23,10 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.GoogleAuthProvider
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.databinding.*
+import com.lukakordzaia.streamflow.databinding.DialogConnectTraktvAlertBinding
+import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
+import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -55,7 +58,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         super.onViewCreated(view, savedInstanceState)
         topBarListener(resources.getString(R.string.account), binding.toolbar)
 
-        binding.aboutTitle.text = "V ${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}"
+        binding.aboutTitle.text = "ვერსია v${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}"
 
         googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
         traktDialog = Dialog(requireContext())

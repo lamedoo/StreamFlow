@@ -52,10 +52,10 @@ class PhoneFavoritesViewModel : BaseViewModel() {
                                     fetchMovieResult.add(data.toSingleTitleModel())
 
                                     _movieResult.value = fetchMovieResult
-                                    favoriteMoviesLoader.value = LoadingState.LOADED
                                 }
                             }
                         }
+                        favoriteMoviesLoader.value = LoadingState.LOADED
                     }
                 }
             }
@@ -75,9 +75,9 @@ class PhoneFavoritesViewModel : BaseViewModel() {
                                     fetchTvShowResult.add(data.toSingleTitleModel())
 
                                     _tvShowResult.value = fetchTvShowResult
-                                    favoriteTvShowsLoader.value = LoadingState.LOADED
                                 }
                             }
+                            favoriteTvShowsLoader.value = LoadingState.LOADED
                         }
                     }
                 }
