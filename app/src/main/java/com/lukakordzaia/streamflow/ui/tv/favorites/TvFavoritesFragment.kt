@@ -21,13 +21,13 @@ import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesViewModel
+import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneWatchlistViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvFavoritesFragment : BrowseSupportFragment() {
-    private val phoneFavoritesViewModel: PhoneFavoritesViewModel by viewModel()
+    private val phoneWatchlistViewModel: PhoneWatchlistViewModel by viewModel()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var metrics: DisplayMetrics
     lateinit var backgroundManager: BackgroundManager
@@ -86,21 +86,21 @@ class TvFavoritesFragment : BrowseSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        phoneFavoritesViewModel.getFavTitlesFromFirestore()
+        phoneWatchlistViewModel.getFavTitlesFromFirestore()
 
         initRowsAdapter()
 
-        phoneFavoritesViewModel.favoriteNoMovies.observe(viewLifecycleOwner, { noMovies ->
-            phoneFavoritesViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, { noTvShows ->
+        phoneWatchlistViewModel.favoriteNoMovies.observe(viewLifecycleOwner, { noMovies ->
+            phoneWatchlistViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, { noTvShows ->
                 if (noMovies && noTvShows) {
                     hasFavorites?.hasFavorites(false)
                 }
             })
         })
 
-        phoneFavoritesViewModel.movieResult.observe(viewLifecycleOwner, { movies ->
+        phoneWatchlistViewModel.movieResult.observe(viewLifecycleOwner, { movies ->
             if (!movies.isNullOrEmpty()) {
-                phoneFavoritesViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
+                phoneWatchlistViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
                     when (it.status) {
                         LoadingState.Status.RUNNING -> {}
                         LoadingState.Status.SUCCESS -> {
@@ -111,9 +111,9 @@ class TvFavoritesFragment : BrowseSupportFragment() {
             }
         })
 
-        phoneFavoritesViewModel.tvShowResult.observe(viewLifecycleOwner, { tvShows ->
+        phoneWatchlistViewModel.tvShowResult.observe(viewLifecycleOwner, { tvShows ->
             if (!tvShows.isNullOrEmpty()) {
-                phoneFavoritesViewModel.favoriteTvShowsLoader.observe(viewLifecycleOwner, {
+                phoneWatchlistViewModel.favoriteTvShowsLoader.observe(viewLifecycleOwner, {
                     when (it.status) {
                         LoadingState.Status.RUNNING -> {}
                         LoadingState.Status.SUCCESS -> {

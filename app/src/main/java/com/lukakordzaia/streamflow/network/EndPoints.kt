@@ -28,6 +28,8 @@ class EndPoints {
         const val USER_LOGIN = "https://api.imovies.cc/api/v1/auth/token"
         const val USER_DATA = "https://api.imovies.cc/api/v1/auth/user"
         const val USER_LOG_OUT = "https://api.imovies.cc/api/v1/auth/revoke-token"
+        const val USER_WATCHLIST = "https://api.imovies.cc/api/v1/user/wantstowatch?page=1&per_page=100&filters%5Bgenres_related%5D=no&filters%5Bcountries_related%5D=no&filters%5Bwithout_watched_movies%5D=no&sort=last_added"
+        const val USER_WATCHLIST_STATUS = "https://api.imovies.cc/api/v1/movies/{id}/wantstowatch"
 
         //TRAKT TV
         const val DEVICE_CODE = "https://api.trakt.tv/oauth/device/code"

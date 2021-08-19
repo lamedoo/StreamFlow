@@ -8,11 +8,11 @@ import com.lukakordzaia.streamflow.databinding.RvFavoriteItemBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.utils.setImage
 
-class FavoritesAdapter(
+class WatchlistAdapter(
     private val context: Context,
     private val onTitleClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int) -> Unit
-) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<WatchlistAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
 
     fun setItems(list: List<SingleTitleModel>) {

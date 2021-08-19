@@ -144,7 +144,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         if (currentUser() != null) {
             traktFavoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
-                val addToFavorites = environment.favoritesRepository.addTitleToFavorites(currentUser()!!.uid, AddFavoritesModel(
+                val addToFavorites = environment.watchlistRepository.addTitleToFavorites(currentUser()!!.uid, AddFavoritesModel(
                         info.nameEng!!,
                         info.isTvShow,
                         info.id,
@@ -168,7 +168,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     fun removeTitleFromFavorites(titleId: Int) {
         traktFavoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            val removeFromFavorites = environment.favoritesRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
+            val removeFromFavorites = environment.watchlistRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
             if (removeFromFavorites) {
                 _addToFavorites.value = false
                 traktFavoriteLoader.value = LoadingState.LOADED
@@ -184,7 +184,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         if (currentUser() != null) {
             traktFavoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
-                val checkTitle = environment.favoritesRepository.checkTitleInFavorites(currentUser()!!.uid, titleId)
+                val checkTitle = environment.watchlistRepository.checkTitleInFavorites(currentUser()!!.uid, titleId)
                 _addToFavorites.value = checkTitle!!.data != null
                 traktFavoriteLoader.value = LoadingState.LOADED
             }

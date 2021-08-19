@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.repository.favoritesrepository
+package com.lukakordzaia.streamflow.repository.watchlistrepository
 
 import android.content.ContentValues
 import android.util.Log
@@ -7,9 +7,22 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.datamodels.AddFavoritesModel
 import com.lukakordzaia.streamflow.interfaces.FavoritesCallBack
+import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.imovies.ImoviesCall
+import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
+import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserWatchlistResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.user.UserWatchListStatusResponse
 import kotlinx.coroutines.tasks.await
 
-class DefaultFavoritesRepository: FavoritesRepository {
+class DefaultWatchlistRepository(private val service: ImoviesNetwork): ImoviesCall(), WatchlistRepository {
+    override suspend fun getUserWatchlist(): Result<GetUserWatchlistResponse> {
+        return imoviesCall { service.getUserWatchlist() }
+    }
+
+    override suspend fun deleteWatchlistTitle(id: Int): Result<UserWatchListStatusResponse> {
+        return imoviesCall { service.deleteWatchlistTitle(id) }
+    }
+
     override suspend fun addTitleToFavorites(currentUserUid: String, addFavoritesModel: AddFavoritesModel): Boolean {
         return try {
             Firebase.firestore

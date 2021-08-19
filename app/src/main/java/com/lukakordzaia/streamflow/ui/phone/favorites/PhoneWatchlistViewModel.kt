@@ -9,14 +9,18 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.toSingleTitleModel
+import com.lukakordzaia.streamflow.utils.toWatchListModel
 import kotlinx.coroutines.launch
 
-class PhoneFavoritesViewModel : BaseViewModel() {
+class PhoneWatchlistViewModel : BaseViewModel() {
     val favoriteMoviesLoader = MutableLiveData<LoadingState>()
     val favoriteTvShowsLoader = MutableLiveData<LoadingState>()
 
     val favoriteNoMovies = MutableLiveData<Boolean>()
     val favoriteNoTvShows = MutableLiveData<Boolean>()
+
+    private val _userWatchlist = MutableLiveData<List<SingleTitleModel>>()
+    val userWatchlist: LiveData<List<SingleTitleModel>> = _userWatchlist
 
     private val _movieResult = MutableLiveData<List<SingleTitleModel>>()
     val movieResult: LiveData<List<SingleTitleModel>> = _movieResult
@@ -25,15 +29,47 @@ class PhoneFavoritesViewModel : BaseViewModel() {
     val tvShowResult: LiveData<List<SingleTitleModel>> = _tvShowResult
 
     fun onSingleTitlePressed(titleId: Int) {
-        navigateToNewFragment(PhoneFavoritesFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
+        navigateToNewFragment(PhoneWatchlistFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
     }
 
     fun onProfileButtonPressed() {
-        navigateToNewFragment(PhoneFavoritesFragmentDirections.actionPhoneFavoritesFragmentToProfileFragment())
+        navigateToNewFragment(PhoneWatchlistFragmentDirections.actionPhoneFavoritesFragmentToProfileFragment())
+    }
+
+    fun getUserWatchlist() {
+        favoriteMoviesLoader.value = LoadingState.LOADING
+        favoriteTvShowsLoader.value = LoadingState.LOADING
+        viewModelScope.launch {
+            when (val watchlist = environment.watchlistRepository.getUserWatchlist()) {
+                is Result.Success -> {
+                    val data = watchlist.data.data
+
+                    if (data.isNullOrEmpty()) {
+                        favoriteNoMovies.value = true
+                        favoriteNoTvShows.value = true
+                    } else {
+                        _userWatchlist.value = data.toWatchListModel()
+                    }
+
+                    favoriteMoviesLoader.value = LoadingState.LOADED
+                    favoriteTvShowsLoader.value = LoadingState.LOADED
+                }
+            }
+        }
+    }
+
+    fun deleteWatchlistTitle(id: Int) {
+        viewModelScope.launch {
+            when (val delete = environment.watchlistRepository.deleteWatchlistTitle(id)) {
+                is Result.Success -> {
+                    getUserWatchlist()
+                }
+            }
+        }
     }
 
     fun getFavTitlesFromFirestore() {
-        environment.favoritesRepository.getTitlesFromFavorites(currentUser()!!.uid, object :
+        environment.watchlistRepository.getTitlesFromFavorites(currentUser()!!.uid, object :
             FavoritesCallBack {
             override fun moviesList(movies: MutableList<Int>) {
                 favoriteMoviesLoader.value = LoadingState.LOADING
@@ -88,7 +124,7 @@ class PhoneFavoritesViewModel : BaseViewModel() {
 
     fun removeFavTitleFromFirestore(titleId: Int) {
         viewModelScope.launch {
-            val removeFromFavorites = environment.favoritesRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
+            val removeFromFavorites = environment.watchlistRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
             if (removeFromFavorites) {
                 newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
             }

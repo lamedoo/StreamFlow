@@ -13,8 +13,6 @@ import com.lukakordzaia.streamflow.repository.cataloguerepository.CatalogueRepos
 import com.lukakordzaia.streamflow.repository.cataloguerepository.DefaultCatalogueRepository
 import com.lukakordzaia.streamflow.repository.databaserepository.DatabaseRepository
 import com.lukakordzaia.streamflow.repository.databaserepository.DefaultDatabaseRepository
-import com.lukakordzaia.streamflow.repository.favoritesrepository.DefaultFavoritesRepository
-import com.lukakordzaia.streamflow.repository.favoritesrepository.FavoritesRepository
 import com.lukakordzaia.streamflow.repository.homerepistory.DefaultHomeRepository
 import com.lukakordzaia.streamflow.repository.homerepistory.HomeRepository
 import com.lukakordzaia.streamflow.repository.searchrepository.DefaultSearchRepository
@@ -25,10 +23,12 @@ import com.lukakordzaia.streamflow.repository.traktrepository.DefaultTraktReposi
 import com.lukakordzaia.streamflow.repository.traktrepository.TraktRepository
 import com.lukakordzaia.streamflow.repository.userrepository.DefaultUserRepository
 import com.lukakordzaia.streamflow.repository.userrepository.UserRepository
+import com.lukakordzaia.streamflow.repository.watchlistrepository.DefaultWatchlistRepository
+import com.lukakordzaia.streamflow.repository.watchlistrepository.WatchlistRepository
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueViewModel
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
-import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesViewModel
+import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneWatchlistViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.SingleTopListViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleViewModel
@@ -53,7 +53,7 @@ val viewModelModule = module {
     viewModel { TvShowBottomSheetViewModel() }
     viewModel { ProfileViewModel() }
     viewModel { TvTitleFilesViewModel() }
-    viewModel { PhoneFavoritesViewModel() }
+    viewModel { PhoneWatchlistViewModel() }
     viewModel { SingleTopListViewModel() }
     viewModel { VideoPlayerViewModel() }
 }
@@ -64,7 +64,7 @@ val repositoryModule = module {
     single<CatalogueRepository> { DefaultCatalogueRepository(get()) }
     single<SearchRepository> { DefaultSearchRepository(get()) }
     single<TraktRepository> { DefaultTraktRepository(get()) }
-    single<FavoritesRepository> { DefaultFavoritesRepository() }
+    single<WatchlistRepository> { DefaultWatchlistRepository(get()) }
     single<DatabaseRepository> { DefaultDatabaseRepository(get()) }
     single<UserRepository> { DefaultUserRepository(get()) }
 }

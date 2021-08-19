@@ -10,15 +10,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneFavoritesBinding
+import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PhoneFavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
-    private val phoneFavoritesViewModel: PhoneFavoritesViewModel by viewModel()
-    private lateinit var favoritesMoviesAdapter: FavoritesAdapter
-    private lateinit var favoriteTvShowsAdapter: FavoritesAdapter
+class PhoneWatchlistFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
+    private val phoneWatchlistViewModel: PhoneWatchlistViewModel by viewModel()
+    private lateinit var watchlistMoviesAdapter: WatchlistAdapter
+    private lateinit var watchlistTvShowsAdapter: WatchlistAdapter
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneFavoritesBinding
         get() = FragmentPhoneFavoritesBinding::inflate
@@ -34,8 +35,8 @@ class PhoneFavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
     }
 
     private fun authCheck() {
-        if (auth.currentUser != null) {
-            phoneFavoritesViewModel.getFavTitlesFromFirestore()
+        if (authSharedPreferences.getLoginToken() != "") {
+            phoneWatchlistViewModel.getUserWatchlist()
             binding.favoriteMoviesContainer.setVisible()
             binding.favoriteTvshowsContainer.setVisible()
             binding.favoriteNoAuth.setGone()
@@ -48,26 +49,51 @@ class PhoneFavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
 
     private fun fragmentListeners() {
         binding.toolbar.homeProfile.setOnClickListener {
-            phoneFavoritesViewModel.onProfileButtonPressed()
+            phoneWatchlistViewModel.onProfileButtonPressed()
         }
 
         binding.profileButton.setOnClickListener {
-            phoneFavoritesViewModel.onProfileButtonPressed()
+            phoneWatchlistViewModel.onProfileButtonPressed()
         }
     }
 
     private fun fragmentObservers() {
-        phoneFavoritesViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+        phoneWatchlistViewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
+            val movies: MutableList<SingleTitleModel> = ArrayList()
+            val tvShows: MutableList<SingleTitleModel> = ArrayList()
+
+            watchlist.forEach {
+                if (it.isTvShow) {
+                    tvShows.add(it)
+                } else {
+                    movies.add(it)
+                }
+            }
+
+            if (movies.isEmpty()) {
+                phoneWatchlistViewModel.favoriteNoMovies.value = true
+            } else {
+                watchlistMoviesAdapter.setItems(movies)
+            }
+
+            if (tvShows.isEmpty()) {
+                phoneWatchlistViewModel.favoriteNoTvShows.value = true
+            } else {
+                watchlistTvShowsAdapter.setItems(tvShows)
+            }
+        })
+
+        phoneWatchlistViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
 
-        phoneFavoritesViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+        phoneWatchlistViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
     }
 
     private fun favMoviesContainer() {
-        phoneFavoritesViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
+        phoneWatchlistViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
                     binding.favoriteMoviesProgressBar.setVisible()
@@ -80,32 +106,27 @@ class PhoneFavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
             }
         })
 
-        phoneFavoritesViewModel.favoriteNoMovies.observe(viewLifecycleOwner, {
+        phoneWatchlistViewModel.favoriteNoMovies.observe(viewLifecycleOwner, {
             if (it) {
                 binding.favoriteNoMovies.setVisible()
             }
         })
 
         val moviesLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        favoritesMoviesAdapter = FavoritesAdapter(requireContext(),
+        watchlistMoviesAdapter = WatchlistAdapter(requireContext(),
             {
-                phoneFavoritesViewModel.onSingleTitlePressed(it)
+                phoneWatchlistViewModel.onSingleTitlePressed(it)
             },
             { titleId: Int ->
                 removeTitleDialog(titleId)
             }
         )
         binding.rvFavoritesMovies.layoutManager = moviesLayout
-        binding.rvFavoritesMovies.adapter = favoritesMoviesAdapter
-
-
-        phoneFavoritesViewModel.movieResult.observe(viewLifecycleOwner, {
-            favoritesMoviesAdapter.setItems(it)
-        })
+        binding.rvFavoritesMovies.adapter = watchlistMoviesAdapter
     }
 
     private fun favTvShowsContainer() {
-        phoneFavoritesViewModel.favoriteTvShowsLoader.observe(viewLifecycleOwner, {
+        phoneWatchlistViewModel.favoriteTvShowsLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
                     binding.favoriteTvshowsProgressBar.setVisible()
@@ -118,27 +139,23 @@ class PhoneFavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
             }
         })
 
-        phoneFavoritesViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, {
+        phoneWatchlistViewModel.favoriteNoTvShows.observe(viewLifecycleOwner, {
             if (it) {
                 binding.favoriteNoTvshows.setVisible()
             }
         })
 
         val tvShowsLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        favoriteTvShowsAdapter = FavoritesAdapter(requireContext(),
+        watchlistTvShowsAdapter = WatchlistAdapter(requireContext(),
             {
-                phoneFavoritesViewModel.onSingleTitlePressed(it)
+                phoneWatchlistViewModel.onSingleTitlePressed(it)
             },
             { titleId: Int ->
                 removeTitleDialog(titleId)
             }
         )
         binding.rvFavoritesTvshows.layoutManager = tvShowsLayout
-        binding.rvFavoritesTvshows.adapter = favoriteTvShowsAdapter
-
-        phoneFavoritesViewModel.tvShowResult.observe(viewLifecycleOwner, {
-            favoriteTvShowsAdapter.setItems(it)
-        })
+        binding.rvFavoritesTvshows.adapter = watchlistTvShowsAdapter
     }
 
     private fun removeTitleDialog(titleId: Int) {
@@ -148,7 +165,8 @@ class PhoneFavoritesFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
         removeFavorite.setContentView(binding.root)
 
         binding.confirmButton.setOnClickListener {
-            phoneFavoritesViewModel.removeFavTitleFromFirestore(titleId)
+//            phoneWatchlistViewModel.removeFavTitleFromFirestore(titleId)
+            phoneWatchlistViewModel.deleteWatchlistTitle(titleId)
             removeFavorite.dismiss()
         }
         binding.cancelButton.setOnClickListener {

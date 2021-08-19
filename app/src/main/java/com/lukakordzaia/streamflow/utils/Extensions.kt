@@ -15,6 +15,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserWatchlistResponse
 
 inline fun <T : Fragment> T.applyBundle(block: Bundle.() -> Unit): T {
     val bundle = Bundle()
@@ -114,6 +115,30 @@ fun GetSingleTitleResponse.toSingleTitleModel(): SingleTitleModel {
         country = if (title.countries.data.isNotEmpty()) title.countries.data[0].secondaryName else "N/A",
         trailer = if (title.trailers.data.isNotEmpty()) title.trailers.data[0].fileUrl else null
     )
+}
+
+fun List<GetUserWatchlistResponse.Data>.toWatchListModel(): List<SingleTitleModel> {
+    return map { data ->
+        val it = data.movie.data
+
+        SingleTitleModel(
+            id = it.id,
+            isTvShow = it.isTvShow?: false,
+            displayName = if (it.primaryName.isNotEmpty()) it.primaryName else it.secondaryName,
+            nameGeo = it.primaryName,
+            nameEng = it.secondaryName,
+            poster = it.posters?.data?.x240,
+            cover = it.covers?.data?.x1050,
+            description = null,
+            imdbId = null,
+            imdbScore = null,
+            releaseYear = it.year.toString(),
+            duration = null,
+            seasonNum = null,
+            country = null,
+            trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null
+        )
+    }
 }
 
 fun ImageView.setImage(image: String?, isPhone: Boolean) {

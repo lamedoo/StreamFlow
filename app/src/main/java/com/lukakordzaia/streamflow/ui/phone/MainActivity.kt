@@ -19,7 +19,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre.SingleGenreFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlestudio.SingleStudioFragment
-import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesFragment
+import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneWatchlistFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.NewMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                 when (f) {
                     is HomeFragment,
                     is CatalogueFragment,
-                    is SearchTitlesFragment, is PhoneFavoritesFragment -> {
+                    is SearchTitlesFragment, is PhoneWatchlistFragment -> {
                         showBottomNavigation()
                     }
                     is ProfileFragment,

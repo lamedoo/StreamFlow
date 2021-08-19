@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.AddFavoritesModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.toSingleTitleModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
@@ -234,7 +234,7 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
         if (currentUser() != null) {
             favoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
-                val addToFavorites = environment.favoritesRepository.addTitleToFavorites(currentUser()!!.uid, AddFavoritesModel(
+                val addToFavorites = environment.watchlistRepository.addTitleToFavorites(currentUser()!!.uid, AddFavoritesModel(
                     info.nameEng!!,
                     info.isTvShow,
                     info.id,
@@ -258,7 +258,7 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
     fun removeTitleFromFavorites(titleId: Int) {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            val removeFromFavorites = environment.favoritesRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
+            val removeFromFavorites = environment.watchlistRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
             if (removeFromFavorites) {
                 _addToFavorites.value = false
                 favoriteLoader.value = LoadingState.LOADED
@@ -274,7 +274,7 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
         if (currentUser() != null) {
             favoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
-                val checkTitle = environment.favoritesRepository.checkTitleInFavorites(currentUser()!!.uid, titleId)
+                val checkTitle = environment.watchlistRepository.checkTitleInFavorites(currentUser()!!.uid, titleId)
                 _addToFavorites.value = checkTitle!!.data != null
                 favoriteLoader.value = LoadingState.LOADED
             }
