@@ -185,7 +185,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+                    phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getTraktToken()}")
                 }, 5000)
             }
         })
@@ -234,7 +234,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
     }
 
     private fun titleDetailsContainer() {
-        phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+        phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getTraktToken()}")
 
         phoneSingleTitleViewModel.singleTitleLoader.observe(viewLifecycleOwner, {
             when (it.status) {

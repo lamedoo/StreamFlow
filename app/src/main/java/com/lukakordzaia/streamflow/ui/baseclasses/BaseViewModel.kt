@@ -8,11 +8,13 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.helpers.Environment
+import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.utils.Event
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 abstract class BaseViewModel : ViewModel(), KoinComponent {
+    protected val authSharedPreferences: AuthSharedPreferences by inject()
     protected val environment: Environment by inject()
 
     private val _navigateScreen = MutableLiveData<Event<NavDirections>>()

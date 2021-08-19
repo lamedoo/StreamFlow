@@ -2,20 +2,30 @@ package com.lukakordzaia.streamflow.network.imovies
 
 
 import com.lukakordzaia.streamflow.network.EndPoints
-import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserDataResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserLogoutResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.user.PostUserLoginResponse
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ImoviesNetwork {
+
+    @POST(EndPoints.USER_LOGIN)
+    suspend fun postUserLogin(@Body loginBody: PostLoginBody) : Response<PostUserLoginResponse>
+
+    @PATCH(EndPoints.USER_LOG_OUT)
+    suspend fun postUserLogOut() : Response<GetUserLogoutResponse>
+
+    @GET(EndPoints.USER_DATA)
+    suspend fun getUserData() : Response<GetUserDataResponse>
 
     @GET(EndPoints.MOVIE_OF_THE_DAY)
     suspend fun getMovieDay() : Response <GetTitlesResponse>

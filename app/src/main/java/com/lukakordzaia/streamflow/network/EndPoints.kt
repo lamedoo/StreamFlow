@@ -25,6 +25,10 @@ class EndPoints {
         const val SINGLE_TITLE_RELATED = "movies/{id}/related?page=1&per_page=10"
         const val SINGLE_TITLE_FILES = "movies/{id}/season-files/{season_number}"
 
+        const val USER_LOGIN = "https://api.imovies.cc/api/v1/auth/token"
+        const val USER_DATA = "https://api.imovies.cc/api/v1/auth/user"
+        const val USER_LOG_OUT = "https://api.imovies.cc/api/v1/auth/revoke-token"
+
         //TRAKT TV
         const val DEVICE_CODE = "https://api.trakt.tv/oauth/device/code"
 

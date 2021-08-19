@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
+import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserDataResponse
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.response.GetDeviceCodeResponse
@@ -18,6 +20,9 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class ProfileViewModel : BaseViewModel() {
+    private val _userData = MutableLiveData<GetUserDataResponse.Data>()
+    val userData: LiveData<GetUserDataResponse.Data> = _userData
+
     private val _traktDeviceCode = MutableLiveData<GetDeviceCodeResponse>()
     val traktDeviceCodeResponse: LiveData<GetDeviceCodeResponse> = _traktDeviceCode
 
@@ -29,6 +34,55 @@ class ProfileViewModel : BaseViewModel() {
 
     private val _traktSfListExists = MutableLiveData<Boolean>()
     val traktSfListExists: LiveData<Boolean> = _traktSfListExists
+
+    fun userLogin(loginBody: PostLoginBody) {
+        viewModelScope.launch {
+            when (val login = environment.userRepository.userLogin(loginBody)) {
+                is Result.Success -> {
+                    val data = login.data
+
+                    authSharedPreferences.saveLoginToken(data.accessToken)
+                    authSharedPreferences.saveLoginRefreshToken(data.refreshToken)
+
+                    refreshProfileOnLogin()
+                }
+                is Result.Error -> {
+                    Log.d("userLogin", login.exception)
+                }
+            }
+        }
+    }
+
+    fun userLogout() {
+        viewModelScope.launch {
+            when (val logout = environment.userRepository.userLogout()) {
+                is Result.Success -> {
+
+                    authSharedPreferences.saveLoginToken("")
+                    authSharedPreferences.saveLoginRefreshToken("")
+                    refreshProfileOnLogin()
+                }
+                is Result.Error -> {
+                    Log.d("userLogout", logout.exception)
+                }
+            }
+        }
+    }
+
+    fun getUserData() {
+        viewModelScope.launch {
+            when (val userData = environment.userRepository.userData()) {
+                is Result.Success -> {
+                    val data = userData.data.data
+
+                    _userData.value = data
+                }
+                is Result.Error -> {
+                    Log.d("userData", userData.exception)
+                }
+            }
+        }
+    }
 
     fun refreshProfileOnLogin() {
         navigateToNewFragment(ProfileFragmentDirections.actionProfileFragmentSelf())

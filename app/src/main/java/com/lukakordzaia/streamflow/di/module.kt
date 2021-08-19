@@ -23,6 +23,8 @@ import com.lukakordzaia.streamflow.repository.singletitlerepository.DefaultSingl
 import com.lukakordzaia.streamflow.repository.singletitlerepository.SingleTitleRepository
 import com.lukakordzaia.streamflow.repository.traktrepository.DefaultTraktRepository
 import com.lukakordzaia.streamflow.repository.traktrepository.TraktRepository
+import com.lukakordzaia.streamflow.repository.userrepository.DefaultUserRepository
+import com.lukakordzaia.streamflow.repository.userrepository.UserRepository
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueViewModel
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
@@ -64,11 +66,12 @@ val repositoryModule = module {
     single<TraktRepository> { DefaultTraktRepository(get()) }
     single<FavoritesRepository> { DefaultFavoritesRepository() }
     single<DatabaseRepository> { DefaultDatabaseRepository(get()) }
+    single<UserRepository> { DefaultUserRepository(get()) }
 }
 
 val generalModule = module {
     single { NetworkConnectionInterceptor(get()) }
-    single { DefaultHeaderInterceptor() }
+    single { DefaultHeaderInterceptor(get()) }
     single { RetrofitBuilder(get(), get()) }
     single { get<RetrofitBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
     single { get<RetrofitBuilder>().getRetrofitInstance().create(TraktTvNetwork::class.java) }
@@ -76,5 +79,5 @@ val generalModule = module {
     single { AuthSharedPreferences(get()) }
     single { TvSidebarAnimations() }
     single { StreamFlowDatabase.getDatabase(get()) }
-    single { Environment(get(), get(), get(), get(), get(), get(), get()) }
+    single { Environment(get(), get(), get(), get(), get(), get(), get(), get()) }
 }

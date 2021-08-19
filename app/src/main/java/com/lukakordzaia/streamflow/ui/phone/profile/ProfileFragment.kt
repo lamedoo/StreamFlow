@@ -3,7 +3,6 @@ package com.lukakordzaia.streamflow.ui.phone.profile
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -11,22 +10,15 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.GoogleAuthProvider
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogConnectTraktvAlertBinding
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
-import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
+import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -37,7 +29,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     private val profileViewModel: ProfileViewModel by viewModel()
-    private var googleAccount: GoogleSignInAccount? = null
     private var traktToken: String? = null
 
     private lateinit var traktDialog: Dialog
@@ -54,51 +45,39 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneProfileBinding
         get() = FragmentPhoneProfileBinding::inflate
 
+    override fun onStart() {
+        super.onStart()
+
+        profileViewModel.getUserData()
+        updateGoogleUI(authSharedPreferences.getLoginToken() != "")
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         topBarListener(resources.getString(R.string.account), binding.toolbar)
 
         binding.aboutTitle.text = "ვერსია v${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}"
 
-        googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
         traktDialog = Dialog(requireContext())
-        traktToken = authSharedPreferences.getAccessToken()
+        traktToken = authSharedPreferences.getTraktToken()
 
         fragmentListeners()
         fragmentObservers()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.idToken)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                Log.w(TAG, "Google sign in failed", e)
-            }
-        }
-    }
-
     private fun fragmentListeners() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
         binding.gSignIn.setOnClickListener {
-            val signInIntent: Intent = googleSignInClient.signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
+            profileViewModel.userLogin(PostLoginBody(
+                3,
+                "password",
+                "Irmisnaxtomi12.",
+                "kordzaialuka@gmail.com"
+            ))
         }
 
         binding.gSignOut.setOnClickListener {
-            auth.signOut()
-            googleSignInClient.signOut()
-            updateGoogleUI(false)
+            profileViewModel.userLogout()
         }
 
         binding.clearContainer.setOnClickListener {
@@ -178,8 +157,8 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                 traktDialog.hide()
                 countdown.cancel()
 
-                authSharedPreferences.saveAccessToken(userToken.accessToken)
-                authSharedPreferences.saveRefreshToken(userToken.refreshToken)
+                authSharedPreferences.saveTraktToken(userToken.accessToken)
+                authSharedPreferences.saveTraktRefreshToken(userToken.refreshToken)
 
                 updateTraktUi(true)
             }
@@ -197,7 +176,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                         null,
                         null
                     ),
-                    "Bearer ${authSharedPreferences.getAccessToken()}"
+                    "Bearer ${authSharedPreferences.getTraktToken()}"
                 )
             }
         })
@@ -209,50 +188,6 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         profileViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    Snackbar.make(binding.root,"წარმატებით გაიარეთ ავტორიზაცია", Snackbar.LENGTH_SHORT).show()
-                    profileViewModel.createUserFirestore()
-
-                    showSyncDialog()
-                } else {
-                    Snackbar.make(binding.root, "ავტორიზაცია ვერ მოხერხდა", Snackbar.LENGTH_SHORT)
-                        .show()
-                    updateGoogleUI(false)
-                }
-            }
-    }
-
-    private fun showSyncDialog() {
-        profileViewModel.getContinueWatchingFromRoom().observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) {
-                val binding = DialogSyncDatabaseBinding.inflate(LayoutInflater.from(requireContext()))
-                val syncDialog = Dialog(requireContext())
-                syncDialog.setContentView(binding.root)
-
-                binding.confirmButton.setOnClickListener { _ ->
-                    profileViewModel.addContinueWatchingToFirestore(it)
-                    syncDialog.dismiss()
-                }
-                binding.cancelButton.setOnClickListener {
-                    syncDialog.dismiss()
-                }
-                syncDialog.show()
-            } else {
-                profileViewModel.refreshProfileOnLogin()
-            }
-        })
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        updateGoogleUI(auth.currentUser != null)
     }
 
     private fun updateTraktUi(isLoggedIn: Boolean) {
@@ -272,14 +207,11 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         binding.lastLine.setVisibleOrGone(isLoggedIn)
         binding.firstLine.setVisibleOrGone(!isLoggedIn)
 
-        binding.profileUsername.text = if (isLoggedIn && googleAccount != null) {
-            "გამარჯობა, ${googleAccount!!.givenName!!.toUpperCase()}"
-        } else {
-            ""
-        }
-
         if (isLoggedIn) {
-            Glide.with(this).load(googleAccount?.photoUrl).into(binding.profilePhoto)
+            profileViewModel.userData.observe(viewLifecycleOwner, {
+                binding.profileUsername.text = it.displayName
+                Glide.with(this).load(it.avatar.large).into(binding.profilePhoto)
+            })
         }
     }
 
