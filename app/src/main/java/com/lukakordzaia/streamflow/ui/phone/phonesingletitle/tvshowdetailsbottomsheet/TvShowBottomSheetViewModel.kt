@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -47,7 +46,6 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
         val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
 
         _continueWatchingDetails.addSource(data) {
-            Log.d("dasdsadasdA", it.toString())
             _continueWatchingDetails.value = it
         }
     }

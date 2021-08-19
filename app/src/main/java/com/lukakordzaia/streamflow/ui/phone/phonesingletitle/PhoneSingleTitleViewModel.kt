@@ -61,6 +61,8 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
                             val data = titleData.data
                             _singleTitleData.value = data.toSingleTitleModel()
 
+                            _addToFavorites.value = data.data.userWantsToWatch?.data?.status ?: false
+
 //                            if (data.isTvShow) {
 //                                checkTitleInTraktList("show", accessToken)
 //                            } else {
@@ -229,6 +231,32 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
 //            }
 //        }
 //    }
+
+    fun addWatchlistTitle(id: Int) {
+        favoriteLoader.value = LoadingState.LOADING
+        viewModelScope.launch {
+            when (val delete = environment.watchlistRepository.addWatchlistTitle(id)) {
+                is Result.Success -> {
+                    newToastMessage("ფილმი დაემატა ფავორიტებში")
+                    _addToFavorites.value = true
+                    favoriteLoader.value = LoadingState.LOADED
+                }
+            }
+        }
+    }
+
+    fun deleteWatchlistTitle(id: Int) {
+        favoriteLoader.value = LoadingState.LOADING
+        viewModelScope.launch {
+            when (val delete = environment.watchlistRepository.deleteWatchlistTitle(id)) {
+                is Result.Success -> {
+                    _addToFavorites.value = false
+                    favoriteLoader.value = LoadingState.LOADED
+                    newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
+                }
+            }
+        }
+    }
 
     fun addTitleToFirestore(info: SingleTitleModel) {
         if (currentUser() != null) {

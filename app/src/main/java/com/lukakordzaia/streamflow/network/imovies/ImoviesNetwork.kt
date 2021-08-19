@@ -75,4 +75,7 @@ interface ImoviesNetwork {
 
     @DELETE(EndPoints.USER_WATCHLIST_STATUS)
     suspend fun deleteWatchlistTitle(@Path("id") id: Int) : Response<UserWatchListStatusResponse>
+
+    @POST(EndPoints.USER_WATCHLIST_STATUS)
+    suspend fun addWatchlistTitle(@Path("id") id: Int) : Response<UserWatchListStatusResponse>
 }

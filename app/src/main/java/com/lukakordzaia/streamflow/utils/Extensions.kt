@@ -86,7 +86,8 @@ fun List<GetTitlesResponse.Data>.toTitleListModel(): List<SingleTitleModel> {
             duration = null,
             seasonNum = null,
             country = null,
-            trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null
+            trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
+            watchlist = it.userWantsToWatch?.data?.status
         )
     }
 }
@@ -113,7 +114,8 @@ fun GetSingleTitleResponse.toSingleTitleModel(): SingleTitleModel {
             0
         },
         country = if (title.countries.data.isNotEmpty()) title.countries.data[0].secondaryName else "N/A",
-        trailer = if (title.trailers.data.isNotEmpty()) title.trailers.data[0].fileUrl else null
+        trailer = if (title.trailers.data.isNotEmpty()) title.trailers.data[0].fileUrl else null,
+        watchlist = title.userWantsToWatch?.data?.status
     )
 }
 
@@ -136,7 +138,8 @@ fun List<GetUserWatchlistResponse.Data>.toWatchListModel(): List<SingleTitleMode
             duration = null,
             seasonNum = null,
             country = null,
-            trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null
+            trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
+            watchlist = it.userWantsToWatch?.data?.status
         )
     }
 }

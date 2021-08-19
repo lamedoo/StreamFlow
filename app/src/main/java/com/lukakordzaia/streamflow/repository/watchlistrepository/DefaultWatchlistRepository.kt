@@ -19,6 +19,10 @@ class DefaultWatchlistRepository(private val service: ImoviesNetwork): ImoviesCa
         return imoviesCall { service.getUserWatchlist() }
     }
 
+    override suspend fun addWatchlistTitle(id: Int): Result<UserWatchListStatusResponse> {
+        return imoviesCall { service.addWatchlistTitle(id) }
+    }
+
     override suspend fun deleteWatchlistTitle(id: Int): Result<UserWatchListStatusResponse> {
         return imoviesCall { service.deleteWatchlistTitle(id) }
     }

@@ -113,20 +113,18 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
     }
 
     private fun checkFavorites() {
-        phoneSingleTitleViewModel.checkTitleInFavorites(args.titleId)
-
         phoneSingleTitleViewModel.addToFavorites.observe(viewLifecycleOwner, {
             if (it) {
                 binding.singleTitleFavoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
                 binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
                 binding.singleTitleFavorite.setOnClickListener {
-                    phoneSingleTitleViewModel.removeTitleFromFavorites(args.titleId)
+                    phoneSingleTitleViewModel.deleteWatchlistTitle(args.titleId)
                 }
             } else {
                 binding.singleTitleFavoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
                 binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
                 binding.singleTitleFavorite.setOnClickListener {
-                    phoneSingleTitleViewModel.addTitleToFirestore(titleInfo)
+                    phoneSingleTitleViewModel.addWatchlistTitle(args.titleId)
                 }
             }
         })

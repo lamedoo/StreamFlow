@@ -14,5 +14,6 @@ interface WatchlistRepository {
     fun getTitlesFromFavorites(currentUserUid: String, favoritesCallBack: FavoritesCallBack)
 
     suspend fun getUserWatchlist() : Result<GetUserWatchlistResponse>
+    suspend fun addWatchlistTitle(id: Int) : Result<UserWatchListStatusResponse>
     suspend fun deleteWatchlistTitle(id: Int) : Result<UserWatchListStatusResponse>
 }
