@@ -49,10 +49,6 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
     }
 
     private fun fragmentListeners() {
-        binding.toolbar.homeFavorites.setOnClickListener {
-            navController(HomeFragmentDirections.actionHomeFragmentToFavoritesFragment())
-        }
-
         binding.toolbar.homeProfile.setOnClickListener {
             navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
         }
@@ -242,9 +238,6 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         when (item.itemId) {
             R.id.profile_button -> {
                 navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
-            }
-            R.id.favorite_button -> {
-                navController(HomeFragmentDirections.actionHomeFragmentToFavoritesFragment())
             }
         }
         return super.onOptionsItemSelected(item)

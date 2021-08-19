@@ -29,7 +29,7 @@ class PhoneFavoritesViewModel : BaseViewModel() {
     }
 
     fun onProfileButtonPressed() {
-        navigateToNewFragment(PhoneFavoritesFragmentDirections.actionFavoritesFragmentToProfileFragment())
+        navigateToNewFragment(PhoneFavoritesFragmentDirections.actionPhoneFavoritesFragmentToProfileFragment())
     }
 
     fun getFavTitlesFromFirestore() {

@@ -35,7 +35,6 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        home_favorites.setGone()
         home_profile.setGone()
 
         fragmentObservers()

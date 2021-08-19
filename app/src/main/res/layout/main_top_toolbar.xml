@@ -19,16 +19,6 @@
         android:src="@drawable/streamflowlogo"/>
 
     <ImageView
-        android:id="@+id/home_favorites"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="25dp"
-        android:src="@drawable/title_favorite_icon"
-        app:layout_constraintTop_toTopOf="@id/main_logo_new"
-        app:layout_constraintBottom_toBottomOf="@id/main_logo_new"
-        app:layout_constraintEnd_toStartOf="@id/home_profile"/>
-
-    <ImageView
         android:id="@+id/home_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -44,9 +44,6 @@
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out" />
         <action
-            android:id="@+id/action_homeFragment_to_favoritesFragment"
-            app:destination="@id/favoritesFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_continueWatchingInfoFragment"
             app:destination="@id/continueWatchingInfoFragment" />
         <action
@@ -95,25 +92,6 @@
                 android:name="titleId"
                 app:argType="integer" />
         </action>
-    </fragment>
-    <fragment
-        android:id="@+id/favoritesFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesFragment"
-        android:label="FavoritesFragment" >
-        <action
-            android:id="@+id/action_favoritesFragment_to_single_title_fragment_nav"
-            app:destination="@id/single_title_fragment_nav"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right">
-            <argument
-                android:name="titleId"
-                app:argType="integer" />
-        </action>
-        <action
-            android:id="@+id/action_favoritesFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
     </fragment>
     <dialog
         android:id="@+id/continueWatchingInfoFragment"

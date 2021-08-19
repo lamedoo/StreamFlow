@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.homeFragment, R.id.categoriesFragment,  R.id.searchTitlesFragment)
+            setOf(R.id.homeFragment, R.id.categoriesFragment, R.id.phoneFavoritesFragment,  R.id.searchTitlesFragment)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
@@ -66,7 +66,9 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
                 when (f) {
-                    is HomeFragment, is CatalogueFragment, is SearchTitlesFragment -> {
+                    is HomeFragment,
+                    is CatalogueFragment,
+                    is SearchTitlesFragment, is PhoneFavoritesFragment -> {
                         showBottomNavigation()
                     }
                     is ProfileFragment,
@@ -74,7 +76,6 @@ class MainActivity : AppCompatActivity() {
                     is TopMoviesFragment,
                     is TopTvShowsFragment,
                     is NewMoviesFragment,
-                    is PhoneFavoritesFragment,
                     is SingleStudioFragment,
                     is PhoneSingleTitleFragment,
                     is TvShowBottomSheetFragment, is VideoPlayerFragment -> {

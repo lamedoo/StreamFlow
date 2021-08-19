@@ -5,9 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/fragment_top_toolbar" />
+    <include android:id="@+id/toolbar"
+        layout="@layout/main_top_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         xmlns:tools="http://schemas.android.com/tools"
