@@ -3,7 +3,6 @@ package com.lukakordzaia.streamflow.di
 import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
 import com.lukakordzaia.streamflow.database.StreamFlowDatabase
 import com.lukakordzaia.streamflow.helpers.Environment
-import com.lukakordzaia.streamflow.helpers.SpinnerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
@@ -73,7 +72,6 @@ val generalModule = module {
     single { RetrofitBuilder(get(), get()) }
     single { get<RetrofitBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
     single { get<RetrofitBuilder>().getRetrofitInstance().create(TraktTvNetwork::class.java) }
-    single { SpinnerClass(get()) }
     single { BuildMediaSource(get()) }
     single { AuthSharedPreferences(get()) }
     single { TvSidebarAnimations() }
