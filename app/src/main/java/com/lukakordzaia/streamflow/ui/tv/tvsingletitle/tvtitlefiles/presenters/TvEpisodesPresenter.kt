@@ -13,7 +13,7 @@ class TvEpisodesPresenter(private val context: Context, private val currentEpiso
         val cardView = TvEpisodesCardView(parent.context, null)
 
         cardView.isFocusable = true
-        cardView.background = ResourcesCompat.getDrawable(context.resources, R.drawable.rv_tv_default_card_view_background, null)
+        cardView.background = ResourcesCompat.getDrawable(context.resources, R.drawable.background_episodes_card_tv, null)
         cardView.isFocusableInTouchMode = true
 
         return ViewHolder(cardView)
@@ -39,7 +39,7 @@ class TvEpisodesPresenter(private val context: Context, private val currentEpiso
                 cardView.setIndicatorDrawable(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        if (hasFocus) R.drawable.phone_chosen_episode_indicator_secondary else R.drawable.phone_chosen_episode_indicator,
+                        if (hasFocus) R.drawable.indicator_current_episode_dark else R.drawable.indicator_current_episode_light,
                         null
                     )
                 )

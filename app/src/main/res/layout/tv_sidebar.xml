@@ -5,7 +5,7 @@
     android:id="@+id/tv_sidebar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/tv_sidebar_background"
+    android:background="@drawable/background_sidebar_tv"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="@dimen/fragment_padding"
@@ -22,7 +22,7 @@
         android:layout_height="50dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:src="@drawable/no_profile_picture"
+        android:src="@drawable/placeholder_profile"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -64,44 +64,32 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/sign_in"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="center_vertical"
         app:layout_constraintTop_toBottomOf="@id/profile_photo"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
-            android:id="@+id/sign_in"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:padding="10dp"
-            android:background="@drawable/tv_google_button_background"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:nextFocusDown="@id/search_button">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/icon_google"
+            android:tint="@color/tv_sidebar_text_focused"
+            android:duplicateParentState="true"
+            tools:ignore="UseAppTint" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:src="@drawable/google_login_logo" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:text="@string/authorization"
-                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
-                android:textColor="@color/white"
-                android:textSize="13.5sp" />
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/sign_in_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
+            android:text="@string/authorization"
+            android:textColor="@color/tv_sidebar_text_focused" />
 
     </LinearLayout>
 
@@ -110,10 +98,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="7dp"
+        android:padding="10dp"
+        android:gravity="center_vertical"
         android:nextFocusUp="@id/sign_in"
         app:layout_constraintBottom_toTopOf="@+id/home_button"
         app:layout_constraintTop_toTopOf="parent"
@@ -121,10 +107,10 @@
         tools:layout_editor_absoluteX="25dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/search_icon_bottom"
+            android:src="@drawable/icon_search"
             android:tint="@color/tv_sidebar_text_focused"
             android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
@@ -133,7 +119,6 @@
             android:id="@+id/search_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
             android:duplicateParentState="true"
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
             android:text="@string/search"
@@ -145,10 +130,8 @@
         android:id="@+id/home_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="7dp"
+        android:padding="10dp"
+        android:gravity="center_vertical"
         android:focusable="true"
         android:focusableInTouchMode="true"
         app:layout_constraintBottom_toTopOf="@+id/favorites_button"
@@ -156,10 +139,10 @@
         tools:layout_editor_absoluteX="25dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/home_icon_bottom"
+            android:src="@drawable/icon_home"
             android:tint="@color/tv_sidebar_text_focused"
             android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
@@ -167,7 +150,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="4dp"
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
             android:text="@string/main"
             android:textColor="@color/tv_sidebar_text_focused"
@@ -181,10 +163,8 @@
         android:id="@+id/favorites_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="7dp"
+        android:padding="10dp"
+        android:gravity="center_vertical"
         android:focusable="true"
         android:focusableInTouchMode="true"
         app:layout_constraintBottom_toTopOf="@+id/movies_button"
@@ -192,10 +172,10 @@
         tools:layout_editor_absoluteX="25dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/title_favorite_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/icon_favorite"
             android:tint="@color/tv_sidebar_text_focused"
             android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
@@ -203,7 +183,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="3dp"
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
             android:text="@string/favorites"
             android:textColor="@color/tv_sidebar_text_focused"
@@ -217,10 +196,8 @@
         android:id="@+id/movies_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="7dp"
+        android:padding="10dp"
+        android:gravity="center_vertical"
         android:focusable="true"
         android:focusableInTouchMode="true"
         app:layout_constraintBottom_toTopOf="@+id/genres_button"
@@ -231,7 +208,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/tv_new_movies_icon"
+            android:src="@drawable/icon_star_round"
             android:tint="@color/tv_sidebar_text_focused"
             android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
@@ -239,7 +216,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
             android:text="@string/new_movies"
             android:textColor="@color/tv_sidebar_text_focused"
@@ -252,10 +228,8 @@
         android:id="@+id/genres_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="7dp"
+        android:padding="10dp"
+        android:gravity="center_vertical"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusDown="@id/settings_button"
@@ -264,10 +238,10 @@
         tools:layout_editor_absoluteX="25dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/genre_icon_bottom"
+            android:src="@drawable/icon_catalogue"
             android:tint="@color/tv_sidebar_text_focused"
             android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
@@ -275,7 +249,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
             android:text="@string/genres"
             android:textColor="@color/tv_sidebar_text_focused"
@@ -288,10 +261,8 @@
         android:id="@+id/settings_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="7dp"
+        android:padding="10dp"
+        android:gravity="center_vertical"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusUp="@id/genres_button"
@@ -302,7 +273,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/settings_icon_home"
+            android:src="@drawable/icon_settings"
             android:tint="@color/tv_sidebar_text_focused"
             android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
@@ -310,7 +281,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="3dp"
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
             android:text="@string/parameters"
             android:textColor="@color/tv_sidebar_text_focused"

@@ -24,7 +24,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/tv_single_genre_header_poster_background"
+        android:background="@drawable/background_top_title_cover_tv"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout

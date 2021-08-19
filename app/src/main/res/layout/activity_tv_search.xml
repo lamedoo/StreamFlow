@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="30dp"
-        android:background="@drawable/phone_search_bar_background"
+        android:background="@drawable/background_search_bar"
         android:clipChildren="false"
         android:drawablePadding="10dp"
         android:textSize="20sp"
@@ -78,8 +78,8 @@
         android:paddingStart="60dp"
         android:paddingBottom="5dp"
         android:paddingEnd="15dp"
-        android:src="@drawable/streamflowlogo"
-        android:background="@drawable/tv_logo_background"
+        android:src="@drawable/logo_streamflow"
+        android:background="@drawable/background_logo_bottom_tv"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

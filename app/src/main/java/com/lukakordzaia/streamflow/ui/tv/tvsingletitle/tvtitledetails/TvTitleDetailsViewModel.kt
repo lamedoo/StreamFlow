@@ -140,7 +140,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         }
     }
 
-    fun addTitleToFirestore(info: SingleTitleModel) {
+    fun addTitleToFavorites(info: SingleTitleModel) {
         if (currentUser() != null) {
             traktFavoriteLoader.value = LoadingState.LOADING
             viewModelScope.launch {
@@ -165,7 +165,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         }
     }
 
-    fun removeTitleFromFirestore(titleId: Int) {
+    fun removeTitleFromFavorites(titleId: Int) {
         traktFavoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             val removeFromFavorites = environment.favoritesRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)

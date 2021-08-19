@@ -12,7 +12,7 @@ class TvCastPresenter : Presenter() {
         val cardView = TvCastCardView(parent.context, null).apply {
             isFocusable = true
             isFocusableInTouchMode = true
-            background = ResourcesCompat.getDrawable(parent.resources, R.drawable.tv_cast_card_view_background, null)
+            background = ResourcesCompat.getDrawable(parent.resources, R.drawable.background_cast_card_tv, null)
         }
 
         return ViewHolder(cardView)

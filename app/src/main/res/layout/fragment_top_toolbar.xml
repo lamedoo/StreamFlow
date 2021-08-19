@@ -14,12 +14,12 @@
         android:id="@+id/fragment_top_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/secondary_button_background"
+        android:background="@drawable/background_arrow_back_phone"
         android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/ic_arrow_back"/>
+        android:src="@drawable/icon_arrow_left"/>
 
     <TextView
         android:id="@+id/fragment_top_header"

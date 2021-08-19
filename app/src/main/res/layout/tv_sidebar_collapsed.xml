@@ -16,13 +16,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="@drawable/rv_tv_default_card_view_background"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/user_profile_icon"
+            android:src="@drawable/icon_account"
             android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
@@ -34,16 +33,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp"
-        android:background="@drawable/rv_tv_default_card_view_background"
         app:layout_constraintBottom_toTopOf="@+id/collapsed_home"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed">
 
         <ImageView
             android:id="@+id/collapsed_search_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/search_icon_bottom"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_search"
             android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
@@ -54,15 +52,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="@drawable/rv_tv_default_card_view_background"
         app:layout_constraintBottom_toTopOf="@+id/collapsed_favorites"
         app:layout_constraintTop_toBottomOf="@+id/collapsed_search">
 
         <ImageView
             android:id="@+id/collapsed_home_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/home_icon_bottom"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_home"
             android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
@@ -74,15 +71,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="@drawable/rv_tv_default_card_view_background"
         app:layout_constraintBottom_toTopOf="@+id/collapsed_movies"
         app:layout_constraintTop_toBottomOf="@+id/collapsed_home">
 
         <ImageView
             android:id="@+id/collapsed_favorites_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/title_favorite_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_favorite"
             android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
@@ -94,15 +90,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="@drawable/rv_tv_default_card_view_background"
         app:layout_constraintBottom_toTopOf="@+id/collapsed_genres"
         app:layout_constraintTop_toBottomOf="@+id/collapsed_favorites">
 
         <ImageView
             android:id="@+id/collapsed_movies_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/tv_new_movies_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_star_round"
             android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
@@ -113,16 +108,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="@drawable/rv_tv_default_card_view_background"
         android:nextFocusDown="@id/collapsed_settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/collapsed_movies">
 
         <ImageView
             android:id="@+id/collapsed_genres_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/genre_icon_bottom"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_catalogue"
             android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
@@ -133,7 +127,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="@drawable/rv_tv_default_card_view_background"
         android:nextFocusUp="@id/collapsed_genres"
         android:nextFocusDown="@id/collapsed_settings"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -142,7 +135,7 @@
             android:id="@+id/collapsed_settings_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/settings_icon_home"
+            android:src="@drawable/icon_settings"
             android:tint="@color/white"
             tools:ignore="UseAppTint" />
 

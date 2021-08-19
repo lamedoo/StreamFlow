@@ -23,7 +23,7 @@
     </style>
 
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/bottom_fragment_sheet_background</item>
+        <item name="android:background">@drawable/background_bottom_fragment_sheet</item>
     </style>
 
     <style name="roundedCornersImageView" parent="">

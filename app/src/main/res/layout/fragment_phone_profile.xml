@@ -34,7 +34,7 @@
                     android:id="@+id/profile_photo"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/no_profile_picture"
+                    android:src="@drawable/placeholder_profile"
                     app:civ_border_color="@color/accent_color"
                     app:civ_border_width="3dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -53,40 +53,12 @@
 
             </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/g_sign_in"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="45dp"-->
-<!--                android:padding="10dp"-->
-<!--                android:background="@drawable/tv_google_button_background"-->
-<!--                android:nextFocusDown="@id/search_button">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="start|center_vertical"-->
-<!--                    android:src="@drawable/google_login_logo" />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:layout_marginStart="5dp"-->
-<!--                    android:gravity="center"-->
-<!--                    android:includeFontPadding="false"-->
-<!--                    android:text="@string/authorization"-->
-<!--                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="13.5sp" />-->
-
-<!--            </LinearLayout>-->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="30dp"
                 android:orientation="vertical"
-                android:background="@drawable/profile_tabs_background"
+                android:background="@drawable/background_profile_tabs_phone"
                 android:padding="20dp">
 
                 <LinearLayout
@@ -98,7 +70,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/google_logo"/>
+                        android:src="@drawable/icon_google"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -128,7 +100,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/traktv_icon"/>
+                        android:src="@drawable/icon_trakttv"/>
 
                     <TextView
                         android:id="@+id/trakt_title"
@@ -158,7 +130,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/clear_db_icon"
+                        android:src="@drawable/icon_trash"
                         android:tint="@color/secondary_text_color"
                         tools:ignore="UseAppTint" />
 
@@ -189,7 +161,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/info_icon"
+                        android:src="@drawable/icon_info"
                         android:tint="@color/secondary_text_color"
                         tools:ignore="UseAppTint" />
 
@@ -222,7 +194,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/logout_icon"
+                        android:src="@drawable/icon_logout"
                         android:tint="@color/secondary_text_color"
                         tools:ignore="UseAppTint" />
 

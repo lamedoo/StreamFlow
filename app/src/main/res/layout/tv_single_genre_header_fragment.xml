@@ -11,14 +11,14 @@
         android:id="@+id/single_genre_title_poster"
         android:layout_width="300dp"
         android:layout_height="200dp"
-        tools:src="@drawable/movie_image_placeholder_landscape"
+        tools:src="@drawable/placeholder_movie_landscape"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/tv_single_genre_header_poster_background"
+        android:background="@drawable/background_top_title_cover_tv"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

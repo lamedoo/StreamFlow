@@ -16,7 +16,7 @@
         android:layout_height="100dp"
         android:background="@color/accent_color"
         android:padding="10dp"
-        tools:src="@drawable/clear_db_icon"
+        tools:src="@drawable/icon_trash"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

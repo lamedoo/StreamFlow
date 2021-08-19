@@ -14,7 +14,7 @@
         android:padding="10dp"
         android:textSize="15sp"
         android:textColor="@color/general_text_color"
-        android:background="@drawable/phone_tags_background"
+        android:background="@drawable/background_tags"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="ფილმის სახელი" />

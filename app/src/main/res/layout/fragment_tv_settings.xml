@@ -31,7 +31,7 @@
         android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:background="@drawable/tv_sidebar_button_background"
+        android:background="@drawable/background_button_settings_tv"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusUp="@id/sign_in"
@@ -50,7 +50,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/traktv_icon"
+            android:src="@drawable/icon_trakttv"
             android:tint="@color/secondary_text_color"
             tools:ignore="UseAppTint" />
 
@@ -71,7 +71,7 @@
         android:id="@+id/tv_settings_info"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/tv_sidebar_button_background"
+        android:background="@drawable/background_button_settings_tv"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusUp="@id/sign_in"
@@ -90,7 +90,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/info_icon"
+            android:src="@drawable/icon_info"
             android:tint="@color/secondary_text_color"
             tools:ignore="UseAppTint" />
 
@@ -111,7 +111,7 @@
         android:id="@+id/tv_settings_delete"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/tv_sidebar_button_background"
+        android:background="@drawable/background_button_settings_tv"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusUp="@id/sign_in"
@@ -131,7 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
-            android:src="@drawable/clear_db_icon"
+            android:src="@drawable/icon_trash"
             android:tint="@color/secondary_text_color"
             tools:ignore="UseAppTint" />
 
@@ -153,7 +153,7 @@
         android:id="@+id/tv_settings_signout"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/tv_sidebar_button_background"
+        android:background="@drawable/background_button_settings_tv"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusUp="@id/sign_in"
@@ -173,7 +173,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/user_profile_icon"
+            android:src="@drawable/icon_account"
             android:tint="@color/secondary_text_color"
             tools:ignore="UseAppTint" />
 

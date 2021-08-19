@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    tools:background="@drawable/rv_tv_default_card_view_background"
+    tools:background="@drawable/background_episodes_card_tv"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -12,7 +12,7 @@
         android:layout_width="200dp"
         android:layout_height="120dp"
         android:scaleType="fitXY"
-        android:src="@drawable/movie_image_placeholder_landscape"
+        android:src="@drawable/placeholder_movie_landscape"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:src="@drawable/phone_chosen_episode_indicator"
+        android:src="@drawable/indicator_current_episode_light"
         app:layout_constraintTop_toTopOf="@id/episode_number"
         app:layout_constraintBottom_toBottomOf="@+id/episode_number"
         app:layout_constraintEnd_toEndOf="parent"

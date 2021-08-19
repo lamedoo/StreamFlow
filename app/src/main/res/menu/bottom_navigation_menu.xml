@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/home_fragment_nav"
-        android:title="მთავარი"
-        android:icon="@drawable/bottom_home_new"/>
+        android:title="@string/main"
+        android:icon="@drawable/icon_home"/>
 
     <item android:id="@+id/catalogue_fragment_nav"
-        android:title="ტოპ სიები"
-        android:icon="@drawable/bottom_catalogue_new"/>
+        android:title="@string/catalogue"
+        android:icon="@drawable/icon_catalogue"/>
 
     <item android:id="@+id/favorites_fragment_nav"
         android:title="@string/favorites"
-        android:icon="@drawable/favorite_icon"/>
+        android:icon="@drawable/icon_favorite"/>
 
     <item android:id="@+id/search_fragment_nav"
-        android:title="ძიება"
-        android:icon="@drawable/bottom_search_new"/>
+        android:title="@string/search"
+        android:icon="@drawable/icon_search"/>
 </menu>

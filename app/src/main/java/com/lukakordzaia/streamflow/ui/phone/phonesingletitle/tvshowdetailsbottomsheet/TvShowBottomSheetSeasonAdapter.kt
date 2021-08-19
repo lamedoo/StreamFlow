@@ -46,9 +46,9 @@ class TvShowBottomSheetSeasonAdapter(
             val isChosen = model == chosenSeason
 
             if (isChosen) {
-                view.rvSeasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.rv_choose_details_season_chosen, null)
+                view.rvSeasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.background_rv_season_current_phone, null)
             } else {
-                view.rvSeasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.rv_choose_details_season, null)
+                view.rvSeasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.background_rv_season_phone, null)
             }
 
             view.rvSeasonContainer.setOnClickListener {

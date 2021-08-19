@@ -23,8 +23,8 @@ import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
-import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
+import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
@@ -216,7 +216,7 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         backgroundManager = BackgroundManager.getInstance(activity).apply {
             attach(activity?.window)
         }
-        defaultBackground = resources.getDrawable(R.drawable.main_background)
+
         metrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
     }

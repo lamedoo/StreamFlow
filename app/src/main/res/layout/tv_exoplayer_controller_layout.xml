@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/video_player_background"
+    android:background="@drawable/background_video_player"
     android:padding="12dp"
     android:visibility="visible"
     app:layout_constraintEnd_toEndOf="parent"
@@ -26,8 +26,8 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="5dp"
-            android:src="@drawable/ic_arrow_back"
-            android:background="@drawable/exo_buttons_focused"
+            android:src="@drawable/icon_arrow_left"
+            android:background="@drawable/background_button_player"
             android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
@@ -36,10 +36,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
-            android:background="@drawable/exo_buttons_focused"
+            android:background="@drawable/background_button_player"
             android:nextFocusDown="@id/exo_pause"
             android:padding="5dp"
-            android:src="@drawable/exo_subtitles_off" />
+            android:src="@drawable/icon_subtitles_off" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -50,15 +50,15 @@
                 style="@style/ExoMediaButton.Next"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/exo_buttons_focused"
-                android:src="@drawable/exo_next" />
+                android:background="@drawable/background_button_player"
+                android:src="@drawable/icon_next" />
 
             <ImageButton
                 android:id="@+id/tv_next_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/exo_buttons_focused"
-                android:src="@drawable/exo_next" />
+                android:background="@drawable/background_button_player"
+                android:src="@drawable/icon_next" />
 
         </RelativeLayout>
 
@@ -119,8 +119,8 @@
         android:nextFocusRight="@id/exo_play"
         android:nextFocusLeft="@id/exo_play"
         android:nextFocusUp="@id/exo_next"
-        android:background="@drawable/exo_buttons_focused"
-        android:src="@drawable/exo_play"
+        android:background="@drawable/background_button_player"
+        android:src="@drawable/icon_play"
         app:layout_constraintBottom_toTopOf="@id/next_details"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/barrier_right"/>
@@ -133,8 +133,8 @@
         android:nextFocusRight="@id/exo_pause"
         android:nextFocusLeft="@id/exo_pause"
         android:nextFocusUp="@id/exo_next"
-        android:background="@drawable/exo_buttons_focused"
-        android:src="@drawable/exo_pause"
+        android:background="@drawable/background_button_player"
+        android:src="@drawable/icon_pause"
         app:layout_constraintBottom_toTopOf="@id/next_details"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/barrier_right"/>
@@ -230,7 +230,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_down_arrow" />
+            android:src="@drawable/icon_arrow_down" />
 
     </LinearLayout>
 

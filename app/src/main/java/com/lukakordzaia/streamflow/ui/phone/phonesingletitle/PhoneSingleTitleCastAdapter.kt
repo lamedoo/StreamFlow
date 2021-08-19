@@ -40,7 +40,7 @@ class PhoneSingleTitleCastAdapter(private val context: Context, private val onCa
                 view.rvCastItemPoster.setImage(model.poster, true)
             } else {
                 Glide.with(context)
-                    .load(R.drawable.no_profile_picture)
+                    .load(R.drawable.placeholder_profile)
                     .into(view.rvCastItemPoster)
             }
 

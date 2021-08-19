@@ -197,8 +197,8 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun categoriesRowsAdapter() {
         val listRowAdapter = ArrayObjectAdapter(TvCategoriesPresenter()).apply {
-            add(TvCategoriesList(0, "ტოპ ფილები", R.drawable.tv_top_titles_icon))
-            add(TvCategoriesList(1, "ტოპ სერიალები", R.drawable.tv_top_titles_icon))
+            add(TvCategoriesList(0, "ტოპ ფილები", R.drawable.icon_star))
+            add(TvCategoriesList(1, "ტოპ სერიალები", R.drawable.icon_star))
         }
 
         HeaderItem(4, AppConstants.TV_GENRES).also { header ->

@@ -3,7 +3,7 @@
     android:id="@+id/tv_default_card_root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/rv_tv_default_card_view_background"
+    android:background="@drawable/background_episodes_card_tv"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 

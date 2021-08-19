@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
@@ -150,14 +151,16 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
 
         tvTitleDetailsViewModel.addToFavorites.observe(viewLifecycleOwner, {
             if (it) {
+                binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
                 binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
                 binding.favoriteContainer.setOnClickListener {
-                    tvTitleDetailsViewModel.removeTitleFromFirestore(titleId)
+                    tvTitleDetailsViewModel.removeTitleFromFavorites(titleId)
                 }
             } else {
+                binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
                 binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
                 binding.favoriteContainer.setOnClickListener {
-                    tvTitleDetailsViewModel.addTitleToFirestore(titleInfo)
+                    tvTitleDetailsViewModel.addTitleToFavorites(titleInfo)
                 }
             }
         })

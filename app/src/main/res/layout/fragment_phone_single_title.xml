@@ -45,12 +45,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="450dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/friends_cover" />
+                        tools:src="@drawable/friends_cover" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/single_title_tabs_background"/>
+                        android:background="@drawable/background_single_title_cover_phone"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
@@ -65,14 +65,14 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="10dp"
-                            android:background="@drawable/secondary_button_background"
+                            android:background="@drawable/background_arrow_back_phone"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_arrow_back"/>
+                                android:src="@drawable/icon_arrow_left"/>
 
                         </LinearLayout>
 
@@ -88,8 +88,8 @@
                             android:layout_height="wrap_content"
                             android:padding="10dp"
                             android:layout_marginStart="10dp"
-                            android:src="@drawable/playlist_icon"
-                            android:background="@drawable/phone_button_secondary_background"
+                            android:src="@drawable/icon_playlist"
+                            android:background="@drawable/background_button_phone"
                             android:tint="@color/general_text_color"
                             app:layout_constraintTop_toTopOf="@id/title_trailer"
                             app:layout_constraintBottom_toBottomOf="@id/title_trailer"
@@ -104,8 +104,8 @@
                             android:layout_height="wrap_content"
                             android:padding="10dp"
                             android:layout_marginStart="10dp"
-                            android:src="@drawable/replay_icon"
-                            android:background="@drawable/phone_button_secondary_background"
+                            android:src="@drawable/icon_replay"
+                            android:background="@drawable/background_button_phone"
                             android:tint="@color/general_text_color"
                             app:layout_constraintTop_toTopOf="@id/title_trailer"
                             app:layout_constraintBottom_toBottomOf="@id/title_trailer"
@@ -121,8 +121,8 @@
                             android:paddingVertical="20dp"
                             android:paddingStart="20dp"
                             android:paddingEnd="15dp"
-                            android:src="@drawable/play_button_new"
-                            android:background="@drawable/play_button_background"
+                            android:src="@drawable/icon_play_general"
+                            android:background="@drawable/background_play_icon_round"
                             android:tint="@color/white"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -170,7 +170,7 @@
                             android:padding="10dp"
                             android:clickable="true"
                             android:focusable="true"
-                            android:background="@drawable/phone_button_secondary_background"
+                            android:background="@drawable/background_button_phone"
                             app:layout_constraintTop_toTopOf="@id/title_trailer"
                             app:layout_constraintBottom_toBottomOf="@id/title_trailer"
                             app:layout_constraintEnd_toEndOf="parent">
@@ -187,7 +187,7 @@
                                 android:id="@+id/single_title_favorite_icon"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/favorite_icon"
+                                android:src="@drawable/icon_favorite"
                                 app:tint="@color/general_text_color"
                                 android:visibility="visible"
                                 tools:visibility="visible"/>
@@ -202,10 +202,10 @@
                             android:layout_marginBottom="40dp"
                             android:padding="10dp"
                             android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
-                            android:drawableEnd="@drawable/tv_play_trailer"
+                            android:drawableEnd="@drawable/icon_trailer"
                             android:drawableTint="@color/general_text_color"
                             android:textColor="@color/general_text_color"
-                            android:background="@drawable/phone_button_secondary_background"
+                            android:background="@drawable/background_button_phone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"/>
@@ -346,7 +346,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@drawable/phone_single_title_watch_background"
+        android:background="@drawable/background_single_title_bottom_phone"
         android:layout_marginBottom="-5dp"
         android:padding="20dp"
         android:alpha="0"
@@ -359,8 +359,8 @@
             android:paddingVertical="20dp"
             android:paddingStart="20dp"
             android:paddingEnd="15dp"
-            android:src="@drawable/play_button_new"
-            android:background="@drawable/play_button_background"
+            android:src="@drawable/icon_play_general"
+            android:background="@drawable/background_play_icon_round"
             android:tint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -372,8 +372,8 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/playlist_icon"
-            android:background="@drawable/phone_button_secondary_background"
+            android:src="@drawable/icon_playlist"
+            android:background="@drawable/background_button_phone"
             android:tint="@color/general_text_color"
             app:layout_constraintBottom_toBottomOf="@id/play_button_bottom"
             app:layout_constraintEnd_toStartOf="@id/play_button_bottom"
@@ -387,8 +387,8 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/replay_icon"
-            android:background="@drawable/phone_button_secondary_background"
+            android:src="@drawable/icon_replay"
+            android:background="@drawable/background_button_phone"
             android:tint="@color/general_text_color"
             app:layout_constraintBottom_toBottomOf="@id/play_button_bottom"
             app:layout_constraintEnd_toStartOf="@id/play_button_bottom"

@@ -9,7 +9,7 @@
         android:id="@+id/rv_studio_poster"
         android:layout_width="100dp"
         android:layout_height="60dp"
-        android:background="@drawable/rv_studios_item_pressed"
+        android:background="@drawable/background_rv_studios_phone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

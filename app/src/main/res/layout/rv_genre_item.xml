@@ -18,7 +18,7 @@
         android:fontFamily="@font/helvetica_neue_lt_geo_caps_65_medium"
         android:textSize="13sp"
         android:textColor="@color/general_text_color"
-        android:background="@drawable/rv_genres_item_pressed"
+        android:background="@drawable/background_rv_genres_phone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

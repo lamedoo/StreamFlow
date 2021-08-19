@@ -38,7 +38,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/tv_details_poster_background"
+            android:background="@drawable/background_single_title_cover_tv"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -207,14 +207,14 @@
                 android:layout_gravity="center"
                 android:padding="13dp"
                 android:nextFocusDown="@id/next_details"
-                android:background="@drawable/tv_details_button_background"
+                android:background="@drawable/background_button_tv"
                 android:visibility="gone"
                 tools:visibility="visible">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/clear_db_icon"
+                    android:src="@drawable/icon_trash"
                     android:tint="@color/red"
                     tools:ignore="UseAppTint" />
 
@@ -225,7 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/tv_details_button_background"
+                android:background="@drawable/background_button_tv"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:layout_marginStart="10dp"
@@ -242,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_gravity="center"
-                android:background="@drawable/tv_details_button_background"
+                android:background="@drawable/background_button_tv"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
@@ -260,11 +260,11 @@
                 android:textColor="@color/secondary_text_color"
                 android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
                 android:text="@string/trailer"
-                android:drawableEnd="@drawable/tv_play_trailer"
+                android:drawableEnd="@drawable/icon_trailer"
                 android:layout_marginStart="10dp"
                 android:layout_gravity="center"
                 android:padding="15dp"
-                android:background="@drawable/tv_details_button_background"
+                android:background="@drawable/background_button_tv"
                 android:nextFocusDown="@id/next_details"/>
 
         </LinearLayout>
@@ -283,7 +283,7 @@
             app:layout_constraintBottom_toBottomOf="@id/buttons_row"
             android:nextFocusDown="@id/next_details"
             android:nextFocusRight="@id/favorite_container"
-            android:background="@drawable/tv_details_favorite_button_background">
+            android:background="@drawable/background_button_favorite_tv">
 
             <ProgressBar
                 android:id="@+id/favorite_progressBar"
@@ -295,10 +295,10 @@
 
             <ImageView
                 android:id="@+id/favorite_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/title_favorite_icon_full"
-                android:tint="@color/white"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/icon_favorite"
+                android:tint="@color/general_text_color"
                 tools:ignore="UseAppTint" />
 
         </LinearLayout>
@@ -328,7 +328,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_down_arrow" />
+                android:src="@drawable/icon_arrow_down" />
 
         </LinearLayout>
 

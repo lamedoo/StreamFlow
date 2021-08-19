@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/favorite_button"
         android:title="პარამეტრები"
-        android:icon="@drawable/title_favorite_icon"
+        android:icon="@drawable/icon_favorite"
         app:showAsAction="always"/>
 
     <item android:id="@+id/profile_button"
         android:title="პარამეტრები"
-        android:icon="@drawable/user_profile_icon"
+        android:icon="@drawable/icon_account"
         app:showAsAction="always"/>
 </menu>

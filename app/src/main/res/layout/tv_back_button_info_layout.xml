@@ -26,7 +26,7 @@
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_marginHorizontal="5dp"
-        android:src="@drawable/ic_arrow_back" />
+        android:src="@drawable/icon_arrow_left" />
 
     <TextView
         android:layout_width="wrap_content"

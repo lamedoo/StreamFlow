@@ -31,7 +31,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:src="@drawable/streamflowlogo"/>
+                android:src="@drawable/logo_streamflow"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:background="@drawable/bottom_nav_background"
+        android:background="@drawable/background_bottom_nav"
         app:elevation="10dp"
         app:itemBackground="@null"
         app:itemRippleColor="@null"

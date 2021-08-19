@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
             app:title="@string/genres"
-            app:arrow_visibility="true"
+            app:arrow_visibility="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_trailers" />
 
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
             app:title="@string/studios"
-            app:arrow_visibility="true"
+            app:arrow_visibility="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_genres" />
 

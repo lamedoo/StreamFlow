@@ -39,14 +39,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/friends_cover"
+                    tools:src="@drawable/friends_cover"
                     app:layout_constraintTop_toTopOf="parent"
                     app:shapeAppearanceOverlay="@style/roundedCornersImageView" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
-                    android:background="@drawable/phone_movie_day_background"
+                    android:background="@drawable/background_movie_day_phone"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView

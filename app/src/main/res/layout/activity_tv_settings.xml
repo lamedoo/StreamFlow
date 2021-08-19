@@ -19,7 +19,7 @@
         android:layout_width="250dp"
         android:layout_height="100dp"
         android:layout_marginEnd="20dp"
-        android:src="@drawable/streamflowlogo"
+        android:src="@drawable/logo_streamflow"
         android:background="@color/transparent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -141,7 +141,7 @@
                 android:layout_height="110dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="40dp"
-                android:src="@drawable/no_profile_picture"
+                android:src="@drawable/placeholder_profile"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 

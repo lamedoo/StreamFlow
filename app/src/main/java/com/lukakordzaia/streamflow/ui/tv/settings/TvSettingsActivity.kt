@@ -47,7 +47,7 @@ class TvSettingsActivity: FragmentActivity(), OnSettingsSelected {
 
                     Glide.with(this)
                         .load(googleAccount!!.photoUrl)
-                        .placeholder( R.drawable.no_profile_picture)
+                        .placeholder( R.drawable.placeholder_profile)
                         .into(binding.profilePhoto)
                 }
 

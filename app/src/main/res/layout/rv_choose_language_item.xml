@@ -16,7 +16,7 @@
         android:textSize="13sp"
         android:textStyle="bold"
         android:textColor="@color/text_on_accent_color"
-        android:background="@drawable/tv_details_button_background"
+        android:background="@drawable/background_button_tv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

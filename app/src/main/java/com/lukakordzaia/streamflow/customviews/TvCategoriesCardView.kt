@@ -12,8 +12,8 @@ open class TvCategoriesCardView(context: Context, attrs: AttributeSet?) : Constr
 
     fun setPoster(poster: Int?) {
         Glide.with(context)
-            .load(poster ?: R.drawable.movie_image_placeholder_landscape)
-            .placeholder( R.drawable.movie_image_placeholder_landscape)
+            .load(poster ?: R.drawable.placeholder_movie_landscape)
+            .placeholder( R.drawable.placeholder_movie_landscape)
             .into(binding.cardPoster)
     }
 

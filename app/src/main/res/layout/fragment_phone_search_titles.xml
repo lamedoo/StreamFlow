@@ -20,7 +20,7 @@
             android:id="@+id/search_title_text"
             android:layout_width="match_parent"
             android:layout_height="53dp"
-            android:background="@drawable/phone_search_bar_background"
+            android:background="@drawable/background_search_bar"
             android:clipChildren="false"
             android:drawablePadding="10dp"
             android:drawableTint="@color/general_text_color"
@@ -39,7 +39,7 @@
             android:id="@+id/rv_search_titles_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/phone_search_result_background"
+            android:background="@drawable/background_search_resut_phone"
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="@id/search_title_text"
             tools:visibility="visible">

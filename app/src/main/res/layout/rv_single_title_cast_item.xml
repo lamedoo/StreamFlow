@@ -13,7 +13,7 @@
         android:id="@+id/rv_cast_item_poster"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        tools:src="@drawable/no_profile_picture"
+        tools:src="@drawable/placeholder_profile"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

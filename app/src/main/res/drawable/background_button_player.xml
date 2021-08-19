@@ -23,15 +23,4 @@
             <corners android:radius="100dp"/>
         </shape>
     </item>
-<!--    <item>-->
-<!--        <shape android:shape="oval">-->
-<!--            <gradient-->
-<!--                android:angle="0"-->
-<!--                android:endColor="@color/transparent"-->
-<!--                android:gradientRadius="20dp"-->
-<!--                android:startColor="#99FFFFFF"-->
-<!--                android:type="radial" />-->
-<!--            <size android:width="20dp" android:height="20dp" />-->
-<!--        </shape>-->
-<!--    </item>-->
 </selector>

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -119,7 +118,7 @@ fun GetSingleTitleResponse.toSingleTitleModel(): SingleTitleModel {
 
 fun ImageView.setImage(image: String?, isPhone: Boolean) {
     Glide.with(context)
-        .load(image ?: if (isPhone) R.drawable.movie_image_placeholder else R.drawable.movie_image_placeholder_landscape)
-        .placeholder(if (isPhone) R.drawable.movie_image_placeholder else R.drawable.movie_image_placeholder_landscape)
+        .load(image ?: if (isPhone) R.drawable.placeholder_movie else R.drawable.placeholder_movie_landscape)
+        .placeholder(if (isPhone) R.drawable.placeholder_movie else R.drawable.placeholder_movie_landscape)
         .into(this)
 }

@@ -3,7 +3,7 @@
     android:id="@+id/tv_watched_card_root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/rv_tv_watched_card_view_background"
+    android:background="@drawable/background_default_card_tv"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -20,7 +20,7 @@
     <View
         android:layout_width="100dp"
         android:layout_height="150dp"
-        android:background="@drawable/rv_continue_watching_background"
+        android:background="@drawable/background_rv_continue_watching"
         app:layout_constraintStart_toStartOf="@id/card_poster"
         app:layout_constraintEnd_toEndOf="@id/card_poster"
         app:layout_constraintTop_toTopOf="@id/card_poster"
@@ -32,9 +32,9 @@
         android:paddingVertical="10dp"
         android:paddingStart="10dp"
         android:paddingEnd="5dp"
-        android:src="@drawable/play_button_new"
+        android:src="@drawable/icon_play_general"
         android:tint="@color/white"
-        android:background="@drawable/phone_db_title_play_button_background"
+        android:background="@drawable/background_play_icon"
         app:layout_constraintStart_toStartOf="@id/card_poster"
         app:layout_constraintEnd_toEndOf="@id/card_poster"
         app:layout_constraintTop_toTopOf="@id/card_poster"

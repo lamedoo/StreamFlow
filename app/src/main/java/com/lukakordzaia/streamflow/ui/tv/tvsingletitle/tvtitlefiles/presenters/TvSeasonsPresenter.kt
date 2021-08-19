@@ -12,7 +12,7 @@ class TvSeasonsPresenter : Presenter() {
 
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
-        cardView.background = ResourcesCompat.getDrawable(parent.resources, R.drawable.rv_tv_default_card_view_background, null)
+        cardView.background = ResourcesCompat.getDrawable(parent.resources, R.drawable.background_episodes_card_tv, null)
         return ViewHolder(cardView)
     }
 

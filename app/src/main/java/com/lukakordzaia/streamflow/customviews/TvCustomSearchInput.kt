@@ -19,7 +19,7 @@ class TvCustomSearchInput
 ) : AppCompatEditText(context, attributeSet, defStyle) {
 
     init {
-        setLeftDrawable(R.drawable.search_icon_bottom)
+        setLeftDrawable(R.drawable.icon_search_bar)
         setTextChangeListener()
         setOnEditorActionListener()
         setDrawablesListener()
