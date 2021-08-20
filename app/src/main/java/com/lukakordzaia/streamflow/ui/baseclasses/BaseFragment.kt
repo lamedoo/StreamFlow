@@ -6,16 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.databinding.FragmentTopToolbarBinding
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
-import kotlinx.android.synthetic.main.fragment_top_toolbar.*
 import org.koin.android.ext.android.inject
 
 abstract class BaseFragment<VB: ViewBinding> : Fragment() {
     protected val authSharedPreferences: AuthSharedPreferences by inject()
-    protected val auth = Firebase.auth
 
     private var rootView: View? = null
 

@@ -52,7 +52,7 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
     }
 
     private fun authCheck() {
-        if (auth.currentUser == null) {
+        if (authSharedPreferences.getLoginToken() == "") {
             binding.tvSettingsSignout.setGone()
         }
     }
@@ -96,7 +96,6 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
 
             binding.continueButton.setOnClickListener {
                 profileViewModel.deleteContinueWatchingFromRoomFull()
-                profileViewModel.deleteContinueWatchingFromFirestoreFull()
 
                 val intent = Intent(requireContext(), TvSettingsActivity::class.java)
                 startActivity(intent)
@@ -109,10 +108,10 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
         }
 
         binding.tvSettingsSignout.setOnClickListener {
-            auth.signOut()
-            googleSignInClient!!.signOut()
-            val intent = Intent(requireContext(), TvSettingsActivity::class.java)
-            startActivity(intent)
+//            auth.signOut()
+//            googleSignInClient!!.signOut()
+//            val intent = Intent(requireContext(), TvSettingsActivity::class.java)
+//            startActivity(intent)
         }
     }
 

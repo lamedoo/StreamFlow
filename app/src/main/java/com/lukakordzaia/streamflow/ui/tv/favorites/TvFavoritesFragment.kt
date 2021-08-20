@@ -86,7 +86,7 @@ class TvFavoritesFragment : BrowseSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        phoneWatchlistViewModel.getFavTitlesFromFirestore()
+        phoneWatchlistViewModel.getUserWatchlist()
 
         initRowsAdapter()
 
@@ -98,8 +98,21 @@ class TvFavoritesFragment : BrowseSupportFragment() {
             })
         })
 
-        phoneWatchlistViewModel.movieResult.observe(viewLifecycleOwner, { movies ->
-            if (!movies.isNullOrEmpty()) {
+        phoneWatchlistViewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
+            val movies: MutableList<SingleTitleModel> = ArrayList()
+            val tvShows: MutableList<SingleTitleModel> = ArrayList()
+
+            watchlist.forEach {
+                if (it.isTvShow) {
+                    tvShows.add(it)
+                } else {
+                    movies.add(it)
+                }
+            }
+
+            if (movies.isEmpty()) {
+                phoneWatchlistViewModel.favoriteNoMovies.value = true
+            } else {
                 phoneWatchlistViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
                     when (it.status) {
                         LoadingState.Status.RUNNING -> {}
@@ -109,10 +122,10 @@ class TvFavoritesFragment : BrowseSupportFragment() {
                     }
                 })
             }
-        })
 
-        phoneWatchlistViewModel.tvShowResult.observe(viewLifecycleOwner, { tvShows ->
-            if (!tvShows.isNullOrEmpty()) {
+            if (tvShows.isEmpty()) {
+                phoneWatchlistViewModel.favoriteNoTvShows.value = true
+            } else {
                 phoneWatchlistViewModel.favoriteTvShowsLoader.observe(viewLifecycleOwner, {
                     when (it.status) {
                         LoadingState.Status.RUNNING -> {}

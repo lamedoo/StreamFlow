@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -35,10 +34,9 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
     val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
 
     fun checkAuthDatabase(titleId: Int) {
-        if (currentUser() == null) {
+        if (authSharedPreferences.getLoginToken() == "") {
             getSingleContinueWatchingFromRoom(titleId)
         } else {
-            checkContinueWatchingInFirestore(titleId)
         }
     }
 
@@ -48,14 +46,6 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
         _continueWatchingDetails.addSource(data) {
             _continueWatchingDetails.value = it
         }
-    }
-
-    private fun checkContinueWatchingInFirestore(titleId: Int) {
-        environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: ContinueWatchingRoom?) {
-                _continueWatchingDetails.value = title
-            }
-        })
     }
 
     fun getSeasonFiles(titleId: Int, season: Int) {
@@ -74,8 +64,21 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
                         _availableLanguages.value = fetchLanguages
 
                         val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
-                        data.forEach {
-                            getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+
+                        if (authSharedPreferences.getLoginToken() == "") {
+                            data.forEach {
+                                getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+                            }
+                        } else {
+                            data.forEach {
+                                getEpisodeNames.add(TitleEpisodes(
+                                    it.episode,
+                                    it.title,
+                                    it.covers.x1050!!,
+                                    it.userWatch.duration,
+                                    it.userWatch.progress
+                                ))
+                            }
                         }
                         _episodeInfo.value = getEpisodeNames
 

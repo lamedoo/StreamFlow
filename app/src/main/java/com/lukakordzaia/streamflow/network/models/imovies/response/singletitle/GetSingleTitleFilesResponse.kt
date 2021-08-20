@@ -21,7 +21,9 @@ data class GetSingleTitleFilesResponse(
         @SerializedName("poster")
         val poster: String?,
         @SerializedName("title")
-        val title: String
+        val title: String,
+        @SerializedName("userWatch")
+        val userWatch: UserWatch
     ) {
         data class Covers(
             @SerializedName("blurhash")
@@ -93,5 +95,26 @@ data class GetSingleTitleFilesResponse(
                 val url: String
             )
         }
+
+        data class UserWatch(
+            @SerializedName("duration")
+            val duration: Long?,
+            @SerializedName("episode")
+            val episode: Int?,
+            @SerializedName("language")
+            val language: String?,
+            @SerializedName("progress")
+            val progress: Long?,
+            @SerializedName("quality")
+            val quality: String?,
+            @SerializedName("season")
+            val season: Int?,
+            @SerializedName("updateDate")
+            val updateDate: String?,
+            @SerializedName("visible")
+            val visible: Boolean?,
+            @SerializedName("watched")
+            val watched: Boolean?
+        )
     }
 }

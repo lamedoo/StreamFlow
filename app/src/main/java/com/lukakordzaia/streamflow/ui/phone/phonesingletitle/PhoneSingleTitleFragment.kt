@@ -57,6 +57,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
         fragmentListeners()
         fragmentObservers()
         titleDetailsContainer()
+        checkWatching()
         castContainer()
         relatedContainer()
     }
@@ -181,8 +182,6 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
     }
 
     private fun titleDetailsContainer() {
-//        phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getTraktToken()}")
-
         phoneSingleTitleViewModel.singleTitleLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
@@ -218,8 +217,6 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
                     phoneSingleTitleViewModel.onEpisodesPressed(it.id, it.displayName!!, it.seasonNum!!)
                 }
             }
-
-            checkWatching(it)
         })
 
         phoneSingleTitleViewModel.titleGenres.observe(viewLifecycleOwner, {
@@ -231,65 +228,67 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
         })
     }
 
-    private fun checkWatching(info: SingleTitleModel) {
-        binding.continueWatchingInfo.setVisibleOrGone(info.currentEpisode != null)
-        binding.continueWatchingSeekBar.setVisibleOrGone(info.currentEpisode != null)
+    private fun checkWatching() {
+        phoneSingleTitleViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            binding.continueWatchingInfo.setVisibleOrGone(it != null)
+            binding.continueWatchingSeekBar.setVisibleOrGone(it != null)
 
-        binding.continueWatchingInfoBottom.setVisibleOrGone(info.currentEpisode != null)
-        binding.continueWatchingSeekBarBottom.setVisibleOrGone(info.currentEpisode != null)
+            binding.continueWatchingInfoBottom.setVisibleOrGone(it != null)
+            binding.continueWatchingSeekBarBottom.setVisibleOrGone(it != null)
 
-        if (info.currentEpisode != null) {
-            binding.continueWatchingSeekBar.max = info.titleDuration!!.toInt()
-            binding.continueWatchingSeekBar.progress = info.watchedDuration!!.toInt()
+            if (it != null) {
+                binding.continueWatchingSeekBar.max = it.titleDuration.toInt()
+                binding.continueWatchingSeekBar.progress = it.watchedDuration.toInt()
 
-            binding.continueWatchingSeekBarBottom.max = info.titleDuration.toInt()
-            binding.continueWatchingSeekBarBottom.progress = info.watchedDuration.toInt()
+                binding.continueWatchingSeekBarBottom.max = it.titleDuration.toInt()
+                binding.continueWatchingSeekBarBottom.progress = it.watchedDuration.toInt()
 
-            if (info.isTvShow) {
-                val time = String.format(
-                    "ს${info.currentSeason} ე${info.currentEpisode} / %02d:%02d",
-                    TimeUnit.SECONDS.toMinutes(info.watchedDuration),
-                    TimeUnit.SECONDS.toSeconds(info.watchedDuration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(info.watchedDuration))
-                )
+                if (it.isTvShow) {
+                    val time = String.format(
+                        "ს${it.season} ე${it.episode} / %02d:%02d",
+                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
+                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
+                    )
 
-                binding.continueWatchingInfo.text = time
-                binding.continueWatchingInfoBottom.text = time
+                    binding.continueWatchingInfo.text = time
+                    binding.continueWatchingInfoBottom.text = time
+                } else {
+                    val time = String.format(
+                        "%02d:%02d",
+                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
+                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
+                    )
+
+                    binding.continueWatchingInfo.text = time
+                    binding.continueWatchingInfoBottom.text = time
+
+                    binding.replayButton.setVisible()
+                    binding.replayButtonBottom.setVisible()
+                    binding.replayButton.setOnClickListener { _ ->
+                        languagePickerDialog()
+                    }
+                }
+
+                binding.playButton.setOnClickListener { _ ->
+                    startVideoPlayer(
+                        ContinueWatchingRoom(
+                            it.titleId,
+                            it.language,
+                            TimeUnit.SECONDS.toMillis(it.watchedDuration),
+                            TimeUnit.SECONDS.toMillis(it.titleDuration),
+                            it.isTvShow,
+                            it.season,
+                            it.episode
+                        ), null)
+                }
             } else {
-                val time = String.format(
-                    "%02d:%02d",
-                    TimeUnit.SECONDS.toMinutes(info.watchedDuration),
-                    TimeUnit.SECONDS.toSeconds(info.watchedDuration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(info.watchedDuration))
-                )
-
-                binding.continueWatchingInfo.text = time
-                binding.continueWatchingInfoBottom.text = time
-
-                binding.replayButton.setVisible()
-                binding.replayButtonBottom.setVisible()
-                binding.replayButton.setOnClickListener { _ ->
+                binding.playButton.setOnClickListener { _ ->
                     languagePickerDialog()
                 }
             }
-
-            binding.playButton.setOnClickListener { _ ->
-                startVideoPlayer(
-                    ContinueWatchingRoom(
-                        info.id,
-                        info.currentLanguage!!,
-                        TimeUnit.SECONDS.toMillis(info.watchedDuration),
-                        TimeUnit.SECONDS.toMillis(info.titleDuration),
-                        info.isTvShow,
-                        info.currentSeason!!,
-                        info.currentEpisode
-                ), null)
-            }
-        } else {
-            binding.playButton.setOnClickListener { _ ->
-                languagePickerDialog()
-            }
-        }
+        })
     }
 
     private fun castContainer() {

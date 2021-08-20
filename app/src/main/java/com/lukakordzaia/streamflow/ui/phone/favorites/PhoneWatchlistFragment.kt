@@ -165,7 +165,6 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
         removeFavorite.setContentView(binding.root)
 
         binding.confirmButton.setOnClickListener {
-//            phoneWatchlistViewModel.removeFavTitleFromFirestore(titleId)
             phoneWatchlistViewModel.deleteWatchlistTitle(titleId)
             removeFavorite.dismiss()
         }

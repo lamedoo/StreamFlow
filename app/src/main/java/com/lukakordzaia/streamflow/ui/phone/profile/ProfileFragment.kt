@@ -87,10 +87,8 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
             clearHistory.setContentView(binding.root)
 
             binding.continueButton.setOnClickListener {
-                if (auth.currentUser == null) {
+                if (authSharedPreferences.getLoginToken() == "") {
                     profileViewModel.deleteContinueWatchingFromRoomFull()
-                } else {
-                    profileViewModel.deleteContinueWatchingFromFirestoreFull()
                 }
                 clearHistory.dismiss()
             }

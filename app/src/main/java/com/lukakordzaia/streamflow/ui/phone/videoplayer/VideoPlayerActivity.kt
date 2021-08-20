@@ -7,12 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VideoPlayerActivity : AppCompatActivity() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
+    private val authSharedPreferences: AuthSharedPreferences by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phone_video_player)
@@ -23,14 +26,18 @@ class VideoPlayerActivity : AppCompatActivity() {
 
         parentFragment.onStop()
 
-        videoPlayerViewModel.saveLoader.observe(this, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {}
-                LoadingState.Status.SUCCESS -> {
-                    super.onBackPressed()
+        if (authSharedPreferences.getLoginToken() != "") {
+            videoPlayerViewModel.saveLoader.observe(this, {
+                when (it.status) {
+                    LoadingState.Status.RUNNING -> {}
+                    LoadingState.Status.SUCCESS -> {
+                        super.onBackPressed()
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            super.onBackPressed()
+        }
     }
 
     companion object {

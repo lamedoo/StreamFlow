@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserDataResponse
@@ -162,52 +161,21 @@ class ProfileViewModel : BaseViewModel() {
         }
     }
 
-    fun deleteContinueWatchingFromFirestoreFull() {
-        environment.databaseRepository.getContinueWatchingFromFirestore(currentUser()!!.uid, object :
-            FirebaseContinueWatchingListCallBack {
-            override fun continueWatchingList(titleList: MutableList<ContinueWatchingRoom>) {
-                if (titleList.isNullOrEmpty()) {
-                    titleList.forEach {
-                        deleteContinueWatchingTitleFromFirestore(it.titleId)
-                    }
-                } else {
-                    newToastMessage("ბაზა უკვე ცარიელია")
-                }
-            }
-        })
-    }
-
-    private fun deleteContinueWatchingTitleFromFirestore(titleId: Int) {
-        viewModelScope.launch {
-            val deleteTitles = environment.databaseRepository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
-
-            if (deleteTitles) {
-                newToastMessage("ბაზა წარმატებით წაშლილია")
-            }
-        }
-    }
-
-    fun createUserFirestore() {
-        viewModelScope.launch {
-            environment.databaseRepository.createUserFirestore(currentUser())
-        }
-    }
-
     fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>> {
         return environment.databaseRepository.getContinueWatchingFromRoom()
     }
 
-    fun addContinueWatchingToFirestore(continueWatchingRoomList: List<ContinueWatchingRoom>) {
+    fun addContinueWatchingToApi(continueWatchingRoomList: List<ContinueWatchingRoom>) {
         viewModelScope.launch {
             continueWatchingRoomList.forEach {
-                val addToFirestore = environment.databaseRepository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, it)
-                if (addToFirestore) {
-                    newToastMessage("სინქრონიზაცია წარმატებით დასრულდა")
-                    deleteContinueWatchingFromRoomFull()
-                    refreshProfileOnLogin()
-                } else {
-                    newToastMessage("სამწუხაროდ, ვერ მოხერხდა სინქრონიზაცია")
-                }
+//                val addToFirestore = environment.databaseRepository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, it)
+//                if (addToFirestore) {
+//                    newToastMessage("სინქრონიზაცია წარმატებით დასრულდა")
+//                    deleteContinueWatchingFromRoomFull()
+//                    refreshProfileOnLogin()
+//                } else {
+//                    newToastMessage("სამწუხაროდ, ვერ მოხერხდა სინქრონიზაცია")
+//                }
             }
         }
     }

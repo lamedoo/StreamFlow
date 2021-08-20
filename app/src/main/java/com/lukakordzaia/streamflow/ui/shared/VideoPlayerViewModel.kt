@@ -46,13 +46,13 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     fun addContinueWatching() {
         val dbDetails = ContinueWatchingRoom(
-                videoPlayerInfo.value!!.titleId,
-                videoPlayerInfo.value!!.chosenLanguage,
-                playbackPositionForDb.value!!,
-                titleDurationForDb.value!!,
-                videoPlayerInfo.value!!.isTvShow,
-                videoPlayerInfo.value!!.chosenSeason,
-                videoPlayerInfo.value!!.chosenEpisode
+            videoPlayerInfo.value!!.titleId,
+            videoPlayerInfo.value!!.chosenLanguage,
+            TimeUnit.MILLISECONDS.toSeconds(playbackPositionForDb.value!!),
+            TimeUnit.MILLISECONDS.toSeconds(titleDurationForDb.value!!),
+            videoPlayerInfo.value!!.isTvShow,
+            videoPlayerInfo.value!!.chosenSeason,
+            videoPlayerInfo.value!!.chosenEpisode
         )
         if (playbackPositionForDb.value!! > 0 && titleDurationForDb.value!! > 0) {
             if (authSharedPreferences.getLoginToken() != "") {

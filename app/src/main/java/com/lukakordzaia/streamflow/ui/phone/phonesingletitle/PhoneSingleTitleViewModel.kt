@@ -1,9 +1,10 @@
 package com.lukakordzaia.streamflow.ui.phone.phonesingletitle
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.AddFavoritesModel
+import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
@@ -36,6 +37,9 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
     private val _addToFavorites = MutableLiveData<Boolean>()
     val addToFavorites: LiveData<Boolean> = _addToFavorites
 
+    private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom?>()
+    val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
+
     fun onEpisodesPressed(titleId: Int, titleName: String, seasonNum: Int) {
         navigateToNewFragment(
                 PhoneSingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
@@ -60,6 +64,24 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
                         is Result.Success -> {
                             val data = titleData.data
                             _singleTitleData.value = data.toSingleTitleModel()
+
+                            if (authSharedPreferences.getLoginToken() == "") {
+                                getSingleContinueWatchingFromRoom(titleId)
+                            } else {
+                                if (data.data.userWatch?.data?.season != null) {
+                                    _continueWatchingDetails.value = ContinueWatchingRoom(
+                                        titleId = titleId,
+                                        language = data.data.userWatch.data.language!!,
+                                        watchedDuration = data.data.userWatch.data.progress!!,
+                                        titleDuration = data.data.userWatch.data.duration!!,
+                                        isTvShow = data.data.isTvShow,
+                                        season = data.data.userWatch.data.season,
+                                        episode = data.data.userWatch.data.episode!!
+                                    )
+                                } else {
+                                    _continueWatchingDetails.value = null
+                                }
+                            }
 
                             _addToFavorites.value = data.data.userWantsToWatch?.data?.status ?: false
 
@@ -135,6 +157,20 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
                     }
                 }
             }
+        }
+    }
+
+    fun checkAuthDatabase(titleId: Int) {
+        if (authSharedPreferences.getLoginToken() == "") {
+            getSingleContinueWatchingFromRoom(titleId)
+        }
+    }
+
+    private fun getSingleContinueWatchingFromRoom(titleId: Int) {
+        val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
+
+        _continueWatchingDetails.addSource(data) {
+            _continueWatchingDetails.value = it
         }
     }
 
@@ -255,59 +291,6 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
                     newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
                 }
             }
-        }
-    }
-
-    fun addTitleToFirestore(info: SingleTitleModel) {
-        if (currentUser() != null) {
-            favoriteLoader.value = LoadingState.LOADING
-            viewModelScope.launch {
-                val addToFavorites = environment.watchlistRepository.addTitleToFavorites(currentUser()!!.uid, AddFavoritesModel(
-                    info.nameEng!!,
-                    info.isTvShow,
-                    info.id,
-                    info.imdbId!!
-                ))
-                if (addToFavorites) {
-                    newToastMessage("ფილმი დაემატა ფავორიტებში")
-                    _addToFavorites.value = true
-                    favoriteLoader.value = LoadingState.LOADED
-                } else {
-                    newToastMessage("სამწუხაროდ ვერ მოხერხდა ფავორიტებში დამატება")
-                    _addToFavorites.value = false
-                    favoriteLoader.value = LoadingState.LOADED
-                }
-            }
-        } else {
-            newToastMessage("ფავორიტებში დასამატებლად, გაიარეთ ავტორიზაცია")
-        }
-    }
-
-    fun removeTitleFromFavorites(titleId: Int) {
-        favoriteLoader.value = LoadingState.LOADING
-        viewModelScope.launch {
-            val removeFromFavorites = environment.watchlistRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
-            if (removeFromFavorites) {
-                _addToFavorites.value = false
-                favoriteLoader.value = LoadingState.LOADED
-                newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
-            } else {
-                _addToFavorites.value = true
-                favoriteLoader.value = LoadingState.LOADED
-            }
-        }
-    }
-
-    fun checkTitleInFavorites(titleId: Int) {
-        if (currentUser() != null) {
-            favoriteLoader.value = LoadingState.LOADING
-            viewModelScope.launch {
-                val checkTitle = environment.watchlistRepository.checkTitleInFavorites(currentUser()!!.uid, titleId)
-                _addToFavorites.value = checkTitle!!.data != null
-                favoriteLoader.value = LoadingState.LOADED
-            }
-        } else {
-            _addToFavorites.value = false
         }
     }
 }

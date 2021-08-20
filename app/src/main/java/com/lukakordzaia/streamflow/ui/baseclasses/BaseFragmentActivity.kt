@@ -177,7 +177,6 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
                     if (task.isSuccessful) {
                         Log.d(ContentValues.TAG, "signInWithCredential:success")
                         this.createToast("წარმატებით გაიარეთ ავტორიზაცია")
-                        profileViewModel.createUserFirestore()
 
                         showSyncDialog()
                     } else {
@@ -196,7 +195,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
                 syncDialog.setContentView(binding.root)
 
                 binding.confirmButton.setOnClickListener { _ ->
-                    profileViewModel.addContinueWatchingToFirestore(it)
+                    profileViewModel.addContinueWatchingToApi(it)
                     val intent = Intent(this, TvActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     this.startActivity(intent)

@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -117,10 +116,8 @@ class TvTitleFilesViewModel : BaseViewModel() {
     }
 
     fun checkAuthDatabase(titleId: Int) {
-        if (currentUser() == null) {
+        if (authSharedPreferences.getLoginToken() == "") {
             getSingleContinueWatchingFromRoom(titleId)
-        } else {
-            checkContinueWatchingInFirestore(titleId)
         }
     }
 
@@ -130,14 +127,5 @@ class TvTitleFilesViewModel : BaseViewModel() {
         _continueWatchingDetails.addSource(data) {
             _continueWatchingDetails.value = it
         }
-    }
-
-    private fun checkContinueWatchingInFirestore(titleId: Int) {
-        environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: ContinueWatchingRoom?) {
-                _continueWatchingDetails.value = title
-            }
-
-        })
     }
 }

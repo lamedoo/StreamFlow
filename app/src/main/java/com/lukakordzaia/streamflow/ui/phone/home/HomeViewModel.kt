@@ -89,26 +89,6 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    private fun getContinueWatching() {
-        continueWatchingLoader.value = LoadingState.LOADING
-        viewModelScope.launch {
-            when (val watching = environment.homeRepository.getContinueWatching()) {
-                is Result.Success -> {
-                    val data = watching.data.data
-
-                    _continueWatchingList.value = data.toContinueWatchingModel()
-                    continueWatchingLoader.value = LoadingState.LOADED
-                }
-                is Result.Error -> {
-                    newToastMessage("დღის ფილმი - ${watching.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
-                }
-            }
-        }
-    }
-
     fun getContinueWatchingTitlesFromApi(dbDetails: List<ContinueWatchingRoom>) {
         continueWatchingLoader.value = LoadingState.LOADING
         val dbTitles: MutableList<ContinueWatchingModel> = mutableListOf()
@@ -141,6 +121,26 @@ class HomeViewModel : BaseViewModel() {
                 }
             }
             continueWatchingLoader.value = LoadingState.LOADED
+        }
+    }
+
+    private fun getContinueWatching() {
+        continueWatchingLoader.value = LoadingState.LOADING
+        viewModelScope.launch {
+            when (val watching = environment.homeRepository.getContinueWatching()) {
+                is Result.Success -> {
+                    val data = watching.data.data
+
+                    _continueWatchingList.value = data.toContinueWatchingModel()
+                    continueWatchingLoader.value = LoadingState.LOADED
+                }
+                is Result.Error -> {
+                    newToastMessage("დღის ფილმი - ${watching.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
+            }
         }
     }
 

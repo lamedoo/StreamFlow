@@ -4,9 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavDirections
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.helpers.Environment
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.utils.Event
@@ -37,9 +34,5 @@ abstract class BaseViewModel : ViewModel(), KoinComponent {
 
     fun setNoInternet() {
         _noInternet.value = Event(true)
-    }
-
-    fun currentUser(): FirebaseUser? {
-        return Firebase.auth.currentUser
     }
 }
