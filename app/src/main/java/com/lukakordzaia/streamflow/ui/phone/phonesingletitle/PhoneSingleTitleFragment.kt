@@ -57,7 +57,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
         fragmentListeners()
         fragmentObservers()
         titleDetailsContainer()
-        checkWatching()
+        checkContinueWatching()
         castContainer()
         relatedContainer()
     }
@@ -228,7 +228,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
         })
     }
 
-    private fun checkWatching() {
+    private fun checkContinueWatching() {
         phoneSingleTitleViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             binding.continueWatchingInfo.setVisibleOrGone(it != null)
             binding.continueWatchingSeekBar.setVisibleOrGone(it != null)

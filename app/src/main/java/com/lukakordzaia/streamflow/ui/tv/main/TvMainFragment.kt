@@ -58,6 +58,12 @@ class TvMainFragment : BrowseSupportFragment() {
         onFirstItem = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        homeViewModel.checkAuthDatabase()
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
         val containerDock = view!!.findViewById<View>(R.id.browse_container_dock) as FrameLayout

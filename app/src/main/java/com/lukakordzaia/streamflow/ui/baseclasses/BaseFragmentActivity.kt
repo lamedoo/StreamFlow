@@ -1,12 +1,10 @@
 package com.lukakordzaia.streamflow.ui.baseclasses
 
 import android.app.Dialog
-import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -18,20 +16,13 @@ import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ListRowPresenter
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
 import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.databinding.TvSidebarBinding
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
-import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
+import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
+import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesActivity
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
@@ -49,9 +40,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCheckFirstItem {
     private val profileViewModel: ProfileViewModel by viewModel()
     private val sidebarAnimations: TvSidebarAnimations by inject()
-    private var googleAccount: GoogleSignInAccount? = null
-    private var googleSignInClient: GoogleSignInClient? = null
-    protected val auth = Firebase.auth
+    protected val authSharedPreferences: AuthSharedPreferences by inject()
+
     private lateinit var signInButton: View
     private lateinit var signOutButton: View
     private lateinit var profilePhoto: ImageView
@@ -72,14 +62,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         binding = getViewBinding()
         setContentView(binding.root)
 
-        googleAccount = GoogleSignIn.getLastSignedInAccount(this)
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
-
+        fragmentObservers()
     }
 
     fun setSidebarClickListeners(view: TvSidebarBinding) {
@@ -96,7 +79,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             sidebarAnimations.hideSideBar(view.tvSidebar)
         }
         view.favoritesButton.setOnClickListener {
-            if (auth.currentUser != null) {
+            if (authSharedPreferences.getLoginToken() != "") {
                 startActivity(Intent(this, TvFavoritesActivity::class.java))
             } else {
                 this.createToast("ფავორიტების სანახავად, გაიარეთ ავტორიზაცია")
@@ -132,59 +115,41 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         profilePhoto = view.profilePhoto
         profileUsername = view.profileUsername
 
-        googleListeners()
+        fragmentListeners()
     }
 
-    private fun googleListeners() {
-        updateGoogleUI(auth.currentUser != null)
+    private fun fragmentListeners() {
+        profileViewModel.getUserData()
+        updateGoogleUI(authSharedPreferences.getLoginToken() != "")
 
         signInButton.setOnClickListener {
-            val signInIntent: Intent = googleSignInClient!!.signInIntent
-            startActivityForResult(signInIntent, ProfileFragment.RC_SIGN_IN)
+            profileViewModel.userLogin(
+                PostLoginBody(
+                3,
+                "password",
+                "Irmisnaxtomi12.",
+                "kordzaialuka@gmail.com"
+            )
+            )
         }
 
         signOutButton.setOnClickListener {
-            auth.signOut()
-            googleSignInClient!!.signOut()
-            updateGoogleUI(false)
-
-            val intent = Intent(this, TvActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            startActivity(intent)
+            profileViewModel.userLogout()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == ProfileFragment.RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)!!
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                Log.w(ContentValues.TAG, "Google sign in failed", e)
-                this.createToast("დაფიქსირა შეცდომა ავტორიზაციის დროს")
-            }
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        Log.d(ContentValues.TAG, "signInWithCredential:success")
-                        this.createToast("წარმატებით გაიარეთ ავტორიზაცია")
-
-                        showSyncDialog()
-                    } else {
-                        Log.w(ContentValues.TAG, "signInWithCredential:failure", task.exception)
-                        this.createToast("დაფიქსირა შეცდომა ავტორიზაციის დროს")
-                        updateGoogleUI(false)
+    private fun fragmentObservers() {
+        profileViewModel.loginLoader.observe(this, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> {}
+                LoadingState.Status.SUCCESS -> {
+                    val intent = Intent(this, TvActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
+                    this.startActivity(intent)
                 }
+            }
+        })
     }
 
     private fun showSyncDialog() {
@@ -218,14 +183,11 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         signInButton.setVisibleOrGone(!isLoggedIn)
         signOutButton.setVisibleOrGone(isLoggedIn)
 
-        profileUsername.text = if (isLoggedIn && googleAccount != null) {
-            "გამარჯობა, ${googleAccount!!.givenName!!.toUpperCase()}"
-        } else {
-            ""
-        }
-
         if (isLoggedIn) {
-            Glide.with(this).load(googleAccount?.photoUrl).into(profilePhoto)
+            profileViewModel.userData.observe(this, {
+                profileUsername.text = "გამარჯობა, ${it.displayName.toUpperCase()}"
+                Glide.with(this).load(it.avatar.large).into(profilePhoto)
+            })
         }
     }
 

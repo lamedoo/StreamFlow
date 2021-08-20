@@ -18,6 +18,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogConnectTraktvAlertBinding
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
@@ -150,6 +151,13 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     }
 
     private fun fragmentObservers() {
+        profileViewModel.loginLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> {}
+                LoadingState.Status.SUCCESS -> profileViewModel.refreshProfileOnLogin()
+            }
+        })
+
         profileViewModel.userUserTokenResponse.observe(viewLifecycleOwner, { userToken ->
             if (userToken != null) {
                 traktDialog.hide()

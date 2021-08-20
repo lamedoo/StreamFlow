@@ -23,7 +23,6 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_fragment) as VideoPlayerFragment
-
         parentFragment.onStop()
 
         if (authSharedPreferences.getLoginToken() != "") {

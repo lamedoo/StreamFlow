@@ -25,7 +25,6 @@ import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerHelpers
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
-import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity.Companion.VIDEO_DETAILS
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
@@ -34,12 +33,12 @@ import kotlinx.android.synthetic.main.fragment_tv_video_player.*
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 
 
 class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
-    private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
+    private val videoPlayerViewModel: VideoPlayerViewModel by sharedViewModel()
     private val buildMediaSource: BuildMediaSource by inject()
     private lateinit var videoPlayerData: VideoPlayerData
     private lateinit var videoPlayerInfo: VideoPlayerInfo
@@ -113,18 +112,8 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
             releasePlayer()
-            if ((requireActivity() as TvVideoPlayerActivity).getCurrentFragment() != VIDEO_DETAILS) {
-                if (!tv_title_player.isControllerVisible) {
-                    requireActivity().onBackPressed()
-                } else {
-                    requireActivity().onBackPressed()
-                    requireActivity().onBackPressed()
-                }
-                super.onStop()
-            } else {
-                super.onStop()
-            }
         }
+        super.onStop()
     }
 
     inner class PlayerListeners: Player.Listener {

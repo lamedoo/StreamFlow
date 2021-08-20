@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserDataResponse
@@ -19,6 +20,8 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class ProfileViewModel : BaseViewModel() {
+    val loginLoader = MutableLiveData<LoadingState>()
+
     private val _userData = MutableLiveData<GetUserDataResponse.Data>()
     val userData: LiveData<GetUserDataResponse.Data> = _userData
 
@@ -35,6 +38,7 @@ class ProfileViewModel : BaseViewModel() {
     val traktSfListExists: LiveData<Boolean> = _traktSfListExists
 
     fun userLogin(loginBody: PostLoginBody) {
+        loginLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (val login = environment.userRepository.userLogin(loginBody)) {
                 is Result.Success -> {
@@ -43,7 +47,7 @@ class ProfileViewModel : BaseViewModel() {
                     authSharedPreferences.saveLoginToken(data.accessToken)
                     authSharedPreferences.saveLoginRefreshToken(data.refreshToken)
 
-                    refreshProfileOnLogin()
+                    loginLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
                     Log.d("userLogin", login.exception)
@@ -53,13 +57,15 @@ class ProfileViewModel : BaseViewModel() {
     }
 
     fun userLogout() {
+        loginLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (val logout = environment.userRepository.userLogout()) {
                 is Result.Success -> {
 
                     authSharedPreferences.saveLoginToken("")
                     authSharedPreferences.saveLoginRefreshToken("")
-                    refreshProfileOnLogin()
+
+                    loginLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
                     Log.d("userLogout", logout.exception)

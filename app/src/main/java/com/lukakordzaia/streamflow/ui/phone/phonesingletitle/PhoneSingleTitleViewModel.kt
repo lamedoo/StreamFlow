@@ -160,12 +160,6 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
         }
     }
 
-    fun checkAuthDatabase(titleId: Int) {
-        if (authSharedPreferences.getLoginToken() == "") {
-            getSingleContinueWatchingFromRoom(titleId)
-        }
-    }
-
     private fun getSingleContinueWatchingFromRoom(titleId: Int) {
         val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
 
