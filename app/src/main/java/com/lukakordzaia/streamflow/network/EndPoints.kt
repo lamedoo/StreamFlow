@@ -32,6 +32,7 @@ class EndPoints {
         const val USER_WATCHLIST_STATUS = "https://api.imovies.cc/api/v1/movies/{id}/wantstowatch"
         const val USER_IS_WATCHING = "https://api.imovies.cc/api/v1/user/watches/{id}/{season}/{episode}"
         const val USER_CONTINUE_WATCHING = "https://api.imovies.cc/api/v1/user/watches-continue?page=1&per_page=20"
+        const val HIDE_CONTINUE_WATCHING = "https://api.imovies.cc/api/v1/user/watches/{id}/hide"
 
         //TRAKT TV
         const val DEVICE_CODE = "https://api.trakt.tv/oauth/device/code"

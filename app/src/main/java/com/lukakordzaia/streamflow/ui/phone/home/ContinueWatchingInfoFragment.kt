@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneContinueWatchingInfoBinding
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseBottomSheet
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
@@ -50,8 +51,16 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
 
            binding.continueButton.setOnClickListener {
                 homeViewModel.deleteContinueWatching(args.titleId)
-                removeTitle.dismiss()
-                dismiss()
+
+               homeViewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+                   when (it.status) {
+                       LoadingState.Status.RUNNING -> {}
+                       LoadingState.Status.SUCCESS -> {
+                           removeTitle.dismiss()
+                           dismiss()
+                       }
+                   }
+               })
             }
             binding.cancelButton.setOnClickListener {
                 removeTitle.dismiss()

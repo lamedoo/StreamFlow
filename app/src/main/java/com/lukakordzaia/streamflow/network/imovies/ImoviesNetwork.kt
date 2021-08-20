@@ -88,4 +88,7 @@ interface ImoviesNetwork {
 
     @GET(EndPoints.USER_CONTINUE_WATCHING)
     suspend fun getContinueWatching() : Response<GetContinueWatchingResponse>
+
+    @PATCH(EndPoints.HIDE_CONTINUE_WATCHING)
+    suspend fun hideTitleContinueWatching(@Path("id") id: Int) : Response<UserWatchListStatusResponse>
 }

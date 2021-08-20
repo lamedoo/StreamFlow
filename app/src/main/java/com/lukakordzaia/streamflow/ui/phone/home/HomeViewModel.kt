@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
     val continueWatchingLoader = MutableLiveData<LoadingState>()
+    val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
     val movieDayLoader = MutableLiveData<LoadingState>()
     val newMovieLoader = MutableLiveData<LoadingState>()
     val topMovieLoader = MutableLiveData<LoadingState>()
@@ -144,10 +145,10 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun deleteContinueWatching(titleId: Int) {
-        if (currentUser() == null) {
+        if (authSharedPreferences.getLoginToken() == "") {
             deleteSingleContinueWatchingFromRoom(titleId)
         } else {
-            deleteSingleContinueWatchingFromFirestore(titleId)
+            hideSingleContinueWatching(titleId)
         }
     }
 
@@ -157,13 +158,21 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    private fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
+    private fun hideSingleContinueWatching(titleId: Int) {
+        hideContinueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            val deleteTitle = environment.databaseRepository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
-            if (deleteTitle) {
-                newToastMessage("წაიშალა განაგრძეთ ყურებიდან")
-            } else {
-                newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
+            when (val hide = environment.homeRepository.hideTitleContinueWatching(titleId)) {
+                is Result.Success -> {
+                    newToastMessage("წაიშალა განაგრძეთ ყურების სიიდან")
+                    checkAuthDatabase()
+                    hideContinueWatchingLoader.value = LoadingState.LOADED
+                }
+                is Result.Error -> {
+                    newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
             }
         }
     }
