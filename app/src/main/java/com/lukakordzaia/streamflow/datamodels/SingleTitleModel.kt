@@ -16,5 +16,10 @@ data class SingleTitleModel(
     val seasonNum: Int?,
     val country: String?,
     val trailer: String?,
-    val watchlist: Boolean?
+    val watchlist: Boolean?,
+    val titleDuration: Long?,
+    val watchedDuration: Long?,
+    val currentSeason: Int?,
+    val currentEpisode: Int?,
+    val currentLanguage: String?
 )

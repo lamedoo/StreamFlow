@@ -17,6 +17,7 @@ import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 
 class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
@@ -35,6 +36,11 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         setHasOptionsMenu(true)
     }
 
+    override fun onStart() {
+        super.onStart()
+        continueWatchingContainer()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -42,7 +48,6 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         fragmentObservers()
 
         movieDayContainer()
-        continueWatchingContainer()
         newMoviesContainer()
         topMoviesContainer()
         topTvShowsContainer()
@@ -220,10 +225,10 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         requireActivity().startActivity(VideoPlayerActivity.startFromHomeScreen(requireContext(), VideoPlayerData(
             data.id,
             data.isTvShow,
-            data.season,
+            if (data.isTvShow) data.season else 0,
             data.language,
-            data.episode,
-            data.watchedDuration,
+            if (data.isTvShow) data.episode else 0,
+            TimeUnit.SECONDS.toMillis(data.watchedDuration),
             null
         )
         ))

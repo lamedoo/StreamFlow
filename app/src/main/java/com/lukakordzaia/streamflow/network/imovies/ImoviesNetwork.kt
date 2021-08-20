@@ -3,6 +3,7 @@ package com.lukakordzaia.streamflow.network.imovies
 
 import com.lukakordzaia.streamflow.network.EndPoints
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
+import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
@@ -78,4 +79,13 @@ interface ImoviesNetwork {
 
     @POST(EndPoints.USER_WATCHLIST_STATUS)
     suspend fun addWatchlistTitle(@Path("id") id: Int) : Response<UserWatchListStatusResponse>
+
+    @POST(EndPoints.USER_IS_WATCHING)
+    suspend fun postTitleWatchTime(@Body watchTimeRequest: PostTitleWatchTimeRequestBody,
+                                   @Path("id") id: Int,
+                                   @Path("season") season: Int,
+                                   @Path("episode") episode: Int) : Response<PostWatchTimeResponse>
+
+    @GET(EndPoints.USER_CONTINUE_WATCHING)
+    suspend fun getContinueWatching() : Response<GetContinueWatchingResponse>
 }

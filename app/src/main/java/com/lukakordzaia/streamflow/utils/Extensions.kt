@@ -12,9 +12,11 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetContinueWatchingResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserWatchlistResponse
 
 inline fun <T : Fragment> T.applyBundle(block: Bundle.() -> Unit): T {
@@ -87,7 +89,12 @@ fun List<GetTitlesResponse.Data>.toTitleListModel(): List<SingleTitleModel> {
             seasonNum = null,
             country = null,
             trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
-            watchlist = it.userWantsToWatch?.data?.status
+            watchlist = it.userWantsToWatch?.data?.status,
+            titleDuration = it.userWatch?.data?.duration,
+            watchedDuration = it.userWatch?.data?.progress,
+            currentSeason = it.userWatch?.data?.season,
+            currentEpisode = it.userWatch?.data?.episode,
+            currentLanguage = it.userWatch?.data?.language
         )
     }
 }
@@ -115,7 +122,12 @@ fun GetSingleTitleResponse.toSingleTitleModel(): SingleTitleModel {
         },
         country = if (title.countries.data.isNotEmpty()) title.countries.data[0].secondaryName else "N/A",
         trailer = if (title.trailers.data.isNotEmpty()) title.trailers.data[0].fileUrl else null,
-        watchlist = title.userWantsToWatch?.data?.status
+        watchlist = title.userWantsToWatch?.data?.status,
+        titleDuration = title.userWatch?.data?.duration,
+        watchedDuration = title.userWatch?.data?.progress,
+        currentSeason = title.userWatch?.data?.season,
+        currentEpisode = title.userWatch?.data?.episode,
+        currentLanguage = title.userWatch?.data?.language
     )
 }
 
@@ -139,7 +151,32 @@ fun List<GetUserWatchlistResponse.Data>.toWatchListModel(): List<SingleTitleMode
             seasonNum = null,
             country = null,
             trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
-            watchlist = it.userWantsToWatch?.data?.status
+            watchlist = it.userWantsToWatch?.data?.status,
+            titleDuration = it.userWatch?.data?.duration,
+            watchedDuration = it.userWatch?.data?.progress,
+            currentSeason = it.userWatch?.data?.season,
+            currentEpisode = it.userWatch?.data?.episode,
+            currentLanguage = it.userWatch?.data?.language
+        )
+    }
+}
+
+fun List<GetContinueWatchingResponse.Data>.toContinueWatchingModel(): List<ContinueWatchingModel> {
+    return map {
+        val movie = it.movie.data
+
+        ContinueWatchingModel(
+            cover = movie.posters?.data?.x240,
+            duration = movie.duration,
+            id = movie.id,
+            isTvShow = movie.isTvShow,
+            primaryName = if (movie.primaryName.isNotEmpty()) movie.primaryName else movie.secondaryName,
+            originalName = if (movie.primaryName.isNotEmpty()) movie.primaryName else movie.secondaryName,
+            watchedDuration = it.progress,
+            titleDuration = it.duration,
+            season = it.season,
+            episode = it.episode,
+            language = it.language
         )
     }
 }

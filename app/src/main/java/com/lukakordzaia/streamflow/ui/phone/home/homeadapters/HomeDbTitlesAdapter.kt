@@ -44,17 +44,17 @@ class HomeDbTitlesAdapter(
 
             if (model.isTvShow) {
                 view.continueWatchingInfo.text = String.format("ს${model.season} ე${model.episode} / %02d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(model.watchedDuration),
-                    TimeUnit.MILLISECONDS.toSeconds(model.watchedDuration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(model.watchedDuration))
+                    TimeUnit.SECONDS.toMinutes(model.watchedDuration),
+                    TimeUnit.SECONDS.toSeconds(model.watchedDuration) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(model.watchedDuration))
                 )
             } else {
                 view.continueWatchingInfo.text = String.format("%02d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(model.watchedDuration),
-                    TimeUnit.MILLISECONDS.toMinutes(model.watchedDuration) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(model.watchedDuration)),
-                    TimeUnit.MILLISECONDS.toSeconds(model.watchedDuration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(model.watchedDuration))
+                    TimeUnit.SECONDS.toHours(model.watchedDuration),
+                    TimeUnit.SECONDS.toMinutes(model.watchedDuration) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(model.watchedDuration)),
+                    TimeUnit.SECONDS.toSeconds(model.watchedDuration) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(model.watchedDuration))
                 )
             }
 

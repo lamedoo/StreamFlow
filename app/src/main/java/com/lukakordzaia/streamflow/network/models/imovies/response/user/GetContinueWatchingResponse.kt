@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class GetUserWatchlistResponse(
+data class GetContinueWatchingResponse(
     @SerializedName("data")
     val `data`: List<Data>,
     @SerializedName("meta")
@@ -14,10 +14,26 @@ data class GetUserWatchlistResponse(
 ) : Parcelable {
     @Parcelize
     data class Data(
-        @SerializedName("createDate")
-        val createDate: String,
+        @SerializedName("duration")
+        val duration: Long,
+        @SerializedName("episode")
+        val episode: Int,
+        @SerializedName("language")
+        val language: String,
         @SerializedName("movie")
-        val movie: Movie
+        val movie: Movie,
+        @SerializedName("progress")
+        val progress: Long,
+        @SerializedName("quality")
+        val quality: String,
+        @SerializedName("season")
+        val season: Int,
+        @SerializedName("updateDate")
+        val updateDate: String,
+        @SerializedName("visible")
+        val visible: Boolean,
+        @SerializedName("watched")
+        val watched: Boolean
     ) : Parcelable {
         @Parcelize
         data class Movie(
@@ -37,9 +53,11 @@ data class GetUserWatchlistResponse(
                 @SerializedName("cover")
                 val cover: Cover,
                 @SerializedName("covers")
-                val covers: Covers?,
+                val covers: Covers,
                 @SerializedName("duration")
                 val duration: Int,
+                @SerializedName("genres")
+                val genres: Genres,
                 @SerializedName("hasSubtitles")
                 val hasSubtitles: Boolean,
                 @SerializedName("id")
@@ -49,7 +67,7 @@ data class GetUserWatchlistResponse(
                 @SerializedName("income")
                 val income: String,
                 @SerializedName("isTvShow")
-                val isTvShow: Boolean?,
+                val isTvShow: Boolean,
                 @SerializedName("languages")
                 val languages: Languages,
                 @SerializedName("originalName")
@@ -77,15 +95,13 @@ data class GetUserWatchlistResponse(
                 @SerializedName("tertiaryName")
                 val tertiaryName: String,
                 @SerializedName("trailers")
-                val trailers: Trailers?,
+                val trailers: Trailers,
                 @SerializedName("userFollows")
                 val userFollows: UserFollows,
                 @SerializedName("userSubscribed")
                 val userSubscribed: UserSubscribed,
                 @SerializedName("userWantsToWatch")
-                val userWantsToWatch: UserWantsToWatch?,
-                @SerializedName("userWatch")
-                val userWatch: UserWatch?,
+                val userWantsToWatch: UserWantsToWatch,
                 @SerializedName("watchCount")
                 val watchCount: Int,
                 @SerializedName("year")
@@ -102,7 +118,7 @@ data class GetUserWatchlistResponse(
                 @Parcelize
                 data class Covers(
                     @SerializedName("data")
-                    val `data`: Data?
+                    val `data`: Data
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
@@ -124,6 +140,26 @@ data class GetUserWatchlistResponse(
                         val x367: String,
                         @SerializedName("510")
                         val x510: String
+                    ) : Parcelable
+                }
+
+                @Parcelize
+                data class Genres(
+                    @SerializedName("data")
+                    val `data`: List<Data>
+                ) : Parcelable {
+                    @Parcelize
+                    data class Data(
+                        @SerializedName("backgroundImage")
+                        val backgroundImage: String,
+                        @SerializedName("id")
+                        val id: Int,
+                        @SerializedName("primaryName")
+                        val primaryName: String,
+                        @SerializedName("secondaryName")
+                        val secondaryName: String,
+                        @SerializedName("tertiaryName")
+                        val tertiaryName: String
                     ) : Parcelable
                 }
 
@@ -211,7 +247,7 @@ data class GetUserWatchlistResponse(
                     @Parcelize
                     data class Imovies(
                         @SerializedName("score")
-                        val score: Float,
+                        val score: Double,
                         @SerializedName("voters")
                         val voters: Int
                     ) : Parcelable
@@ -236,7 +272,7 @@ data class GetUserWatchlistResponse(
                 @Parcelize
                 data class Trailers(
                     @SerializedName("data")
-                    val `data`: List<Data?>
+                    val `data`: List<Data>
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
@@ -278,40 +314,12 @@ data class GetUserWatchlistResponse(
                 @Parcelize
                 data class UserWantsToWatch(
                     @SerializedName("data")
-                    val `data`: Data?
+                    val `data`: Data
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("status")
                         val status: Boolean
-                    ) : Parcelable
-                }
-
-                @Parcelize
-                data class UserWatch(
-                    @SerializedName("data")
-                    val `data`: Data?
-                ) : Parcelable {
-                    @Parcelize
-                    data class Data(
-                        @SerializedName("duration")
-                        val duration: Long?,
-                        @SerializedName("episode")
-                        val episode: Int?,
-                        @SerializedName("language")
-                        val language: String,
-                        @SerializedName("progress")
-                        val progress: Long?,
-                        @SerializedName("quality")
-                        val quality: String,
-                        @SerializedName("season")
-                        val season: Int?,
-                        @SerializedName("updateDate")
-                        val updateDate: String,
-                        @SerializedName("visible")
-                        val visible: Boolean,
-                        @SerializedName("watched")
-                        val watched: Boolean
                     ) : Parcelable
                 }
             }

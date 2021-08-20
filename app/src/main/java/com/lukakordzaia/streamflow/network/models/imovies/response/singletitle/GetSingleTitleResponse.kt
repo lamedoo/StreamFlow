@@ -389,17 +389,17 @@ data class GetSingleTitleResponse(
         ) {
             data class Data(
                 @SerializedName("duration")
-                val duration: Int?,
+                val duration: Long?,
                 @SerializedName("episode")
-                val episode: Any?,
+                val episode: Int?,
                 @SerializedName("language")
                 val language: String?,
                 @SerializedName("progress")
-                val progress: Int?,
+                val progress: Long?,
                 @SerializedName("quality")
                 val quality: String?,
                 @SerializedName("season")
-                val season: Any?,
+                val season: Int?,
                 @SerializedName("updateDate")
                 val updateDate: String?,
                 @SerializedName("visible")

@@ -32,10 +32,10 @@ import kotlinx.android.synthetic.main.fragment_phone_video_player.*
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
-    private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
+    private val videoPlayerViewModel: VideoPlayerViewModel by sharedViewModel()
     private val buildMediaSource: BuildMediaSource by inject()
     private lateinit var videoPlayerData: VideoPlayerData
     private lateinit var videoPlayerInfo: VideoPlayerInfo
@@ -117,7 +117,6 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         if (Util.SDK_INT >= 24) {
             releasePlayer()
         }
-        requireActivity().onBackPressed()
         super.onStop()
     }
 
@@ -308,6 +307,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         if (videoPlayerData.trailerUrl == null) {
             videoPlayerViewModel.addContinueWatching()
         }
+
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {

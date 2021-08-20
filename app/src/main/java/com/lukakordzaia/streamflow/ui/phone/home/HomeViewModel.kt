@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.toContinueWatchingModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
@@ -73,8 +73,8 @@ class HomeViewModel : BaseViewModel() {
 
     fun checkAuthDatabase() {
         clearContinueWatchingTitleList()
-        if (currentUser() != null) {
-            getContinueWatchingFromFirestore()
+        if (authSharedPreferences.getLoginToken() != "") {
+            getContinueWatching()
         } else {
             getContinueWatchingFromRoom()
         }
@@ -88,12 +88,24 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    private fun getContinueWatchingFromFirestore() {
-        environment.databaseRepository.getContinueWatchingFromFirestore(currentUser()!!.uid, object : FirebaseContinueWatchingListCallBack {
-            override fun continueWatchingList(titleList: MutableList<ContinueWatchingRoom>) {
-                _contWatchingData.value = titleList
+    private fun getContinueWatching() {
+        continueWatchingLoader.value = LoadingState.LOADING
+        viewModelScope.launch {
+            when (val watching = environment.homeRepository.getContinueWatching()) {
+                is Result.Success -> {
+                    val data = watching.data.data
+
+                    _continueWatchingList.value = data.toContinueWatchingModel()
+                    continueWatchingLoader.value = LoadingState.LOADED
+                }
+                is Result.Error -> {
+                    newToastMessage("დღის ფილმი - ${watching.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
             }
-        })
+        }
     }
 
     fun getContinueWatchingTitlesFromApi(dbDetails: List<ContinueWatchingRoom>) {
