@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.tv.favorites
+package com.lukakordzaia.streamflow.ui.tv.watchlist
 
 import android.os.Bundle
 import android.os.Handler
@@ -6,7 +6,7 @@ import android.os.Looper
 import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.databinding.ActivityTvFavoritesBinding
+import com.lukakordzaia.streamflow.databinding.ActivityTvWatchlistBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
@@ -16,14 +16,13 @@ import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setImage
 import com.lukakordzaia.streamflow.utils.setVisible
-import kotlinx.android.synthetic.main.activity_tv_favorites.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), TvCheckTitleSelected, TvHasFavoritesListener {
+class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), TvCheckTitleSelected, TvHasFavoritesListener {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
     private var hasFavorites = true
 
-    override fun getViewBinding() = ActivityTvFavoritesBinding.inflate(layoutInflater)
+    override fun getViewBinding() = ActivityTvWatchlistBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +41,7 @@ class TvFavoritesActivity: BaseFragmentActivity<ActivityTvFavoritesBinding>(), T
         Handler(Looper.getMainLooper()).postDelayed({
 
             if (!hasFavorites) {
-                no_favorites_container.setVisible()
+                binding.noFavoritesContainer.setVisible()
                 this.createToast("სამწუხაროდ, არ გაქვთ ფავორიტები არჩეული")
             }
         }, 2500)

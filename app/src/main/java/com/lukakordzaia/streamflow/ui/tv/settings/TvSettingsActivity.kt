@@ -4,23 +4,26 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvSettingsBinding
 import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
+import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
+import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSettingsActivity: FragmentActivity(), OnSettingsSelected {
+    private val profileViewModel: ProfileViewModel by viewModel()
+    private val authSharedPreferences: AuthSharedPreferences by inject()
     private lateinit var binding: ActivityTvSettingsBinding
-    private var googleAccount: GoogleSignInAccount? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTvSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        googleAccount = GoogleSignIn.getLastSignedInAccount(this)
+
+        profileViewModel.getUserData()
     }
 
     override fun getSettingsType(type: Int) {
@@ -41,14 +44,11 @@ class TvSettingsActivity: FragmentActivity(), OnSettingsSelected {
                 binding.signOutContainer.setVisible()
                 hideViews(listOf(binding.traktContainer, binding.infoContainer, binding.deleteContainer))
 
-                if (googleAccount != null) {
-                    binding.profileName.text = "შესული ხართ, როგორც ${googleAccount!!.givenName!!} ${googleAccount!!.familyName!!}"
-                    binding.profileEmail.text = "ელ-ფოსტა: ${googleAccount!!.email}"
-
-                    Glide.with(this)
-                        .load(googleAccount!!.photoUrl)
-                        .placeholder( R.drawable.placeholder_profile)
-                        .into(binding.profilePhoto)
+                if (authSharedPreferences.getLoginToken() != "") {
+                    profileViewModel.userData.observe(this, {
+                        binding.profileName.text = "შესული ხართ როგორც ${it.displayName}"
+                        Glide.with(this).load(it.avatar.large).into(binding.profilePhoto)
+                    })
                 }
 
             }

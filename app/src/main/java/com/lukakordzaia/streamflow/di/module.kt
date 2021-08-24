@@ -28,11 +28,11 @@ import com.lukakordzaia.streamflow.repository.watchlistrepository.WatchlistRepos
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueViewModel
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
-import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneWatchlistViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.SingleTopListViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
+import com.lukakordzaia.streamflow.ui.phone.phonewatchlist.PhoneWatchlistViewModel
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel

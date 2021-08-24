@@ -100,6 +100,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
         viewModelScope.launch {
             environment.databaseRepository.deleteSingleContinueWatchingFromRoom(titleId)
+            newToastMessage("წაიშალა ნახვების ისტორიიდან სიიდან")
         }
     }
 

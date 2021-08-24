@@ -55,17 +55,19 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
             }
 
            binding.continueButton.setOnClickListener {
-                homeViewModel.deleteContinueWatching(args.titleId)
-
-               homeViewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
-                   when (it.status) {
-                       LoadingState.Status.RUNNING -> {}
-                       LoadingState.Status.SUCCESS -> {
-                           removeTitle.dismiss()
-                           dismiss()
+               if (authSharedPreferences.getLoginToken() == "") {
+                   homeViewModel.deleteContinueWatching(args.titleId)
+               } else {
+                   homeViewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+                       when (it.status) {
+                           LoadingState.Status.RUNNING -> {}
+                           LoadingState.Status.SUCCESS -> {
+                               removeTitle.dismiss()
+                               dismiss()
+                           }
                        }
-                   }
-               })
+                   })
+               }
             }
             binding.cancelButton.setOnClickListener {
                 removeTitle.dismiss()

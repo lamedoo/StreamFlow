@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.favorites
+package com.lukakordzaia.streamflow.ui.phone.phonewatchlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

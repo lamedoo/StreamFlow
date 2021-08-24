@@ -77,7 +77,7 @@
                 android:paddingTop="36dp"
                 android:inputType="textPassword"
                 android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:singleLine="true"/>
 
         </com.google.android.material.textfield.TextInputLayout>

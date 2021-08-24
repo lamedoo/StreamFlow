@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.tv.favorites
+package com.lukakordzaia.streamflow.ui.tv.watchlist
 
 import android.view.ViewGroup
 import androidx.leanback.widget.HorizontalGridView
@@ -7,7 +7,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvDefaultCardView
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 
-class TvFavoritesPresenter : Presenter() {
+class TvWatchlistPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvDefaultCardView(parent.context, null)
 

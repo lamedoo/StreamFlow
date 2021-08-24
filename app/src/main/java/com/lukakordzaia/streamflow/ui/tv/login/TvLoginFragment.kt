@@ -1,33 +1,31 @@
-package com.lukakordzaia.streamflow.ui.phone.profile
+package com.lukakordzaia.streamflow.ui.tv.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import com.google.android.material.textfield.TextInputEditText
-import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.databinding.FragmentPhoneLoginBinding
+import android.widget.EditText
+import com.lukakordzaia.streamflow.databinding.FragmentTvLoginBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginFragment: BaseFragment<FragmentPhoneLoginBinding>() {
+class TvLoginFragment: BaseFragment<FragmentTvLoginBinding>() {
     private val profileViewModel: ProfileViewModel by viewModel()
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneLoginBinding
-        get() = FragmentPhoneLoginBinding::inflate
-
-
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvLoginBinding
+        get() = FragmentTvLoginBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topBarListener(resources.getString(R.string.authorization), binding.toolbar)
 
         fragmentListeners()
         fragmentObservers()
+        onEditorActionListener(binding.passwordInput)
     }
 
     private fun fragmentListeners() {
@@ -36,44 +34,44 @@ class LoginFragment: BaseFragment<FragmentPhoneLoginBinding>() {
             clearFocus(binding.passwordInput)
 
             if (!binding.usernameInput.text.isNullOrEmpty() && !binding.passwordInput.text.isNullOrEmpty()) {
-                profileViewModel.userLogin(PostLoginBody(
+                profileViewModel.userLogin(
+                    PostLoginBody(
                     3,
                     "password",
                     binding.passwordInput.text.toString(),
                     binding.usernameInput.text.toString()
-                ))
+                )
+                )
             }
         }
-
-        onEditorActionListener(binding.usernameInput)
-        onEditorActionListener(binding.passwordInput)
     }
 
     private fun fragmentObservers() {
         profileViewModel.loginLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {}
-                LoadingState.Status.SUCCESS -> requireActivity().onBackPressed()
+                LoadingState.Status.SUCCESS -> requireActivity().finish()
             }
         })
     }
 
-    private fun clearFocus(view: TextInputEditText) {
-        view.apply {
-            hideKeyboard()
-            clearFocus()
-        }
-    }
-
-    private fun onEditorActionListener(view: TextInputEditText) {
+    private fun onEditorActionListener(view: EditText) {
         view.setOnEditorActionListener { v, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     clearFocus(view)
+                    binding.authButton.requestFocus()
                     return@setOnEditorActionListener true
                 }
             }
             return@setOnEditorActionListener false
+        }
+    }
+
+    private fun clearFocus(view: EditText) {
+        view.apply {
+            hideKeyboard()
+            clearFocus()
         }
     }
 }

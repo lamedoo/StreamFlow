@@ -19,13 +19,13 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre.SingleGenreFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlestudio.SingleStudioFragment
-import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneWatchlistFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.NewMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment
+import com.lukakordzaia.streamflow.ui.phone.phonewatchlist.PhoneWatchlistFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesFragment
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerFragment

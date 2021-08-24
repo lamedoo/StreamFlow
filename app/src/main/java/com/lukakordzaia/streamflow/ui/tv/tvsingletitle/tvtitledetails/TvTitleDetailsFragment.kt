@@ -228,9 +228,16 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                     removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     removeTitle.setContentView(binding.root)
 
+                    if (authSharedPreferences.getLoginToken() != "") {
+                        binding.title.text = resources.getString(R.string.remove_from_list_title)
+                    }
+
                     binding.continueButton.setOnClickListener { _ ->
-                        tvTitleDetailsViewModel.deleteSingleContinueWatchingFromRoom(it.titleId)
-                        tvTitleDetailsViewModel.hideSingleContinueWatching(it.titleId)
+                        if (authSharedPreferences.getLoginToken() == "") {
+                            tvTitleDetailsViewModel.deleteSingleContinueWatchingFromRoom(it.titleId)
+                        } else {
+                            tvTitleDetailsViewModel.hideSingleContinueWatching(it.titleId)
+                        }
 
                         val intent = Intent(requireContext(), TvSingleTitleActivity::class.java)
                         intent.putExtra("titleId", it.titleId)

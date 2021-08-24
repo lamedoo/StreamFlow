@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.favorites
+package com.lukakordzaia.streamflow.ui.phone.phonewatchlist
 
 import android.app.Dialog
 import android.graphics.Color
@@ -9,20 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
-import com.lukakordzaia.streamflow.databinding.FragmentPhoneFavoritesBinding
+import com.lukakordzaia.streamflow.databinding.FragmentPhoneWatchlistBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PhoneWatchlistFragment : BaseFragment<FragmentPhoneFavoritesBinding>() {
+class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
     private val phoneWatchlistViewModel: PhoneWatchlistViewModel by viewModel()
     private lateinit var watchlistMoviesAdapter: WatchlistAdapter
     private lateinit var watchlistTvShowsAdapter: WatchlistAdapter
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneFavoritesBinding
-        get() = FragmentPhoneFavoritesBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneWatchlistBinding
+        get() = FragmentPhoneWatchlistBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

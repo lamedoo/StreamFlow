@@ -20,16 +20,15 @@ import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
 import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.databinding.TvSidebarBinding
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
-import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesActivity
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
+import com.lukakordzaia.streamflow.ui.tv.login.TvLoginActivity
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.streamflow.ui.tv.settings.TvSettingsActivity
 import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
+import com.lukakordzaia.streamflow.ui.tv.watchlist.TvWatchlistActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
@@ -57,12 +56,16 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
     lateinit var binding: VB
     abstract fun getViewBinding(): VB
 
+    override fun onStart() {
+        super.onStart()
+        profileViewModel.getUserData()
+        updateProfileUI(authSharedPreferences.getLoginToken() != "")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = getViewBinding()
         setContentView(binding.root)
-
-        fragmentObservers()
     }
 
     fun setSidebarClickListeners(view: TvSidebarBinding) {
@@ -80,7 +83,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         }
         view.favoritesButton.setOnClickListener {
             if (authSharedPreferences.getLoginToken() != "") {
-                startActivity(Intent(this, TvFavoritesActivity::class.java))
+                startActivity(Intent(this, TvWatchlistActivity::class.java))
             } else {
                 this.createToast("ფავორიტების სანახავად, გაიარეთ ავტორიზაცია")
             }
@@ -103,6 +106,11 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             startActivity(intent)
             sidebarAnimations.hideSideBar(view.tvSidebar)
         }
+        view.signIn.setOnClickListener {
+            val intent = Intent(this, TvLoginActivity::class.java)
+            startActivity(intent)
+            sidebarAnimations.hideSideBar(view.tvSidebar)
+        }
     }
 
     fun setCurrentButton(currentButton: View) {
@@ -119,37 +127,9 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
     }
 
     private fun fragmentListeners() {
-        profileViewModel.getUserData()
-        updateGoogleUI(authSharedPreferences.getLoginToken() != "")
-
-        signInButton.setOnClickListener {
-            profileViewModel.userLogin(
-                PostLoginBody(
-                3,
-                "password",
-                "Irmisnaxtomi12.",
-                "kordzaialuka@gmail.com"
-            )
-            )
-        }
-
         signOutButton.setOnClickListener {
             profileViewModel.userLogout()
         }
-    }
-
-    private fun fragmentObservers() {
-        profileViewModel.loginLoader.observe(this, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {}
-                LoadingState.Status.SUCCESS -> {
-                    val intent = Intent(this, TvActivity::class.java).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                    this.startActivity(intent)
-                }
-            }
-        })
     }
 
     private fun showSyncDialog() {
@@ -178,7 +158,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         })
     }
 
-    private fun updateGoogleUI(isLoggedIn: Boolean) {
+    private fun updateProfileUI(isLoggedIn: Boolean) {
         profilePhoto.setVisibleOrGone(isLoggedIn)
         signInButton.setVisibleOrGone(!isLoggedIn)
         signOutButton.setVisibleOrGone(isLoggedIn)

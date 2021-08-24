@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/phoneFavoritesFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.favorites.PhoneWatchlistFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.phonewatchlist.PhoneWatchlistFragment"
         android:label="PhoneFavoritesFragment"
-        tools:layout="@layout/fragment_phone_favorites">
+        tools:layout="@layout/fragment_phone_watchlist">
         <action
             android:id="@+id/action_favoritesFragment_to_single_title_fragment_nav"
             app:destination="@id/single_title_fragment_nav">

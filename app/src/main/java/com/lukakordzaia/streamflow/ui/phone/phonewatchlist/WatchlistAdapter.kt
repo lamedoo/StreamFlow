@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.favorites
+package com.lukakordzaia.streamflow.ui.phone.phonewatchlist
 
 import android.content.Context
 import android.view.LayoutInflater

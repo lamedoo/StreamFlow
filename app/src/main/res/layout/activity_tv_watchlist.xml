@@ -20,7 +20,7 @@
         layout="@layout/tv_top_title_header"/>
 
     <fragment
-        android:name="com.lukakordzaia.streamflow.ui.tv.favorites.TvFavoritesFragment"
+        android:name="com.lukakordzaia.streamflow.ui.tv.watchlist.TvWatchlistFragment"
         android:id="@+id/tv_main_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"

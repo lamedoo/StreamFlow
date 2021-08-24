@@ -77,7 +77,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/icon_google"
+            android:src="@drawable/icon_account"
             android:tint="@color/tv_sidebar_text_focused"
             android:duplicateParentState="true"
             tools:ignore="UseAppTint" />
