@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneContinueWatchingInfoBinding
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -48,6 +49,10 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
             val removeTitle = Dialog(requireContext())
             removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             removeTitle.setContentView(binding.root)
+
+            if (authSharedPreferences.getLoginToken() != "") {
+                binding.title.text = resources.getString(R.string.remove_from_list_title)
+            }
 
            binding.continueButton.setOnClickListener {
                 homeViewModel.deleteContinueWatching(args.titleId)

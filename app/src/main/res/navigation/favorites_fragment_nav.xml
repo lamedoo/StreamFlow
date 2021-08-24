@@ -18,13 +18,9 @@
                 app:argType="integer" />
         </action>
         <action
-            android:id="@+id/action_phoneFavoritesFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            android:id="@+id/action_phoneFavoritesFragment_to_profile_fragment_nav"
+            app:destination="@id/profile_fragment_nav" />
     </fragment>
     <include app:graph="@navigation/single_title_fragment_nav" />
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment"
-        android:label="fragment_phone_profile"
-        tools:layout="@layout/fragment_phone_profile" />
+    <include app:graph="@navigation/profile_fragment_nav" />
 </navigation>

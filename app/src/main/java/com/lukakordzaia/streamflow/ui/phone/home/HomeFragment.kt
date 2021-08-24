@@ -55,7 +55,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
 
     private fun fragmentListeners() {
         binding.toolbar.homeProfile.setOnClickListener {
-            navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
+            navController(HomeFragmentDirections.actionHomeFragmentToProfileFragmentNav())
         }
 
         binding.newMoviesHeader.setOnClickListener {
@@ -242,7 +242,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.profile_button -> {
-                navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
+                navController(HomeFragmentDirections.actionHomeFragmentToProfileFragmentNav())
             }
         }
         return super.onOptionsItemSelected(item)

@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="invisible"
-        tools:visibility="visible"/>
+        tools:visibility="gone"/>
 
     <TextView
         android:id="@+id/episode_name"
@@ -45,6 +45,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="invisible"
         tools:visibility="visible"/>
+
+    <View
+        android:layout_width="200dp"
+        android:layout_height="120dp"
+        android:background="@drawable/background_rv_continue_watching"
+        app:layout_constraintEnd_toEndOf="@id/card_poster"
+        app:layout_constraintTop_toTopOf="@id/card_poster"
+        app:layout_constraintBottom_toBottomOf="@id/card_poster"/>
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/item_seekBar"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:thumbTint="@color/general_text_color"
+        android:thumb="@color/accent_color"
+        android:progressTint="@color/accent_color"
+        tools:progress="50"
+        android:visibility="visible"
+        tools:visibility="visible"
+        android:progressBackgroundTint="@color/general_text_color"
+        app:layout_constraintStart_toStartOf="@id/card_poster"
+        app:layout_constraintEnd_toEndOf="@id/card_poster"
+        app:layout_constraintBottom_toBottomOf="@id/card_poster"/>
 
     <TextView
         android:id="@+id/episode_number"

@@ -31,7 +31,7 @@ class PhoneWatchlistViewModel : BaseViewModel() {
     }
 
     fun onProfileButtonPressed() {
-        navigateToNewFragment(PhoneWatchlistFragmentDirections.actionPhoneFavoritesFragmentToProfileFragment())
+        navigateToNewFragment(PhoneWatchlistFragmentDirections.actionPhoneFavoritesFragmentToProfileFragmentNav())
     }
 
     fun getUserWatchlist() {

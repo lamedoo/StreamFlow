@@ -51,7 +51,7 @@
                     android:backgroundTint="@color/accent_color"
                     android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
                     android:padding="10dp"
-                    android:text="პროფილის პანელი"
+                    android:text="profile_panel"
                     android:textColor="@color/text_on_accent_color" />
 
             </LinearLayout>

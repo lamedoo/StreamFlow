@@ -74,8 +74,20 @@ class TvTitleFilesViewModel : BaseViewModel() {
                     _availableLanguages.value = fetchLanguages
 
                     val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
-                    data.forEach {
-                        getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+                    if (authSharedPreferences.getLoginToken() == "") {
+                        data.forEach {
+                            getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+                        }
+                    } else {
+                        data.forEach {
+                            getEpisodeNames.add(TitleEpisodes(
+                                it.episode,
+                                it.title,
+                                it.covers.x1050!!,
+                                it.userWatch.duration,
+                                it.userWatch.progress
+                            ))
+                        }
                     }
                     _episodeNames.value = getEpisodeNames
                 }

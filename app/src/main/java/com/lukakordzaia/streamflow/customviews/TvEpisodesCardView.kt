@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.lukakordzaia.streamflow.databinding.TvDetailsEpisodesItemBinding
 import com.lukakordzaia.streamflow.utils.setImage
+import com.lukakordzaia.streamflow.utils.setVisible
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
@@ -38,5 +39,14 @@ class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLay
 
     fun setIndicatorDrawable(drawable: Drawable?) {
         binding.currentIndicator.setImageDrawable(drawable)
+    }
+
+    fun setSeekbarVisibility(visibility: Boolean) {
+        binding.itemSeekBar.setVisible()
+    }
+
+    fun setProgress(progress: Int, max: Int) {
+        binding.itemSeekBar.progress = progress
+        binding.itemSeekBar.max = max
     }
 }

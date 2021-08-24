@@ -31,6 +31,11 @@ class TvEpisodesPresenter(private val context: Context, private val currentEpiso
         cardView.setName(episode.episodeName)
         cardView.setPoster(episode.episodePoster)
 
+        if (episode.titleDuration != 0.toLong()) {
+            cardView.setSeekbarVisibility(true)
+            cardView.setProgress(episode.watchDuration!!.toInt(), episode.titleDuration!!.toInt())
+        }
+
         cardView.setOnFocusChangeListener { _, hasFocus ->
             cardView.posterDimVisibility(hasFocus)
             cardView.nameVisibility(hasFocus)

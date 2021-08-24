@@ -36,7 +36,6 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
     fun checkAuthDatabase(titleId: Int) {
         if (authSharedPreferences.getLoginToken() == "") {
             getSingleContinueWatchingFromRoom(titleId)
-        } else {
         }
     }
 

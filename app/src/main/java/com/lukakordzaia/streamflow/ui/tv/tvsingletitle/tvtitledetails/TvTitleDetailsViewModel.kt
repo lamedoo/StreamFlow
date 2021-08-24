@@ -108,7 +108,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         viewModelScope.launch {
             when (val hide = environment.homeRepository.hideTitleContinueWatching(titleId)) {
                 is Result.Success -> {
-                    newToastMessage("წაიშალა განაგრძეთ ყურების სიიდან")
+                    newToastMessage("დაიმალა განაგრძეთ ყურების სიიდან")
                     hideContinueWatchingLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {

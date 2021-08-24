@@ -19,7 +19,6 @@ import com.lukakordzaia.streamflow.databinding.DialogConnectTraktvAlertBinding
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
@@ -50,7 +49,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         super.onStart()
 
         profileViewModel.getUserData()
-        updateGoogleUI(authSharedPreferences.getLoginToken() != "")
+        updateProfileUI(authSharedPreferences.getLoginToken() != "")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,12 +68,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     private fun fragmentListeners() {
 
         binding.gSignIn.setOnClickListener {
-            profileViewModel.userLogin(PostLoginBody(
-                3,
-                "password",
-                "Irmisnaxtomi12.",
-                "kordzaialuka@gmail.com"
-            ))
+            navController(ProfileFragmentDirections.actionProfileFragmentToLoginBottomSheetFragment())
         }
 
         binding.gSignOut.setOnClickListener {
@@ -206,12 +200,14 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
 //        }
     }
 
-    private fun updateGoogleUI(isLoggedIn: Boolean) {
+    private fun updateProfileUI(isLoggedIn: Boolean) {
         binding.profileContainer.setVisibleOrGone(isLoggedIn)
         binding.gSignIn.setVisibleOrGone(!isLoggedIn)
         binding.gSignOut.setVisibleOrGone(isLoggedIn)
         binding.lastLine.setVisibleOrGone(isLoggedIn)
         binding.firstLine.setVisibleOrGone(!isLoggedIn)
+        binding.clearContainer.setVisibleOrGone(!isLoggedIn)
+        binding.historyLine.setVisibleOrGone(!isLoggedIn)
 
         if (isLoggedIn) {
             profileViewModel.userData.observe(viewLifecycleOwner, {
@@ -219,9 +215,5 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                 Glide.with(this).load(it.avatar.large).into(binding.profilePhoto)
             })
         }
-    }
-
-    companion object {
-        const val RC_SIGN_IN = 13
     }
 }
