@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.RvChooseDetailsEpisodesItemBinding
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
 import com.lukakordzaia.streamflow.utils.setImage
-import com.lukakordzaia.streamflow.utils.setVisible
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 class TvShowBottomSheetEpisodesAdapter(
@@ -56,8 +55,8 @@ class TvShowBottomSheetEpisodesAdapter(
 
             view.itemPoster.setImage(model.episodePoster, false)
 
-            if (model.titleDuration != 0.toLong()) {
-                view.itemSeekBar.setVisible()
+            view.itemSeekBar.setVisibleOrGone(model.titleDuration?.toInt() != 0)
+            if (model.titleDuration?.toInt() != 0) {
                 view.itemSeekBar.max = model.titleDuration!!.toInt()
                 view.itemSeekBar.progress = model.watchDuration!!.toInt()
             }

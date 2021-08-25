@@ -22,18 +22,25 @@ class VideoPlayerActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        val videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
+
+
         val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_fragment) as VideoPlayerFragment
         parentFragment.onStop()
 
-        if (authSharedPreferences.getLoginToken() != "") {
-            videoPlayerViewModel.saveLoader.observe(this, {
-                when (it.status) {
-                    LoadingState.Status.RUNNING -> {}
-                    LoadingState.Status.SUCCESS -> {
-                        super.onBackPressed()
+        if (videoPlayerData.trailerUrl == null) {
+            if (authSharedPreferences.getLoginToken() != "") {
+                videoPlayerViewModel.saveLoader.observe(this, {
+                    when (it.status) {
+                        LoadingState.Status.RUNNING -> {}
+                        LoadingState.Status.SUCCESS -> {
+                            super.onBackPressed()
+                        }
                     }
-                }
-            })
+                })
+            } else {
+                super.onBackPressed()
+            }
         } else {
             super.onBackPressed()
         }

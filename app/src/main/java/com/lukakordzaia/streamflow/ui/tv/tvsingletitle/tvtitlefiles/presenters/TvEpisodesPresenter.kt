@@ -31,8 +31,8 @@ class TvEpisodesPresenter(private val context: Context, private val currentEpiso
         cardView.setName(episode.episodeName)
         cardView.setPoster(episode.episodePoster)
 
-        if (episode.titleDuration != 0.toLong()) {
-            cardView.setSeekbarVisibility(true)
+        cardView.setSeekbarVisibility(episode.titleDuration?.toInt() != 0)
+        if (episode.titleDuration?.toInt() != 0) {
             cardView.setProgress(episode.watchDuration!!.toInt(), episode.titleDuration!!.toInt())
         }
 
