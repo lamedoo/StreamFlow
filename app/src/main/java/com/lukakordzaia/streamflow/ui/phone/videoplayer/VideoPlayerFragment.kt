@@ -285,6 +285,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
                 TitleMediaItemsUri(MediaItem.fromUri(
                     Uri.parse(trailerUrl)), "0")
             ))
+            subtitleFunctions(false)
         } else {
             videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
