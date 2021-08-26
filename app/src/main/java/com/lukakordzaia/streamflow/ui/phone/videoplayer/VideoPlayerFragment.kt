@@ -112,12 +112,6 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (Util.SDK_INT < 24) {
-        }
-    }
-
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
             requireActivity().onBackPressed()

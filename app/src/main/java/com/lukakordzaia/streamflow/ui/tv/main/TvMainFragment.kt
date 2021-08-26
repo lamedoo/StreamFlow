@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -42,6 +43,7 @@ class TvMainFragment : BrowseSupportFragment() {
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var metrics: DisplayMetrics
     private lateinit var backgroundManager: BackgroundManager
+    private var rowPosition = 0
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
@@ -61,6 +63,18 @@ class TvMainFragment : BrowseSupportFragment() {
     override fun onStart() {
         super.onStart()
         homeViewModel.checkAuthDatabase()
+
+        homeViewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> {}
+                LoadingState.Status.SUCCESS -> {
+                    Handler(Looper.myLooper()!!).postDelayed({
+                        Log.d("dasdasdasdasdasd", rowPosition.toString())
+                        rowsSupportFragment.setSelectedPosition(rowPosition, true, ListRowPresenter.SelectItemViewHolderTask(0))
+                    }, 500)
+                }
+            }
+        })
 
     }
 
@@ -121,6 +135,8 @@ class TvMainFragment : BrowseSupportFragment() {
         prepareBackgroundManager()
         setupUIElements()
         setupEventListeners()
+
+        fragmentObservers()
     }
 
     private fun initRowsAdapter() {
@@ -212,6 +228,12 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
+    private fun fragmentObservers() {
+        homeViewModel.tvSelectedRow.observe(viewLifecycleOwner, { position ->
+            rowPosition = position
+        })
+    }
+
     private fun prepareBackgroundManager() {
         backgroundManager = BackgroundManager.getInstance(activity).apply {
             attach(activity?.window)
@@ -282,6 +304,10 @@ class TvMainFragment : BrowseSupportFragment() {
                 onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment.selectedPosition)
             } else {
                 onFirstItem?.isFirstItem(false, null, null)
+            }
+
+            if (rowsSupportFragment.selectedPosition != 0 || rowsSupportFragment.selectedPosition != 1) {
+                homeViewModel.setTvRow(rowsSupportFragment.selectedPosition)
             }
         }
     }

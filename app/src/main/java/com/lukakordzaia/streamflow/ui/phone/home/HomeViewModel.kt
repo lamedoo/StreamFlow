@@ -41,6 +41,9 @@ class HomeViewModel : BaseViewModel() {
     private val _contWatchingData = MediatorLiveData<List<ContinueWatchingRoom>>()
     val contWatchingData: LiveData<List<ContinueWatchingRoom>> = _contWatchingData
 
+    private val _tvSelectedRow = MutableLiveData<Int>(0)
+    val tvSelectedRow: LiveData<Int> = _tvSelectedRow
+
     init {
         fetchContent(1)
     }
@@ -264,5 +267,9 @@ class HomeViewModel : BaseViewModel() {
         getNewMovies(page)
         getTopMovies(page)
         getTopTvShows(page)
+    }
+
+    fun setTvRow(row: Int) {
+        _tvSelectedRow.value = row
     }
 }
