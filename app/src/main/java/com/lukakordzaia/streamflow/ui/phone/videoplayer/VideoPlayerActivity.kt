@@ -10,6 +10,7 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.EventObserver
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,9 +25,13 @@ class VideoPlayerActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
 
+        videoPlayerViewModel.backPress.observe(this, EventObserver {
+            if (it) {
+            }
+        })
 
         val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_fragment) as VideoPlayerFragment
-        parentFragment.onStop()
+        parentFragment.releasePlayer()
 
         if (videoPlayerData.trailerUrl == null) {
             if (authSharedPreferences.getLoginToken() != "") {

@@ -82,7 +82,13 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
 
         if (videoPlayerData.trailerUrl == null) {
             videoPlayerViewModel.getTitleFiles(
-                VideoPlayerInfo(videoPlayerData.titleId,  videoPlayerData.isTvShow,  videoPlayerData.chosenSeason, videoPlayerData.chosenEpisode, videoPlayerData.chosenLanguage)
+                VideoPlayerInfo(
+                    videoPlayerData.titleId,
+                    videoPlayerData.isTvShow,
+                    videoPlayerData.chosenSeason,
+                    videoPlayerData.chosenEpisode,
+                    videoPlayerData.chosenLanguage
+                )
             )
             videoPlayerViewModel.getSingleTitleData(videoPlayerData.titleId)
         }
@@ -109,13 +115,12 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
     override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
-            releasePlayer()
         }
     }
 
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
-            releasePlayer()
+            requireActivity().onBackPressed()
         }
         super.onStop()
     }
@@ -300,7 +305,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         mediaPlayer.initPlayer(binding.phoneTitlePlayer, 0, watchedTime)
     }
 
-    private fun releasePlayer() {
+    fun releasePlayer() {
         mediaPlayer.releasePlayer {
             videoPlayerViewModel.setVideoPlayerInfo(it)
         }
