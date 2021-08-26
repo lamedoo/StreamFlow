@@ -23,9 +23,19 @@ class TvLoginFragment: BaseFragment<FragmentTvLoginBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setCredentials()
         fragmentListeners()
         fragmentObservers()
         onEditorActionListener(binding.passwordInput)
+    }
+
+    private fun setCredentials() {
+        if (authSharedPreferences.getUsername() != "") {
+            binding.usernameInput.setText(authSharedPreferences.getUsername())
+        }
+        if (authSharedPreferences.getPassword() != "") {
+            binding.passwordInput.setText(authSharedPreferences.getPassword())
+        }
     }
 
     private fun fragmentListeners() {

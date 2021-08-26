@@ -5,6 +5,8 @@ import android.content.Context
 class AuthSharedPreferences(context: Context) {
     private val loginTokenDefValue = ""
     private val loginRefreshTokenDefValue = ""
+    private val usernameDefValue = ""
+    private val passwordDefValue = ""
     private val traktTokenDefValue = ""
     private val traktRefreshTokenDefValue = ""
     private val authPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -26,6 +28,24 @@ class AuthSharedPreferences(context: Context) {
 
     fun getLoginRefreshToken(): String? {
         return authPrefs.getString(LOGIN_REFRESH_TOKEN, loginRefreshTokenDefValue)
+    }
+
+    fun saveUsername(username: String) {
+        authEditor.putString(USERNAME, username)
+        authEditor.apply()
+    }
+
+    fun getUsername(): String? {
+        return authPrefs.getString(USERNAME, usernameDefValue)
+    }
+
+    fun savePassword(password: String) {
+        authEditor.putString(PASSWORD, password)
+        authEditor.apply()
+    }
+
+    fun getPassword(): String? {
+        return authPrefs.getString(PASSWORD, passwordDefValue)
     }
 
     fun saveTraktToken(accessToken: String) {
@@ -50,6 +70,8 @@ class AuthSharedPreferences(context: Context) {
         const val PREF_NAME = "Auth"
         const val LOGIN_TOKEN = "login token"
         const val LOGIN_REFRESH_TOKEN = "login refresh token"
+        const val USERNAME = "username"
+        const val PASSWORD = "password"
         const val TRAKT_TOKEN = "trakt token"
         const val TRAKT_REFRESH_TOKEN = "trakt refresh token"
     }

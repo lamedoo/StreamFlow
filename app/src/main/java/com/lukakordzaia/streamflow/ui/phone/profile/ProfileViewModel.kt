@@ -46,6 +46,8 @@ class ProfileViewModel : BaseViewModel() {
 
                     authSharedPreferences.saveLoginToken(data.accessToken)
                     authSharedPreferences.saveLoginRefreshToken(data.refreshToken)
+                    authSharedPreferences.saveUsername(loginBody.username)
+                    authSharedPreferences.savePassword(loginBody.password)
 
                     loginLoader.value = LoadingState.LOADED
                 }

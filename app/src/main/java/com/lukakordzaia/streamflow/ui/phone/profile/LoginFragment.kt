@@ -26,8 +26,18 @@ class LoginFragment: BaseFragment<FragmentPhoneLoginBinding>() {
         super.onViewCreated(view, savedInstanceState)
         topBarListener(resources.getString(R.string.authorization), binding.toolbar)
 
+        setCredentials()
         fragmentListeners()
         fragmentObservers()
+    }
+
+    private fun setCredentials() {
+        if (authSharedPreferences.getUsername() != "") {
+            binding.usernameInput.setText(authSharedPreferences.getUsername())
+        }
+        if (authSharedPreferences.getPassword() != "") {
+            binding.passwordInput.setText(authSharedPreferences.getPassword())
+        }
     }
 
     private fun fragmentListeners() {
