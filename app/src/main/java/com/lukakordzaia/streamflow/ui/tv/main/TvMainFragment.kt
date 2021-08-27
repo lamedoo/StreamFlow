@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +42,6 @@ class TvMainFragment : BrowseSupportFragment() {
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var metrics: DisplayMetrics
     private lateinit var backgroundManager: BackgroundManager
-    private var rowPosition = 0
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
@@ -62,17 +60,16 @@ class TvMainFragment : BrowseSupportFragment() {
 
     override fun onStart() {
         super.onStart()
-        homeViewModel.checkAuthDatabase()
+        homeViewModel.tvRefresh.observe(viewLifecycleOwner, {
+            if (it) {
+                homeViewModel.checkAuthDatabase()
+            }
+        })
 
         homeViewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {}
-                LoadingState.Status.SUCCESS -> {
-                    Handler(Looper.myLooper()!!).postDelayed({
-                        Log.d("dasdasdasdasdasd", rowPosition.toString())
-                        rowsSupportFragment.setSelectedPosition(rowPosition, true, ListRowPresenter.SelectItemViewHolderTask(0))
-                    }, 500)
-                }
+                LoadingState.Status.SUCCESS -> {}
             }
         })
 
@@ -135,8 +132,6 @@ class TvMainFragment : BrowseSupportFragment() {
         prepareBackgroundManager()
         setupUIElements()
         setupEventListeners()
-
-        fragmentObservers()
     }
 
     private fun initRowsAdapter() {
@@ -228,12 +223,6 @@ class TvMainFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun fragmentObservers() {
-        homeViewModel.tvSelectedRow.observe(viewLifecycleOwner, { position ->
-            rowPosition = position
-        })
-    }
-
     private fun prepareBackgroundManager() {
         backgroundManager = BackgroundManager.getInstance(activity).apply {
             attach(activity?.window)
@@ -261,12 +250,16 @@ class TvMainFragment : BrowseSupportFragment() {
                 row: Row
         ) {
             if (item is SingleTitleModel) {
+                homeViewModel.setTvRefresh(false)
+
                 val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                     putExtra("titleId", item.id)
                     putExtra("isTvShow", item.isTvShow)
                 }
                 activity?.startActivity(intent)
             } else if (item is ContinueWatchingModel) {
+                homeViewModel.setTvRefresh(true)
+
                 val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                     putExtra("titleId", item.id)
                     putExtra("isTvShow", item.isTvShow)
@@ -274,6 +267,8 @@ class TvMainFragment : BrowseSupportFragment() {
                 }
                 activity?.startActivity(intent)
             } else if (item is TvCategoriesList) {
+                homeViewModel.setTvRefresh(false)
+
                 when (item.categoriesId) {
                     0 -> {
                         val intent = Intent(context, TvCatalogueActivity::class.java)
@@ -304,10 +299,6 @@ class TvMainFragment : BrowseSupportFragment() {
                 onFirstItem?.isFirstItem(true, rowsSupportFragment, rowsSupportFragment.selectedPosition)
             } else {
                 onFirstItem?.isFirstItem(false, null, null)
-            }
-
-            if (rowsSupportFragment.selectedPosition != 0 || rowsSupportFragment.selectedPosition != 1) {
-                homeViewModel.setTvRow(rowsSupportFragment.selectedPosition)
             }
         }
     }
