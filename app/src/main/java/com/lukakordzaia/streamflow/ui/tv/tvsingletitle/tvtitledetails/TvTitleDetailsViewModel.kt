@@ -89,6 +89,40 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         }
     }
 
+    fun getContinueWatchingData(titleId: Int) {
+        viewModelScope.launch {
+            when (val info = environment.singleTitleRepository.getSingleTitleData(titleId)) {
+                is Result.Success -> {
+                    val data = info.data
+
+                    if (authSharedPreferences.getLoginToken() == "") {
+                        getSingleContinueWatchingFromRoom(titleId)
+                    } else {
+                        if (data.data.userWatch?.data?.season != null) {
+                            _continueWatchingDetails.value = ContinueWatchingRoom(
+                                titleId = titleId,
+                                language = data.data.userWatch.data.language!!,
+                                watchedDuration = data.data.userWatch.data.progress!!,
+                                titleDuration = data.data.userWatch.data.duration!!,
+                                isTvShow = data.data.isTvShow,
+                                season = data.data.userWatch.data.season,
+                                episode = data.data.userWatch.data.episode!!
+                            )
+                        } else {
+                            _continueWatchingDetails.value = null
+                        }
+                    }
+                }
+                is Result.Error -> {
+                    newToastMessage(info.exception)
+                }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
+            }
+        }
+    }
+
     private fun getSingleContinueWatchingFromRoom(titleId: Int) {
         val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
 

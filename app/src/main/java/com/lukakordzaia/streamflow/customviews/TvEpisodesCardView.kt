@@ -7,11 +7,12 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.lukakordzaia.streamflow.databinding.TvDetailsEpisodesItemBinding
 import com.lukakordzaia.streamflow.utils.setImage
-import com.lukakordzaia.streamflow.utils.setVisible
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     val binding = TvDetailsEpisodesItemBinding.inflate(LayoutInflater.from(context), this, true)
+    var progress = 0
+    var max = 0
 
     fun setPoster(poster: String?) {
         binding.cardPoster.setImage(poster, false)
@@ -42,11 +43,16 @@ class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLay
     }
 
     fun setSeekbarVisibility(visibility: Boolean) {
-        binding.itemSeekBar.setVisible()
+        binding.itemSeekBar.setVisibleOrGone(visibility)
     }
 
     fun setProgress(progress: Int, max: Int) {
-        binding.itemSeekBar.progress = progress
-        binding.itemSeekBar.max = max
+        this.progress = progress
+        this.max = max
+
+        binding.itemSeekBar.progress = this.progress
+        binding.itemSeekBar.max = this.max
+
+        invalidate()
     }
 }

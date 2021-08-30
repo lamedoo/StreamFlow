@@ -105,13 +105,12 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
-            releasePlayer()
         }
     }
 
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
-            releasePlayer()
+            requireActivity().onBackPressed()
         }
         super.onStop()
     }
@@ -289,7 +288,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
         mediaPlayer.initPlayer(binding.tvTitlePlayer, 0, watchedTime)
     }
 
-    private fun releasePlayer() {
+    fun releasePlayer() {
         mediaPlayer.releasePlayer {
             videoPlayerViewModel.setVideoPlayerInfo(it)
         }

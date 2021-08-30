@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvVideoPlayerBinding
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
@@ -220,19 +221,25 @@ class TvVideoPlayerActivity : FragmentActivity() {
             if (tv_title_player.isControllerVisible) {
                 tv_title_player.hideController()
             } else {
+                val videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
+
                 val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
-                parentFragment.onStop()
+                parentFragment.releasePlayer()
 
-
-                if (authSharedPreferences.getLoginToken() != "") {
-                    videoPlayerViewModel.saveLoader.observe(this, {
-                        when (it.status) {
-                            LoadingState.Status.RUNNING -> {}
-                            LoadingState.Status.SUCCESS -> {
-                                super.onBackPressed()
+                if (videoPlayerData.trailerUrl == null) {
+                    if (authSharedPreferences.getLoginToken() != "") {
+                        videoPlayerViewModel.saveLoader.observe(this, {
+                            when (it.status) {
+                                LoadingState.Status.RUNNING -> {
+                                }
+                                LoadingState.Status.SUCCESS -> {
+                                    super.onBackPressed()
+                                }
                             }
-                        }
-                    })
+                        })
+                    } else {
+                        super.onBackPressed()
+                    }
                 } else {
                     super.onBackPressed()
                 }
@@ -248,8 +255,6 @@ class TvVideoPlayerActivity : FragmentActivity() {
             exo_pause.requestFocus()
         }
     }
-
-    fun getCurrentFragment() = currentFragment
 
     private fun detailsFragment() {
         tv_title_player.player!!.pause()

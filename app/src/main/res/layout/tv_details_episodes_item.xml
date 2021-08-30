@@ -54,7 +54,7 @@
         app:layout_constraintTop_toTopOf="@id/card_poster"
         app:layout_constraintBottom_toBottomOf="@id/card_poster"/>
 
-    <androidx.appcompat.widget.AppCompatSeekBar
+    <SeekBar
         android:id="@+id/item_seekBar"
         android:layout_width="200dp"
         android:layout_height="20dp"
@@ -62,7 +62,7 @@
         android:thumb="@color/accent_color"
         android:progressTint="@color/accent_color"
         tools:progress="50"
-        android:visibility="visible"
+        android:visibility="invisible"
         tools:visibility="visible"
         android:progressBackgroundTint="@color/general_text_color"
         app:layout_constraintStart_toStartOf="@id/card_poster"
