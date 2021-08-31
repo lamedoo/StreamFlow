@@ -20,6 +20,7 @@ import com.lukakordzaia.streamflow.animations.TvSidebarAnimations
 import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.databinding.TvSidebarBinding
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
@@ -130,6 +131,19 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         signOutButton.setOnClickListener {
             profileViewModel.userLogout()
         }
+
+        profileViewModel.loginLoader.observe(this, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> {}
+                LoadingState.Status.SUCCESS -> {
+                    val intent = Intent(this, TvActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    startActivity(intent)
+                }
+            }
+        })
     }
 
     private fun showSyncDialog() {
