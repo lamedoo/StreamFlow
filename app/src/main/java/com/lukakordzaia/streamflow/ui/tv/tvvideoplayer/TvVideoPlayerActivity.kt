@@ -26,10 +26,14 @@ class TvVideoPlayerActivity : FragmentActivity() {
     private var ffIncrement = 10000
     private var rewIncrement = 10000
 
+    private lateinit var videoPlayerData: VideoPlayerData
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTvVideoPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
 
         supportFragmentManager.beginTransaction()
             .add(R.id.tv_video_player_nav_host, TvVideoPlayerFragment())
@@ -97,7 +101,6 @@ class TvVideoPlayerActivity : FragmentActivity() {
                                 setCurrentFragment(VIDEO_DETAILS)
                                 detailsFragment()
 
-                                val videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
                                 val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
                                 parentFragment.releasePlayer()
 
@@ -241,8 +244,6 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 if (tv_title_player.isControllerVisible) {
                     tv_title_player.hideController()
                 } else {
-                    val videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
-
                     val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
                     parentFragment.releasePlayer()
 

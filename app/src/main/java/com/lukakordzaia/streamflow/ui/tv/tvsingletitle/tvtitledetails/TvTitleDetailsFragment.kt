@@ -51,7 +51,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         fragmentObservers(titleId)
         favoriteContainer(titleId)
         titleDetails(titleId, isTvShow)
-        checkDatabase(continueWatching)
+        checkContinueWatching(continueWatching)
     }
 
     override fun onStart() {
@@ -214,7 +214,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         })
     }
 
-    private fun checkDatabase(continueWatching: Boolean?) {
+    private fun checkContinueWatching(continueWatching: Boolean?) {
         binding.deleteButton.setGone()
         binding.playButton.requestFocus()
         binding.continueButton.setGone()
@@ -280,7 +280,12 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                 binding.continueButton.setVisible()
                 binding.continueButton.requestFocus()
                 binding.playButton.text = "თავიდან ყურება"
-                binding.deleteButton.setVisible()
+
+                if (authSharedPreferences.getLoginToken() == "") {
+                    binding.deleteButton.setVisible()
+                } else {
+                    binding.deleteButton.setVisibleOrGone(titleInfo.visibility!!)
+                }
 
                 if (continueWatching != null) {
                     tvTitleDetailsViewModel.startedWatching.observe(viewLifecycleOwner, {

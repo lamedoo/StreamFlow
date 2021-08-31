@@ -94,7 +94,8 @@ fun List<GetTitlesResponse.Data>.toTitleListModel(): List<SingleTitleModel> {
             watchedDuration = it.userWatch?.data?.progress,
             currentSeason = it.userWatch?.data?.season,
             currentEpisode = it.userWatch?.data?.episode,
-            currentLanguage = it.userWatch?.data?.language
+            currentLanguage = it.userWatch?.data?.language,
+            visibility = it.userWatch?.data?.visible
         )
     }
 }
@@ -127,7 +128,8 @@ fun GetSingleTitleResponse.toSingleTitleModel(): SingleTitleModel {
         watchedDuration = title.userWatch?.data?.progress,
         currentSeason = title.userWatch?.data?.season,
         currentEpisode = title.userWatch?.data?.episode,
-        currentLanguage = title.userWatch?.data?.language
+        currentLanguage = title.userWatch?.data?.language,
+        visibility = title.userWatch?.data?.visible
     )
 }
 
@@ -156,7 +158,8 @@ fun List<GetUserWatchlistResponse.Data>.toWatchListModel(): List<SingleTitleMode
             watchedDuration = it.userWatch?.data?.progress,
             currentSeason = it.userWatch?.data?.season,
             currentEpisode = it.userWatch?.data?.episode,
-            currentLanguage = it.userWatch?.data?.language
+            currentLanguage = it.userWatch?.data?.language,
+            visibility = it.userWatch?.data?.visible
         )
     }
 }

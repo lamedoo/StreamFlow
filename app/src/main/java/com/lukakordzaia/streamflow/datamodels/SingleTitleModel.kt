@@ -21,5 +21,6 @@ data class SingleTitleModel(
     val watchedDuration: Long?,
     val currentSeason: Int?,
     val currentEpisode: Int?,
-    val currentLanguage: String?
+    val currentLanguage: String?,
+    val visibility: Boolean?
 )
