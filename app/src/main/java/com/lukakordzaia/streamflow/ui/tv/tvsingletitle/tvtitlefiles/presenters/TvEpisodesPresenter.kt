@@ -33,7 +33,8 @@ class TvEpisodesPresenter(private val context: Context, private val currentEpiso
 
         cardView.setSeekbarVisibility(episode.titleDuration?.toInt() != 0)
         if (episode.titleDuration?.toInt() != 0) {
-            cardView.setProgress(episode.watchDuration!!.toInt(), episode.titleDuration!!.toInt())
+            cardView.binding.itemSeekBar.max =  episode.titleDuration!!.toInt()
+            cardView.binding.itemSeekBar.progress = episode.watchDuration!!.toInt()
         }
 
         cardView.setOnFocusChangeListener { _, hasFocus ->

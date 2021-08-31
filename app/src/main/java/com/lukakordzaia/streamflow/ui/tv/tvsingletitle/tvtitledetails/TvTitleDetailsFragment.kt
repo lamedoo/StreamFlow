@@ -183,7 +183,6 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
     }
 
     private fun titleDetails(titleId: Int, isTvShow: Boolean) {
-        tvTitleDetailsViewModel.getSingleTitleData(titleId)
         tvTitleDetailsViewModel.getSingleTitleFiles(titleId)
 
         tvTitleDetailsViewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
