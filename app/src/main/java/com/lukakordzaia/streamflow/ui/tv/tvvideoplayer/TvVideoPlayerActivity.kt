@@ -36,7 +36,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
         videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.tv_video_player_nav_host, TvVideoPlayerFragment())
+            .replace(R.id.tv_video_player_nav_host, TvVideoPlayerFragment())
             .commit()
     }
 
@@ -102,23 +102,9 @@ class TvVideoPlayerActivity : FragmentActivity() {
                                 detailsFragment()
 
                                 val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
-                                parentFragment.releasePlayer()
+                                parentFragment.saveCurrentProgress()
 
                                 if (videoPlayerData.trailerUrl == null) {
-                                    if (authSharedPreferences.getLoginToken() != "") {
-                                        videoPlayerViewModel.saveLoader.observe(this, {
-                                            when (it.status) {
-                                                LoadingState.Status.RUNNING -> {
-                                                }
-                                                LoadingState.Status.SUCCESS -> {
-                                                    showDetails()
-                                                }
-                                            }
-                                        })
-                                    } else {
-                                        showDetails()
-                                    }
-                                } else {
                                     showDetails()
                                 }
                                 return true
@@ -239,8 +225,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 supportFragmentManager.popBackStack()
                 setCurrentFragment(VIDEO_PLAYER)
             }
-            NEW_EPISODE -> {}
-            else -> {
+            VIDEO_PLAYER -> {
                 if (tv_title_player.isControllerVisible) {
                     tv_title_player.hideController()
                 } else {
@@ -266,6 +251,29 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     }
                 }
             }
+            BACK_BUTTON -> {
+                val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
+                parentFragment.releasePlayer()
+
+                if (videoPlayerData.trailerUrl == null) {
+                    if (authSharedPreferences.getLoginToken() != "") {
+                        videoPlayerViewModel.saveLoader.observe(this, {
+                            when (it.status) {
+                                LoadingState.Status.RUNNING -> {
+                                }
+                                LoadingState.Status.SUCCESS -> {
+                                    super.onBackPressed()
+                                }
+                            }
+                        })
+                    } else {
+                        super.onBackPressed()
+                    }
+                } else {
+                    super.onBackPressed()
+                }
+            }
+            NEW_EPSIDOE -> {}
         }
     }
 
@@ -294,6 +302,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
     companion object {
         const val VIDEO_PLAYER = 0
         const val VIDEO_DETAILS = 1
-        const val NEW_EPISODE = 2
+        const val NEW_EPSIDOE = 2
+        const val BACK_BUTTON = 3
     }
 }
