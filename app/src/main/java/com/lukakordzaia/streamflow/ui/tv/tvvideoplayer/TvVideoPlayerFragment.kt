@@ -192,38 +192,35 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
         val nextButton = tv_next_button
 
         if (videoPlayerInfo.isTvShow) {
-            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, {
-                if (videoPlayerInfo.chosenEpisode == it) {
-                    nextButton?.setOnClickListener {
-                        episodeHasEnded = false
-                        player.clearMediaItems()
-                        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
-                            videoPlayerInfo.titleId,
-                            videoPlayerInfo.isTvShow,
-                            videoPlayerInfo.chosenSeason+1,
-                            1,
-                            videoPlayerInfo.chosenLanguage
-                        ))
-                        mediaPlayer.initPlayer(binding.tvTitlePlayer, 0, 0L)
-                    }
-                } else {
-                    nextButton?.setOnClickListener {
-                        episodeHasEnded = false
-                        player.clearMediaItems()
-                        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
-                            videoPlayerInfo.titleId,
-                            videoPlayerInfo.isTvShow,
-                            videoPlayerInfo.chosenSeason,
-                            videoPlayerInfo.chosenEpisode+1,
-                            videoPlayerInfo.chosenLanguage
-                        ))
-                        mediaPlayer.initPlayer(binding.tvTitlePlayer, 0, 0L)
-                    }
+            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
+                nextButton.setOnClickListener {
+                    nextButtonFunction(videoPlayerInfo.chosenEpisode == lastEpisode)
                 }
             })
         } else {
             nextButton?.setGone()
         }
+    }
+
+    private fun nextButtonFunction(lastEpisode: Boolean) {
+        videoPlayerViewModel.setVideoPlayerInfo(
+            PlayerDurationInfo(
+                player.currentPosition,
+                player.duration
+            )
+        )
+        videoPlayerViewModel.addContinueWatching()
+
+        episodeHasEnded = false
+        player.clearMediaItems()
+        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
+            videoPlayerInfo.titleId,
+            videoPlayerInfo.isTvShow,
+            if (lastEpisode) videoPlayerInfo.chosenSeason+1 else videoPlayerInfo.chosenSeason,
+            if (lastEpisode) 1 else videoPlayerInfo.chosenEpisode+1,
+            videoPlayerInfo.chosenLanguage
+        ))
+        mediaPlayer.initPlayer(binding.tvTitlePlayer, 0, 0L)
     }
 
     private fun setTitleName() {
