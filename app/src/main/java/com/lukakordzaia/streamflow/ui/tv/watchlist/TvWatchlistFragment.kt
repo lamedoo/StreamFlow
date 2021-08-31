@@ -77,10 +77,10 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
         override fun onItemClicked(
-                itemViewHolder: Presenter.ViewHolder,
-                item: Any,
-                rowViewHolder: RowPresenter.ViewHolder,
-                row: Row
+            itemViewHolder: Presenter.ViewHolder?,
+            item: Any?,
+            rowViewHolder: RowPresenter.ViewHolder?,
+            row: Row?
         ) {
             if (item is SingleTitleModel) {
                 val intent = Intent(context, TvSingleTitleActivity::class.java)
