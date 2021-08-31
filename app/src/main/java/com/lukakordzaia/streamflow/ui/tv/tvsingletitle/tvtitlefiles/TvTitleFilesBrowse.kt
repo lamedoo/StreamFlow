@@ -44,6 +44,9 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     lateinit var metrics: DisplayMetrics
     private var hasFocus = false
 
+    var titleId: Int? = 0
+    var isTvShow: Boolean? = false
+
     private var focusedSeason = 0
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -68,6 +71,12 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         })
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        setSeasonsAndEpisodes(titleId!!, isTvShow!!)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
         val containerDock = view!!.findViewById<View>(R.id.browse_container_dock) as FrameLayout
@@ -82,8 +91,6 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val titleId: Int?
-        val isTvShow: Boolean?
 
         val titleIdFromDetails = activity?.intent?.getSerializableExtra("titleId") as? Int
         val isTvShowFromDetails = activity?.intent?.getSerializableExtra("isTvShow") as? Boolean
@@ -98,14 +105,13 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
         }
 
         initRowsAdapter(isTvShow!!)
-        setSeasonsAndEpisodes(titleId!!, isTvShow)
-        setTitleCast(titleId, isTvShow)
-        setTitleRelated(titleId, isTvShow)
+        setTitleCast(titleId!!, isTvShow!!)
+        setTitleRelated(titleId!!, isTvShow!!)
 
         prepareBackgroundManager()
         setupUIElements()
-        onItemViewClickedListener = ItemViewClickedListener(titleId, isTvShow)
-        onItemViewSelectedListener = ItemViewSelectedListener(titleId)
+        onItemViewClickedListener = ItemViewClickedListener(titleId!!, isTvShow!!)
+        onItemViewSelectedListener = ItemViewSelectedListener(titleId!!)
     }
 
     private fun initRowsAdapter(isTvShow: Boolean) {
@@ -284,18 +290,20 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
 
     private fun playEpisode(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
         val trailerUrl: String? = null
-        val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("videoPlayerData", VideoPlayerData(
-            titleId,
-            isTvShow,
-            tvTitleFilesViewModel.chosenSeason.value!!,
-            chosenLanguage,
-            tvTitleFilesViewModel.chosenEpisode.value!!,
-            0L,
-            trailerUrl
-        ))
+        val intent = Intent(context, TvVideoPlayerActivity::class.java).apply {
+            putExtra("videoPlayerData", VideoPlayerData(
+                titleId,
+                isTvShow,
+                tvTitleFilesViewModel.chosenSeason.value!!,
+                chosenLanguage,
+                tvTitleFilesViewModel.chosenEpisode.value!!,
+                0L,
+                trailerUrl
+            ))
+        }
         requireActivity().startActivity(intent)
         if (requireActivity() is TvVideoPlayerActivity) {
+            (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.NEW_EPISODE)
             requireActivity().finish()
         }
     }

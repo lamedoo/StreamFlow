@@ -4,7 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/drawable/background_episodes_card_tv.xml" value="0.1" />
+        <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/continue_watching_dialog.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/fragment_tv_title_details.xml" value="0.46510416666666665" />
+        <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/fragment_tv_title_files.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/rv_choose_details_episodes_item.xml" value="0.46510416666666665" />
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_details_episodes_item.xml" value="0.46510416666666665" />
       </map>
