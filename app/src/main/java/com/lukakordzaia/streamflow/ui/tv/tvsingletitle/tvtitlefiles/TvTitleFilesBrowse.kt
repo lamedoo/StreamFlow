@@ -127,7 +127,6 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     private fun setSeasonsAndEpisodes(titleId: Int, isTvShow: Boolean) {
         if (isTvShow) {
             tvTitleFilesViewModel.getSingleTitleData(titleId)
-            tvTitleFilesViewModel.checkAuthDatabase(titleId)
 
             tvTitleFilesViewModel.numOfSeasons.observe(viewLifecycleOwner, {
                 val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()

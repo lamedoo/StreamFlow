@@ -47,6 +47,24 @@ class TvTitleFilesViewModel : BaseViewModel() {
                 is Result.Success -> {
                     if (data.data.data.seasons != null) {
                         _numOfSeasons.value = data.data.data.seasons.data.size
+
+                        if (authSharedPreferences.getLoginToken() == "") {
+                            getSingleContinueWatchingFromRoom(titleId)
+                        } else {
+                            if (data.data.data.userWatch?.data?.season != null) {
+                                _continueWatchingDetails.value = ContinueWatchingRoom(
+                                    titleId = titleId,
+                                    language = data.data.data.userWatch.data.language!!,
+                                    watchedDuration = data.data.data.userWatch.data.progress!!,
+                                    titleDuration = data.data.data.userWatch.data.duration!!,
+                                    isTvShow = data.data.data.isTvShow,
+                                    season = data.data.data.userWatch.data.season,
+                                    episode = data.data.data.userWatch.data.episode!!
+                                )
+                            } else {
+                                _continueWatchingDetails.value = null
+                            }
+                        }
                     }
                 }
                 is Result.Error -> {
@@ -124,12 +142,6 @@ class TvTitleFilesViewModel : BaseViewModel() {
                     newToastMessage("მსგავსი - ${related.exception}")
                 }
             }
-        }
-    }
-
-    fun checkAuthDatabase(titleId: Int) {
-        if (authSharedPreferences.getLoginToken() == "") {
-            getSingleContinueWatchingFromRoom(titleId)
         }
     }
 
