@@ -7,8 +7,8 @@ import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserW
 import com.lukakordzaia.streamflow.network.models.imovies.response.user.UserWatchListStatusResponse
 
 class DefaultWatchlistRepository(private val service: ImoviesNetwork): ImoviesCall(), WatchlistRepository {
-    override suspend fun getUserWatchlist(): Result<GetUserWatchlistResponse> {
-        return imoviesCall { service.getUserWatchlist() }
+    override suspend fun getUserWatchlist(page: Int): Result<GetUserWatchlistResponse> {
+        return imoviesCall { service.getUserWatchlist(page) }
     }
 
     override suspend fun addWatchlistTitle(id: Int): Result<UserWatchListStatusResponse> {

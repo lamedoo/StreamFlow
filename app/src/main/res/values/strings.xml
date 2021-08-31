@@ -59,6 +59,7 @@
     <string name="password">პაროლი</string>
     <string name="remove_from_list_title">ნამდვილად გსურთ სიიდან წაშლა?</string>
     <string name="profile_panel">ანგარიშის პანელი</string>
+    <string name="watchlist">ვგეგმავ ყურებას</string>
 
     <!--    <string name="default_web_client_id">700559852856-68iooe5pueka6q1k3oejuc46h4fh9dai.apps.googleusercontent.com</string>-->
 </resources>

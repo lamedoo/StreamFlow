@@ -72,7 +72,7 @@ interface ImoviesNetwork {
     suspend fun getSingleTitleFiles(@Path("id") id: Int, @Path("season_number") season_number: Int) : Response<GetSingleTitleFilesResponse>
 
     @GET(EndPoints.USER_WATCHLIST)
-    suspend fun getUserWatchlist() : Response<GetUserWatchlistResponse>
+    suspend fun getUserWatchlist(@Query("page") page: Int) : Response<GetUserWatchlistResponse>
 
     @DELETE(EndPoints.USER_WATCHLIST_STATUS)
     suspend fun deleteWatchlistTitle(@Path("id") id: Int) : Response<UserWatchListStatusResponse>

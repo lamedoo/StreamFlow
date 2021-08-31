@@ -14,17 +14,10 @@ class PhoneWatchlistViewModel : BaseViewModel() {
     val favoriteMoviesLoader = MutableLiveData<LoadingState>()
     val favoriteTvShowsLoader = MutableLiveData<LoadingState>()
 
-    val favoriteNoMovies = MutableLiveData<Boolean>()
-    val favoriteNoTvShows = MutableLiveData<Boolean>()
+    val noFavorites = MutableLiveData<Boolean>()
 
     private val _userWatchlist = MutableLiveData<List<SingleTitleModel>>()
     val userWatchlist: LiveData<List<SingleTitleModel>> = _userWatchlist
-
-    private val _movieResult = MutableLiveData<List<SingleTitleModel>>()
-    val movieResult: LiveData<List<SingleTitleModel>> = _movieResult
-
-    private val _tvShowResult = MutableLiveData<List<SingleTitleModel>>()
-    val tvShowResult: LiveData<List<SingleTitleModel>> = _tvShowResult
 
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(PhoneWatchlistFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
@@ -34,17 +27,16 @@ class PhoneWatchlistViewModel : BaseViewModel() {
         navigateToNewFragment(PhoneWatchlistFragmentDirections.actionPhoneFavoritesFragmentToProfileFragmentNav())
     }
 
-    fun getUserWatchlist() {
+    fun getUserWatchlist(page: Int) {
         favoriteMoviesLoader.value = LoadingState.LOADING
         favoriteTvShowsLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (val watchlist = environment.watchlistRepository.getUserWatchlist()) {
+            when (val watchlist = environment.watchlistRepository.getUserWatchlist(page)) {
                 is Result.Success -> {
                     val data = watchlist.data.data
 
                     if (data.isNullOrEmpty()) {
-                        favoriteNoMovies.value = true
-                        favoriteNoTvShows.value = true
+                        noFavorites.value = true
                     } else {
                         _userWatchlist.value = data.toWatchListModel()
                     }
@@ -60,7 +52,7 @@ class PhoneWatchlistViewModel : BaseViewModel() {
         viewModelScope.launch {
             when (val delete = environment.watchlistRepository.deleteWatchlistTitle(id)) {
                 is Result.Success -> {
-                    getUserWatchlist()
+                    getUserWatchlist(1)
                 }
             }
         }

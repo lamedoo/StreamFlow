@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rv_favorite_item_root"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_marginStart="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="30dp"
     android:layout_marginTop="5dp"
-    android:layout_marginEnd="5dp"
-    android:layout_marginBottom="30dp">
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp">
 
     <ImageView
         android:id="@+id/item_poster"
@@ -20,6 +20,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/friends_poster" />
 
+    <TextView
+        android:id="@+id/is_tvShow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/accent_color"
+        android:textColor="@color/text_on_accent_color"
+        tools:text="სერიალი"
+        android:padding="5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/item_poster"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -27,8 +38,8 @@
         android:background="@drawable/background_rv_default_bottom_phone"
         android:orientation="horizontal"
         android:padding="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/item_poster"
+        app:layout_constraintStart_toStartOf="@id/item_poster"
         app:layout_constraintTop_toBottomOf="@id/item_poster">
 
         <ImageView

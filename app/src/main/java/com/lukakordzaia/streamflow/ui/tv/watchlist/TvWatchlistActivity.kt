@@ -12,10 +12,7 @@ import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
-import com.lukakordzaia.streamflow.utils.createToast
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setImage
-import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), TvCheckTitleSelected, TvHasFavoritesListener {
@@ -51,6 +48,7 @@ class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), T
         tvTitleDetailsViewModel.getSingleTitleData(titleId)
 
         tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
+            binding.titleInfo.isTvShow.setVisibleOrGone(it.isTvShow)
             binding.titleInfo.name.text = it.nameEng
 
             binding.titleInfo.poster.setImage(it.cover, false)

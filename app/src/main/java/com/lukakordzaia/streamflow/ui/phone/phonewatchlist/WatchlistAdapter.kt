@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.streamflow.databinding.RvFavoriteItemBinding
+import com.lukakordzaia.streamflow.databinding.RvWatchlistItemBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.utils.setImage
 
@@ -22,7 +22,7 @@ class WatchlistAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvFavoriteItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvWatchlistItemBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 
@@ -36,9 +36,11 @@ class WatchlistAdapter(
         return list.size
     }
 
-    inner class ViewHolder(val view: RvFavoriteItemBinding) : RecyclerView.ViewHolder(view.root) {
+    inner class ViewHolder(val view: RvWatchlistItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: SingleTitleModel) {
             view.itemPoster.setImage(model.poster, true)
+
+            view.isTvShow.text = if (model.isTvShow) "სერიალი" else "ფილმი"
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)

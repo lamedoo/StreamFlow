@@ -184,7 +184,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
-            android:text="@string/favorites"
+            android:text="@string/watchlist"
             android:textColor="@color/tv_sidebar_text_focused"
             android:duplicateParentState="true"
             android:textStyle="bold"/>
