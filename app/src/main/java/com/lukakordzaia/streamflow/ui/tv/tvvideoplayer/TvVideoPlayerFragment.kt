@@ -64,6 +64,8 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreferences.saveTvVideoPlayerOn(true)
+
         videoPlayerData = activity?.intent!!.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
 
         if (!videoPlayerData.isTvShow) {

@@ -21,7 +21,7 @@ import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.databinding.TvSidebarBinding
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
 import com.lukakordzaia.streamflow.ui.tv.login.TvLoginActivity
@@ -40,7 +40,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCheckFirstItem {
     private val profileViewModel: ProfileViewModel by viewModel()
     private val sidebarAnimations: TvSidebarAnimations by inject()
-    protected val authSharedPreferences: AuthSharedPreferences by inject()
+    protected val sharedPreferences: SharedPreferences by inject()
 
     private lateinit var signInButton: View
     private lateinit var signOutButton: View
@@ -60,7 +60,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
     override fun onStart() {
         super.onStart()
         profileViewModel.getUserData()
-        updateProfileUI(authSharedPreferences.getLoginToken() != "")
+        updateProfileUI(sharedPreferences.getLoginToken() != "")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +83,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             sidebarAnimations.hideSideBar(view.tvSidebar)
         }
         view.favoritesButton.setOnClickListener {
-            if (authSharedPreferences.getLoginToken() != "") {
+            if (sharedPreferences.getLoginToken() != "") {
                 startActivity(Intent(this, TvWatchlistActivity::class.java))
             } else {
                 this.createToast("ფავორიტების სანახავად, გაიარეთ ავტორიზაცია")

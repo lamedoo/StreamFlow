@@ -34,7 +34,7 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
     val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
 
     fun checkAuthDatabase(titleId: Int) {
-        if (authSharedPreferences.getLoginToken() == "") {
+        if (sharedPreferences.getLoginToken() == "") {
             getSingleContinueWatchingFromRoom(titleId)
         }
     }
@@ -64,7 +64,7 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
 
                         val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
 
-                        if (authSharedPreferences.getLoginToken() == "") {
+                        if (sharedPreferences.getLoginToken() == "") {
                             data.forEach {
                                 getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
                             }

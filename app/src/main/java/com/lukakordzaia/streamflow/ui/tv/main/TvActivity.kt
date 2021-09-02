@@ -23,6 +23,8 @@ class TvActivity : BaseFragmentActivity<ActivityTvBinding>(), TvCheckTitleSelect
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        sharedPreferences.saveTvVideoPlayerOn(false)
+
         setSidebarClickListeners(binding.tvSidebar)
         setCurrentButton(binding.tvSidebar.homeButton)
         googleViews(binding.tvSidebar)

@@ -2,13 +2,14 @@ package com.lukakordzaia.streamflow.sharedpreferences
 
 import android.content.Context
 
-class AuthSharedPreferences(context: Context) {
+class SharedPreferences(context: Context) {
     private val loginTokenDefValue = ""
     private val loginRefreshTokenDefValue = ""
     private val usernameDefValue = ""
     private val passwordDefValue = ""
     private val traktTokenDefValue = ""
     private val traktRefreshTokenDefValue = ""
+    private val tvVideoPlayerOnDefValue = false
     private val authPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     private val authEditor = authPrefs.edit()
 
@@ -48,6 +49,15 @@ class AuthSharedPreferences(context: Context) {
         return authPrefs.getString(PASSWORD, passwordDefValue)
     }
 
+    fun saveTvVideoPlayerOn(playerIsOn: Boolean) {
+        authEditor.putBoolean(TV_VIDEO_PLAYER_ON, playerIsOn)
+        authEditor.apply()
+    }
+
+    fun getTvVideoPlayerOn(): Boolean {
+        return authPrefs.getBoolean(TV_VIDEO_PLAYER_ON, tvVideoPlayerOnDefValue)
+    }
+
     fun saveTraktToken(accessToken: String) {
         authEditor.putString(TRAKT_TOKEN, accessToken)
         authEditor.apply()
@@ -74,5 +84,6 @@ class AuthSharedPreferences(context: Context) {
         const val PASSWORD = "password"
         const val TRAKT_TOKEN = "trakt token"
         const val TRAKT_REFRESH_TOKEN = "trakt refresh token"
+        const val TV_VIDEO_PLAYER_ON = "video player is on"
     }
 }

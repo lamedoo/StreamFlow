@@ -50,12 +50,12 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
             removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             removeTitle.setContentView(binding.root)
 
-            if (authSharedPreferences.getLoginToken() != "") {
+            if (sharedPreferences.getLoginToken() != "") {
                 binding.title.text = resources.getString(R.string.remove_from_list_title)
             }
 
            binding.continueButton.setOnClickListener {
-               if (authSharedPreferences.getLoginToken() == "") {
+               if (sharedPreferences.getLoginToken() == "") {
                    homeViewModel.deleteContinueWatching(args.titleId)
                    removeTitle.dismiss()
                    dismiss()

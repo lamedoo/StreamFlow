@@ -37,7 +37,7 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
     }
 
     private fun authCheck() {
-        if (authSharedPreferences.getLoginToken() == "") {
+        if (sharedPreferences.getLoginToken() == "") {
             binding.tvSettingsSignout.setGone()
         } else {
             binding.tvSettingsDelete.setGone()

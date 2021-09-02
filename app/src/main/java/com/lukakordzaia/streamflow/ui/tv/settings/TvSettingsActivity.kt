@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.lukakordzaia.streamflow.databinding.ActivityTvSettingsBinding
 import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
-import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
@@ -15,7 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSettingsActivity: FragmentActivity(), OnSettingsSelected {
     private val profileViewModel: ProfileViewModel by viewModel()
-    private val authSharedPreferences: AuthSharedPreferences by inject()
+    private val sharedPreferences: SharedPreferences by inject()
     private lateinit var binding: ActivityTvSettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class TvSettingsActivity: FragmentActivity(), OnSettingsSelected {
                 binding.signOutContainer.setVisible()
                 hideViews(listOf(binding.traktContainer, binding.infoContainer, binding.deleteContainer))
 
-                if (authSharedPreferences.getLoginToken() != "") {
+                if (sharedPreferences.getLoginToken() != "") {
                     profileViewModel.userData.observe(this, {
                         binding.profileName.text = "შესული ხართ როგორც ${it.displayName}"
                         Glide.with(this).load(it.avatar.large).into(binding.profilePhoto)

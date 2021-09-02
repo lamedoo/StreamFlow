@@ -32,11 +32,11 @@ class LoginFragment: BaseFragment<FragmentPhoneLoginBinding>() {
     }
 
     private fun setCredentials() {
-        if (authSharedPreferences.getUsername() != "") {
-            binding.usernameInput.setText(authSharedPreferences.getUsername())
+        if (sharedPreferences.getUsername() != "") {
+            binding.usernameInput.setText(sharedPreferences.getUsername())
         }
-        if (authSharedPreferences.getPassword() != "") {
-            binding.passwordInput.setText(authSharedPreferences.getPassword())
+        if (sharedPreferences.getPassword() != "") {
+            binding.passwordInput.setText(sharedPreferences.getPassword())
         }
     }
 

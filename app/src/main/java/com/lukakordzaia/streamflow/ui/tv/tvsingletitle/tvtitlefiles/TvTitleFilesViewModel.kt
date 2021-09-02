@@ -48,7 +48,7 @@ class TvTitleFilesViewModel : BaseViewModel() {
                     if (data.data.data.seasons != null) {
                         _numOfSeasons.value = data.data.data.seasons.data.size
 
-                        if (authSharedPreferences.getLoginToken() == "") {
+                        if (sharedPreferences.getLoginToken() == "") {
                             getSingleContinueWatchingFromRoom(titleId)
                         } else {
                             if (data.data.data.userWatch?.data?.season != null) {
@@ -92,7 +92,7 @@ class TvTitleFilesViewModel : BaseViewModel() {
                     _availableLanguages.value = fetchLanguages
 
                     val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
-                    if (authSharedPreferences.getLoginToken() == "") {
+                    if (sharedPreferences.getLoginToken() == "") {
                         data.forEach {
                             getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
                         }

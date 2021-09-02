@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTopToolbarBinding
-import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import org.koin.android.ext.android.inject
 
 abstract class BaseFragment<VB: ViewBinding> : Fragment() {
-    protected val authSharedPreferences: AuthSharedPreferences by inject()
+    protected val sharedPreferences: SharedPreferences by inject()
 
     private var rootView: View? = null
 

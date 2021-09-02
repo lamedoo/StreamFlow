@@ -55,7 +55,7 @@ class VideoPlayerViewModel : BaseViewModel() {
             videoPlayerInfo.value!!.chosenEpisode
         )
         if (playbackPositionForDb.value!! > 0 && titleDurationForDb.value!! > 0) {
-            if (authSharedPreferences.getLoginToken() != "") {
+            if (sharedPreferences.getLoginToken() != "") {
                 saveLoader.value = LoadingState.LOADING
                 viewModelScope.launch {
                     when (val time = environment.userRepository.titleWatchTime(

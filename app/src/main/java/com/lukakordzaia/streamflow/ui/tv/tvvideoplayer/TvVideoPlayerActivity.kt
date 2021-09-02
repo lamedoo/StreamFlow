@@ -8,7 +8,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
 import kotlinx.android.synthetic.main.fragment_tv_video_player.*
@@ -19,7 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvVideoPlayerActivity : FragmentActivity() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
-    private val authSharedPreferences: AuthSharedPreferences by inject()
+    private val sharedPreferences: SharedPreferences by inject()
 
     private lateinit var binding: ActivityTvVideoPlayerBinding
     private var currentFragment = VIDEO_PLAYER
@@ -233,7 +233,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     parentFragment.releasePlayer()
 
                     if (videoPlayerData.trailerUrl == null) {
-                        if (authSharedPreferences.getLoginToken() != "") {
+                        if (sharedPreferences.getLoginToken() != "") {
                             videoPlayerViewModel.saveLoader.observe(this, {
                                 when (it.status) {
                                     LoadingState.Status.RUNNING -> {
@@ -256,7 +256,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 parentFragment.releasePlayer()
 
                 if (videoPlayerData.trailerUrl == null) {
-                    if (authSharedPreferences.getLoginToken() != "") {
+                    if (sharedPreferences.getLoginToken() != "") {
                         videoPlayerViewModel.saveLoader.observe(this, {
                             when (it.status) {
                                 LoadingState.Status.RUNNING -> {

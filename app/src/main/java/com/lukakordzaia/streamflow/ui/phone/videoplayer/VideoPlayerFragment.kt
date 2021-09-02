@@ -76,6 +76,8 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
 
         mediaPlayer.setPlayerListener(PlayerListeners())
 
+        sharedPreferences.saveTvVideoPlayerOn(true)
+
         phone_exo_back.setOnClickListener {
             requireActivity().onBackPressed()
         }

@@ -54,7 +54,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
 
                     _dataLoader.value = LoadingState.LOADED
 
-                    if (authSharedPreferences.getLoginToken() == "") {
+                    if (sharedPreferences.getLoginToken() == "") {
                         getSingleContinueWatchingFromRoom(titleId)
                     } else {
                         if (data.data.userWatch?.data?.season != null) {

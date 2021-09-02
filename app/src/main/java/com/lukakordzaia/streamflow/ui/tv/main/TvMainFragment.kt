@@ -24,6 +24,7 @@ import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
@@ -34,11 +35,13 @@ import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvMainFragment : BrowseSupportFragment() {
     private val homeViewModel: HomeViewModel by viewModel()
+    private val sharedPreferences: SharedPreferences by inject()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var metrics: DisplayMetrics
     private lateinit var backgroundManager: BackgroundManager
@@ -60,19 +63,9 @@ class TvMainFragment : BrowseSupportFragment() {
 
     override fun onStart() {
         super.onStart()
-        homeViewModel.tvRefresh.observe(viewLifecycleOwner, {
-            if (it) {
-                homeViewModel.checkAuthDatabase()
-            }
-        })
-
-        homeViewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {}
-                LoadingState.Status.SUCCESS -> {}
-            }
-        })
-
+        if (sharedPreferences.getTvVideoPlayerOn()) {
+            homeViewModel.checkAuthDatabase()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -250,16 +243,12 @@ class TvMainFragment : BrowseSupportFragment() {
                 row: Row
         ) {
             if (item is SingleTitleModel) {
-                homeViewModel.setTvRefresh(false)
-
                 val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                     putExtra("titleId", item.id)
                     putExtra("isTvShow", item.isTvShow)
                 }
                 activity?.startActivity(intent)
             } else if (item is ContinueWatchingModel) {
-                homeViewModel.setTvRefresh(true)
-
                 val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                     putExtra("titleId", item.id)
                     putExtra("isTvShow", item.isTvShow)
@@ -267,8 +256,6 @@ class TvMainFragment : BrowseSupportFragment() {
                 }
                 activity?.startActivity(intent)
             } else if (item is TvCategoriesList) {
-                homeViewModel.setTvRefresh(false)
-
                 when (item.categoriesId) {
                     0 -> {
                         val intent = Intent(context, TvCatalogueActivity::class.java)

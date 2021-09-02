@@ -33,7 +33,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
     }
 
     private fun authCheck() {
-        if (authSharedPreferences.getLoginToken() != "") {
+        if (sharedPreferences.getLoginToken() != "") {
             phoneWatchlistViewModel.getUserWatchlist(1)
             binding.favoriteMoviesContainer.setVisible()
             binding.favoriteNoAuth.setGone()

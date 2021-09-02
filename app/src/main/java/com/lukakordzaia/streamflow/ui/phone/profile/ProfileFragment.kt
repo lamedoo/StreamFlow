@@ -49,7 +49,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         super.onStart()
 
         profileViewModel.getUserData()
-        updateProfileUI(authSharedPreferences.getLoginToken() != "")
+        updateProfileUI(sharedPreferences.getLoginToken() != "")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +59,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         binding.aboutTitle.text = "ვერსია v${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}"
 
         traktDialog = Dialog(requireContext())
-        traktToken = authSharedPreferences.getTraktToken()
+        traktToken = sharedPreferences.getTraktToken()
 
         fragmentListeners()
         fragmentObservers()
@@ -82,7 +82,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
             clearHistory.setContentView(binding.root)
 
             binding.continueButton.setOnClickListener {
-                if (authSharedPreferences.getLoginToken() == "") {
+                if (sharedPreferences.getLoginToken() == "") {
                     profileViewModel.deleteContinueWatchingFromRoomFull()
                 }
                 clearHistory.dismiss()
@@ -157,8 +157,8 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                 traktDialog.hide()
                 countdown.cancel()
 
-                authSharedPreferences.saveTraktToken(userToken.accessToken)
-                authSharedPreferences.saveTraktRefreshToken(userToken.refreshToken)
+                sharedPreferences.saveTraktToken(userToken.accessToken)
+                sharedPreferences.saveTraktRefreshToken(userToken.refreshToken)
 
                 updateTraktUi(true)
             }
@@ -176,7 +176,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                         null,
                         null
                     ),
-                    "Bearer ${authSharedPreferences.getTraktToken()}"
+                    "Bearer ${sharedPreferences.getTraktToken()}"
                 )
             }
         })

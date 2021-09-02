@@ -38,7 +38,9 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
 
     override fun onStart() {
         super.onStart()
-        continueWatchingContainer()
+        if (sharedPreferences.getTvVideoPlayerOn()) {
+            continueWatchingContainer()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,6 +49,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         fragmentListeners()
         fragmentObservers()
 
+        continueWatchingContainer()
         movieDayContainer()
         newMoviesContainer()
         topMoviesContainer()

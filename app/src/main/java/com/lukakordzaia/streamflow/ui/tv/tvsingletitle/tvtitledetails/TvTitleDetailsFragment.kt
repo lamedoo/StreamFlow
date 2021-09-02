@@ -227,12 +227,12 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                     removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     removeTitle.setContentView(binding.root)
 
-                    if (authSharedPreferences.getLoginToken() != "") {
+                    if (sharedPreferences.getLoginToken() != "") {
                         binding.title.text = resources.getString(R.string.remove_from_list_title)
                     }
 
                     binding.continueButton.setOnClickListener { _ ->
-                        if (authSharedPreferences.getLoginToken() == "") {
+                        if (sharedPreferences.getLoginToken() == "") {
                             tvTitleDetailsViewModel.deleteSingleContinueWatchingFromRoom(it.titleId)
                         } else {
                             tvTitleDetailsViewModel.hideSingleContinueWatching(it.titleId)
@@ -281,7 +281,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                 binding.continueButton.requestFocus()
                 binding.playButton.text = "თავიდან ყურება"
 
-                if (authSharedPreferences.getLoginToken() == "") {
+                if (sharedPreferences.getLoginToken() == "") {
                     binding.deleteButton.setVisible()
                 } else {
                     binding.deleteButton.setVisibleOrGone(titleInfo.visibility!!)

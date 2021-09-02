@@ -41,9 +41,6 @@ class HomeViewModel : BaseViewModel() {
     private val _contWatchingData = MediatorLiveData<List<ContinueWatchingRoom>>()
     val contWatchingData: LiveData<List<ContinueWatchingRoom>> = _contWatchingData
 
-    private val _tvRefresh = MutableLiveData<Boolean>()
-    val tvRefresh: LiveData<Boolean> = _tvRefresh
-
     init {
         fetchContent(1)
     }
@@ -77,7 +74,7 @@ class HomeViewModel : BaseViewModel() {
 
     fun checkAuthDatabase() {
         clearContinueWatchingTitleList()
-        if (authSharedPreferences.getLoginToken() != "") {
+        if (sharedPreferences.getLoginToken() != "") {
             getContinueWatching()
         } else {
             getContinueWatchingFromRoom()
@@ -148,7 +145,7 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun deleteContinueWatching(titleId: Int) {
-        if (authSharedPreferences.getLoginToken() == "") {
+        if (sharedPreferences.getLoginToken() == "") {
             deleteSingleContinueWatchingFromRoom(titleId)
         } else {
             hideSingleContinueWatching(titleId)
@@ -267,9 +264,5 @@ class HomeViewModel : BaseViewModel() {
         getNewMovies(page)
         getTopMovies(page)
         getTopTvShows(page)
-    }
-
-    fun setTvRefresh(refresh: Boolean) {
-        _tvRefresh.value = refresh
     }
 }

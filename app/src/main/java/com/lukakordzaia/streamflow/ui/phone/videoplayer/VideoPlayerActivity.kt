@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.android.ext.android.inject
@@ -15,7 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VideoPlayerActivity : AppCompatActivity() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
-    private val authSharedPreferences: AuthSharedPreferences by inject()
+    private val sharedPreferences: SharedPreferences by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phone_video_player)
@@ -28,7 +28,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         parentFragment.releasePlayer()
 
         if (videoPlayerData.trailerUrl == null) {
-            if (authSharedPreferences.getLoginToken() != "") {
+            if (sharedPreferences.getLoginToken() != "") {
                 videoPlayerViewModel.saveLoader.observe(this, {
                     when (it.status) {
                         LoadingState.Status.RUNNING -> {}

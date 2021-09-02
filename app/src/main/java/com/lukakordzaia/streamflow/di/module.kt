@@ -25,7 +25,7 @@ import com.lukakordzaia.streamflow.repository.userrepository.DefaultUserReposito
 import com.lukakordzaia.streamflow.repository.userrepository.UserRepository
 import com.lukakordzaia.streamflow.repository.watchlistrepository.DefaultWatchlistRepository
 import com.lukakordzaia.streamflow.repository.watchlistrepository.WatchlistRepository
-import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueViewModel
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
@@ -76,7 +76,7 @@ val generalModule = module {
     single { get<RetrofitBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
     single { get<RetrofitBuilder>().getRetrofitInstance().create(TraktTvNetwork::class.java) }
     single { BuildMediaSource(get()) }
-    single { AuthSharedPreferences(get()) }
+    single { SharedPreferences(get()) }
     single { TvSidebarAnimations() }
     single { StreamFlowDatabase.getDatabase(get()) }
     single { Environment(get(), get(), get(), get(), get(), get(), get(), get()) }

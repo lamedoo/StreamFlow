@@ -44,10 +44,10 @@ class ProfileViewModel : BaseViewModel() {
                 is Result.Success -> {
                     val data = login.data
 
-                    authSharedPreferences.saveLoginToken(data.accessToken)
-                    authSharedPreferences.saveLoginRefreshToken(data.refreshToken)
-                    authSharedPreferences.saveUsername(loginBody.username)
-                    authSharedPreferences.savePassword(loginBody.password)
+                    sharedPreferences.saveLoginToken(data.accessToken)
+                    sharedPreferences.saveLoginRefreshToken(data.refreshToken)
+                    sharedPreferences.saveUsername(loginBody.username)
+                    sharedPreferences.savePassword(loginBody.password)
 
                     loginLoader.value = LoadingState.LOADED
                 }
@@ -64,8 +64,8 @@ class ProfileViewModel : BaseViewModel() {
             when (val logout = environment.userRepository.userLogout()) {
                 is Result.Success -> {
 
-                    authSharedPreferences.saveLoginToken("")
-                    authSharedPreferences.saveLoginRefreshToken("")
+                    sharedPreferences.saveLoginToken("")
+                    sharedPreferences.saveLoginRefreshToken("")
 
                     loginLoader.value = LoadingState.LOADED
                 }

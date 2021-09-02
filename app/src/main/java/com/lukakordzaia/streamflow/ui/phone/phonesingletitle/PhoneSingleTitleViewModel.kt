@@ -65,7 +65,7 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
                             val data = titleData.data
                             _singleTitleData.value = data.toSingleTitleModel()
 
-                            if (authSharedPreferences.getLoginToken() == "") {
+                            if (sharedPreferences.getLoginToken() == "") {
                                 getSingleContinueWatchingFromRoom(titleId)
                             } else {
                                 if (data.data.userWatch?.data?.season != null) {

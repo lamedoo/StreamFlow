@@ -45,7 +45,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
 
     override fun onStart() {
         super.onStart()
-        phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getTraktToken()}")
+        phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${sharedPreferences.getTraktToken()}")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -133,7 +133,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getTraktToken()}")
+                    phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${sharedPreferences.getTraktToken()}")
                 }, 5000)
             }
         })
