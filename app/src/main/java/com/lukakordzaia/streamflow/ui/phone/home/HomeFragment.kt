@@ -40,6 +40,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         super.onStart()
         if (sharedPreferences.getTvVideoPlayerOn()) {
             continueWatchingContainer()
+            sharedPreferences.saveTvVideoPlayerOn(false)
         }
     }
 
