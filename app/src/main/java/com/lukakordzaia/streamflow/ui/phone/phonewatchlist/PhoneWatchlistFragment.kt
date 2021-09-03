@@ -12,11 +12,12 @@ import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneWatchlistBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.shared.WatchlistViewModel
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
-    private val phoneWatchlistViewModel: PhoneWatchlistViewModel by viewModel()
+    private val watchlistViewModel: WatchlistViewModel by viewModel()
     private lateinit var watchlistMoviesAdapter: WatchlistAdapter
     private lateinit var watchlistTvShowsAdapter: WatchlistAdapter
 
@@ -34,7 +35,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
 
     private fun authCheck() {
         if (sharedPreferences.getLoginToken() != "") {
-            phoneWatchlistViewModel.getUserWatchlist(1)
+            watchlistViewModel.getUserWatchlist(1)
             binding.favoriteMoviesContainer.setVisible()
             binding.favoriteNoAuth.setGone()
         } else {
@@ -45,30 +46,30 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
 
     private fun fragmentListeners() {
         binding.toolbar.homeProfile.setOnClickListener {
-            phoneWatchlistViewModel.onProfileButtonPressed()
+            watchlistViewModel.onProfileButtonPressed()
         }
 
         binding.profileButton.setOnClickListener {
-            phoneWatchlistViewModel.onProfileButtonPressed()
+            watchlistViewModel.onProfileButtonPressed()
         }
     }
 
     private fun fragmentObservers() {
-        phoneWatchlistViewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
+        watchlistViewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
             watchlistMoviesAdapter.setItems(watchlist)
         })
 
-        phoneWatchlistViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+        watchlistViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
 
-        phoneWatchlistViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+        watchlistViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
     }
 
     private fun favMoviesContainer() {
-        phoneWatchlistViewModel.favoriteMoviesLoader.observe(viewLifecycleOwner, {
+        watchlistViewModel.watchListLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
                     binding.favoriteMoviesProgressBar.setVisible()
@@ -81,7 +82,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
             }
         })
 
-        phoneWatchlistViewModel.noFavorites.observe(viewLifecycleOwner, {
+        watchlistViewModel.noFavorites.observe(viewLifecycleOwner, {
             if (it) {
                 binding.favoriteNoMovies.setVisible()
             }
@@ -90,7 +91,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         val moviesLayout = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         watchlistMoviesAdapter = WatchlistAdapter(requireContext(),
             {
-                phoneWatchlistViewModel.onSingleTitlePressed(it)
+                watchlistViewModel.onSingleTitlePressed(it)
             },
             { titleId: Int ->
                 removeTitleDialog(titleId)
@@ -107,7 +108,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         removeFavorite.setContentView(binding.root)
 
         binding.confirmButton.setOnClickListener {
-            phoneWatchlistViewModel.deleteWatchlistTitle(titleId)
+            watchlistViewModel.deleteWatchlistTitle(titleId)
             removeFavorite.dismiss()
         }
         binding.cancelButton.setOnClickListener {

@@ -17,7 +17,17 @@
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_details_episodes_item.xml" value="0.46510416666666665" />
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_sidebar.xml" value="0.3171171171171171" />
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_top_title_header.xml" value="0.33" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_bottom_fragment_sheet.xml" value="0.296875" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button.xml" value="0.296875" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button_favorite_tv.xml" value="0.296875" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button_tv.xml" value="0.296875" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button_tv_catalogue.xml" value="0.296875" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_tv_single_title.xml" value="0.5451559934318555" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_tv_video_player.xml" value="0.31851851851851853" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_tv_watchlist.xml" value="0.32592592592592595" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_tv_title_details.xml" value="0.3458333333333333" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/tv_sidebar.xml" value="0.17916666666666667" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/tv_top_title_header.xml" value="0.3458333333333333" />
       </map>
     </option>
   </component>

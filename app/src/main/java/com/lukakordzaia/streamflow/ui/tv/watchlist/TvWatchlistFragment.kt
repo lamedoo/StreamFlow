@@ -10,26 +10,31 @@ import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
-import com.lukakordzaia.streamflow.ui.phone.phonewatchlist.PhoneWatchlistViewModel
+import com.lukakordzaia.streamflow.interfaces.TvWatchListTopRow
+import com.lukakordzaia.streamflow.ui.shared.WatchlistViewModel
 import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCataloguePresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvWatchlistFragment : VerticalGridSupportFragment() {
-    private val phoneWatchlistViewModel: PhoneWatchlistViewModel by viewModel()
+    private val watchlistViewModel: WatchlistViewModel by viewModel()
     private lateinit var gridAdapter: ArrayObjectAdapter
+    private lateinit var type: String
+    private var hasFocus = false
 
     private var page = 1
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
     var hasFavorites: TvHasFavoritesListener? = null
+    var tvWatchListTopRow: TvWatchListTopRow? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onTitleSelected = context as? TvCheckTitleSelected
         onFirstItem = context as? TvCheckFirstItem
         hasFavorites = context as? TvHasFavoritesListener
+        tvWatchListTopRow = context as? TvWatchListTopRow
     }
 
     override fun onDetach() {
@@ -37,6 +42,7 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
         onTitleSelected = null
         onFirstItem = null
         hasFavorites = null
+        tvWatchListTopRow = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,19 +51,23 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
         setupFragment()
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        phoneWatchlistViewModel.getUserWatchlist(page)
+        val args = arguments
+        val bundledType = args?.getString("type")
+
+        type = bundledType!!
+
+        watchlistViewModel.getUserWatchlist(page, type)
         gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
 
-        phoneWatchlistViewModel.noFavorites.observe(viewLifecycleOwner, {
+        watchlistViewModel.noFavorites.observe(viewLifecycleOwner, {
             if (it) {
                 hasFavorites?.hasFavorites(false)
             }
         })
 
-        phoneWatchlistViewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
+        watchlistViewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
             watchlist.forEach {
                 gridAdapter.add(it)
             }
@@ -108,6 +118,12 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
                 onFirstItem?.isFirstItem(true, null, null)
             }
 
+            if (indexOfItem in 0..5) {
+                tvWatchListTopRow?.isTopRow(true)
+            } else {
+                tvWatchListTopRow?.isTopRow(false)
+            }
+
             gridSize.forEach {
                 if (it % 6 == 0) {
                     if (indexOfItem == it) {
@@ -118,7 +134,7 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
-                phoneWatchlistViewModel.getUserWatchlist(page)
+                watchlistViewModel.getUserWatchlist(page, type)
             }
         }
     }

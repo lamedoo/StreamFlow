@@ -34,6 +34,7 @@ import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.T
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvEpisodesPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvSeasonsPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
+import com.lukakordzaia.streamflow.ui.tv.watchlist.TvWatchlistActivity
 import kotlinx.android.synthetic.main.tv_details_season_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -315,6 +316,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
             browseFrameLayout.onFocusSearchListener = OnFocusSearchListener setOnFocusSearchListener@{ _: View?, direction: Int ->
                 if (direction == View.FOCUS_UP) {
                     this.hasFocus = true
+                    (requireActivity() as TvWatchlistActivity).buttonFocusability(true)
                     return@setOnFocusSearchListener viewToFocus
                 } else {
                     return@setOnFocusSearchListener null

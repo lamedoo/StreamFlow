@@ -39,7 +39,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCheckFirstItem {
     private val profileViewModel: ProfileViewModel by viewModel()
-    private val sidebarAnimations: TvSidebarAnimations by inject()
+    protected val sidebarAnimations: TvSidebarAnimations by inject()
     protected val sharedPreferences: SharedPreferences by inject()
 
     private lateinit var signInButton: View

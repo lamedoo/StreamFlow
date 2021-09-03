@@ -9,7 +9,8 @@
 
     <include
         android:id="@+id/tv_sidebar"
-        layout="@layout/tv_sidebar"/>
+        layout="@layout/tv_sidebar"
+        tools:visibility="gone"/>
 
     <include
         android:id="@+id/tv_sidebar_collapsed"
@@ -17,17 +18,71 @@
 
     <include
         android:id="@+id/title_info"
-        layout="@layout/tv_top_title_header"/>
+        layout="@layout/tv_top_title_header"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toEndOf="@id/tv_sidebar_collapsed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <fragment
-        android:name="com.lukakordzaia.streamflow.ui.tv.watchlist.TvWatchlistFragment"
-        android:id="@+id/tv_main_fragment"
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="@drawable/background_button_tv_catalogue_container"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@id/tv_sidebar_collapsed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/host_container">
+
+        <TextView
+            android:id="@+id/watchlist_movies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/background_button_tv"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+            android:padding="15dp"
+            android:text="@string/movies"
+            android:textColor="@color/secondary_text_color" />
+
+        <TextView
+            android:id="@+id/watchlist_tvShows"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/background_button_tv"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+            android:padding="15dp"
+            android:text="@string/tv_shows"
+            android:textColor="@color/secondary_text_color" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/host_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="30dp"
+        android:background="@color/primaryColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintWidth_default="percent"
-        app:layout_constraintHeight_percent="0.6"/>
+        app:layout_constraintHeight_percent="0.5">
+
+        <fragment
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:id="@+id/tv_watchlist_nav_host"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/no_favorites_container"
@@ -43,7 +98,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <LinearLayout
             android:id="@+id/tv_settings_back"

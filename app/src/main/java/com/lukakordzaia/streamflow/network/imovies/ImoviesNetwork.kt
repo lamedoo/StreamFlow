@@ -74,6 +74,10 @@ interface ImoviesNetwork {
     @GET(EndPoints.USER_WATCHLIST)
     suspend fun getUserWatchlist(@Query("page") page: Int) : Response<GetUserWatchlistResponse>
 
+    @GET(EndPoints.USER_WATCHLIST)
+    suspend fun getUserWatchlistByType(@Query("page") page: Int,
+                                       @Query("filters[type]") type: String) : Response<GetUserWatchlistResponse>
+
     @DELETE(EndPoints.USER_WATCHLIST_STATUS)
     suspend fun deleteWatchlistTitle(@Path("id") id: Int) : Response<UserWatchListStatusResponse>
 
