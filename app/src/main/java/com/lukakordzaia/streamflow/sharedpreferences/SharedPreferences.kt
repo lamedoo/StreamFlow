@@ -10,6 +10,7 @@ class SharedPreferences(context: Context) {
     private val traktTokenDefValue = ""
     private val traktRefreshTokenDefValue = ""
     private val tvVideoPlayerOnDefValue = false
+    private val fromWatchlistDefValue = -1
     private val authPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     private val authEditor = authPrefs.edit()
 
@@ -58,6 +59,15 @@ class SharedPreferences(context: Context) {
         return authPrefs.getBoolean(TV_VIDEO_PLAYER_ON, tvVideoPlayerOnDefValue)
     }
 
+    fun saveFromWatchlist(position: Int) {
+        authEditor.putInt(IS_FROM_WATCHLIST, position)
+        authEditor.apply()
+    }
+
+    fun getFromWatchlist(): Int {
+        return authPrefs.getInt(IS_FROM_WATCHLIST, fromWatchlistDefValue)
+    }
+
     fun saveTraktToken(accessToken: String) {
         authEditor.putString(TRAKT_TOKEN, accessToken)
         authEditor.apply()
@@ -85,5 +95,6 @@ class SharedPreferences(context: Context) {
         const val TRAKT_TOKEN = "trakt token"
         const val TRAKT_REFRESH_TOKEN = "trakt refresh token"
         const val TV_VIDEO_PLAYER_ON = "video player is on"
+        const val IS_FROM_WATCHLIST = "is from watchlist"
     }
 }

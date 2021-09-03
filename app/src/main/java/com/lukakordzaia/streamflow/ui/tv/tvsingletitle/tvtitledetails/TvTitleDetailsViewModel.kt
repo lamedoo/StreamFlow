@@ -166,7 +166,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         }
     }
 
-    fun deleteWatchlistTitle(id: Int) {
+    fun deleteWatchlistTitle(id: Int, fromWatchlist: Int?) {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (val delete = environment.watchlistRepository.deleteWatchlistTitle(id)) {
@@ -174,6 +174,10 @@ class TvTitleDetailsViewModel : BaseViewModel() {
                     _addToFavorites.value = false
                     favoriteLoader.value = LoadingState.LOADED
                     newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
+
+                    if (fromWatchlist != null) {
+                        sharedPreferences.saveFromWatchlist(fromWatchlist)
+                    }
                 }
             }
         }

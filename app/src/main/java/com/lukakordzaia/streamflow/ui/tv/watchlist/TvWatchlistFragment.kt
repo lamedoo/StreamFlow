@@ -11,16 +11,20 @@ import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.interfaces.TvWatchListTopRow
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.WatchlistViewModel
 import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCataloguePresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvWatchlistFragment : VerticalGridSupportFragment() {
     private val watchlistViewModel: WatchlistViewModel by viewModel()
+    private val sharedPreferences: SharedPreferences by inject()
     private lateinit var gridAdapter: ArrayObjectAdapter
     private lateinit var type: String
-    private var hasFocus = false
+
+    private var selectedItem = 0
 
     private var page = 1
 
@@ -45,6 +49,14 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
         tvWatchListTopRow = null
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        if (sharedPreferences.getFromWatchlist() != -1) {
+            gridAdapter.removeItems(sharedPreferences.getFromWatchlist(), 1)
+            sharedPreferences.saveFromWatchlist(-1)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = ""
@@ -55,7 +67,6 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         val args = arguments
         val bundledType = args?.getString("type")
-
         type = bundledType!!
 
         watchlistViewModel.getUserWatchlist(page, type)
@@ -94,6 +105,7 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
         ) {
             if (item is SingleTitleModel) {
                 val intent = Intent(context, TvSingleTitleActivity::class.java)
+                intent.putExtra("FromWatchlist", gridAdapter.indexOf(item))
                 intent.putExtra("titleId", item.id)
                 intent.putExtra("isTvShow", item.isTvShow)
                 activity?.startActivity(intent)
@@ -105,6 +117,8 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
+
+            selectedItem = indexOfItem
 
             if (item is SingleTitleModel) {
                 onTitleSelected?.getTitleId(item.id, null)

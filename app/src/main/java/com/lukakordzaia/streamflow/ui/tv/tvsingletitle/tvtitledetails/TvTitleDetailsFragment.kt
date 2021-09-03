@@ -46,10 +46,11 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
         val continueWatching = activity?.intent?.getSerializableExtra("continue") as? Boolean
+        val fromWatchlist = activity?.intent?.getSerializableExtra("FromWatchlist") as? Int
 
         fragmentListeners(titleId, isTvShow)
         fragmentObservers(titleId)
-        favoriteContainer(titleId)
+        favoriteContainer(titleId, fromWatchlist)
         titleDetails(titleId, isTvShow)
         checkContinueWatching(continueWatching)
     }
@@ -151,13 +152,13 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         })
     }
 
-    private fun favoriteContainer(titleId: Int) {
+    private fun favoriteContainer(titleId: Int, fromWatchlist: Int?) {
         tvTitleDetailsViewModel.addToFavorites.observe(viewLifecycleOwner, {
             if (it) {
                 binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
                 binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
                 binding.favoriteContainer.setOnClickListener {
-                    tvTitleDetailsViewModel.deleteWatchlistTitle(titleId)
+                    tvTitleDetailsViewModel.deleteWatchlistTitle(titleId, fromWatchlist)
                 }
             } else {
                 binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
