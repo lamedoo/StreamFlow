@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.lukakordzaia.streamflow.App
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvWatchlistBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
@@ -22,7 +23,7 @@ class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), T
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
     private var hasFavorites = true
     private var isTop = true
-    private var type = "movie"
+    private var type = AppConstants.WATCHLIST_MOVIES
 
     override fun getViewBinding() = ActivityTvWatchlistBinding.inflate(layoutInflater)
 
@@ -41,14 +42,14 @@ class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), T
 
         buttonFocusability(false)
 
-        fragmentType("movie")
+        fragmentType(AppConstants.WATCHLIST_MOVIES)
 
         binding.watchlistTvShows.setOnClickListener {
-            fragmentType("series")
+            fragmentType(AppConstants.WATCHLIST_TV_SHOWS)
         }
 
         binding.watchlistMovies.setOnClickListener {
-            fragmentType("movie")
+            fragmentType(AppConstants.WATCHLIST_MOVIES)
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -83,7 +84,7 @@ class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), T
                 when {
                     isTop -> {
                         buttonFocusability(!binding.tvSidebar.tvSidebar.isVisible)
-                        if (type == "movie") binding.watchlistMovies.requestFocus() else binding.watchlistTvShows.requestFocus()
+                        if (type == AppConstants.WATCHLIST_MOVIES) binding.watchlistMovies.requestFocus() else binding.watchlistTvShows.requestFocus()
 //                        true
                     }
                     else -> super.onKeyDown(keyCode, event)
@@ -137,11 +138,11 @@ class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), T
         this.type = type
 
         when (type) {
-            "movie" -> {
+            AppConstants.WATCHLIST_MOVIES -> {
                 binding.watchlistMovies.setDrawableBackground(R.drawable.background_button_tv_catalogue)
                 binding.watchlistTvShows.setDrawableBackground(R.drawable.background_button_tv)
             }
-            "series" -> {
+            AppConstants.WATCHLIST_TV_SHOWS -> {
                 binding.watchlistMovies.setDrawableBackground(R.drawable.background_button_tv)
                 binding.watchlistTvShows.setDrawableBackground(R.drawable.background_button_tv_catalogue)
             }

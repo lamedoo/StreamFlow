@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
@@ -22,6 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
     private val watchlistViewModel: WatchlistViewModel by viewModel()
     private lateinit var watchlistMoviesAdapter: WatchlistAdapter
+    private var type = AppConstants.WATCHLIST_MOVIES
 
     private var page = 1
     private var pastVisibleItems: Int = 0
@@ -39,12 +39,12 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         fragmentListeners()
         fragmentObservers()
         favMoviesContainer()
-        setButtons("movie")
+        setButtons(AppConstants.WATCHLIST_MOVIES)
     }
 
     private fun authCheck() {
         if (sharedPreferences.getLoginToken() != "") {
-            watchlistViewModel.getUserWatchlist(page)
+            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES)
             binding.favoriteMoviesContainer.setVisible()
             binding.favoriteNoAuth.setGone()
         } else {
@@ -64,14 +64,18 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
 
         binding.watchlistMovies.setOnClickListener {
             page = 1
-            watchlistViewModel.getUserWatchlist(page, "movie")
-            setButtons("movie")
+            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES)
+            setButtons(AppConstants.WATCHLIST_MOVIES)
+
+            type = AppConstants.WATCHLIST_MOVIES
         }
 
         binding.watchlistTvShows.setOnClickListener {
             page = 1
-            watchlistViewModel.getUserWatchlist(page, "series")
-            setButtons("series")
+            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_TV_SHOWS)
+            setButtons(AppConstants.WATCHLIST_TV_SHOWS)
+
+            type = AppConstants.WATCHLIST_TV_SHOWS
         }
     }
 
@@ -108,9 +112,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         })
 
         watchlistViewModel.noFavorites.observe(viewLifecycleOwner, {
-            if (it) {
-                binding.favoriteNoMovies.setVisible()
-            }
+            binding.favoriteNoMovies.setVisibleOrGone(it)
         })
 
         val moviesLayout = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
@@ -160,17 +162,17 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
     private fun fetchMoreTitle() {
         binding.favoriteMoviesProgressBar
         page++
-        watchlistViewModel.getUserWatchlist(page)
+        watchlistViewModel.getUserWatchlist(page, type)
         loading = false
     }
 
     private fun setButtons(type: String) {
         when (type) {
-            "movie" -> {
+            AppConstants.WATCHLIST_MOVIES -> {
                 binding.watchlistMovies.setColor(R.color.accent_color)
                 binding.watchlistTvShows.setColor(R.color.secondary_color)
             }
-            "series" -> {
+            AppConstants.WATCHLIST_TV_SHOWS -> {
                 binding.watchlistMovies.setColor(R.color.secondary_color)
                 binding.watchlistTvShows.setColor(R.color.accent_color)
             }

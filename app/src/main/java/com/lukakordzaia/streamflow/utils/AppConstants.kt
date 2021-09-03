@@ -45,5 +45,8 @@ class AppConstants {
         const val VIDEO_PLAYER_DATA = "video player data"
 
         const val NO_INTERNET = "შეამოწმეთ ინტერნეტთან კავშირი"
+
+        const val WATCHLIST_MOVIES = "movie"
+        const val WATCHLIST_TV_SHOWS = "series"
     }
 }

@@ -14,7 +14,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.phone.phonewatchlist.PhoneWatchlistFragment">
@@ -89,13 +88,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/watchlist_movies">
 
-<!--                <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:title="@string/watchlist"-->
-<!--                    app:arrow_visibility="false"/>-->
-
                 <TextView
                     android:id="@+id/favorite_no_movies"
                     android:layout_width="match_parent"
@@ -119,6 +111,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:clipToPadding="false"
+                    android:paddingBottom="100dp"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="2"
                     tools:listitem="@layout/rv_watchlist_item"/>

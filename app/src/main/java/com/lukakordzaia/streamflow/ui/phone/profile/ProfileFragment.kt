@@ -66,9 +66,8 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     }
 
     private fun fragmentListeners() {
-
         binding.gSignIn.setOnClickListener {
-            navController(ProfileFragmentDirections.actionProfileFragmentToLoginBottomSheetFragment())
+            profileViewModel.onLoginPressed()
         }
 
         binding.gSignOut.setOnClickListener {

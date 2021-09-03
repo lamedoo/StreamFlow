@@ -31,11 +31,6 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneHomeBinding
         get() = FragmentPhoneHomeBinding::inflate
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onStart() {
         super.onStart()
         if (sharedPreferences.getTvVideoPlayerOn()) {
@@ -59,7 +54,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
 
     private fun fragmentListeners() {
         binding.toolbar.homeProfile.setOnClickListener {
-            navController(HomeFragmentDirections.actionHomeFragmentToProfileFragmentNav())
+            homeViewModel.onProfilePressed()
         }
 
         binding.newMoviesHeader.setOnClickListener {
@@ -236,19 +231,5 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
             null
         )
         ))
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.home_fragment_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.profile_button -> {
-                navController(HomeFragmentDirections.actionHomeFragmentToProfileFragmentNav())
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

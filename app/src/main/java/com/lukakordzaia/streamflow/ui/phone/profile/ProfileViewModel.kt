@@ -16,6 +16,7 @@ import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRe
 import com.lukakordzaia.streamflow.network.models.trakttv.response.GetDeviceCodeResponse
 import com.lukakordzaia.streamflow.network.models.trakttv.response.GetUserTokenResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.ui.phone.home.HomeFragmentDirections
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
@@ -36,6 +37,10 @@ class ProfileViewModel : BaseViewModel() {
 
     private val _traktSfListExists = MutableLiveData<Boolean>()
     val traktSfListExists: LiveData<Boolean> = _traktSfListExists
+
+    fun onLoginPressed() {
+        navigateToNewFragment(ProfileFragmentDirections.actionProfileFragmentToLoginBottomSheetFragment())
+    }
 
     fun userLogin(loginBody: PostLoginBody) {
         loginLoader.value = LoadingState.LOADING

@@ -45,6 +45,10 @@ class HomeViewModel : BaseViewModel() {
         fetchContent(1)
     }
 
+    fun onProfilePressed() {
+        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToProfileFragmentNav())
+    }
+
     fun onSingleTitlePressed(start: Int, titleId: Int) {
         when (start) {
             AppConstants.NAV_HOME_TO_SINGLE -> navigateToNewFragment(

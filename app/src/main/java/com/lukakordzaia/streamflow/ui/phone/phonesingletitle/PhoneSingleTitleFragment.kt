@@ -115,11 +115,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
                     )
                 )
             } else {
-                binding.singleTitleDetailsScroll.background = ResourcesCompat.getDrawable(
-                    requireContext().resources,
-                    R.drawable.background_single_title_cover_phone,
-                    null
-                )
+                binding.singleTitleDetailsScroll.setDrawableBackground(R.drawable.background_single_title_cover_phone)
             }
         })
 

@@ -31,7 +31,7 @@ class WatchlistViewModel : BaseViewModel() {
         navigateToNewFragment(PhoneWatchlistFragmentDirections.actionPhoneFavoritesFragmentToProfileFragmentNav())
     }
 
-    fun getUserWatchlist(page: Int, type: String = "movie") {
+    fun getUserWatchlist(page: Int, type: String) {
         watchListLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (val watchlist = environment.watchlistRepository.getUserWatchlist(page, type)) {
