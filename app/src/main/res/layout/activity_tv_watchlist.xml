@@ -93,48 +93,22 @@
         android:gravity="center"
         android:orientation="vertical"
         android:background="@color/secondary_color"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_container"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
-        <LinearLayout
-            android:id="@+id/tv_settings_back"
-            android:layout_width="250dp"
+        <include
+            android:id="@+id/back_button_info"
+            layout="@layout/tv_back_button_info_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            app:layout_constraintBottom_toTopOf="@+id/tv_settings_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="დააჭირეთ "
-                android:textColor="@color/general_text_color"
-                android:textSize="10sp" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/icon_arrow_left" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text=" უკან გასასვლელად"
-                android:textColor="@color/general_text_color"
-                android:textSize="10sp" />
-
-        </LinearLayout>
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintBottom_toTopOf="@id/title_name"
+            app:layout_constraintStart_toStartOf="@id/title_name"/>
 
         <TextView
             android:layout_width="wrap_content"

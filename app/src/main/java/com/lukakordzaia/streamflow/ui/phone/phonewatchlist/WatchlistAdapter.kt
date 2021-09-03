@@ -11,7 +11,7 @@ import com.lukakordzaia.streamflow.utils.setImage
 class WatchlistAdapter(
     private val context: Context,
     private val onTitleClick: (titleId: Int) -> Unit,
-    private val onMoreMenuClick: (titleId: Int) -> Unit
+    private val onMoreMenuClick: (titleId: Int, position: Int) -> Unit
 ) : RecyclerView.Adapter<WatchlistAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
 
@@ -29,7 +29,7 @@ class WatchlistAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listModel = list[position]
 
-        holder.bind(listModel)
+        holder.bind(listModel, position)
     }
 
     override fun getItemCount(): Int {
@@ -37,7 +37,7 @@ class WatchlistAdapter(
     }
 
     inner class ViewHolder(val view: RvWatchlistItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: SingleTitleModel) {
+        fun bind(model: SingleTitleModel, position: Int) {
             view.itemPoster.setImage(model.poster, true)
 
             view.isTvShow.text = if (model.isTvShow) "სერიალი" else "ფილმი"
@@ -47,7 +47,7 @@ class WatchlistAdapter(
             }
 
             view.removeItem.setOnClickListener {
-                onMoreMenuClick(model.id)
+                onMoreMenuClick(model.id, position)
             }
         }
     }

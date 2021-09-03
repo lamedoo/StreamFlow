@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneWatchlistBinding
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -20,6 +21,12 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
     private val watchlistViewModel: WatchlistViewModel by viewModel()
     private lateinit var watchlistMoviesAdapter: WatchlistAdapter
     private lateinit var watchlistTvShowsAdapter: WatchlistAdapter
+
+    private var page = 1
+    private var pastVisibleItems: Int = 0
+    private var visibleItemCount: Int = 0
+    private var totalItemCount: Int = 0
+    private var loading = false
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneWatchlistBinding
         get() = FragmentPhoneWatchlistBinding::inflate
@@ -35,7 +42,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
 
     private fun authCheck() {
         if (sharedPreferences.getLoginToken() != "") {
-            watchlistViewModel.getUserWatchlist(1)
+            watchlistViewModel.getUserWatchlist(page)
             binding.favoriteMoviesContainer.setVisible()
             binding.favoriteNoAuth.setGone()
         } else {
@@ -66,6 +73,10 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         watchlistViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
         })
+
+        watchlistViewModel.removedTitle.observe(viewLifecycleOwner, EventObserver {
+            watchlistMoviesAdapter.notifyItemRemoved(it)
+        })
     }
 
     private fun favMoviesContainer() {
@@ -93,27 +104,49 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
             {
                 watchlistViewModel.onSingleTitlePressed(it)
             },
-            { titleId: Int ->
-                removeTitleDialog(titleId)
+            { titleId: Int, position: Int ->
+                removeTitleDialog(titleId, position)
             }
         )
         binding.rvFavoritesMovies.layoutManager = moviesLayout
         binding.rvFavoritesMovies.adapter = watchlistMoviesAdapter
+
+        binding.rvFavoritesMovies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    visibleItemCount = moviesLayout.childCount
+                    totalItemCount = moviesLayout.itemCount
+                    pastVisibleItems = moviesLayout.findFirstVisibleItemPosition()
+
+                    if (!loading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                        loading = true
+                        fetchMoreTitle()
+                    }
+                }
+            }
+        })
     }
 
-    private fun removeTitleDialog(titleId: Int) {
+    private fun removeTitleDialog(titleId: Int, position: Int) {
         val binding = DialogRemoveFavoriteBinding.inflate(LayoutInflater.from(requireContext()))
         val removeFavorite = Dialog(requireContext())
         removeFavorite.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         removeFavorite.setContentView(binding.root)
 
         binding.confirmButton.setOnClickListener {
-            watchlistViewModel.deleteWatchlistTitle(titleId)
+            watchlistViewModel.deleteWatchlistTitle(titleId, position)
             removeFavorite.dismiss()
         }
         binding.cancelButton.setOnClickListener {
             removeFavorite.dismiss()
         }
         removeFavorite.show()
+    }
+
+    private fun fetchMoreTitle() {
+        binding.favoriteMoviesProgressBar
+        page++
+        watchlistViewModel.getUserWatchlist(page)
+        loading = false
     }
 }
