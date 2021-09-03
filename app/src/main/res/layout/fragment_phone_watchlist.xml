@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:background="@color/primaryColor">
 
     <include android:id="@+id/toolbar"
         layout="@layout/main_top_toolbar"
@@ -27,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,20 +58,43 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/watchlist_movies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movies"
+                android:textSize="25sp"
+                android:textColor="@color/secondary_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_75_bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/watchlist_tvShows"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="@string/tv_shows"
+                android:textSize="25sp"
+                android:textColor="@color/secondary_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_75_bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/watchlist_movies"/>
+
             <LinearLayout
                 android:id="@+id/favorite_movies_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/watchlist_movies">
 
-                <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:title="@string/watchlist"
-                    app:arrow_visibility="false"/>
+<!--                <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:title="@string/watchlist"-->
+<!--                    app:arrow_visibility="false"/>-->
 
                 <TextView
                     android:id="@+id/favorite_no_movies"
@@ -93,7 +118,10 @@
                     android:id="@+id/rv_favorites_movies"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp" />
+                    android:layout_marginTop="20dp"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="2"
+                    tools:listitem="@layout/rv_watchlist_item"/>
 
             </LinearLayout>
 

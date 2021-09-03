@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -194,4 +195,8 @@ fun ImageView.setImage(image: String?, isPhone: Boolean) {
 
 fun View.setDrawableBackground(background: Int) {
     this.background = ResourcesCompat.getDrawable(resources, background, null)
+}
+
+fun TextView.setColor(color: Int) {
+    this.setTextColor(ResourcesCompat.getColor(resources, color, null))
 }

@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneWatchlistBinding
 import com.lukakordzaia.streamflow.network.LoadingState
@@ -20,7 +22,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
     private val watchlistViewModel: WatchlistViewModel by viewModel()
     private lateinit var watchlistMoviesAdapter: WatchlistAdapter
-    private lateinit var watchlistTvShowsAdapter: WatchlistAdapter
 
     private var page = 1
     private var pastVisibleItems: Int = 0
@@ -38,6 +39,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         fragmentListeners()
         fragmentObservers()
         favMoviesContainer()
+        setButtons("movie")
     }
 
     private fun authCheck() {
@@ -58,6 +60,18 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
 
         binding.profileButton.setOnClickListener {
             watchlistViewModel.onProfileButtonPressed()
+        }
+
+        binding.watchlistMovies.setOnClickListener {
+            page = 1
+            watchlistViewModel.getUserWatchlist(page, "movie")
+            setButtons("movie")
+        }
+
+        binding.watchlistTvShows.setOnClickListener {
+            page = 1
+            watchlistViewModel.getUserWatchlist(page, "series")
+            setButtons("series")
         }
     }
 
@@ -148,5 +162,18 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         page++
         watchlistViewModel.getUserWatchlist(page)
         loading = false
+    }
+
+    private fun setButtons(type: String) {
+        when (type) {
+            "movie" -> {
+                binding.watchlistMovies.setColor(R.color.accent_color)
+                binding.watchlistTvShows.setColor(R.color.secondary_color)
+            }
+            "series" -> {
+                binding.watchlistMovies.setColor(R.color.secondary_color)
+                binding.watchlistTvShows.setColor(R.color.accent_color)
+            }
+        }
     }
 }

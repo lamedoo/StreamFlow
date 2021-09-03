@@ -40,8 +40,6 @@ class WatchlistAdapter(
         fun bind(model: SingleTitleModel, position: Int) {
             view.itemPoster.setImage(model.poster, true)
 
-            view.isTvShow.text = if (model.isTvShow) "სერიალი" else "ფილმი"
-
             view.root.setOnClickListener {
                 onTitleClick(model.id)
             }
