@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:minHeight="100dp"
     android:orientation="vertical"
-    android:padding="@dimen/fragment_padding"
+    android:padding="20dp"
     tools:context=".ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment">
 
     <TextView

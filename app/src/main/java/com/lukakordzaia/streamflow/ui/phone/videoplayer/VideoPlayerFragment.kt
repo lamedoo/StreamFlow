@@ -32,10 +32,10 @@ import kotlinx.android.synthetic.main.fragment_phone_video_player.*
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
-    private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
+    private val videoPlayerViewModel: VideoPlayerViewModel by sharedViewModel()
     private val buildMediaSource: BuildMediaSource by inject()
     private lateinit var videoPlayerData: VideoPlayerData
     private lateinit var videoPlayerInfo: VideoPlayerInfo
@@ -76,13 +76,21 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
 
         mediaPlayer.setPlayerListener(PlayerListeners())
 
+        sharedPreferences.saveTvVideoPlayerOn(true)
+
         phone_exo_back.setOnClickListener {
             requireActivity().onBackPressed()
         }
 
         if (videoPlayerData.trailerUrl == null) {
             videoPlayerViewModel.getTitleFiles(
-                VideoPlayerInfo(videoPlayerData.titleId,  videoPlayerData.isTvShow,  videoPlayerData.chosenSeason, videoPlayerData.chosenEpisode, videoPlayerData.chosenLanguage)
+                VideoPlayerInfo(
+                    videoPlayerData.titleId,
+                    videoPlayerData.isTvShow,
+                    videoPlayerData.chosenSeason,
+                    videoPlayerData.chosenEpisode,
+                    videoPlayerData.chosenLanguage
+                )
             )
             videoPlayerViewModel.getSingleTitleData(videoPlayerData.titleId)
         }
@@ -106,18 +114,10 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (Util.SDK_INT < 24) {
-            releasePlayer()
-        }
-    }
-
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
-            releasePlayer()
+            requireActivity().onBackPressed()
         }
-        requireActivity().onBackPressed()
         super.onStop()
     }
 
@@ -211,38 +211,35 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         val nextButton = phone_next_button
 
         if (videoPlayerInfo.isTvShow) {
-            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, {
-                if (videoPlayerInfo.chosenEpisode == it) {
-                    nextButton?.setOnClickListener {
-                        episodeHasEnded = false
-                        player.clearMediaItems()
-                        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
-                            videoPlayerInfo.titleId,
-                            videoPlayerInfo.isTvShow,
-                            videoPlayerInfo.chosenSeason+1,
-                            1,
-                            videoPlayerInfo.chosenLanguage
-                        ))
-                        mediaPlayer.initPlayer(binding.phoneTitlePlayer, 0, 0L)
-                    }
-                } else {
-                    nextButton?.setOnClickListener {
-                        episodeHasEnded = false
-                        player.clearMediaItems()
-                        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
-                            videoPlayerInfo.titleId,
-                            videoPlayerInfo.isTvShow,
-                            videoPlayerInfo.chosenSeason,
-                            videoPlayerInfo.chosenEpisode+1,
-                            videoPlayerInfo.chosenLanguage
-                        ))
-                        mediaPlayer.initPlayer(binding.phoneTitlePlayer, 0, 0L)
-                    }
+            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
+                nextButton.setOnClickListener {
+                    nextButtonFunction(videoPlayerInfo.chosenEpisode == lastEpisode)
                 }
             })
         } else {
             nextButton?.setGone()
         }
+    }
+
+    private fun nextButtonFunction(lastEpisode: Boolean) {
+        videoPlayerViewModel.setVideoPlayerInfo(
+            PlayerDurationInfo(
+                player.currentPosition,
+                player.duration
+            )
+        )
+        videoPlayerViewModel.addContinueWatching()
+
+        episodeHasEnded = false
+        player.clearMediaItems()
+        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
+            videoPlayerInfo.titleId,
+            videoPlayerInfo.isTvShow,
+            if (lastEpisode) videoPlayerInfo.chosenSeason+1 else videoPlayerInfo.chosenSeason,
+            if (lastEpisode) 1 else videoPlayerInfo.chosenEpisode+1,
+            videoPlayerInfo.chosenLanguage
+        ))
+        mediaPlayer.initPlayer(binding.phoneTitlePlayer, 0, 0L)
     }
 
     private fun setTitleName() {
@@ -286,6 +283,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
                 TitleMediaItemsUri(MediaItem.fromUri(
                     Uri.parse(trailerUrl)), "0")
             ))
+            subtitleFunctions(false)
         } else {
             videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
@@ -300,7 +298,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         mediaPlayer.initPlayer(binding.phoneTitlePlayer, 0, watchedTime)
     }
 
-    private fun releasePlayer() {
+    fun releasePlayer() {
         mediaPlayer.releasePlayer {
             videoPlayerViewModel.setVideoPlayerInfo(it)
         }
@@ -308,6 +306,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         if (videoPlayerData.trailerUrl == null) {
             videoPlayerViewModel.addContinueWatching()
         }
+
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {

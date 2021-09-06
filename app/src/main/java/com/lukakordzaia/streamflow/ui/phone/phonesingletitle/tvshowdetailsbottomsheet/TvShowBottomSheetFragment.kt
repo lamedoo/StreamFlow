@@ -54,6 +54,8 @@ class TvShowBottomSheetFragment : BaseBottomSheet<FragmentPhoneTvShowBottomSheet
         super.onViewCreated(view, savedInstanceState)
         binding.chooseDetailsTitle.text = args.titleName
 
+        tvShowBottomSheetViewModel.getSeasonFiles(args.titleId, 1)
+
         fragmentListeners()
         fragmentObservers()
         checkAuth()

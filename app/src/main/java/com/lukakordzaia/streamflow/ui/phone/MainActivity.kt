@@ -16,22 +16,25 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre.SingleGenreFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlestudio.SingleStudioFragment
-import com.lukakordzaia.streamflow.ui.phone.favorites.PhoneFavoritesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.NewMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment
 import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment
+import com.lukakordzaia.streamflow.ui.phone.phonewatchlist.PhoneWatchlistFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileFragment
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesFragment
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
+    private val sharedPreferences: SharedPreferences by inject()
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -45,6 +48,8 @@ class MainActivity : AppCompatActivity() {
 
         setUpNavigation()
         observeFragments()
+
+        sharedPreferences.saveTvVideoPlayerOn(false)
     }
 
     private fun setUpNavigation() {
@@ -68,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 when (f) {
                     is HomeFragment,
                     is CatalogueFragment,
-                    is SearchTitlesFragment, is PhoneFavoritesFragment -> {
+                    is SearchTitlesFragment, is PhoneWatchlistFragment -> {
                         showBottomNavigation()
                     }
                     is ProfileFragment,

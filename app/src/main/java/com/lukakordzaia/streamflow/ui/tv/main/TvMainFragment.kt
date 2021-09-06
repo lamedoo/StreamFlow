@@ -24,6 +24,7 @@ import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.network.LoadingState
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
@@ -34,11 +35,13 @@ import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvMainFragment : BrowseSupportFragment() {
     private val homeViewModel: HomeViewModel by viewModel()
+    private val sharedPreferences: SharedPreferences by inject()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var metrics: DisplayMetrics
     private lateinit var backgroundManager: BackgroundManager
@@ -56,6 +59,14 @@ class TvMainFragment : BrowseSupportFragment() {
         super.onDetach()
         onTitleSelected = null
         onFirstItem = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (sharedPreferences.getTvVideoPlayerOn()) {
+            homeViewModel.checkAuthDatabase()
+            sharedPreferences.saveTvVideoPlayerOn(false)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -232,30 +243,36 @@ class TvMainFragment : BrowseSupportFragment() {
                 rowViewHolder: RowPresenter.ViewHolder,
                 row: Row
         ) {
-            if (item is SingleTitleModel) {
-                val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
-                    putExtra("titleId", item.id)
-                    putExtra("isTvShow", item.isTvShow)
-                }
-                activity?.startActivity(intent)
-            } else if (item is ContinueWatchingModel) {
-                val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
-                    putExtra("titleId", item.id)
-                    putExtra("isTvShow", item.isTvShow)
-                    putExtra("continue", true)
-                }
-                activity?.startActivity(intent)
-            } else if (item is TvCategoriesList) {
-                when (item.categoriesId) {
-                    0 -> {
-                        val intent = Intent(context, TvCatalogueActivity::class.java)
-                        intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_MOVIES)
-                        activity?.startActivity(intent)
+            when (item) {
+                is SingleTitleModel -> {
+                    val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
+                        putExtra("titleId", item.id)
+                        putExtra("isTvShow", item.isTvShow)
                     }
-                    1 -> {
-                        val intent = Intent(context, TvCatalogueActivity::class.java)
-                        intent.putExtra("type", AppConstants.TV_CATEGORY_TOP_TV_SHOWS)
-                        activity?.startActivity(intent)
+                    requireActivity().startActivity(intent)
+                }
+                is ContinueWatchingModel -> {
+                    val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
+                        putExtra("titleId", item.id)
+                        putExtra("isTvShow", item.isTvShow)
+                        putExtra("continue", true)
+                    }
+                    requireActivity().startActivity(intent)
+                }
+                is TvCategoriesList -> {
+                    when (item.categoriesId) {
+                        0 -> {
+                            val intent = Intent(context, TvCatalogueActivity::class.java).apply {
+                                putExtra("type", AppConstants.TV_CATEGORY_TOP_MOVIES)
+                            }
+                            requireActivity().startActivity(intent)
+                        }
+                        1 -> {
+                            val intent = Intent(context, TvCatalogueActivity::class.java).apply {
+                                putExtra("type", AppConstants.TV_CATEGORY_TOP_TV_SHOWS)
+                            }
+                            requireActivity().startActivity(intent)
+                        }
                     }
                 }
             }

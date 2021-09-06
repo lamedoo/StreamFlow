@@ -7,10 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTvSettingsBinding
 import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
@@ -22,7 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
     private val profileViewModel: ProfileViewModel by viewModel()
-    private var googleSignInClient: GoogleSignInClient? = null
     private var onSettingsSelected: OnSettingsSelected? = null
 
     override fun onAttach(context: Context) {
@@ -33,16 +28,6 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvSettingsBinding
         get() = FragmentTvSettingsBinding::inflate
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -52,8 +37,10 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
     }
 
     private fun authCheck() {
-        if (auth.currentUser == null) {
+        if (sharedPreferences.getLoginToken() == "") {
             binding.tvSettingsSignout.setGone()
+        } else {
+            binding.tvSettingsDelete.setGone()
         }
     }
 
@@ -96,7 +83,6 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
 
             binding.continueButton.setOnClickListener {
                 profileViewModel.deleteContinueWatchingFromRoomFull()
-                profileViewModel.deleteContinueWatchingFromFirestoreFull()
 
                 val intent = Intent(requireContext(), TvSettingsActivity::class.java)
                 startActivity(intent)
@@ -109,10 +95,7 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
         }
 
         binding.tvSettingsSignout.setOnClickListener {
-            auth.signOut()
-            googleSignInClient!!.signOut()
-            val intent = Intent(requireContext(), TvSettingsActivity::class.java)
-            startActivity(intent)
+            profileViewModel.userLogout()
         }
     }
 

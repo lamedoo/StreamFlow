@@ -7,6 +7,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvChooseDetailsSeasonItemBinding
+import com.lukakordzaia.streamflow.utils.setDrawableBackground
 
 class TvShowBottomSheetSeasonAdapter(
         private val context: Context,
@@ -46,9 +47,8 @@ class TvShowBottomSheetSeasonAdapter(
             val isChosen = model == chosenSeason
 
             if (isChosen) {
-                view.rvSeasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.background_rv_season_current_phone, null)
-            } else {
-                view.rvSeasonContainer.background = ResourcesCompat.getDrawable(context.resources, R.drawable.background_rv_season_phone, null)
+                view.rvSeasonContainer.setDrawableBackground(R.drawable.background_rv_season_current_phone)
+                view.rvSeasonContainer.setDrawableBackground(R.drawable.background_rv_season_phone)
             }
 
             view.rvSeasonContainer.setOnClickListener {

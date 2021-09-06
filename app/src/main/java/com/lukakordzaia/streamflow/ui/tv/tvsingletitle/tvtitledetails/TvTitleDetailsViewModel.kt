@@ -5,9 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.streamflow.datamodels.AddFavoritesModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -17,6 +15,8 @@ import kotlinx.coroutines.launch
 
 class TvTitleDetailsViewModel : BaseViewModel() {
     val traktFavoriteLoader = MutableLiveData<LoadingState>()
+    val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
+    val favoriteLoader = MutableLiveData<LoadingState>()
 
     private val _singleTitleData = MutableLiveData<SingleTitleModel>()
     val getSingleTitleResponse: LiveData<SingleTitleModel> = _singleTitleData
@@ -54,10 +54,30 @@ class TvTitleDetailsViewModel : BaseViewModel() {
 
                     _dataLoader.value = LoadingState.LOADED
 
+                    if (sharedPreferences.getLoginToken() == "") {
+                        getSingleContinueWatchingFromRoom(titleId)
+                    } else {
+                        if (data.data.userWatch?.data?.season != null) {
+                            _continueWatchingDetails.value = ContinueWatchingRoom(
+                                titleId = titleId,
+                                language = data.data.userWatch.data.language!!,
+                                watchedDuration = data.data.userWatch.data.progress!!,
+                                titleDuration = data.data.userWatch.data.duration!!,
+                                isTvShow = data.data.isTvShow,
+                                season = data.data.userWatch.data.season,
+                                episode = data.data.userWatch.data.episode!!
+                            )
+                        } else {
+                            _continueWatchingDetails.value = null
+                        }
+                    }
+
                     data.data.genres.data.forEach {
                         fetchTitleGenres.add(it.primaryName!!)
                     }
                     _titleGenres.value = fetchTitleGenres
+
+                    _addToFavorites.value = data.data.userWantsToWatch?.data?.status ?: false
                 }
                 is Result.Error -> {
                     newToastMessage(info.exception)
@@ -69,14 +89,6 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         }
     }
 
-    fun checkAuthDatabase(titleId: Int) {
-        if (currentUser() == null) {
-            getSingleContinueWatchingFromRoom(titleId)
-        } else {
-            checkContinueWatchingInFirestore(titleId)
-        }
-    }
-
     private fun getSingleContinueWatchingFromRoom(titleId: Int) {
         val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
 
@@ -85,26 +97,27 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         }
     }
 
-    private fun checkContinueWatchingInFirestore(titleId: Int) {
-        environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: ContinueWatchingRoom?) {
-                _continueWatchingDetails.value = title
-            }
-
-        })
-    }
-
     fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
         viewModelScope.launch {
             environment.databaseRepository.deleteSingleContinueWatchingFromRoom(titleId)
+            newToastMessage("წაიშალა ნახვების ისტორიიდან სიიდან")
         }
     }
 
-    fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
+    fun hideSingleContinueWatching(titleId: Int) {
+        hideContinueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            val deleteTitle = environment.databaseRepository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
-            if (!deleteTitle) {
-                newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
+            when (val hide = environment.homeRepository.hideTitleContinueWatching(titleId)) {
+                is Result.Success -> {
+                    newToastMessage("დაიმალა განაგრძეთ ყურების სიიდან")
+                    hideContinueWatchingLoader.value = LoadingState.LOADED
+                }
+                is Result.Error -> {
+                    newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
             }
         }
     }
@@ -140,56 +153,33 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         }
     }
 
-    fun addTitleToFavorites(info: SingleTitleModel) {
-        if (currentUser() != null) {
-            traktFavoriteLoader.value = LoadingState.LOADING
-            viewModelScope.launch {
-                val addToFavorites = environment.favoritesRepository.addTitleToFavorites(currentUser()!!.uid, AddFavoritesModel(
-                        info.nameEng!!,
-                        info.isTvShow,
-                        info.id,
-                        info.imdbId!!
-                ))
-                if (addToFavorites) {
+    fun addWatchlistTitle(id: Int) {
+        favoriteLoader.value = LoadingState.LOADING
+        viewModelScope.launch {
+            when (val delete = environment.watchlistRepository.addWatchlistTitle(id)) {
+                is Result.Success -> {
                     newToastMessage("ფილმი დაემატა ფავორიტებში")
                     _addToFavorites.value = true
-                    traktFavoriteLoader.value = LoadingState.LOADED
-                } else {
-                    newToastMessage("სამწუხაროდ ვერ მოხერხდა ფავორიტებში დამატება")
-                    _addToFavorites.value = false
-                    traktFavoriteLoader.value = LoadingState.LOADED
+                    favoriteLoader.value = LoadingState.LOADED
                 }
             }
-        } else {
-            newToastMessage("ფავორიტებში დასამატებლად, გაიარეთ ავტორიზაცია")
         }
     }
 
-    fun removeTitleFromFavorites(titleId: Int) {
-        traktFavoriteLoader.value = LoadingState.LOADING
+    fun deleteWatchlistTitle(id: Int, fromWatchlist: Int?) {
+        favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            val removeFromFavorites = environment.favoritesRepository.removeTitleFromFavorites(currentUser()!!.uid, titleId)
-            if (removeFromFavorites) {
-                _addToFavorites.value = false
-                traktFavoriteLoader.value = LoadingState.LOADED
-                newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
-            } else {
-                _addToFavorites.value = true
-                traktFavoriteLoader.value = LoadingState.LOADED
-            }
-        }
-    }
+            when (val delete = environment.watchlistRepository.deleteWatchlistTitle(id)) {
+                is Result.Success -> {
+                    _addToFavorites.value = false
+                    favoriteLoader.value = LoadingState.LOADED
+                    newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
 
-    fun checkTitleInFirestore(titleId: Int) {
-        if (currentUser() != null) {
-            traktFavoriteLoader.value = LoadingState.LOADING
-            viewModelScope.launch {
-                val checkTitle = environment.favoritesRepository.checkTitleInFavorites(currentUser()!!.uid, titleId)
-                _addToFavorites.value = checkTitle!!.data != null
-                traktFavoriteLoader.value = LoadingState.LOADED
+                    if (fromWatchlist != null) {
+                        sharedPreferences.saveFromWatchlist(fromWatchlist)
+                    }
+                }
             }
-        } else {
-            _addToFavorites.value = false
         }
     }
 

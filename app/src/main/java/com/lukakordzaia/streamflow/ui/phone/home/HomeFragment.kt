@@ -17,6 +17,7 @@ import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 
 class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
@@ -30,9 +31,12 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneHomeBinding
         get() = FragmentPhoneHomeBinding::inflate
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+    override fun onStart() {
+        super.onStart()
+        if (sharedPreferences.getTvVideoPlayerOn()) {
+            continueWatchingContainer()
+            sharedPreferences.saveTvVideoPlayerOn(false)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,8 +45,8 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         fragmentListeners()
         fragmentObservers()
 
-        movieDayContainer()
         continueWatchingContainer()
+        movieDayContainer()
         newMoviesContainer()
         topMoviesContainer()
         topTvShowsContainer()
@@ -50,7 +54,7 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
 
     private fun fragmentListeners() {
         binding.toolbar.homeProfile.setOnClickListener {
-            navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
+            homeViewModel.onProfilePressed()
         }
 
         binding.newMoviesHeader.setOnClickListener {
@@ -220,26 +224,12 @@ class HomeFragment : BaseFragment<FragmentPhoneHomeBinding>() {
         requireActivity().startActivity(VideoPlayerActivity.startFromHomeScreen(requireContext(), VideoPlayerData(
             data.id,
             data.isTvShow,
-            data.season,
+            if (data.isTvShow) data.season else 0,
             data.language,
-            data.episode,
-            data.watchedDuration,
+            if (data.isTvShow) data.episode else 0,
+            TimeUnit.SECONDS.toMillis(data.watchedDuration),
             null
         )
         ))
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.home_fragment_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.profile_button -> {
-                navController(HomeFragmentDirections.actionHomeFragmentToProfileFragment())
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

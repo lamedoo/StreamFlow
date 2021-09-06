@@ -60,7 +60,6 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
     }
 
     private fun loadData() {
-
         tvCatalogueViewModel.newMovieList.observe(viewLifecycleOwner, { newMovies ->
             newMovies.forEach {
                 gridAdapter.add(it)

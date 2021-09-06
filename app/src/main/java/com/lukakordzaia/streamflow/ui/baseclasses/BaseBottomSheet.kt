@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.lukakordzaia.streamflow.sharedpreferences.AuthSharedPreferences
-import kotlinx.android.synthetic.main.fragment_top_toolbar.*
+import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import org.koin.android.ext.android.inject
 
 abstract class BaseBottomSheet<VB: ViewBinding> : BottomSheetDialogFragment() {
-    protected val authSharedPreferences: AuthSharedPreferences by inject()
+    protected val sharedPreferences: SharedPreferences by inject()
     protected val auth = Firebase.auth
 
     private var _binding: VB? = null

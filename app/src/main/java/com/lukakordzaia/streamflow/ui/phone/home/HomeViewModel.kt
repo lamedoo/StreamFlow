@@ -7,16 +7,17 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingListCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.toContinueWatchingModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
     val continueWatchingLoader = MutableLiveData<LoadingState>()
+    val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
     val movieDayLoader = MutableLiveData<LoadingState>()
     val newMovieLoader = MutableLiveData<LoadingState>()
     val topMovieLoader = MutableLiveData<LoadingState>()
@@ -42,6 +43,10 @@ class HomeViewModel : BaseViewModel() {
 
     init {
         fetchContent(1)
+    }
+
+    fun onProfilePressed() {
+        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToProfileFragmentNav())
     }
 
     fun onSingleTitlePressed(start: Int, titleId: Int) {
@@ -73,8 +78,8 @@ class HomeViewModel : BaseViewModel() {
 
     fun checkAuthDatabase() {
         clearContinueWatchingTitleList()
-        if (currentUser() != null) {
-            getContinueWatchingFromFirestore()
+        if (sharedPreferences.getLoginToken() != "") {
+            getContinueWatching()
         } else {
             getContinueWatchingFromRoom()
         }
@@ -86,14 +91,6 @@ class HomeViewModel : BaseViewModel() {
         _contWatchingData.addSource(data) {
             _contWatchingData.value = it
         }
-    }
-
-    private fun getContinueWatchingFromFirestore() {
-        environment.databaseRepository.getContinueWatchingFromFirestore(currentUser()!!.uid, object : FirebaseContinueWatchingListCallBack {
-            override fun continueWatchingList(titleList: MutableList<ContinueWatchingRoom>) {
-                _contWatchingData.value = titleList
-            }
-        })
     }
 
     fun getContinueWatchingTitlesFromApi(dbDetails: List<ContinueWatchingRoom>) {
@@ -131,11 +128,31 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
+    private fun getContinueWatching() {
+        continueWatchingLoader.value = LoadingState.LOADING
+        viewModelScope.launch {
+            when (val watching = environment.homeRepository.getContinueWatching()) {
+                is Result.Success -> {
+                    val data = watching.data.data
+
+                    _continueWatchingList.value = data.toContinueWatchingModel()
+                    continueWatchingLoader.value = LoadingState.LOADED
+                }
+                is Result.Error -> {
+                    newToastMessage("დღის ფილმი - ${watching.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
+            }
+        }
+    }
+
     fun deleteContinueWatching(titleId: Int) {
-        if (currentUser() == null) {
+        if (sharedPreferences.getLoginToken() == "") {
             deleteSingleContinueWatchingFromRoom(titleId)
         } else {
-            deleteSingleContinueWatchingFromFirestore(titleId)
+            hideSingleContinueWatching(titleId)
         }
     }
 
@@ -145,13 +162,21 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    private fun deleteSingleContinueWatchingFromFirestore(titleId: Int) {
+    private fun hideSingleContinueWatching(titleId: Int) {
+        hideContinueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            val deleteTitle = environment.databaseRepository.deleteSingleContinueWatchingFromFirestore(currentUser()!!.uid, titleId)
-            if (deleteTitle) {
-                newToastMessage("წაიშალა განაგრძეთ ყურებიდან")
-            } else {
-                newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
+            when (val hide = environment.homeRepository.hideTitleContinueWatching(titleId)) {
+                is Result.Success -> {
+                    newToastMessage("წაიშალა განაგრძეთ ყურების სიიდან")
+                    checkAuthDatabase()
+                    hideContinueWatchingLoader.value = LoadingState.LOADED
+                }
+                is Result.Error -> {
+                    newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
             }
         }
     }

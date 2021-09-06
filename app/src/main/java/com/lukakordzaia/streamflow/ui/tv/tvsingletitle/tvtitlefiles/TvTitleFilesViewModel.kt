@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -48,6 +47,24 @@ class TvTitleFilesViewModel : BaseViewModel() {
                 is Result.Success -> {
                     if (data.data.data.seasons != null) {
                         _numOfSeasons.value = data.data.data.seasons.data.size
+
+                        if (sharedPreferences.getLoginToken() == "") {
+                            getSingleContinueWatchingFromRoom(titleId)
+                        } else {
+                            if (data.data.data.userWatch?.data?.season != null) {
+                                _continueWatchingDetails.value = ContinueWatchingRoom(
+                                    titleId = titleId,
+                                    language = data.data.data.userWatch.data.language!!,
+                                    watchedDuration = data.data.data.userWatch.data.progress!!,
+                                    titleDuration = data.data.data.userWatch.data.duration!!,
+                                    isTvShow = data.data.data.isTvShow,
+                                    season = data.data.data.userWatch.data.season,
+                                    episode = data.data.data.userWatch.data.episode!!
+                                )
+                            } else {
+                                _continueWatchingDetails.value = null
+                            }
+                        }
                     }
                 }
                 is Result.Error -> {
@@ -75,8 +92,20 @@ class TvTitleFilesViewModel : BaseViewModel() {
                     _availableLanguages.value = fetchLanguages
 
                     val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
-                    data.forEach {
-                        getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+                    if (sharedPreferences.getLoginToken() == "") {
+                        data.forEach {
+                            getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+                        }
+                    } else {
+                        data.forEach {
+                            getEpisodeNames.add(TitleEpisodes(
+                                it.episode,
+                                it.title,
+                                it.covers.x1050!!,
+                                it.userWatch.duration,
+                                it.userWatch.progress
+                            ))
+                        }
                     }
                     _episodeNames.value = getEpisodeNames
                 }
@@ -116,28 +145,11 @@ class TvTitleFilesViewModel : BaseViewModel() {
         }
     }
 
-    fun checkAuthDatabase(titleId: Int) {
-        if (currentUser() == null) {
-            getSingleContinueWatchingFromRoom(titleId)
-        } else {
-            checkContinueWatchingInFirestore(titleId)
-        }
-    }
-
     private fun getSingleContinueWatchingFromRoom(titleId: Int){
         val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
 
         _continueWatchingDetails.addSource(data) {
             _continueWatchingDetails.value = it
         }
-    }
-
-    private fun checkContinueWatchingInFirestore(titleId: Int) {
-        environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: ContinueWatchingRoom?) {
-                _continueWatchingDetails.value = title
-            }
-
-        })
     }
 }

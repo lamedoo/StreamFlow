@@ -23,6 +23,8 @@ class TvActivity : BaseFragmentActivity<ActivityTvBinding>(), TvCheckTitleSelect
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        sharedPreferences.saveTvVideoPlayerOn(false)
+
         setSidebarClickListeners(binding.tvSidebar)
         setCurrentButton(binding.tvSidebar.homeButton)
         googleViews(binding.tvSidebar)
@@ -42,17 +44,17 @@ class TvActivity : BaseFragmentActivity<ActivityTvBinding>(), TvCheckTitleSelect
             binding.titleInfo.continueWatchingSeason.setVisible()
             if (continueWatchingDetails.isTvShow) {
                 binding.titleInfo.continueWatchingSeason.text = String.format("ს${continueWatchingDetails.season} ე${continueWatchingDetails.episode} / %02d:%02d",
-                        TimeUnit.MILLISECONDS.toMinutes(continueWatchingDetails.watchedDuration),
-                        TimeUnit.MILLISECONDS.toSeconds(continueWatchingDetails.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(continueWatchingDetails.watchedDuration))
+                        TimeUnit.SECONDS.toMinutes(continueWatchingDetails.watchedDuration),
+                        TimeUnit.SECONDS.toSeconds(continueWatchingDetails.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(continueWatchingDetails.watchedDuration))
                 )
             } else {
                 binding.titleInfo.continueWatchingSeason.text = String.format("%02d:%02d:%02d",
-                        TimeUnit.MILLISECONDS.toHours(continueWatchingDetails.watchedDuration),
-                        TimeUnit.MILLISECONDS.toMinutes(continueWatchingDetails.watchedDuration) -
-                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(continueWatchingDetails.watchedDuration)),
-                        TimeUnit.MILLISECONDS.toSeconds(continueWatchingDetails.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(continueWatchingDetails.watchedDuration))
+                        TimeUnit.SECONDS.toHours(continueWatchingDetails.watchedDuration),
+                        TimeUnit.SECONDS.toMinutes(continueWatchingDetails.watchedDuration) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(continueWatchingDetails.watchedDuration)),
+                        TimeUnit.SECONDS.toSeconds(continueWatchingDetails.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(continueWatchingDetails.watchedDuration))
                 )
             }
 

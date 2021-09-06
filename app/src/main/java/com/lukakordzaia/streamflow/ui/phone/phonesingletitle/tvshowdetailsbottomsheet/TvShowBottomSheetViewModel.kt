@@ -1,13 +1,11 @@
 package com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.network.FirebaseContinueWatchingCallBack
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
@@ -36,10 +34,8 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
     val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
 
     fun checkAuthDatabase(titleId: Int) {
-        if (currentUser() == null) {
+        if (sharedPreferences.getLoginToken() == "") {
             getSingleContinueWatchingFromRoom(titleId)
-        } else {
-            checkContinueWatchingInFirestore(titleId)
         }
     }
 
@@ -47,17 +43,8 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
         val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
 
         _continueWatchingDetails.addSource(data) {
-            Log.d("dasdsadasdA", it.toString())
             _continueWatchingDetails.value = it
         }
-    }
-
-    private fun checkContinueWatchingInFirestore(titleId: Int) {
-        environment.databaseRepository.checkContinueWatchingInFirestore(currentUser()!!.uid, titleId, object : FirebaseContinueWatchingCallBack {
-            override fun continueWatchingTitle(title: ContinueWatchingRoom?) {
-                _continueWatchingDetails.value = title
-            }
-        })
     }
 
     fun getSeasonFiles(titleId: Int, season: Int) {
@@ -76,8 +63,21 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
                         _availableLanguages.value = fetchLanguages
 
                         val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
-                        data.forEach {
-                            getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+
+                        if (sharedPreferences.getLoginToken() == "") {
+                            data.forEach {
+                                getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+                            }
+                        } else {
+                            data.forEach {
+                                getEpisodeNames.add(TitleEpisodes(
+                                    it.episode,
+                                    it.title,
+                                    it.covers.x1050!!,
+                                    it.userWatch.duration,
+                                    it.userWatch.progress
+                                ))
+                            }
                         }
                         _episodeInfo.value = getEpisodeNames
 

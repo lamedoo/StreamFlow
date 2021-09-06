@@ -11,6 +11,8 @@ import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     val binding = TvDetailsEpisodesItemBinding.inflate(LayoutInflater.from(context), this, true)
+    var progress = 0
+    var max = 0
 
     fun setPoster(poster: String?) {
         binding.cardPoster.setImage(poster, false)
@@ -38,5 +40,19 @@ class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLay
 
     fun setIndicatorDrawable(drawable: Drawable?) {
         binding.currentIndicator.setImageDrawable(drawable)
+    }
+
+    fun setSeekbarVisibility(visibility: Boolean) {
+        binding.itemSeekBar.setVisibleOrGone(visibility)
+    }
+
+    fun setProgress(progress: Int, max: Int) {
+        this.progress = progress
+        this.max = max
+
+        binding.itemSeekBar.progress = this.progress
+        binding.itemSeekBar.max = this.max
+
+        invalidate()
     }
 }

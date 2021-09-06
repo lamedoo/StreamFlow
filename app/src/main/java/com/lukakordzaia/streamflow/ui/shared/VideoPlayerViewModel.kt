@@ -10,10 +10,13 @@ import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingR
 import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class VideoPlayerViewModel : BaseViewModel() {
     private val numOfSeasons = MutableLiveData<Int>()
@@ -27,11 +30,14 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     private val playbackPositionForDb = MutableLiveData(0L)
     private val titleDurationForDb = MutableLiveData(0L)
+    private val qualityForDb = MutableLiveData("HIGH")
 
     private val _setTitleNameList = MutableLiveData<String>()
     val setTitleName: LiveData<String> = _setTitleNameList
 
     var totalEpisodesInSeason = MutableLiveData<Int>()
+
+    val saveLoader = MutableLiveData<LoadingState>()
 
     fun setVideoPlayerInfo(playerDurationInfo: PlayerDurationInfo) {
         playbackPositionForDb.value = playerDurationInfo.playbackPosition
@@ -40,24 +46,37 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     fun addContinueWatching() {
         val dbDetails = ContinueWatchingRoom(
-                videoPlayerInfo.value!!.titleId,
-                videoPlayerInfo.value!!.chosenLanguage,
-                playbackPositionForDb.value!!,
-                titleDurationForDb.value!!,
-                videoPlayerInfo.value!!.isTvShow,
-                videoPlayerInfo.value!!.chosenSeason,
-                videoPlayerInfo.value!!.chosenEpisode
+            videoPlayerInfo.value!!.titleId,
+            videoPlayerInfo.value!!.chosenLanguage,
+            TimeUnit.MILLISECONDS.toSeconds(playbackPositionForDb.value!!),
+            TimeUnit.MILLISECONDS.toSeconds(titleDurationForDb.value!!),
+            videoPlayerInfo.value!!.isTvShow,
+            videoPlayerInfo.value!!.chosenSeason,
+            videoPlayerInfo.value!!.chosenEpisode
         )
         if (playbackPositionForDb.value!! > 0 && titleDurationForDb.value!! > 0) {
-            if (currentUser() != null) {
+            if (sharedPreferences.getLoginToken() != "") {
+                saveLoader.value = LoadingState.LOADING
                 viewModelScope.launch {
-                    environment.databaseRepository.addContinueWatchingTitleToFirestore(currentUser()!!.uid, dbDetails)
+                    when (val time = environment.userRepository.titleWatchTime(
+                        PostTitleWatchTimeRequestBody(
+                            duration = TimeUnit.MILLISECONDS.toSeconds(titleDurationForDb.value!!).toInt(),
+                            progress = TimeUnit.MILLISECONDS.toSeconds(playbackPositionForDb.value!!).toInt(),
+                            language = videoPlayerInfo.value!!.chosenLanguage,
+                            quality = qualityForDb.value!!
+                        ),
+                        videoPlayerInfo.value!!.titleId,
+                        videoPlayerInfo.value!!.chosenSeason,
+                        videoPlayerInfo.value!!.chosenEpisode
+                    )) {
+                        is Result.Success -> {
+                            saveLoader.value = LoadingState.LOADED
+                        }
+                        is Result.Error -> {
+                            saveLoader.value = LoadingState.LOADING
+                        }
+                    }
                 }
-//                if (isTvShow) {
-//                    viewModelScope.launch {
-//                        repository.addWatchedEpisodeToFirestore(currentUser()!!.uid, dbDetails)
-//                    }
-//                }
             } else {
                 viewModelScope.launch {
                     environment.databaseRepository.insertContinueWatchingInRoom(dbDetails)

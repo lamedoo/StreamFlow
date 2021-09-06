@@ -43,90 +43,38 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleBinding
         get() = FragmentPhoneSingleTitleBinding::inflate
 
+    override fun onStart() {
+        super.onStart()
+        phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${sharedPreferences.getTraktToken()}")
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.singleTitleAppbar.setExpanded(true)
 
-        checkAuth()
         checkFavorites()
 
         fragmentListeners()
         fragmentObservers()
         titleDetailsContainer()
+        checkContinueWatching()
         castContainer()
         relatedContainer()
     }
 
-    private fun checkAuth() {
-        tvShowBottomSheetViewModel.checkAuthDatabase(args.titleId)
-        tvShowBottomSheetViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-            binding.continueWatchingInfo.setVisibleOrGone(it != null)
-            binding.continueWatchingSeekBar.setVisibleOrGone(it != null)
-
-            binding.continueWatchingInfoBottom.setVisibleOrGone(it != null)
-            binding.continueWatchingSeekBarBottom.setVisibleOrGone(it != null)
-
-            if (it != null) {
-                binding.playButton.setOnClickListener { _ ->
-                    startVideoPlayer(it, null)
-                }
-
-                if (it.isTvShow) {
-                    val info = String.format(
-                        "ს${it.season} ე${it.episode} / %02d:%02d",
-                        TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                    )
-
-                    binding.continueWatchingInfo.text = info
-                    binding.continueWatchingInfoBottom.text = info
-                } else {
-                    val info = String.format(
-                        "%02d:%02d",
-                        TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                    )
-
-                    binding.continueWatchingInfo.text = info
-                    binding.continueWatchingInfoBottom.text = info
-
-                    binding.replayButton.setVisible()
-                    binding.replayButtonBottom.setVisible()
-                    binding.replayButton.setOnClickListener { _ ->
-                        languagePickerDialog()
-                    }
-                }
-
-                binding.continueWatchingSeekBar.max = it.titleDuration.toInt()
-                binding.continueWatchingSeekBar.progress = it.watchedDuration.toInt()
-
-                binding.continueWatchingSeekBarBottom.max = it.titleDuration.toInt()
-                binding.continueWatchingSeekBarBottom.progress = it.watchedDuration.toInt()
-            } else {
-                binding.playButton.setOnClickListener { _ ->
-                    languagePickerDialog()
-                }
-            }
-        })
-    }
-
     private fun checkFavorites() {
-        phoneSingleTitleViewModel.checkTitleInFavorites(args.titleId)
-
         phoneSingleTitleViewModel.addToFavorites.observe(viewLifecycleOwner, {
             if (it) {
                 binding.singleTitleFavoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
                 binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
                 binding.singleTitleFavorite.setOnClickListener {
-                    phoneSingleTitleViewModel.removeTitleFromFavorites(args.titleId)
+                    phoneSingleTitleViewModel.deleteWatchlistTitle(args.titleId)
                 }
             } else {
                 binding.singleTitleFavoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
                 binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
                 binding.singleTitleFavorite.setOnClickListener {
-                    phoneSingleTitleViewModel.addTitleToFirestore(titleInfo)
+                    phoneSingleTitleViewModel.addWatchlistTitle(args.titleId)
                 }
             }
         })
@@ -167,11 +115,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
                     )
                 )
             } else {
-                binding.singleTitleDetailsScroll.background = ResourcesCompat.getDrawable(
-                    requireContext().resources,
-                    R.drawable.background_single_title_cover_phone,
-                    null
-                )
+                binding.singleTitleDetailsScroll.setDrawableBackground(R.drawable.background_single_title_cover_phone)
             }
         })
 
@@ -185,7 +129,7 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
+                    phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${sharedPreferences.getTraktToken()}")
                 }, 5000)
             }
         })
@@ -234,8 +178,6 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
     }
 
     private fun titleDetailsContainer() {
-        phoneSingleTitleViewModel.getSingleTitleData(args.titleId, "Bearer ${authSharedPreferences.getAccessToken()}")
-
         phoneSingleTitleViewModel.singleTitleLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
@@ -279,6 +221,69 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
 
         phoneSingleTitleViewModel.getSingleTitleDirectorResponse.observe(viewLifecycleOwner, {
             binding.titleDirector.text = it.originalName
+        })
+    }
+
+    private fun checkContinueWatching() {
+        phoneSingleTitleViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            binding.continueWatchingInfo.setVisibleOrGone(it != null)
+            binding.continueWatchingSeekBar.setVisibleOrGone(it != null)
+
+            binding.continueWatchingInfoBottom.setVisibleOrGone(it != null)
+            binding.continueWatchingSeekBarBottom.setVisibleOrGone(it != null)
+
+            if (it != null) {
+                binding.continueWatchingSeekBar.max = it.titleDuration.toInt()
+                binding.continueWatchingSeekBar.progress = it.watchedDuration.toInt()
+
+                binding.continueWatchingSeekBarBottom.max = it.titleDuration.toInt()
+                binding.continueWatchingSeekBarBottom.progress = it.watchedDuration.toInt()
+
+                if (it.isTvShow) {
+                    val time = String.format(
+                        "ს${it.season} ე${it.episode} / %02d:%02d",
+                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
+                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
+                    )
+
+                    binding.continueWatchingInfo.text = time
+                    binding.continueWatchingInfoBottom.text = time
+                } else {
+                    val time = String.format(
+                        "%02d:%02d",
+                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
+                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
+                    )
+
+                    binding.continueWatchingInfo.text = time
+                    binding.continueWatchingInfoBottom.text = time
+
+                    binding.replayButton.setVisible()
+                    binding.replayButtonBottom.setVisible()
+                    binding.replayButton.setOnClickListener { _ ->
+                        languagePickerDialog()
+                    }
+                }
+
+                binding.playButton.setOnClickListener { _ ->
+                    startVideoPlayer(
+                        ContinueWatchingRoom(
+                            it.titleId,
+                            it.language,
+                            TimeUnit.SECONDS.toMillis(it.watchedDuration),
+                            TimeUnit.SECONDS.toMillis(it.titleDuration),
+                            it.isTvShow,
+                            it.season,
+                            it.episode
+                        ), null)
+                }
+            } else {
+                binding.playButton.setOnClickListener { _ ->
+                    languagePickerDialog()
+                }
+            }
         })
     }
 

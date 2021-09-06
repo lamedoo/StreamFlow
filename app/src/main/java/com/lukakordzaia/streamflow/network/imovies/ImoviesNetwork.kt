@@ -2,20 +2,29 @@ package com.lukakordzaia.streamflow.network.imovies
 
 
 import com.lukakordzaia.streamflow.network.EndPoints
-import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
+import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
-import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.user.*
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ImoviesNetwork {
+
+    @POST(EndPoints.USER_LOGIN)
+    suspend fun postUserLogin(@Body loginBody: PostLoginBody) : Response<PostUserLoginResponse>
+
+    @PATCH(EndPoints.USER_LOG_OUT)
+    suspend fun postUserLogOut() : Response<GetUserLogoutResponse>
+
+    @GET(EndPoints.USER_DATA)
+    suspend fun getUserData() : Response<GetUserDataResponse>
 
     @GET(EndPoints.MOVIE_OF_THE_DAY)
     suspend fun getMovieDay() : Response <GetTitlesResponse>
@@ -62,6 +71,28 @@ interface ImoviesNetwork {
     @GET (EndPoints.SINGLE_TITLE_FILES)
     suspend fun getSingleTitleFiles(@Path("id") id: Int, @Path("season_number") season_number: Int) : Response<GetSingleTitleFilesResponse>
 
-    @GET ("search-advanced?filters%5Btype%5D=movie&per_page=1&movie_filters%5Bgenres_related%5D=no&movie_filters%5Bcountries_related%5D=no")
-    suspend fun getSearchFavoriteTitles(@Query("keywords") keywords: String, @Query("page") page: Int, @Query("movie_filters[year_range]") year: String) : Response<GetTitlesResponse>
+    @GET(EndPoints.USER_WATCHLIST)
+    suspend fun getUserWatchlist(@Query("page") page: Int) : Response<GetUserWatchlistResponse>
+
+    @GET(EndPoints.USER_WATCHLIST)
+    suspend fun getUserWatchlistByType(@Query("page") page: Int,
+                                       @Query("filters[type]") type: String) : Response<GetUserWatchlistResponse>
+
+    @DELETE(EndPoints.USER_WATCHLIST_STATUS)
+    suspend fun deleteWatchlistTitle(@Path("id") id: Int) : Response<UserWatchListStatusResponse>
+
+    @POST(EndPoints.USER_WATCHLIST_STATUS)
+    suspend fun addWatchlistTitle(@Path("id") id: Int) : Response<UserWatchListStatusResponse>
+
+    @POST(EndPoints.USER_IS_WATCHING)
+    suspend fun postTitleWatchTime(@Body watchTimeRequest: PostTitleWatchTimeRequestBody,
+                                   @Path("id") id: Int,
+                                   @Path("season") season: Int,
+                                   @Path("episode") episode: Int) : Response<PostWatchTimeResponse>
+
+    @GET(EndPoints.USER_CONTINUE_WATCHING)
+    suspend fun getContinueWatching() : Response<GetContinueWatchingResponse>
+
+    @PATCH(EndPoints.HIDE_CONTINUE_WATCHING)
+    suspend fun hideTitleContinueWatching(@Path("id") id: Int) : Response<UserWatchListStatusResponse>
 }

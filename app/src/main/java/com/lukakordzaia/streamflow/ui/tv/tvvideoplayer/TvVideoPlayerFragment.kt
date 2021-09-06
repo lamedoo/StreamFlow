@@ -25,7 +25,6 @@ import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerHelpers
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
-import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity.Companion.VIDEO_DETAILS
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
@@ -34,12 +33,12 @@ import kotlinx.android.synthetic.main.fragment_tv_video_player.*
 import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 
 
 class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
-    private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
+    private val videoPlayerViewModel: VideoPlayerViewModel by sharedViewModel()
     private val buildMediaSource: BuildMediaSource by inject()
     private lateinit var videoPlayerData: VideoPlayerData
     private lateinit var videoPlayerInfo: VideoPlayerInfo
@@ -54,7 +53,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     private val autoBackPress = object : CountDownTimer(500000, 1000) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
-            requireActivity().onBackPressed()
+            (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.BACK_BUTTON)
             requireActivity().onBackPressed()
         }
     }
@@ -65,6 +64,8 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreferences.saveTvVideoPlayerOn(true)
+
         videoPlayerData = activity?.intent!!.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
 
         if (!videoPlayerData.isTvShow) {
@@ -77,7 +78,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
         mediaPlayer.setPlayerListener(PlayerListeners())
 
         tv_exo_back.setOnClickListener {
-            requireActivity().onBackPressed()
+            (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.BACK_BUTTON)
             requireActivity().onBackPressed()
         }
 
@@ -103,28 +104,11 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (Util.SDK_INT < 24) {
-            releasePlayer()
-        }
-    }
-
     override fun onStop() {
         if (Util.SDK_INT >= 24) {
-            releasePlayer()
-            if ((requireActivity() as TvVideoPlayerActivity).getCurrentFragment() != VIDEO_DETAILS) {
-                if (!tv_title_player.isControllerVisible) {
-                    requireActivity().onBackPressed()
-                } else {
-                    requireActivity().onBackPressed()
-                    requireActivity().onBackPressed()
-                }
-                super.onStop()
-            } else {
-                super.onStop()
-            }
+            requireActivity().onBackPressed()
         }
+        super.onStop()
     }
 
     inner class PlayerListeners: Player.Listener {
@@ -142,7 +126,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
             super.onPlaybackStateChanged(state)
 
             if (videoPlayerData.trailerUrl != null) {
-                phone_next_button?.setGone()
+                tv_next_button?.setGone()
             }
 
             videoPlayerViewModel.videoPlayerInfo.observe(viewLifecycleOwner, {
@@ -175,7 +159,6 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
                 if (episodeHasEnded) {
                     mediaItemsPlayed++
                     tv_next_button?.callOnClick()
-                    phone_next_button?.callOnClick()
                     episodeHasEnded = false
                 }
             }
@@ -204,38 +187,29 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
         val nextButton = tv_next_button
 
         if (videoPlayerInfo.isTvShow) {
-            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, {
-                if (videoPlayerInfo.chosenEpisode == it) {
-                    nextButton?.setOnClickListener {
-                        episodeHasEnded = false
-                        player.clearMediaItems()
-                        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
-                            videoPlayerInfo.titleId,
-                            videoPlayerInfo.isTvShow,
-                            videoPlayerInfo.chosenSeason+1,
-                            1,
-                            videoPlayerInfo.chosenLanguage
-                        ))
-                        mediaPlayer.initPlayer(binding.tvTitlePlayer, 0, 0L)
-                    }
-                } else {
-                    nextButton?.setOnClickListener {
-                        episodeHasEnded = false
-                        player.clearMediaItems()
-                        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
-                            videoPlayerInfo.titleId,
-                            videoPlayerInfo.isTvShow,
-                            videoPlayerInfo.chosenSeason,
-                            videoPlayerInfo.chosenEpisode+1,
-                            videoPlayerInfo.chosenLanguage
-                        ))
-                        mediaPlayer.initPlayer(binding.tvTitlePlayer, 0, 0L)
-                    }
+            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
+                nextButton.setOnClickListener {
+                    nextButtonFunction(videoPlayerInfo.chosenEpisode == lastEpisode)
                 }
             })
         } else {
             nextButton?.setGone()
         }
+    }
+
+    private fun nextButtonFunction(lastEpisode: Boolean) {
+        saveCurrentProgress()
+
+        episodeHasEnded = false
+        player.clearMediaItems()
+        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
+            videoPlayerInfo.titleId,
+            videoPlayerInfo.isTvShow,
+            if (lastEpisode) videoPlayerInfo.chosenSeason+1 else videoPlayerInfo.chosenSeason,
+            if (lastEpisode) 1 else videoPlayerInfo.chosenEpisode+1,
+            videoPlayerInfo.chosenLanguage
+        ))
+        mediaPlayer.initPlayer(binding.tvTitlePlayer, 0, 0L)
     }
 
     private fun setTitleName() {
@@ -300,7 +274,20 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
         mediaPlayer.initPlayer(binding.tvTitlePlayer, 0, watchedTime)
     }
 
-    private fun releasePlayer() {
+    fun saveCurrentProgress() {
+        videoPlayerViewModel.setVideoPlayerInfo(
+            PlayerDurationInfo(
+                player.currentPosition,
+                player.duration
+            )
+        )
+
+        if (videoPlayerData.trailerUrl == null) {
+            videoPlayerViewModel.addContinueWatching()
+        }
+    }
+
+    fun releasePlayer() {
         mediaPlayer.releasePlayer {
             videoPlayerViewModel.setVideoPlayerInfo(it)
         }

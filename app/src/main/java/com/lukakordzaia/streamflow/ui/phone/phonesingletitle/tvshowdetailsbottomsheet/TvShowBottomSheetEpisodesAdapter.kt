@@ -4,15 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvChooseDetailsEpisodesItemBinding
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setImage
-import com.lukakordzaia.streamflow.utils.setVisible
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
-import kotlinx.android.synthetic.main.rv_choose_details_episodes_item.view.*
 
 class TvShowBottomSheetEpisodesAdapter(
         private val context: Context,
@@ -53,12 +48,18 @@ class TvShowBottomSheetEpisodesAdapter(
         fun bind(model: TitleEpisodes, position: Int) {
             val isChosen = position == chosenEpisode-1
 
-            view.rvEpisodesChosenIndicator.setVisibleOrGone(isChosen)
+            view.currentIndicator.setVisibleOrGone(isChosen)
 
-            view.rvEpisodesNumber.text = "ეპიზოდი ${model.episodeNum}"
-            view.rvEpisodesName.text = model.episodeName
+            view.episodeNumber.text = "ეპიზოდი ${model.episodeNum}"
+            view.episodeName.text = model.episodeName
 
-            view.rvEpisodesPoster.setImage(model.episodePoster, false)
+            view.itemPoster.setImage(model.episodePoster, false)
+
+            view.itemSeekBar.setVisibleOrGone(model.titleDuration?.toInt() != 0)
+            if (model.titleDuration?.toInt() != 0) {
+                view.itemSeekBar.max = model.titleDuration!!.toInt()
+                view.itemSeekBar.progress = model.watchDuration!!.toInt()
+            }
 
             view.rvEpisodesContainer.setOnClickListener {
                 onEpisodeClick(model.episodeNum)

@@ -46,12 +46,18 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
         val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
         val continueWatching = activity?.intent?.getSerializableExtra("continue") as? Boolean
+        val fromWatchlist = activity?.intent?.getSerializableExtra("FromWatchlist") as? Int
 
         fragmentListeners(titleId, isTvShow)
         fragmentObservers(titleId)
-        favoriteContainer(titleId)
+        favoriteContainer(titleId, fromWatchlist)
         titleDetails(titleId, isTvShow)
-        checkDatabase(titleId, isTvShow, continueWatching)
+        checkContinueWatching(continueWatching)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        tvTitleDetailsViewModel.getSingleTitleData(activity?.intent?.getSerializableExtra("titleId") as Int)
     }
 
     private fun fragmentListeners(titleId: Int, isTvShow: Boolean) {
@@ -146,95 +152,38 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         })
     }
 
-    private fun favoriteContainer(titleId: Int) {
-        tvTitleDetailsViewModel.checkTitleInFirestore(titleId)
-
+    private fun favoriteContainer(titleId: Int, fromWatchlist: Int?) {
         tvTitleDetailsViewModel.addToFavorites.observe(viewLifecycleOwner, {
             if (it) {
                 binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
                 binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
                 binding.favoriteContainer.setOnClickListener {
-                    tvTitleDetailsViewModel.removeTitleFromFavorites(titleId)
+                    tvTitleDetailsViewModel.deleteWatchlistTitle(titleId, fromWatchlist)
                 }
             } else {
                 binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
                 binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
                 binding.favoriteContainer.setOnClickListener {
-                    tvTitleDetailsViewModel.addTitleToFavorites(titleInfo)
+                    tvTitleDetailsViewModel.addWatchlistTitle(titleId)
                 }
             }
         })
-    }
 
-    private fun checkDatabase(titleId: Int, isTvShow: Boolean, continueWatching: Boolean?) {
-        tvTitleDetailsViewModel.checkAuthDatabase(titleId)
-
-        binding.deleteButton.setGone()
-        binding.playButton.requestFocus()
-        binding.continueButton.setGone()
-
-        tvTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-            if (it != null) {
-                binding.deleteButton.setOnClickListener {
-                    val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
-                    val removeTitle = Dialog(requireContext())
-                    removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    removeTitle.setContentView(binding.root)
-
-                    binding.continueButton.setOnClickListener {
-                        tvTitleDetailsViewModel.deleteSingleContinueWatchingFromRoom(titleId)
-                        tvTitleDetailsViewModel.deleteSingleContinueWatchingFromFirestore(titleId)
-
-                        val intent = Intent(requireContext(), TvSingleTitleActivity::class.java)
-                        intent.putExtra("titleId", titleId)
-                        intent.putExtra("isTvShow", isTvShow)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                    }
-                    binding.cancelButton.setOnClickListener {
-                        removeTitle.dismiss()
-                    }
-                    removeTitle.show()
-                    binding.continueButton.requestFocus()
+        tvTitleDetailsViewModel.favoriteLoader.observe(viewLifecycleOwner, {
+            when (it.status) {
+                LoadingState.Status.RUNNING -> {
+                    binding.favoriteProgressBar.setVisible()
+                    binding.favoriteIcon.setGone()
                 }
-
-                binding.continueButton.setOnClickListener { _ ->
-                    continueTitlePlay(it)
-                }
-
-                if (isTvShow) {
-                    binding.continueButton.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d",
-                        TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                    )
-                } else {
-                    binding.continueButton.text = String.format("განაგრძეთ - %02d:%02d",
-                        TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.MILLISECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(it.watchedDuration))
-                    )
-                }
-
-                binding.continueButton.setVisible()
-                binding.continueButton.requestFocus()
-                binding.playButton.text = "თავიდან ყურება"
-                binding.deleteButton.setVisible()
-
-                if (continueWatching != null) {
-                    tvTitleDetailsViewModel.startedWatching.observe(viewLifecycleOwner, {
-                        if (!it) {
-                            binding.continueButton.callOnClick()
-                            tvTitleDetailsViewModel.setStartedWatching(true)
-                        }
-                    })
+                LoadingState.Status.SUCCESS -> {
+                    binding.favoriteProgressBar.setGone()
+                    binding.favoriteIcon.setVisible()
                 }
             }
         })
     }
 
     private fun titleDetails(titleId: Int, isTvShow: Boolean) {
-        tvTitleDetailsViewModel.getSingleTitleData(titleId)
         tvTitleDetailsViewModel.getSingleTitleFiles(titleId)
 
         tvTitleDetailsViewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
@@ -263,7 +212,91 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
             }
 
             binding.titleDescription.text = it.description
+        })
+    }
 
+    private fun checkContinueWatching(continueWatching: Boolean?) {
+        binding.deleteButton.setGone()
+        binding.playButton.requestFocus()
+        binding.continueButton.setGone()
+
+        tvTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            if (it != null) {
+                binding.deleteButton.setOnClickListener { _ ->
+                    val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
+                    val removeTitle = Dialog(requireContext())
+                    removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    removeTitle.setContentView(binding.root)
+
+                    if (sharedPreferences.getLoginToken() != "") {
+                        binding.title.text = resources.getString(R.string.remove_from_list_title)
+                    }
+
+                    binding.continueButton.setOnClickListener { _ ->
+                        if (sharedPreferences.getLoginToken() == "") {
+                            tvTitleDetailsViewModel.deleteSingleContinueWatchingFromRoom(it.titleId)
+                        } else {
+                            tvTitleDetailsViewModel.hideSingleContinueWatching(it.titleId)
+                        }
+
+                        val intent = Intent(requireContext(), TvSingleTitleActivity::class.java)
+                        intent.putExtra("titleId", it.titleId)
+                        intent.putExtra("isTvShow", it.isTvShow)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
+                    binding.cancelButton.setOnClickListener {
+                        removeTitle.dismiss()
+                    }
+                    removeTitle.show()
+                    binding.continueButton.requestFocus()
+                }
+
+                binding.continueButton.setOnClickListener { _ ->
+                    continueTitlePlay(ContinueWatchingRoom(
+                        it.titleId,
+                        it.language,
+                        TimeUnit.SECONDS.toMillis(it.watchedDuration),
+                        TimeUnit.SECONDS.toMillis(it.titleDuration),
+                        it.isTvShow,
+                        it.season,
+                        it.episode
+                    ))
+                }
+
+                if (it.isTvShow) {
+                    binding.continueButton.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d",
+                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
+                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
+                    )
+                } else {
+                    binding.continueButton.text = String.format("განაგრძეთ - %02d:%02d",
+                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
+                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
+                    )
+                }
+
+                binding.continueButton.setVisible()
+                binding.continueButton.requestFocus()
+                binding.playButton.text = "თავიდან ყურება"
+
+                if (sharedPreferences.getLoginToken() == "") {
+                    binding.deleteButton.setVisible()
+                } else {
+                    binding.deleteButton.setVisibleOrGone(titleInfo.visibility!!)
+                }
+
+                if (continueWatching != null) {
+                    tvTitleDetailsViewModel.startedWatching.observe(viewLifecycleOwner, {
+                        if (!it) {
+                            binding.continueButton.callOnClick()
+                            tvTitleDetailsViewModel.setStartedWatching(true)
+                        }
+                    })
+                }
+            }
         })
     }
 
