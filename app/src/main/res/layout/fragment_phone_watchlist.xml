@@ -23,40 +23,6 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/fragment_padding">
 
-            <LinearLayout
-                android:id="@+id/favorite_no_auth"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/log_in_to_see_favorites"
-                    android:fontFamily="@font/helvetica_neue_lt_geo_75_bold"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/profile_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/background_button"
-                    android:backgroundTint="@color/accent_color"
-                    android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
-                    android:padding="10dp"
-                    android:text="@string/profile_panel"
-                    android:textColor="@color/text_on_accent_color" />
-
-            </LinearLayout>
-
             <TextView
                 android:id="@+id/watchlist_movies"
                 android:layout_width="wrap_content"
@@ -81,6 +47,41 @@
                 app:layout_constraintStart_toEndOf="@id/watchlist_movies"/>
 
             <LinearLayout
+                android:id="@+id/favorite_no_auth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/watchlist_movies">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/log_in_to_see_favorites"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_75_bold"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/profile_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/background_button"
+                    android:backgroundTint="@color/accent_color"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
+                    android:padding="10dp"
+                    android:text="@string/profile_panel"
+                    android:textColor="@color/text_on_accent_color" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/favorite_movies_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,15 +98,6 @@
                     android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
                     android:visibility="gone" />
 
-                <ProgressBar
-                    android:id="@+id/favorite_movies_progressBar"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:indeterminateTint="@color/accent_color"
-                    android:visibility="visible" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_favorites_movies"
                     android:layout_width="match_parent"
@@ -116,6 +108,16 @@
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="2"
                     tools:listitem="@layout/rv_watchlist_item"/>
+
+                <ProgressBar
+                    android:id="@+id/favorite_movies_progressBar"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:indeterminateTint="@color/accent_color"
+                    android:visibility="visible" />
+
 
             </LinearLayout>
 

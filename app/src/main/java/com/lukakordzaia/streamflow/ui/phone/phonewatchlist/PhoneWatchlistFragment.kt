@@ -28,6 +28,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
     private var loading = false
+    private var hasMore = false
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneWatchlistBinding
         get() = FragmentPhoneWatchlistBinding::inflate
@@ -63,6 +64,8 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         }
 
         binding.watchlistMovies.setOnClickListener {
+            watchlistViewModel.clearWatchlist()
+
             page = 1
             watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES)
             setButtons(AppConstants.WATCHLIST_MOVIES)
@@ -71,6 +74,8 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         }
 
         binding.watchlistTvShows.setOnClickListener {
+            watchlistViewModel.clearWatchlist()
+
             page = 1
             watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_TV_SHOWS)
             setButtons(AppConstants.WATCHLIST_TV_SHOWS)
@@ -95,6 +100,10 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         watchlistViewModel.removedTitle.observe(viewLifecycleOwner, EventObserver {
             watchlistMoviesAdapter.notifyItemRemoved(it)
         })
+
+        watchlistViewModel.hasMorePage.observe(viewLifecycleOwner, {
+            hasMore = it
+        })
     }
 
     private fun favMoviesContainer() {
@@ -102,11 +111,11 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
                     binding.favoriteMoviesProgressBar.setVisible()
-                    binding.rvFavoritesMovies.setGone()
                 }
                 LoadingState.Status.SUCCESS -> {
                     binding.favoriteMoviesProgressBar.setGone()
                     binding.rvFavoritesMovies.setVisible()
+                    loading = false
                 }
             }
         })
@@ -160,10 +169,11 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
     }
 
     private fun fetchMoreTitle() {
-        binding.favoriteMoviesProgressBar
-        page++
-        watchlistViewModel.getUserWatchlist(page, type)
-        loading = false
+        if (hasMore) {
+            binding.favoriteMoviesProgressBar.setVisible()
+            page++
+            watchlistViewModel.getUserWatchlist(page, type)
+        }
     }
 
     private fun setButtons(type: String) {

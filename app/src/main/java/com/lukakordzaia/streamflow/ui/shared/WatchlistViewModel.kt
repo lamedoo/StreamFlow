@@ -17,11 +17,15 @@ class WatchlistViewModel : BaseViewModel() {
 
     val noFavorites = MutableLiveData<Boolean>()
 
+    private val fetchUserWatchlist: MutableList<SingleTitleModel> = ArrayList()
     private val _userWatchlist = MutableLiveData<List<SingleTitleModel>>()
     val userWatchlist: LiveData<List<SingleTitleModel>> = _userWatchlist
 
     private val _removedTitle = MutableLiveData<Event<Int>>()
     val removedTitle: LiveData<Event<Int>> = _removedTitle
+
+    private val _hasMorePage = MutableLiveData(true)
+    val hasMorePage: LiveData<Boolean> = _hasMorePage
 
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(PhoneWatchlistFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
@@ -38,10 +42,13 @@ class WatchlistViewModel : BaseViewModel() {
                 is Result.Success -> {
                     val data = watchlist.data.data
 
-                    if (data.isNullOrEmpty()) {
-                        noFavorites.value = true
-                    } else {
-                        _userWatchlist.value = data.toWatchListModel()
+                    _hasMorePage.value = watchlist.data.meta.pagination.totalPages > watchlist.data.meta.pagination.currentPage
+
+                    noFavorites.value = data.isNullOrEmpty()
+
+                    if (!data.isNullOrEmpty()) {
+                        fetchUserWatchlist.addAll(data.toWatchListModel())
+                        _userWatchlist.value = fetchUserWatchlist
                     }
 
                     watchListLoader.value = LoadingState.LOADED
@@ -54,10 +61,18 @@ class WatchlistViewModel : BaseViewModel() {
         viewModelScope.launch {
             when (val delete = environment.watchlistRepository.deleteWatchlistTitle(id)) {
                 is Result.Success -> {
-                    _removedTitle.value = Event(position)
+                    fetchUserWatchlist.removeAt(position)
+                    _userWatchlist.value = fetchUserWatchlist
+
+//                    _removedTitle.value = Event(position)
                 }
             }
         }
+    }
+
+    fun clearWatchlist() {
+        fetchUserWatchlist.clear()
+        _userWatchlist.value = fetchUserWatchlist
     }
 
 
