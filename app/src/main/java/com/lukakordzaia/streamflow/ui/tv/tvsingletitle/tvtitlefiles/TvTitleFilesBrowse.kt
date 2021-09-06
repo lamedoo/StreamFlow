@@ -316,7 +316,9 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
             browseFrameLayout.onFocusSearchListener = OnFocusSearchListener setOnFocusSearchListener@{ _: View?, direction: Int ->
                 if (direction == View.FOCUS_UP) {
                     this.hasFocus = true
-                    (requireActivity() as TvWatchlistActivity).buttonFocusability(true)
+                    if (requireActivity() is TvWatchlistActivity) {
+                        (requireActivity() as TvWatchlistActivity).buttonFocusability(true)
+                    }
                     return@setOnFocusSearchListener viewToFocus
                 } else {
                     return@setOnFocusSearchListener null
