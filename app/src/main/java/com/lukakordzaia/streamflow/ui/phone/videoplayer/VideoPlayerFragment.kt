@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsetsController
 import android.widget.ImageButton
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -110,7 +111,10 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
             when (state) {
                 Player.STATE_READY -> {
                     episodeHasEnded = true
-                    showContinueWatchingDialog()
+
+                    showContinueWatchingDialog(binding.continueWatching) {
+                        requireActivity().onBackPressed()
+                    }
                 }
                 Player.STATE_ENDED -> {
                     if (episodeHasEnded) {
@@ -150,26 +154,6 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
             }
         } else {
             prevButton.setGone()
-        }
-    }
-
-    private fun showContinueWatchingDialog() {
-        if (mediaItemsPlayed == 3) {
-            videoPlayerViewModel.addContinueWatching()
-            player.pause()
-
-            binding.continueWatching.root.setVisible()
-
-            binding.continueWatching.confirmButton.setOnClickListener {
-                binding.continueWatching.root.setGone()
-                player.play()
-            }
-
-            binding.continueWatching.goBackButton.setOnClickListener {
-                requireActivity().onBackPressed()
-            }
-
-            mediaItemsPlayed = 0
         }
     }
 

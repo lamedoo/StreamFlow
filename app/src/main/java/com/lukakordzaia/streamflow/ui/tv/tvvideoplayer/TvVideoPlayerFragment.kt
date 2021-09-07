@@ -93,7 +93,13 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             when (state) {
                 Player.STATE_READY -> {
                     episodeHasEnded = true
-                    showContinueWatchingDialog()
+
+                    showContinueWatchingDialog(binding.continueWatching) {
+                        val intent = Intent(requireContext(), TvActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
+
                     tracker = ProgressTracker(player, object :
                         PositionListener {
                         override fun progress(position: Long) {
@@ -124,29 +130,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         subtitleFunctions(binding.tvTitlePlayer.subtitleView!!, playerBinding.subtitleToggle, hasSubs)
     }
 
-    private fun showContinueWatchingDialog() {
-        if (mediaItemsPlayed == 3) {
-            videoPlayerViewModel.addContinueWatching()
-            player.pause()
-
-            binding.continueWatching.root.setVisible()
-
-            binding.continueWatching.confirmButton.setOnClickListener {
-                binding.continueWatching.root.setGone()
-                player.play()
-            }
-
-            binding.continueWatching.goBackButton.setOnClickListener {
-                val intent = Intent(requireContext(), TvActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                this.startActivity(intent)
-            }
-            binding.continueWatching.confirmButton.requestFocus()
-
-            mediaItemsPlayed = 0
-        }
-    }
-
     private fun initPlayer(watchedTime: Long, trailerUrl: String?) {
         if (trailerUrl != null) {
             mediaPlayer.setMediaItems(listOf(MediaItem.fromUri(Uri.parse(trailerUrl))))
@@ -166,7 +149,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     }
 
     inner class ProgressTracker(private val player: Player, private val positionListener: PositionListener) : Runnable {
-        private val handler: Handler = Handler()
+        private val handler: Handler = Handler(Looper.myLooper()!!)
         override fun run() {
             val position = player.duration - player.currentPosition
             positionListener.progress(position)

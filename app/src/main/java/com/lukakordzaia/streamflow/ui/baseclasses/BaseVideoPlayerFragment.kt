@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflow.ui.baseclasses
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.os.Bundle
@@ -24,6 +25,7 @@ import com.google.android.exoplayer2.ui.SubtitleView
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.animations.VideoPlayerAnimations
+import com.lukakordzaia.streamflow.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTopToolbarBinding
 import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -32,6 +34,7 @@ import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
+import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerFragment
 import com.lukakordzaia.streamflow.utils.AppConstants
@@ -213,6 +216,26 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         }
     }
 
+    fun showContinueWatchingDialog(continueWatching: ContinueWatchingDialogBinding, stop: () -> Unit) {
+        if (mediaItemsPlayed == 3) {
+            videoPlayerViewModel.addContinueWatching()
+            player.pause()
+
+            continueWatching.root.setVisible()
+
+            continueWatching.confirmButton.setOnClickListener {
+                continueWatching.root.setGone()
+                player.play()
+            }
+
+            continueWatching.goBackButton.setOnClickListener {
+                stop.invoke()
+            }
+            continueWatching.confirmButton.requestFocus()
+
+            mediaItemsPlayed = 0
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
