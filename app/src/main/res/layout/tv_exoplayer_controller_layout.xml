@@ -12,7 +12,7 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <LinearLayout
-        android:id="@+id/player_header_container"
+        android:id="@+id/header_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/tv_exo_back"
+            android:id="@+id/back_button"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="5dp"
@@ -32,7 +32,7 @@
             tools:ignore="UseAppTint" />
 
         <ImageButton
-            android:id="@+id/tv_subtitle_toggle"
+            android:id="@+id/subtitle_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
@@ -54,7 +54,7 @@
                 android:src="@drawable/icon_next" />
 
             <ImageButton
-                android:id="@+id/tv_next_button"
+                android:id="@+id/next_episode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_button_player"
@@ -68,7 +68,7 @@
             android:layout_weight="1"/>
 
         <TextView
-            android:id="@+id/tv_header_tv"
+            android:id="@+id/player_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -192,7 +192,7 @@
         android:layout_marginLeft="7dp"
         android:layout_marginEnd="7dp"
         android:layout_marginRight="7dp"
-        android:text="00:00"
+        tools:text="00:00"
         android:textAlignment="viewEnd"
         android:minWidth="50dp"
         android:textColor="@color/white"
@@ -225,7 +225,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
-            android:text="სხვა ეპიზოდები" />
+            android:text="@string/other_episodes" />
 
         <ImageView
             android:layout_width="wrap_content"

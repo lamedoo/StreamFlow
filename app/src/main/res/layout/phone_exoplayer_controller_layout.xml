@@ -143,7 +143,7 @@
         android:layout_height="55dp"
         android:layout_width="55dp"
         android:layout_margin="10dp"
-        android:nextFocusLeft="@id/tv_subtitle_toggle"
+        android:nextFocusLeft="@id/subtitle_toggle"
         android:background="@drawable/background_button_player"
         android:src="@drawable/icon_next"
         app:layout_constraintBottom_toBottomOf="@id/exo_play"

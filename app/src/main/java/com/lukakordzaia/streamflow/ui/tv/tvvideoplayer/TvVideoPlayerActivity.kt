@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvVideoPlayerBinding
+import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
@@ -20,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class TvVideoPlayerActivity : FragmentActivity() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
     private val sharedPreferences: SharedPreferences by inject()
-
+    
     private lateinit var binding: ActivityTvVideoPlayerBinding
     private var currentFragment = VIDEO_PLAYER
     private var ffIncrement = 10000
@@ -31,6 +32,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTvVideoPlayerBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
         videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
@@ -52,17 +54,17 @@ class TvVideoPlayerActivity : FragmentActivity() {
                                 tv_title_player.showController()
                                 tv_title_player.exo_pause.requestFocus()
                             }
-                            tv_next_button.isVisible -> {
-                                exo_pause.nextFocusUpId = R.id.tv_next_button
-                                exo_play.nextFocusUpId = R.id.tv_next_button
+                            next_episode.isVisible -> {
+                                exo_pause.nextFocusUpId = R.id.next_episode
+                                exo_play.nextFocusUpId = R.id.next_episode
                             }
-                            tv_subtitle_toggle.isVisible -> {
-                                exo_pause.nextFocusUpId = R.id.tv_subtitle_toggle
-                                exo_play.nextFocusUpId = R.id.tv_subtitle_toggle
+                            subtitle_toggle.isVisible -> {
+                                exo_pause.nextFocusUpId = R.id.subtitle_toggle
+                                exo_play.nextFocusUpId = R.id.subtitle_toggle
                             }
                             else -> {
-                                exo_pause.nextFocusUpId = R.id.tv_exo_back
-                                exo_play.nextFocusUpId = R.id.tv_exo_back
+                                exo_pause.nextFocusUpId = R.id.back_button
+                                exo_play.nextFocusUpId = R.id.back_button
                             }
                         }
                     }
@@ -110,9 +112,9 @@ class TvVideoPlayerActivity : FragmentActivity() {
                                 return true
                             }
                             else -> {
-                                tv_subtitle_toggle.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
-                                tv_next_button.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
-                                tv_next_button?.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
+                                subtitle_toggle.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
+                                next_episode.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
+                                next_episode.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
                             }
                         }
                     }
@@ -129,8 +131,8 @@ class TvVideoPlayerActivity : FragmentActivity() {
                                 tv_title_player.showController()
                                 tv_title_player.exo_rew.callOnClick()
                             }
-                            tv_next_button.isFocused -> if (tv_subtitle_toggle.isVisible) tv_subtitle_toggle.requestFocus() else tv_exo_back.requestFocus()
-                            tv_subtitle_toggle.isFocused -> tv_exo_back.requestFocus()
+                            next_episode.isFocused -> if (subtitle_toggle.isVisible) subtitle_toggle.requestFocus() else back_button.requestFocus()
+                            subtitle_toggle.isFocused -> back_button.requestFocus()
                             else -> tv_title_player.exo_rew.callOnClick()
                         }
                     }
@@ -148,11 +150,11 @@ class TvVideoPlayerActivity : FragmentActivity() {
                                 tv_title_player.showController()
                                 tv_title_player.exo_ffwd.callOnClick()
                             }
-                            tv_exo_back.isFocused ->
-                                if (tv_subtitle_toggle.isVisible) tv_subtitle_toggle.requestFocus() else {
-                                    if (tv_next_button.isVisible) tv_next_button.requestFocus() else tv_title_player.exo_ffwd.callOnClick()
+                            back_button.isFocused ->
+                                if (subtitle_toggle.isVisible) subtitle_toggle.requestFocus() else {
+                                    if (next_episode.isVisible) next_episode.requestFocus() else tv_title_player.exo_ffwd.callOnClick()
                                 }
-                            tv_subtitle_toggle.isFocused -> if (tv_next_button.isVisible) tv_next_button.requestFocus() else tv_title_player.exo_ffwd.callOnClick()
+                            subtitle_toggle.isFocused -> if (next_episode.isVisible) next_episode.requestFocus() else tv_title_player.exo_ffwd.callOnClick()
                             else -> tv_title_player.exo_ffwd.callOnClick()
                         }
                     }

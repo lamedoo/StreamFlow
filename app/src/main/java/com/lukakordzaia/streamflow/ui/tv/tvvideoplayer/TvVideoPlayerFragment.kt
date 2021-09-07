@@ -15,6 +15,8 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
+import com.lukakordzaia.streamflow.databinding.PhoneExoplayerControllerLayoutBinding
+import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -43,6 +45,8 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     private lateinit var videoPlayerData: VideoPlayerData
     private lateinit var videoPlayerInfo: VideoPlayerInfo
 
+    private lateinit var playerBinding: TvExoplayerControllerLayoutBinding
+
     private lateinit var mediaPlayer: MediaPlayerClass
     private lateinit var player: SimpleExoPlayer
     private var tracker: ProgressTrackerNew? = null
@@ -64,6 +68,8 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        playerBinding = TvExoplayerControllerLayoutBinding.bind(binding.root)
+
         sharedPreferences.saveTvVideoPlayerOn(true)
 
         videoPlayerData = activity?.intent!!.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
@@ -77,7 +83,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
 
         mediaPlayer.setPlayerListener(PlayerListeners())
 
-        tv_exo_back.setOnClickListener {
+        playerBinding.backButton.setOnClickListener {
             (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.BACK_BUTTON)
             requireActivity().onBackPressed()
         }
@@ -126,7 +132,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
             super.onPlaybackStateChanged(state)
 
             if (videoPlayerData.trailerUrl != null) {
-                tv_next_button?.setGone()
+                playerBinding.nextEpisode.setGone()
             }
 
             videoPlayerViewModel.videoPlayerInfo.observe(viewLifecycleOwner, {
@@ -158,7 +164,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
             if (state == Player.STATE_ENDED) {
                 if (episodeHasEnded) {
                     mediaItemsPlayed++
-                    tv_next_button?.callOnClick()
+                    playerBinding.nextEpisode.callOnClick()
                     episodeHasEnded = false
                 }
             }
@@ -184,7 +190,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
     }
 
     private fun nextButtonClickListener() {
-        val nextButton = tv_next_button
+        val nextButton = playerBinding.nextEpisode
 
         if (videoPlayerInfo.isTvShow) {
             videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
@@ -193,7 +199,7 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
                 }
             })
         } else {
-            nextButton?.setGone()
+            nextButton.setGone()
         }
     }
 
@@ -214,20 +220,20 @@ class TvVideoPlayerFragment : BaseFragment<FragmentTvVideoPlayerBinding>() {
 
     private fun setTitleName() {
         if (videoPlayerData.trailerUrl != null) {
-            tv_header_tv?.text = "ტრეილერი"
+            playerBinding.playerTitle.text = "ტრეილერი"
         } else {
             videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
                 if (videoPlayerInfo.isTvShow) {
-                    tv_header_tv?.text = "ს${videoPlayerInfo.chosenSeason}. ე${videoPlayerInfo.chosenEpisode}. $name"
+                    playerBinding.playerTitle.text = "ს${videoPlayerInfo.chosenSeason}. ე${videoPlayerInfo.chosenEpisode}. $name"
                 } else {
-                    tv_header_tv?.text = name
+                    playerBinding.playerTitle.text = name
                 }
             })
         }
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {
-        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.tvTitlePlayer.subtitleView!!, tv_subtitle_toggle, player, hasSubs)
+        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.tvTitlePlayer.subtitleView!!, playerBinding.subtitleToggle, player, hasSubs)
     }
 
     private fun showContinueWatchingDialog() {
