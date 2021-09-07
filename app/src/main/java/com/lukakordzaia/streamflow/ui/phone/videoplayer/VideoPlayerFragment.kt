@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,9 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.util.Util
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneVideoPlayerBinding
+import com.lukakordzaia.streamflow.databinding.PhoneExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -39,6 +42,8 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
     private val buildMediaSource: BuildMediaSource by inject()
     private lateinit var videoPlayerData: VideoPlayerData
     private lateinit var videoPlayerInfo: VideoPlayerInfo
+
+    private lateinit var playerBinding: PhoneExoplayerControllerLayoutBinding
 
     private lateinit var mediaPlayer: MediaPlayerClass
     private lateinit var player: SimpleExoPlayer
@@ -69,6 +74,8 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        playerBinding = PhoneExoplayerControllerLayoutBinding.bind(binding.root)
+
         videoPlayerData = requireActivity().intent!!.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
 
         player = SimpleExoPlayer.Builder(requireContext()).build()
@@ -78,7 +85,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
 
         sharedPreferences.saveTvVideoPlayerOn(true)
 
-        phone_exo_back.setOnClickListener {
+        playerBinding.backButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
 
@@ -136,8 +143,8 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
             super.onPlaybackStateChanged(state)
 
             if (videoPlayerData.trailerUrl != null) {
-                phone_prev_button?.setGone()
-                phone_next_button?.setGone()
+                playerBinding.prevEpisode.setGone()
+                playerBinding.nextEpisode.setGone()
             }
 
             if (this@VideoPlayerFragment::videoPlayerInfo.isInitialized) {
@@ -154,7 +161,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
             if (state == Player.STATE_ENDED) {
                 if (episodeHasEnded) {
                     mediaItemsPlayed++
-                    phone_next_button?.callOnClick()
+                    playerBinding.nextEpisode.callOnClick()
                     episodeHasEnded = false
                 }
             }
@@ -180,16 +187,16 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
     }
 
     private fun prevButtonClickListener() {
-        val prevButton: ImageButton? = phone_prev_button
+        val prevButton = playerBinding.prevEpisode
 
         if (videoPlayerInfo.isTvShow) {
             if (videoPlayerInfo.chosenEpisode == 1) {
-                prevButton?.setOnClickListener {
+                prevButton.setOnClickListener {
                     mediaItemsPlayed = 0
-                    exo_prev?.callOnClick()
+                    playerBinding.exoPrev.callOnClick()
                 }
             } else {
-                prevButton?.setOnClickListener {
+                prevButton.setOnClickListener {
                     mediaItemsPlayed = 0
                     player.clearMediaItems()
                     videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
@@ -203,12 +210,12 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
                 }
             }
         } else {
-            prevButton?.setGone()
+            prevButton.setGone()
         }
     }
 
     private fun nextButtonClickListener() {
-        val nextButton = phone_next_button
+        val nextButton = playerBinding.nextEpisode
 
         if (videoPlayerInfo.isTvShow) {
             videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
@@ -217,7 +224,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
                 }
             })
         } else {
-            nextButton?.setGone()
+            nextButton.setGone()
         }
     }
 
@@ -244,13 +251,13 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
 
     private fun setTitleName() {
         if (videoPlayerData.trailerUrl != null) {
-            header_tv?.text = "ტრეილერი"
+            playerBinding.playerTitle.text = "ტრეილერი"
         } else {
             videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
                 if (videoPlayerInfo.isTvShow) {
-                    header_tv?.text = "ს${videoPlayerInfo.chosenSeason}. ე${videoPlayerInfo.chosenEpisode}. $name"
+                    playerBinding.playerTitle.text = "ს${videoPlayerInfo.chosenSeason}. ე${videoPlayerInfo.chosenEpisode}. $name"
                 } else {
-                    header_tv?.text = name
+                    playerBinding.playerTitle.text = name
                 }
             })
         }
@@ -310,7 +317,7 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
     }
 
     private fun subtitleFunctions(hasSubs: Boolean) {
-        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.phoneTitlePlayer.subtitleView!!, phone_subtitle_toggle, player, hasSubs)
+        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.phoneTitlePlayer.subtitleView!!, playerBinding.subtitleToggle, player, hasSubs)
     }
 
     override fun onDestroy() {
