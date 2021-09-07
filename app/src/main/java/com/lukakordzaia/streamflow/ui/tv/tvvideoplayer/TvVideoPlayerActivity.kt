@@ -47,29 +47,8 @@ class TvVideoPlayerActivity : FragmentActivity() {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
                 if (currentFragment == VIDEO_PLAYER) {
-                    if (continue_watching?.isVisible == true) {
-                        confirm_button.requestFocus()
-                    } else {
-                        when {
-                            !tv_title_player.isControllerVisible -> {
-                                tv_title_player.showController()
-                                tv_title_player.exo_pause.requestFocus()
-                            }
-                            next_episode.isVisible -> {
-                                exo_pause.nextFocusUpId = R.id.next_episode
-                                exo_play.nextFocusUpId = R.id.next_episode
-                            }
-                            subtitle_toggle.isVisible -> {
-                                exo_pause.nextFocusUpId = R.id.subtitle_toggle
-                                exo_play.nextFocusUpId = R.id.subtitle_toggle
-                            }
-                            else -> {
-                                exo_pause.nextFocusUpId = R.id.back_button
-                                exo_play.nextFocusUpId = R.id.back_button
-                            }
-                        }
-                    }
-//                    return true
+                    val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
+                    parentFragment.onKeyUp()
                 } else {
                     return super.onKeyUp(keyCode, event)
                 }
@@ -77,12 +56,8 @@ class TvVideoPlayerActivity : FragmentActivity() {
 
             KeyEvent.KEYCODE_DPAD_CENTER -> {
                 return if (currentFragment == VIDEO_PLAYER) {
-                    if (!tv_title_player.isControllerVisible) {
-                        tv_title_player.showController()
-                        tv_title_player.player!!.pause()
-                    } else if (!tv_title_player.player!!.isPlaying && !tv_title_player.isControllerVisible) {
-                        tv_title_player.player!!.play()
-                    }
+                    val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
+                    parentFragment.onKeyCenter()
                     true
                 } else {
                     super.onKeyUp(keyCode, event)
@@ -125,43 +100,22 @@ class TvVideoPlayerActivity : FragmentActivity() {
             }
 
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                if (currentFragment == VIDEO_PLAYER) {
-                    if (continue_watching?.isVisible == false) {
-                        when {
-                            !tv_title_player.isControllerVisible -> {
-                                tv_title_player.showController()
-                                tv_title_player.exo_rew.callOnClick()
-                            }
-                            next_episode.isFocused -> if (subtitle_toggle.isVisible) subtitle_toggle.requestFocus() else back_button.requestFocus()
-                            subtitle_toggle.isFocused -> back_button.requestFocus()
-                            else -> tv_title_player.exo_rew.callOnClick()
-                        }
-                    }
-                    return true
+                return if (currentFragment == VIDEO_PLAYER) {
+                    val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
+                    parentFragment.onKeyLeft()
+                    true
                 } else {
-                    return super.onKeyUp(keyCode, event)
+                    super.onKeyUp(keyCode, event)
                 }
             }
 
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (currentFragment == VIDEO_PLAYER) {
-                    if (continue_watching?.isVisible == false) {
-                        when {
-                            !tv_title_player.isControllerVisible -> {
-                                tv_title_player.showController()
-                                tv_title_player.exo_ffwd.callOnClick()
-                            }
-                            back_button.isFocused ->
-                                if (subtitle_toggle.isVisible) subtitle_toggle.requestFocus() else {
-                                    if (next_episode.isVisible) next_episode.requestFocus() else tv_title_player.exo_ffwd.callOnClick()
-                                }
-                            subtitle_toggle.isFocused -> if (next_episode.isVisible) next_episode.requestFocus() else tv_title_player.exo_ffwd.callOnClick()
-                            else -> tv_title_player.exo_ffwd.callOnClick()
-                        }
-                    }
-                    return true
+                return if (currentFragment == VIDEO_PLAYER) {
+                    val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
+                    parentFragment.onKeyRight()
+                    true
                 } else {
-                    return super.onKeyUp(keyCode, event)
+                    super.onKeyUp(keyCode, event)
                 }
             }
 

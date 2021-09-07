@@ -9,9 +9,11 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
@@ -22,7 +24,10 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
+import kotlinx.android.synthetic.main.continue_watching_dialog.*
+import kotlinx.android.synthetic.main.fragment_tv_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
+import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.view.*
 import java.util.concurrent.TimeUnit
 
 
@@ -173,5 +178,71 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         super.onDetach()
         tracker?.purgeHandler()
         autoBackPress.cancel()
+    }
+
+    fun onKeyUp() {
+        if (binding.continueWatching.root.isVisible) {
+            binding.continueWatching.confirmButton.requestFocus()
+        } else {
+            when {
+                !binding.tvTitlePlayer.isControllerVisible -> {
+                    binding.tvTitlePlayer.showController()
+                    playerBinding.exoPause.requestFocus()
+                }
+                playerBinding.nextEpisode.isVisible -> {
+                    playerBinding.exoPause.nextFocusUpId = R.id.next_episode
+                    playerBinding.exoPlay.nextFocusUpId = R.id.next_episode
+                }
+                playerBinding.subtitleToggle.isVisible -> {
+                    playerBinding.exoPause.nextFocusUpId = R.id.subtitle_toggle
+                    playerBinding.exoPlay.nextFocusUpId = R.id.subtitle_toggle
+                }
+                else -> {
+                    playerBinding.exoPause.nextFocusUpId = R.id.back_button
+                    playerBinding.exoPlay.nextFocusUpId = R.id.back_button
+                }
+            }
+        }
+    }
+
+    fun onKeyCenter() {
+        if (!binding.tvTitlePlayer.isControllerVisible) {
+            binding.tvTitlePlayer.showController()
+            binding.tvTitlePlayer.player!!.pause()
+        } else if (!binding.tvTitlePlayer.player!!.isPlaying && !binding.tvTitlePlayer.isControllerVisible) {
+            binding.tvTitlePlayer.player!!.play()
+        }
+    }
+
+    fun onKeyLeft() {
+        if (!binding.continueWatching.root.isVisible) {
+            when {
+                !binding.tvTitlePlayer.isControllerVisible -> {
+                    binding.tvTitlePlayer.showController()
+                    playerBinding.exoRew.callOnClick()
+                }
+                playerBinding.nextEpisode.isFocused ->
+                    if (playerBinding.subtitleToggle.isVisible) playerBinding.subtitleToggle.requestFocus() else playerBinding.backButton.requestFocus()
+                playerBinding.subtitleToggle.isFocused -> playerBinding.backButton.requestFocus()
+                else -> playerBinding.exoRew.callOnClick()
+            }
+        }
+    }
+
+    fun onKeyRight() {
+        if (!binding.continueWatching.root.isVisible) {
+            when {
+                !binding.tvTitlePlayer.isControllerVisible -> {
+                    binding.tvTitlePlayer.showController()
+                    playerBinding.exoFfwd.callOnClick()
+                }
+                playerBinding.backButton.isFocused ->
+                    if (playerBinding.subtitleToggle.isVisible) playerBinding.subtitleToggle.requestFocus() else {
+                        if (playerBinding.nextEpisode.isVisible) playerBinding.nextEpisode.requestFocus() else playerBinding.exoFfwd.callOnClick()
+                    }
+                playerBinding.subtitleToggle.isFocused -> if (next_episode.isVisible) playerBinding.nextEpisode.requestFocus() else playerBinding.exoFfwd.callOnClick()
+                else -> playerBinding.exoFfwd.callOnClick()
+            }
+        }
     }
 }
