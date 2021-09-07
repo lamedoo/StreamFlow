@@ -35,6 +35,7 @@ import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.T
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvSeasonsPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.watchlist.TvWatchlistActivity
+import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.android.synthetic.main.tv_details_season_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -95,7 +96,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
 
         val titleIdFromDetails = activity?.intent?.getSerializableExtra("titleId") as? Int
         val isTvShowFromDetails = activity?.intent?.getSerializableExtra("isTvShow") as? Boolean
-        val videoPlayerData = activity?.intent?.getParcelableExtra("videoPlayerData") as? VideoPlayerData
+        val videoPlayerData = activity?.intent?.getParcelableExtra(AppConstants.VIDEO_PLAYER_DATA) as? VideoPlayerData
 
         if (titleIdFromDetails == null) {
             titleId = videoPlayerData?.titleId
@@ -292,7 +293,7 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     private fun playEpisode(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
         val trailerUrl: String? = null
         val intent = Intent(context, TvVideoPlayerActivity::class.java).apply {
-            putExtra("videoPlayerData", VideoPlayerData(
+            putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
                 titleId,
                 isTvShow,
                 tvTitleFilesViewModel.chosenSeason.value!!,

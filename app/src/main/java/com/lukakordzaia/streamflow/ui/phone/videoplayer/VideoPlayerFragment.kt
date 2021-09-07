@@ -26,6 +26,7 @@ import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
 import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerHelpers
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.setGone
@@ -37,25 +38,11 @@ import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
-    private val videoPlayerViewModel: VideoPlayerViewModel by sharedViewModel()
-    private val buildMediaSource: BuildMediaSource by inject()
-    private lateinit var videoPlayerData: VideoPlayerData
-    private lateinit var videoPlayerInfo: VideoPlayerInfo
-
+class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBinding>() {
     private lateinit var playerBinding: PhoneExoplayerControllerLayoutBinding
 
-    private lateinit var mediaPlayer: MediaPlayerClass
-    private lateinit var player: SimpleExoPlayer
-
-    private var mediaItemsPlayed = 0
-    private var episodeHasEnded = false
-
-    private val autoBackPress = object : CountDownTimer(500000, 1000) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            requireActivity().onBackPressed()
-        }
+    private val autoBackPress = autoBackPress {
+        requireActivity().onBackPressed()
     }
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneVideoPlayerBinding
@@ -76,35 +63,24 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         super.onViewCreated(view, savedInstanceState)
         playerBinding = PhoneExoplayerControllerLayoutBinding.bind(binding.root)
 
-        videoPlayerData = requireActivity().intent!!.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
-
-        player = SimpleExoPlayer.Builder(requireContext()).build()
-        mediaPlayer = MediaPlayerClass(player)
-
         mediaPlayer.setPlayerListener(PlayerListeners())
-
-        sharedPreferences.saveTvVideoPlayerOn(true)
 
         playerBinding.backButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
 
-        if (videoPlayerData.trailerUrl == null) {
-            videoPlayerViewModel.getTitleFiles(
-                VideoPlayerInfo(
-                    videoPlayerData.titleId,
-                    videoPlayerData.isTvShow,
-                    videoPlayerData.chosenSeason,
-                    videoPlayerData.chosenEpisode,
-                    videoPlayerData.chosenLanguage
-                )
-            )
-            videoPlayerViewModel.getSingleTitleData(videoPlayerData.titleId)
-        }
-
         videoPlayerViewModel.videoPlayerInfo.observe(viewLifecycleOwner, {
             videoPlayerInfo = it
+            nextButtonClickListener(playerBinding.nextEpisode, binding.phoneTitlePlayer)
+            prevButtonClickListener()
+
+            setTitleName(playerBinding.playerTitle)
         })
+
+        if (videoPlayerData.trailerUrl != null) {
+            playerBinding.prevEpisode.setGone()
+            playerBinding.nextEpisode.setGone()
+        }
     }
 
     override fun onStart() {
@@ -121,68 +97,31 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
         }
     }
 
-    override fun onStop() {
-        if (Util.SDK_INT >= 24) {
-            requireActivity().onBackPressed()
-        }
-        super.onStop()
-    }
-
     inner class PlayerListeners : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             super.onIsPlayingChanged(isPlaying)
 
-            if (isPlaying) {
-                autoBackPress.cancel()
-            } else {
-                autoBackPress.start()
-            }
+            if (isPlaying) autoBackPress.cancel() else autoBackPress.start()
         }
 
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
 
-            if (videoPlayerData.trailerUrl != null) {
-                playerBinding.prevEpisode.setGone()
-                playerBinding.nextEpisode.setGone()
-            }
-
-            if (this@VideoPlayerFragment::videoPlayerInfo.isInitialized) {
-                nextButtonClickListener()
-                prevButtonClickListener()
-            }
-
-            if (state == Player.STATE_READY) {
-                episodeHasEnded = true
-                showContinueWatchingDialog()
-                binding.phoneTitlePlayer.keepScreenOn = true
-            } else binding.phoneTitlePlayer.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
-
-            if (state == Player.STATE_ENDED) {
-                if (episodeHasEnded) {
-                    mediaItemsPlayed++
-                    playerBinding.nextEpisode.callOnClick()
-                    episodeHasEnded = false
+            when (state) {
+                Player.STATE_READY -> {
+                    episodeHasEnded = true
+                    showContinueWatchingDialog()
                 }
-            }
-        }
-
-        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                setTitleName()
-
-                videoPlayerViewModel.setVideoPlayerInfo(
-                    PlayerDurationInfo(
-                        player.currentPosition,
-                        player.duration
-                    )
-                )
-                if (mediaItem != null) {
-                    if (videoPlayerData.trailerUrl == null) {
-                        videoPlayerViewModel.addContinueWatching()
+                Player.STATE_ENDED -> {
+                    if (episodeHasEnded) {
+                        mediaItemsPlayed++
+                        playerBinding.nextEpisode.callOnClick()
+                        episodeHasEnded = false
                     }
                 }
-            }, 2000)
+            }
+
+            binding.phoneTitlePlayer.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
         }
     }
 
@@ -211,55 +150,6 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
             }
         } else {
             prevButton.setGone()
-        }
-    }
-
-    private fun nextButtonClickListener() {
-        val nextButton = playerBinding.nextEpisode
-
-        if (videoPlayerInfo.isTvShow) {
-            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
-                nextButton.setOnClickListener {
-                    nextButtonFunction(videoPlayerInfo.chosenEpisode == lastEpisode)
-                }
-            })
-        } else {
-            nextButton.setGone()
-        }
-    }
-
-    private fun nextButtonFunction(lastEpisode: Boolean) {
-        videoPlayerViewModel.setVideoPlayerInfo(
-            PlayerDurationInfo(
-                player.currentPosition,
-                player.duration
-            )
-        )
-        videoPlayerViewModel.addContinueWatching()
-
-        episodeHasEnded = false
-        player.clearMediaItems()
-        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
-            videoPlayerInfo.titleId,
-            videoPlayerInfo.isTvShow,
-            if (lastEpisode) videoPlayerInfo.chosenSeason+1 else videoPlayerInfo.chosenSeason,
-            if (lastEpisode) 1 else videoPlayerInfo.chosenEpisode+1,
-            videoPlayerInfo.chosenLanguage
-        ))
-        mediaPlayer.initPlayer(binding.phoneTitlePlayer, 0, 0L)
-    }
-
-    private fun setTitleName() {
-        if (videoPlayerData.trailerUrl != null) {
-            playerBinding.playerTitle.text = "ტრეილერი"
-        } else {
-            videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
-                if (videoPlayerInfo.isTvShow) {
-                    playerBinding.playerTitle.text = "ს${videoPlayerInfo.chosenSeason}. ე${videoPlayerInfo.chosenEpisode}. $name"
-                } else {
-                    playerBinding.playerTitle.text = name
-                }
-            })
         }
     }
 
@@ -295,29 +185,14 @@ class VideoPlayerFragment : BaseFragment<FragmentPhoneVideoPlayerBinding>() {
             videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
 
-                if (it.titleSubUri.isNotEmpty() && it.titleSubUri != "0") {
-                    subtitleFunctions(true)
-                } else {
-                    subtitleFunctions(false)
-                }
+                subtitleFunctions(it.titleSubUri.isNotEmpty() && it.titleSubUri != "0")
             })
         }
         mediaPlayer.initPlayer(binding.phoneTitlePlayer, 0, watchedTime)
     }
 
-    fun releasePlayer() {
-        mediaPlayer.releasePlayer {
-            videoPlayerViewModel.setVideoPlayerInfo(it)
-        }
-
-        if (videoPlayerData.trailerUrl == null) {
-            videoPlayerViewModel.addContinueWatching()
-        }
-
-    }
-
     private fun subtitleFunctions(hasSubs: Boolean) {
-        VideoPlayerHelpers(requireContext()).subtitleFunctions(binding.phoneTitlePlayer.subtitleView!!, playerBinding.subtitleToggle, player, hasSubs)
+        subtitleFunctions(binding.phoneTitlePlayer.subtitleView!!, playerBinding.subtitleToggle, hasSubs)
     }
 
     override fun onDestroy() {

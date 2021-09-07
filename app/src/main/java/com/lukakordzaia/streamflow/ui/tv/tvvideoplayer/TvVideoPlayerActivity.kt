@@ -11,6 +11,7 @@ import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
+import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
 import kotlinx.android.synthetic.main.fragment_tv_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
@@ -35,7 +36,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
 
         setContentView(binding.root)
 
-        videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>("videoPlayerData") as VideoPlayerData
+        videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.tv_video_player_nav_host, TvVideoPlayerFragment())

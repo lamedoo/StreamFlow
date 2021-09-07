@@ -302,7 +302,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
 
     private fun playTitleTrailer(titleId: Int, isTvShow: Boolean, trailerUrl: String) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("videoPlayerData", VideoPlayerData(
+        intent.putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
             titleId,
             isTvShow,
             0,
@@ -316,7 +316,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
 
     private fun playTitleFromStart(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("videoPlayerData", VideoPlayerData(
+        intent.putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
             titleId,
             isTvShow,
             if (isTvShow) 1 else 0,
@@ -330,7 +330,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
 
     private fun continueTitlePlay(item: ContinueWatchingRoom) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra("videoPlayerData", VideoPlayerData(
+        intent.putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
             item.titleId,
             item.isTvShow,
             item.season,

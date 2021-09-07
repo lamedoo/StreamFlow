@@ -13,8 +13,6 @@ import org.koin.android.ext.android.inject
 abstract class BaseFragment<VB: ViewBinding> : Fragment() {
     protected val sharedPreferences: SharedPreferences by inject()
 
-    private var rootView: View? = null
-
     private var _binding: VB? = null
     abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
     protected val binding: VB
@@ -28,13 +26,12 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment() {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = bindingInflater.invoke(inflater, container, false)
         return _binding!!.root
     }
-    override fun onDestroyView() {
 
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
