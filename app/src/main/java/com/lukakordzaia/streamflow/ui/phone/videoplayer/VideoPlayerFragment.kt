@@ -117,11 +117,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
                     }
                 }
                 Player.STATE_ENDED -> {
-                    if (episodeHasEnded) {
-                        mediaItemsPlayed++
-                        playerBinding.nextEpisode.callOnClick()
-                        episodeHasEnded = false
-                    }
+                    stateHasEnded(playerBinding.nextEpisode)
                 }
             }
 

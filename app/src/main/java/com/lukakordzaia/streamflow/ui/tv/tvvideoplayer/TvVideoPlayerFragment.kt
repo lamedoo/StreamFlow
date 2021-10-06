@@ -120,23 +120,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     })
                 }
                 Player.STATE_ENDED -> {
-                    if (episodeHasEnded) {
-                        if (videoPlayerInfo.isTvShow) {
-                            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
-                                videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
-                                    if (!(numOfSeasons == videoPlayerInfo.chosenSeason && videoPlayerInfo.chosenEpisode == lastEpisode)) {
-                                        mediaItemsPlayed++
-                                        playerBinding.nextEpisode.callOnClick()
-                                        episodeHasEnded = false
-                                    } else {
-                                        requireActivity().onBackPressed()
-                                    }
-                                })
-                            })
-                        } else {
-                            requireActivity().onBackPressed()
-                        }
-                    }
+                    stateHasEnded(playerBinding.nextEpisode)
                 }
             }
 

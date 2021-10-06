@@ -207,6 +207,26 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         }
     }
 
+    fun stateHasEnded(nextButton: ImageButton) {
+        if (episodeHasEnded) {
+            if (videoPlayerInfo.isTvShow) {
+                videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
+                    videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+                        if (!(numOfSeasons == videoPlayerInfo.chosenSeason && videoPlayerInfo.chosenEpisode == lastEpisode)) {
+                            mediaItemsPlayed++
+                            nextButton.callOnClick()
+                            episodeHasEnded = false
+                        } else {
+                            requireActivity().onBackPressed()
+                        }
+                    })
+                })
+            } else {
+                requireActivity().onBackPressed()
+            }
+        }
+    }
+
     fun releasePlayer() {
         mediaPlayer.releasePlayer {
             videoPlayerViewModel.setVideoPlayerInfo(it)
