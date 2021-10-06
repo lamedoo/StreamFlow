@@ -24,6 +24,7 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
 import kotlinx.android.synthetic.main.fragment_tv_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
@@ -120,9 +121,21 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                 }
                 Player.STATE_ENDED -> {
                     if (episodeHasEnded) {
-                        mediaItemsPlayed++
-                        playerBinding.nextEpisode.callOnClick()
-                        episodeHasEnded = false
+                        if (videoPlayerInfo.isTvShow) {
+                            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
+                                videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+                                    if (!(numOfSeasons == videoPlayerInfo.chosenSeason && videoPlayerInfo.chosenEpisode == lastEpisode)) {
+                                        mediaItemsPlayed++
+                                        playerBinding.nextEpisode.callOnClick()
+                                        episodeHasEnded = false
+                                    } else {
+                                        requireActivity().onBackPressed()
+                                    }
+                                })
+                            })
+                        } else {
+                            requireActivity().onBackPressed()
+                        }
                     }
                 }
             }

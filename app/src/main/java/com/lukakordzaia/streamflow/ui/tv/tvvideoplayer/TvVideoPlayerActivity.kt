@@ -6,7 +6,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvVideoPlayerBinding
-import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
@@ -230,7 +229,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
                     super.onBackPressed()
                 }
             }
-            NEW_EPSIDOE -> {}
+            NEW_EPISODE -> {}
         }
     }
 
@@ -259,7 +258,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
     companion object {
         const val VIDEO_PLAYER = 0
         const val VIDEO_DETAILS = 1
-        const val NEW_EPSIDOE = 2
+        const val NEW_EPISODE = 2
         const val BACK_BUTTON = 3
     }
 }

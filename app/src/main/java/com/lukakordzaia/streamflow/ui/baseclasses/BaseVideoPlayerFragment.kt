@@ -37,10 +37,7 @@ import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerFragment
-import com.lukakordzaia.streamflow.utils.AppConstants
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setInvisible
-import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -169,6 +166,10 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
     fun nextButtonClickListener(nextButton: ImageButton, view: PlayerView) {
         if (videoPlayerInfo.isTvShow) {
             videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
+                videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+                    nextButton.setVisibleOrGone(!(numOfSeasons == videoPlayerInfo.chosenSeason && videoPlayerInfo.chosenEpisode == lastEpisode))
+                })
+
                 nextButton.setOnClickListener {
                     nextButtonFunction(videoPlayerInfo.chosenEpisode == lastEpisode, view)
                 }

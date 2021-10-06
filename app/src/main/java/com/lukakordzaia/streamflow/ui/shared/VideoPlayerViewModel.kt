@@ -19,7 +19,11 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class VideoPlayerViewModel : BaseViewModel() {
-    private val numOfSeasons = MutableLiveData<Int>()
+    private val _numOfSeasons = MutableLiveData<Int>()
+    val numOfSeasons: LiveData<Int> = _numOfSeasons
+
+    private val _nexButtonVisibility = MutableLiveData<Boolean>()
+    val nextButtonVisibility: LiveData<Boolean> = _nexButtonVisibility
 
     private var getEpisode: String = ""
     private var getSubtitles: String = ""
@@ -164,10 +168,10 @@ class VideoPlayerViewModel : BaseViewModel() {
                 is Result.Success -> {
                     val data = titleData.data.data
 
-                    if (data.seasons == null) {
-                        numOfSeasons.value = 0
+                    if (!data.isTvShow || data.seasons == null) {
+                        _numOfSeasons.value = 0
                     } else {
-                        numOfSeasons.value = data.seasons.data.size
+                        _numOfSeasons.value = data.seasons.data.size
                     }
                 }
                 is Result.Error -> {
