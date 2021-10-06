@@ -111,7 +111,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     tracker = ProgressTracker(player, object :
                         PositionListener {
                         override fun progress(position: Long) {
-                            exo_live_duration?.text = String.format("%02d:%02d:%02d",
+                            playerBinding.exoLiveDuration.text = String.format("%02d:%02d:%02d",
                                 TimeUnit.MILLISECONDS.toHours(position),
                                 TimeUnit.MILLISECONDS.toMinutes(position) -
                                         TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(position)),
@@ -155,7 +155,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     inner class ProgressTracker(private val player: Player, private val positionListener: PositionListener) : Runnable {
         private val handler: Handler = Handler(Looper.myLooper()!!)
         override fun run() {
-            val position = player.duration - player.currentPosition
+            val position = if (player.duration <= 0) 0 else player.duration - player.currentPosition
             positionListener.progress(position)
             handler.postDelayed(this, 1000)
         }
