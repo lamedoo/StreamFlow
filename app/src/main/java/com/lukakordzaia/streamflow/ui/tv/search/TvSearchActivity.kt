@@ -42,6 +42,7 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSear
 
         binding.tvSidebarCollapsed.collapsedSearchIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
+        binding.titleInfo.backButtonInfo.root.setGone()
         searchInput()
     }
 
