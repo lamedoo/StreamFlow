@@ -65,6 +65,8 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             nextButtonClickListener(playerBinding.nextEpisode, binding.tvTitlePlayer)
 
             setTitleName(playerBinding.playerTitle)
+            playerBinding.exoPlay.requestFocus()
+            playerBinding.exoPause.requestFocus()
         })
 
         if (videoPlayerData.trailerUrl != null) {
