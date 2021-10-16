@@ -157,7 +157,11 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
 
         tvTitleFilesViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
-                rowsSupportFragment.setSelectedPosition(0, true, ListRowPresenter.SelectItemViewHolderTask(it.season-1))
+                val task = ListRowPresenter.SelectItemViewHolderTask(it.season-1)
+                val isSmoothScroll = false // If you need to ignore the animation
+                task.isSmoothScroll = isSmoothScroll
+
+                rowsSupportFragment.setSelectedPosition(0, isSmoothScroll, task)
                 focusedSeason = it.season
                 episodesRowsAdapter(it.episode, it.season)
             }
@@ -180,8 +184,8 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
 
             if (currentEpisode != null && isFirst) {
                 Handler(Looper.myLooper()!!).postDelayed({
-                    rowsSupportFragment.setSelectedPosition(1, true, ListRowPresenter.SelectItemViewHolderTask(currentEpisode-1))
-                }, 1000)
+                    rowsSupportFragment.setSelectedPosition(1, false, ListRowPresenter.SelectItemViewHolderTask(currentEpisode-1))
+                }, 500)
                 isFirst = false
             }
         })

@@ -40,8 +40,6 @@ class TvVideoPlayerActivity : FragmentActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.tv_video_player_nav_host, TvVideoPlayerFragment())
             .commit()
-
-        initObservers()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -234,10 +232,6 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 }
             })
         }
-    }
-
-    private fun initObservers() {
-
     }
 
     companion object {
