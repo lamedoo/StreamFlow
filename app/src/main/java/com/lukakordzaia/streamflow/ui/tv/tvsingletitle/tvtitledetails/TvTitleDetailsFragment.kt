@@ -52,7 +52,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         fragmentObservers(titleId)
         favoriteContainer(titleId, fromWatchlist)
         titleDetails(titleId, isTvShow)
-        checkContinueWatching(continueWatching)
+        checkContinueWatching(continueWatching, fromWatchlist)
     }
 
     override fun onStart() {
@@ -215,7 +215,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         })
     }
 
-    private fun checkContinueWatching(continueWatching: Boolean?) {
+    private fun checkContinueWatching(continueWatching: Boolean?, fromWatchlist: Int?) {
         binding.deleteButton.setGone()
         binding.playButton.requestFocus()
         binding.continueButton.setGone()
@@ -239,10 +239,14 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                             tvTitleDetailsViewModel.hideSingleContinueWatching(it.titleId)
                         }
 
-                        val intent = Intent(requireContext(), TvSingleTitleActivity::class.java)
-                        intent.putExtra("titleId", it.titleId)
-                        intent.putExtra("isTvShow", it.isTvShow)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        sharedPreferences.saveTvVideoPlayerOn(true)
+
+                        val intent = Intent(requireContext(), TvSingleTitleActivity::class.java).apply {
+                            putExtra("titleId", it.titleId)
+                            putExtra("isTvShow", it.isTvShow)
+                            putExtra("FromWatchlist", fromWatchlist)
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
                         startActivity(intent)
                     }
                     binding.cancelButton.setOnClickListener {
