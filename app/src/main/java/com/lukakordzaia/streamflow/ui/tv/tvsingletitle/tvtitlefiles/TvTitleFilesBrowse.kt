@@ -34,7 +34,7 @@ import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.T
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvEpisodesPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters.TvSeasonsPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
-import com.lukakordzaia.streamflow.ui.tv.watchlist.TvWatchlistActivity
+import com.lukakordzaia.streamflow.ui.tv.tvwatchlist.TvWatchlistActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.android.synthetic.main.tv_details_season_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel

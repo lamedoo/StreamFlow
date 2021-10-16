@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.tv.watchlist
+package com.lukakordzaia.streamflow.ui.tv.tvwatchlist
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,7 +7,6 @@ import android.text.TextUtils
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.lukakordzaia.streamflow.App
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvWatchlistBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel

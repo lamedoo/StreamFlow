@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.tv.watchlist
+package com.lukakordzaia.streamflow.ui.tv.tvwatchlist
 
 import android.view.ViewGroup
 import androidx.leanback.widget.HorizontalGridView

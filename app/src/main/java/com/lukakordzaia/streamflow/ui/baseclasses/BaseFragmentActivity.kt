@@ -29,7 +29,7 @@ import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
 import com.lukakordzaia.streamflow.ui.tv.settings.TvSettingsActivity
 import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
-import com.lukakordzaia.streamflow.ui.tv.watchlist.TvWatchlistActivity
+import com.lukakordzaia.streamflow.ui.tv.tvwatchlist.TvWatchlistActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone

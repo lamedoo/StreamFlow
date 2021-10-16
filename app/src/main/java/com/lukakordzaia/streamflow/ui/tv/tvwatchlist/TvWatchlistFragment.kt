@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.tv.watchlist
+package com.lukakordzaia.streamflow.ui.tv.tvwatchlist
 
 import android.content.Context
 import android.content.Intent

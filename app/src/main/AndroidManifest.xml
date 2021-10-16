@@ -60,7 +60,7 @@
             android:name="com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity"
             android:theme="@style/Theme.Leanback"/>
         <activity
-            android:name="com.lukakordzaia.streamflow.ui.tv.watchlist.TvWatchlistActivity"
+            android:name="com.lukakordzaia.streamflow.ui.tv.tvwatchlist.TvWatchlistActivity"
             android:theme="@style/Theme.Leanback"/>
         <activity
             android:name="com.lukakordzaia.streamflow.ui.tv.settings.TvSettingsActivity"
