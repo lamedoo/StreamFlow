@@ -39,7 +39,7 @@ class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), T
 
         binding.tvSidebarCollapsed.collapsedFavoritesIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 
-        buttonFocusability(false)
+        buttonFocusability(true)
 
         fragmentType(AppConstants.WATCHLIST_MOVIES)
 

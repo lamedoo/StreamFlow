@@ -45,7 +45,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
 
     private fun authCheck() {
         if (sharedPreferences.getLoginToken() != "") {
-            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES)
+            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false)
             binding.favoriteMoviesContainer.setVisible()
             binding.favoriteNoAuth.setGone()
         } else {
@@ -67,7 +67,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
             watchlistViewModel.clearWatchlist()
 
             page = 1
-            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES)
+            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false)
             setButtons(AppConstants.WATCHLIST_MOVIES)
 
             type = AppConstants.WATCHLIST_MOVIES
@@ -77,7 +77,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
             watchlistViewModel.clearWatchlist()
 
             page = 1
-            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_TV_SHOWS)
+            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_TV_SHOWS, false)
             setButtons(AppConstants.WATCHLIST_TV_SHOWS)
 
             type = AppConstants.WATCHLIST_TV_SHOWS
@@ -95,10 +95,6 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
 
         watchlistViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController(it)
-        })
-
-        watchlistViewModel.removedTitle.observe(viewLifecycleOwner, EventObserver {
-            watchlistMoviesAdapter.notifyItemRemoved(it)
         })
 
         watchlistViewModel.hasMorePage.observe(viewLifecycleOwner, {
@@ -172,7 +168,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         if (hasMore) {
             binding.favoriteMoviesProgressBar.setVisible()
             page++
-            watchlistViewModel.getUserWatchlist(page, type)
+            watchlistViewModel.getUserWatchlist(page, type, false)
         }
     }
 

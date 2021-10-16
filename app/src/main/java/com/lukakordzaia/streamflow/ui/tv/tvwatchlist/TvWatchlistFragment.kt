@@ -69,7 +69,7 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
         val bundledType = args?.getString("type")
         type = bundledType!!
 
-        watchlistViewModel.getUserWatchlist(page, type)
+        watchlistViewModel.getUserWatchlist(page, type, true)
         gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
 
         watchlistViewModel.noFavorites.observe(viewLifecycleOwner, {
@@ -148,7 +148,7 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
-                watchlistViewModel.getUserWatchlist(page, type)
+                watchlistViewModel.getUserWatchlist(page, type, true)
             }
         }
     }
