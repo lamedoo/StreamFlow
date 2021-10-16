@@ -27,21 +27,18 @@ class VideoPlayerActivity : AppCompatActivity() {
         val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_fragment) as VideoPlayerFragment
         parentFragment.releasePlayer()
 
-        if (videoPlayerData.trailerUrl == null) {
-            if (sharedPreferences.getLoginToken() != "") {
-                videoPlayerViewModel.saveLoader.observe(this, {
-                    when (it.status) {
-                        LoadingState.Status.RUNNING -> {}
-                        LoadingState.Status.SUCCESS -> {
-                            super.onBackPressed()
-                        }
-                    }
-                })
-            } else {
-                super.onBackPressed()
-            }
-        } else {
+        if (videoPlayerData.trailerUrl == null || sharedPreferences.getLoginToken() != null) {
             super.onBackPressed()
+        } else {
+            videoPlayerViewModel.saveLoader.observe(this, {
+                when (it.status) {
+                    LoadingState.Status.RUNNING -> {
+                    }
+                    LoadingState.Status.SUCCESS, LoadingState.Status.ERROR -> {
+                        super.onBackPressed()
+                    }
+                }
+            })
         }
     }
 

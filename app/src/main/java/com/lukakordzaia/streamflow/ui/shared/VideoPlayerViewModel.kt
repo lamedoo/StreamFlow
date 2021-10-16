@@ -22,9 +22,6 @@ class VideoPlayerViewModel : BaseViewModel() {
     private val _numOfSeasons = MutableLiveData<Int>()
     val numOfSeasons: LiveData<Int> = _numOfSeasons
 
-    private val _nexButtonVisibility = MutableLiveData<Boolean>()
-    val nextButtonVisibility: LiveData<Boolean> = _nexButtonVisibility
-
     private var getEpisode: String = ""
     private var getSubtitles: String = ""
     val mediaAndSubtitle = MutableLiveData<TitleMediaItemsUri>()
@@ -77,7 +74,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                             saveLoader.value = LoadingState.LOADED
                         }
                         is Result.Error -> {
-                            saveLoader.value = LoadingState.LOADING
+                            saveLoader.value = LoadingState.ERROR
                         }
                     }
                 }

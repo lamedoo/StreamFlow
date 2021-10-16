@@ -8,15 +8,17 @@ sealed class Result<out T: Any> {
     data class Error(val exception: String) : Result<Nothing>()
 }
 
-data class LoadingState private constructor(val status: Status) {
+data class LoadingState(val status: Status) {
     companion object {
         val LOADED = LoadingState(Status.SUCCESS)
         val LOADING = LoadingState(Status.RUNNING)
+        val ERROR = LoadingState(Status.ERROR)
     }
 
     enum class Status {
         RUNNING,
-        SUCCESS
+        SUCCESS,
+        ERROR
     }
 }
 

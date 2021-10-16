@@ -40,6 +40,8 @@ class TvVideoPlayerActivity : FragmentActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.tv_video_player_nav_host, TvVideoPlayerFragment())
             .commit()
+
+        initObservers()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -185,50 +187,10 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 if (tv_title_player.isControllerVisible) {
                     tv_title_player.hideController()
                 } else {
-                    val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
-                    parentFragment.releasePlayer()
-
-                    if (videoPlayerData.trailerUrl == null) {
-                        if (sharedPreferences.getLoginToken() != "") {
-                            videoPlayerViewModel.saveLoader.observe(this, {
-                                when (it.status) {
-                                    LoadingState.Status.RUNNING -> {
-                                    }
-                                    LoadingState.Status.SUCCESS -> {
-                                        super.onBackPressed()
-                                    }
-                                }
-                            })
-                        } else {
-                            super.onBackPressed()
-                        }
-                    } else {
-                        super.onBackPressed()
-                    }
+                    goBack()
                 }
             }
-            BACK_BUTTON -> {
-                val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
-                parentFragment.releasePlayer()
-
-                if (videoPlayerData.trailerUrl == null) {
-                    if (sharedPreferences.getLoginToken() != "") {
-                        videoPlayerViewModel.saveLoader.observe(this, {
-                            when (it.status) {
-                                LoadingState.Status.RUNNING -> {
-                                }
-                                LoadingState.Status.SUCCESS -> {
-                                    super.onBackPressed()
-                                }
-                            }
-                        })
-                    } else {
-                        super.onBackPressed()
-                    }
-                } else {
-                    super.onBackPressed()
-                }
-            }
+            BACK_BUTTON -> goBack()
             NEW_EPISODE -> {}
         }
     }
@@ -253,6 +215,29 @@ class TvVideoPlayerActivity : FragmentActivity() {
     private fun detailsFragment() {
         tv_title_player.player!!.pause()
         tv_title_player.hideController()
+    }
+
+    private fun goBack() {
+        val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
+        parentFragment.releasePlayer()
+
+        if (videoPlayerData.trailerUrl == null || sharedPreferences.getLoginToken() != null) {
+            super.onBackPressed()
+        } else {
+            videoPlayerViewModel.saveLoader.observe(this, {
+                when (it.status) {
+                    LoadingState.Status.RUNNING -> {
+                    }
+                    LoadingState.Status.SUCCESS, LoadingState.Status.ERROR -> {
+                        super.onBackPressed()
+                    }
+                }
+            })
+        }
+    }
+
+    private fun initObservers() {
+
     }
 
     companion object {
