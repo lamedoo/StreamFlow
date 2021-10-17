@@ -263,13 +263,13 @@ class TvMainFragment : BrowseSupportFragment() {
                     when (item.categoriesId) {
                         0 -> {
                             val intent = Intent(context, TvCatalogueActivity::class.java).apply {
-                                putExtra(AppConstants.CATALOGUE_TYPE, AppConstants.TV_CATALOGUE_TOP_MOVIES)
+                                putExtra(AppConstants.CATALOGUE_TYPE, AppConstants.LIST_TOP_MOVIES)
                             }
                             requireActivity().startActivity(intent)
                         }
                         1 -> {
                             val intent = Intent(context, TvCatalogueActivity::class.java).apply {
-                                putExtra(AppConstants.CATALOGUE_TYPE, AppConstants.TV_CATALOGUE_TOP_TV_SHOWS)
+                                putExtra(AppConstants.CATALOGUE_TYPE, AppConstants.LIST_TOP_TV_SHOWS)
                             }
                             requireActivity().startActivity(intent)
                         }

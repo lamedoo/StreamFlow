@@ -7,51 +7,29 @@ import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class SingleTopListViewModel : BaseViewModel() {
+    val listLoader = MutableLiveData<LoadingState>()
 
-    val newMovieLoader = MutableLiveData<LoadingState>()
-    val topMovieLoader = MutableLiveData<LoadingState>()
-    val topTvShowsLoader = MutableLiveData<LoadingState>()
+    private val fetchList: MutableList<SingleTitleModel> = ArrayList()
+    private val _list = MutableLiveData<List<SingleTitleModel>>()
+    val list: LiveData<List<SingleTitleModel>> = _list
 
-    private val fetchNewMoviesList: MutableList<SingleTitleModel> = ArrayList()
-    private val _newMovieList = MutableLiveData<List<SingleTitleModel>>()
-    val newMovieList: LiveData<List<SingleTitleModel>> = _newMovieList
-
-    private val fetchTopMoviesList: MutableList<SingleTitleModel> = ArrayList()
-    private val _topMovieList = MutableLiveData<List<SingleTitleModel>>()
-    val topMovieList: LiveData<List<SingleTitleModel>> = _topMovieList
-
-    private val fetchTopTvShowsList: MutableList<SingleTitleModel> = ArrayList()
-    private val _topTvShowList = MutableLiveData<List<SingleTitleModel>>()
-    val topTvShowList: LiveData<List<SingleTitleModel>> = _topTvShowList
-
-    fun onSingleTitlePressed(start: Int, titleId: Int) {
-        when (start) {
-            AppConstants.NAV_TOP_MOVIES_TO_SINGLE -> navigateToNewFragment(
-                    TopMoviesFragmentDirections.actionTopMoviesFragmentToSingleTitleFragmentNav(titleId)
-            )
-            AppConstants.NAV_TOP_TV_SHOWS_TO_SINGLE -> navigateToNewFragment(
-                    TopTvShowsFragmentDirections.actionTopTvShowsFragmentToSingleTitleFragmentNav(titleId)
-            )
-            AppConstants.NAV_NEW_MOVIES_TO_SINGLE -> navigateToNewFragment(
-                    NewMoviesFragmentDirections.actionNewMoviesFragmentToSingleTitleFragmentNav(titleId)
-            )
-        }
+    fun onSingleTitlePressed(titleId: Int) {
+        navigateToNewFragment(TopListFragmentDirections.actionTopListFragmentToSingleTitleFragmentNav(titleId))
     }
 
     fun getNewMovies(page: Int) {
         viewModelScope.launch {
-            newMovieLoader.value = LoadingState.LOADING
+            listLoader.value = LoadingState.LOADING
             when (val newMovies = environment.homeRepository.getNewMovies(page)) {
                 is Result.Success -> {
                     val data = newMovies.data.data
-                    fetchNewMoviesList.addAll(data.toTitleListModel())
-                    _newMovieList.value = fetchNewMoviesList
-                    newMovieLoader.value = LoadingState.LOADED
+                    fetchList.addAll(data.toTitleListModel())
+                    _list.value = fetchList
+                    listLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
                     newToastMessage("ახალი ფილმები - ${newMovies.exception}")
@@ -65,13 +43,13 @@ class SingleTopListViewModel : BaseViewModel() {
 
     fun getTopMovies(page: Int) {
         viewModelScope.launch {
-            topMovieLoader.value = LoadingState.LOADING
+            listLoader.value = LoadingState.LOADING
             when (val topMovies = environment.homeRepository.getTopMovies(page)) {
                 is Result.Success -> {
                     val data = topMovies.data.data
-                    fetchTopMoviesList.addAll(data.toTitleListModel())
-                    _topMovieList.value = fetchTopMoviesList
-                    topMovieLoader.value = LoadingState.LOADED
+                    fetchList.addAll(data.toTitleListModel())
+                    _list.value = fetchList
+                    listLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
                     newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
@@ -85,13 +63,13 @@ class SingleTopListViewModel : BaseViewModel() {
 
     fun getTopTvShows(page: Int) {
         viewModelScope.launch {
-            topTvShowsLoader.value = LoadingState.LOADING
+            listLoader.value = LoadingState.LOADING
             when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
                 is Result.Success -> {
                     val data = topTvShows.data.data
-                    fetchTopTvShowsList.addAll(data.toTitleListModel())
-                    _topTvShowList.value = fetchTopTvShowsList
-                    topTvShowsLoader.value = LoadingState.LOADED
+                    fetchList.addAll(data.toTitleListModel())
+                    _list.value = fetchList
+                    listLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
                     newToastMessage("ტოპ სერიალები- ${topTvShows.exception}")

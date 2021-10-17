@@ -45,13 +45,13 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
         gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
 
         when (activity?.intent?.getSerializableExtra(AppConstants.CATALOGUE_TYPE) as Int) {
-            AppConstants.TV_CATALOGUE_NEW_MOVIES -> {
+            AppConstants.LIST_NEW_MOVIES -> {
                 tvCatalogueViewModel.getNewMoviesTv(page)
             }
-            AppConstants.TV_CATALOGUE_TOP_MOVIES -> {
+            AppConstants.LIST_TOP_MOVIES -> {
                 tvCatalogueViewModel.getTopMoviesTv(page)
             }
-            AppConstants.TV_CATALOGUE_TOP_TV_SHOWS -> {
+            AppConstants.LIST_TOP_TV_SHOWS -> {
                 tvCatalogueViewModel.getTopTvShowsTv(page)
             }
         }
@@ -122,13 +122,13 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
                 when (activity?.intent?.getSerializableExtra(AppConstants.CATALOGUE_TYPE) as Int) {
-                    AppConstants.TV_CATALOGUE_NEW_MOVIES -> {
+                    AppConstants.LIST_NEW_MOVIES -> {
                         tvCatalogueViewModel.getNewMoviesTv(page)
                     }
-                    AppConstants.TV_CATALOGUE_TOP_MOVIES -> {
+                    AppConstants.LIST_TOP_MOVIES -> {
                         tvCatalogueViewModel.getTopMoviesTv(page)
                     }
-                    AppConstants.TV_CATALOGUE_TOP_TV_SHOWS -> {
+                    AppConstants.LIST_TOP_TV_SHOWS -> {
                         tvCatalogueViewModel.getTopTvShowsTv(page)
                     }
                 }

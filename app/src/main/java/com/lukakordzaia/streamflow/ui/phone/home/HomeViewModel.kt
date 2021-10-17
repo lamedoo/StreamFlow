@@ -60,16 +60,8 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    fun newMoviesMorePressed() {
-        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToNewMoviesFragment())
-    }
-
-    fun topMoviesMorePressed() {
-        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToTopMoviesFragment())
-    }
-
-    fun topTvShowsMorePressed() {
-        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToTopTvShowsFragment())
+    fun onTopListPressed(type: Int) {
+        navigateToNewFragment(HomeFragmentDirections.actionHomeFragmentToTopListFragment(type))
     }
 
     fun onContinueWatchingInfoPressed(titleId: Int, titleName: String) {

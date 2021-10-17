@@ -21,9 +21,7 @@ import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre.SingleGenreFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlestudio.SingleStudioFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
-import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.NewMoviesFragment
-import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopMoviesFragment
-import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopTvShowsFragment
+import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopListFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment
 import com.lukakordzaia.streamflow.ui.phone.phonewatchlist.PhoneWatchlistFragment
@@ -78,9 +76,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     is ProfileFragment,
                     is SingleGenreFragment,
-                    is TopMoviesFragment,
-                    is TopTvShowsFragment,
-                    is NewMoviesFragment,
+                    is TopListFragment,
                     is SingleStudioFragment,
                     is PhoneSingleTitleFragment,
                     is TvShowBottomSheetFragment, is VideoPlayerFragment -> {

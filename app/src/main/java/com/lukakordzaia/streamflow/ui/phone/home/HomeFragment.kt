@@ -60,15 +60,15 @@ class HomeFragment : BaseVMFragment<FragmentPhoneHomeBinding, HomeViewModel>() {
         }
 
         binding.newMoviesHeader.setOnClickListener {
-            viewModel.newMoviesMorePressed()
+            viewModel.onTopListPressed(AppConstants.LIST_NEW_MOVIES)
         }
 
         binding.topMoviesHeader.setOnClickListener {
-            viewModel.topMoviesMorePressed()
+            viewModel.onTopListPressed(AppConstants.LIST_TOP_MOVIES)
         }
 
         binding.topTvShowsHeader.setOnClickListener {
-            viewModel.topTvShowsMorePressed()
+            viewModel.onTopListPressed(AppConstants.LIST_TOP_TV_SHOWS)
         }
 
         binding.fragmentScroll.setOnScrollChangeListener { _: View, _: Int, scrollY: Int, _: Int, _: Int ->

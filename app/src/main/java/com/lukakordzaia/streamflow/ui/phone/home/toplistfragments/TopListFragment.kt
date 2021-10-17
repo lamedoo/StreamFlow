@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
@@ -16,8 +17,9 @@ import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewMoviesFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, SingleTopListViewModel>() {
+class TopListFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, SingleTopListViewModel>() {
     override val viewModel by viewModel<SingleTopListViewModel>()
+    private val args: TopListFragmentArgs by navArgs()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private var page = 1
     private var pastVisibleItems: Int = 0
@@ -31,12 +33,27 @@ class NewMoviesFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, Sin
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getNewMovies(page)
-
-        topBarListener(resources.getString(R.string.new_movies), binding.toolbar)
+        when (args.type) {
+            AppConstants.LIST_NEW_MOVIES -> {
+                viewModel.getNewMovies(page)
+                setTopBar(R.string.new_movies)
+            }
+            AppConstants.LIST_TOP_MOVIES -> {
+                viewModel.getTopMovies(page)
+                setTopBar(R.string.top_movies)
+            }
+            AppConstants.LIST_TOP_TV_SHOWS -> {
+                viewModel.getTopTvShows(page)
+                setTopBar(R.string.top_tv_shows)
+            }
+        }
 
         fragmentObservers()
         newMoviesContainer()
+    }
+
+    private fun setTopBar(title: Int) {
+        topBarListener(resources.getString(title), binding.toolbar)
     }
 
     private fun fragmentObservers() {
@@ -51,7 +68,7 @@ class NewMoviesFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, Sin
     }
 
     private fun newMoviesContainer() {
-        viewModel.newMovieLoader.observe(viewLifecycleOwner, {
+        viewModel.listLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> binding.progressBar.setVisible()
                 LoadingState.Status.SUCCESS -> {
@@ -63,12 +80,12 @@ class NewMoviesFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, Sin
 
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(AppConstants.NAV_NEW_MOVIES_TO_SINGLE, it)
+            viewModel.onSingleTitlePressed(it)
         }
         binding.rvSingleCategory.adapter = singleCategoryAdapter
         binding.rvSingleCategory.layoutManager = layoutManager
 
-        viewModel.newMovieList.observe(viewLifecycleOwner, {
+        viewModel.list.observe(viewLifecycleOwner, {
             singleCategoryAdapter.setItems(it)
         })
 
@@ -91,7 +108,17 @@ class NewMoviesFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, Sin
     private fun fetchMoreTopMovies() {
         binding.progressBar.setVisible()
         page++
-        viewModel.getNewMovies(page)
+        when (args.type) {
+            AppConstants.LIST_NEW_MOVIES -> {
+                viewModel.getNewMovies(page)
+            }
+            AppConstants.LIST_TOP_MOVIES -> {
+                viewModel.getTopMovies(page)
+            }
+            AppConstants.LIST_TOP_TV_SHOWS -> {
+                viewModel.getTopTvShows(page)
+            }
+        }
         loading = false
     }
 }

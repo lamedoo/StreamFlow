@@ -28,9 +28,9 @@ class AppConstants {
         const val GENRE_ADVENTURE = "სათავგადასავლო"
         const val GENRE_ACTION = "მძაფრ-სიუჟეტიანი"
 
-        const val TV_CATALOGUE_NEW_MOVIES = 0
-        const val TV_CATALOGUE_TOP_MOVIES = 1
-        const val TV_CATALOGUE_TOP_TV_SHOWS = 2
+        const val LIST_NEW_MOVIES = 0
+        const val LIST_TOP_MOVIES = 1
+        const val LIST_TOP_TV_SHOWS = 2
 
         const val NOT_FOUND_ERROR = "404 ვერ მოიძებნა"
         const val SERVER_ERROR = "500 სერვერთან დაკავშირება ვერ მოხერხდა"
