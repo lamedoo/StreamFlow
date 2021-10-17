@@ -10,17 +10,15 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneLoginBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginFragment: BaseFragment<FragmentPhoneLoginBinding>() {
-    private val profileViewModel: ProfileViewModel by viewModel()
+class LoginFragment: BaseVMFragment<FragmentPhoneLoginBinding, ProfileViewModel>() {
+    override val viewModel by viewModel<ProfileViewModel>()
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneLoginBinding
         get() = FragmentPhoneLoginBinding::inflate
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,7 +44,7 @@ class LoginFragment: BaseFragment<FragmentPhoneLoginBinding>() {
             clearFocus(binding.passwordInput)
 
             if (!binding.usernameInput.text.isNullOrEmpty() && !binding.passwordInput.text.isNullOrEmpty()) {
-                profileViewModel.userLogin(PostLoginBody(
+                viewModel.userLogin(PostLoginBody(
                     3,
                     "password",
                     binding.passwordInput.text.toString(),
@@ -60,7 +58,7 @@ class LoginFragment: BaseFragment<FragmentPhoneLoginBinding>() {
     }
 
     private fun fragmentObservers() {
-        profileViewModel.loginLoader.observe(viewLifecycleOwner, {
+        viewModel.loginLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {}
                 LoadingState.Status.SUCCESS -> requireActivity().onBackPressed()

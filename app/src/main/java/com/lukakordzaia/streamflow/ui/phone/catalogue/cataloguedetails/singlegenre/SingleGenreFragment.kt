@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleGenreFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
-    private val singleCategoryViewModel: SingleCategoryViewModel by viewModel()
+class SingleGenreFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, SingleCategoryViewModel>() {
+    override val viewModel by viewModel<SingleCategoryViewModel>()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private val args: SingleGenreFragmentArgs by navArgs()
     private var page = 1
@@ -33,7 +33,7 @@ class SingleGenreFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        singleCategoryViewModel.getSingleGenre(args.genreId, page)
+        viewModel.getSingleGenre(args.genreId, page)
 
         topBarListener(args.genreName, binding.toolbar)
 
@@ -42,22 +42,18 @@ class SingleGenreFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
     }
 
     private fun fragmentObservers() {
-        singleCategoryViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    singleCategoryViewModel.getSingleGenre(args.genreId, page)
+                    viewModel.getSingleGenre(args.genreId, page)
                 }, 5000)
             }
-        })
-
-        singleCategoryViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
         })
     }
 
     private fun genresContainer() {
-        singleCategoryViewModel.categoryLoader.observe(viewLifecycleOwner, {
+        viewModel.categoryLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> binding.progressBar.setVisible()
                 LoadingState.Status.SUCCESS -> binding.progressBar.setGone()
@@ -66,16 +62,16 @@ class SingleGenreFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
 
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
-            singleCategoryViewModel.onSingleTitlePressed(it, AppConstants.NAV_GENRE_TO_SINGLE)
+            viewModel.onSingleTitlePressed(it, AppConstants.NAV_GENRE_TO_SINGLE)
         }
         binding.rvSingleCategory.adapter = singleCategoryAdapter
         binding.rvSingleCategory.layoutManager = layoutManager
 
-        singleCategoryViewModel.singleGenreList.observe(viewLifecycleOwner, {
+        viewModel.singleGenreList.observe(viewLifecycleOwner, {
             singleCategoryAdapter.setItems(it)
         })
 
-        singleCategoryViewModel.hasMorePage.observe(viewLifecycleOwner, {
+        viewModel.hasMorePage.observe(viewLifecycleOwner, {
             if (it) {
                 binding.rvSingleCategory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -98,7 +94,7 @@ class SingleGenreFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
     private fun fetchMoreTitle() {
         binding.progressBar.setVisible()
         page++
-        singleCategoryViewModel.getSingleGenre(args.genreId, page)
+        viewModel.getSingleGenre(args.genreId, page)
         loading = false
     }
 }

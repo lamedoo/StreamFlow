@@ -21,14 +21,17 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
-import com.lukakordzaia.streamflow.utils.*
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.createToast
+import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import kotlinx.android.synthetic.main.dialog_connect_traktv_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
-    private val profileViewModel: ProfileViewModel by viewModel()
+class ProfileFragment : BaseVMFragment<FragmentPhoneProfileBinding, ProfileViewModel>() {
+    override val viewModel by viewModel<ProfileViewModel>()
+
     private var traktToken: String? = null
 
     private lateinit var traktDialog: Dialog
@@ -48,7 +51,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     override fun onStart() {
         super.onStart()
 
-        profileViewModel.getUserData()
+        viewModel.getUserData()
         updateProfileUI(sharedPreferences.getLoginToken() != "")
     }
 
@@ -67,11 +70,11 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
 
     private fun fragmentListeners() {
         binding.gSignIn.setOnClickListener {
-            profileViewModel.onLoginPressed()
+            viewModel.onLoginPressed()
         }
 
         binding.gSignOut.setOnClickListener {
-            profileViewModel.userLogout()
+            viewModel.userLogout()
         }
 
         binding.clearContainer.setOnClickListener {
@@ -82,7 +85,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
 
             binding.continueButton.setOnClickListener {
                 if (sharedPreferences.getLoginToken() == "") {
-                    profileViewModel.deleteContinueWatchingFromRoomFull()
+                    viewModel.deleteContinueWatchingFromRoomFull()
                 }
                 clearHistory.dismiss()
             }
@@ -100,9 +103,9 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
             val binding = DialogConnectTraktvAlertBinding.inflate(LayoutInflater.from(requireContext()))
             traktDialog.setContentView(binding.root)
             traktDialog.show()
-            profileViewModel.getDeviceCode()
+            viewModel.getDeviceCode()
 
-            profileViewModel.traktDeviceCodeResponse.observe(viewLifecycleOwner, {
+            viewModel.traktDeviceCodeResponse.observe(viewLifecycleOwner, {
                 binding.userCode.text = it.userCode
                 binding.traktvUrl.text = it.verificationUrl
                 countdown.start()
@@ -121,7 +124,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                     startActivity(intent)
                 }
 
-                profileViewModel.getUserToken(
+                viewModel.getUserToken(
                     GetUserTokenRequestBody(
                         AppConstants.TRAKTV_CLIENT_ID,
                         AppConstants.TRAKTV_CLIENT_SECRET,
@@ -144,14 +147,14 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
     }
 
     private fun fragmentObservers() {
-        profileViewModel.loginLoader.observe(viewLifecycleOwner, {
+        viewModel.loginLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {}
-                LoadingState.Status.SUCCESS -> profileViewModel.refreshProfileOnLogin()
+                LoadingState.Status.SUCCESS -> viewModel.refreshProfileOnLogin()
             }
         })
 
-        profileViewModel.userUserTokenResponse.observe(viewLifecycleOwner, { userToken ->
+        viewModel.userUserTokenResponse.observe(viewLifecycleOwner, { userToken ->
             if (userToken != null) {
                 traktDialog.hide()
                 countdown.cancel()
@@ -163,9 +166,9 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
             }
         })
 
-        profileViewModel.traktSfListExists.observe(viewLifecycleOwner, {
+        viewModel.traktSfListExists.observe(viewLifecycleOwner, {
             if (!it) {
-                profileViewModel.createNewList(
+                viewModel.createNewList(
                     AddNewListRequestBody(
                         null,
                         null,
@@ -178,14 +181,6 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
                     "Bearer ${sharedPreferences.getTraktToken()}"
                 )
             }
-        })
-
-        profileViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
-        })
-
-        profileViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
         })
     }
 
@@ -209,7 +204,7 @@ class ProfileFragment : BaseFragment<FragmentPhoneProfileBinding>() {
         binding.historyLine.setVisibleOrGone(!isLoggedIn)
 
         if (isLoggedIn) {
-            profileViewModel.userData.observe(viewLifecycleOwner, {
+            viewModel.userData.observe(viewLifecycleOwner, {
                 binding.profileUsername.text = it.displayName
                 Glide.with(this).load(it.avatar.large).into(binding.profilePhoto)
             })

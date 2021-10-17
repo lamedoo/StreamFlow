@@ -55,8 +55,8 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
             }
 
            binding.continueButton.setOnClickListener {
+               homeViewModel.deleteContinueWatching(args.titleId)
                if (sharedPreferences.getLoginToken() == "") {
-                   homeViewModel.deleteContinueWatching(args.titleId)
                    removeTitle.dismiss()
                    dismiss()
                } else {

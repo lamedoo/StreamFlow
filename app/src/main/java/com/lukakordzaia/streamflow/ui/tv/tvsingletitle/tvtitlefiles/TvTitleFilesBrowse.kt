@@ -94,8 +94,8 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val titleIdFromDetails = activity?.intent?.getSerializableExtra("titleId") as? Int
-        val isTvShowFromDetails = activity?.intent?.getSerializableExtra("isTvShow") as? Boolean
+        val titleIdFromDetails = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as? Int
+        val isTvShowFromDetails = activity?.intent?.getSerializableExtra(AppConstants.IS_TV_SHOW) as? Boolean
         val videoPlayerData = activity?.intent?.getParcelableExtra(AppConstants.VIDEO_PLAYER_DATA) as? VideoPlayerData
 
         if (titleIdFromDetails == null) {

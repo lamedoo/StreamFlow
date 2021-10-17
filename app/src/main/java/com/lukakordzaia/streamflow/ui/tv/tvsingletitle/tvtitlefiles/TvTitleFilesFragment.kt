@@ -11,7 +11,6 @@ import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsFragment
 
 class TvTitleFilesFragment : BaseFragment<FragmentTvTitleFilesBinding>() {
-
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvTitleFilesBinding
         get() = FragmentTvTitleFilesBinding::inflate
 
