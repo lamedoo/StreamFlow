@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TopMoviesFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
-    private val viewModel: SingleTopListViewModel by viewModel()
+class TopMoviesFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, SingleTopListViewModel>() {
+    override val viewModel by viewModel<SingleTopListViewModel>()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private var page = 1
     private var pastVisibleItems: Int = 0
@@ -47,14 +47,6 @@ class TopMoviesFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
                     viewModel.getTopMovies(page)
                 }, 3000)
             }
-        })
-
-        viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
-        })
-
-        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
         })
     }
 

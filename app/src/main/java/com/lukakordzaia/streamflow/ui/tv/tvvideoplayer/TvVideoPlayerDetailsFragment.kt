@@ -9,7 +9,6 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity.Companion.VIDEO_PLAYER
 
 class TvVideoPlayerDetailsFragment : BaseFragment<FragmentTvTitleFilesBinding>() {
-
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvTitleFilesBinding
         get() = FragmentTvTitleFilesBinding::inflate
 

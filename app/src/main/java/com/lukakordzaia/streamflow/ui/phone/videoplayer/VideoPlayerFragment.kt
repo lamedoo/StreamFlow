@@ -3,41 +3,18 @@ package com.lukakordzaia.streamflow.ui.phone.videoplayer
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsetsController
-import android.widget.ImageButton
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.util.Util
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.PhoneExoplayerControllerLayoutBinding
-import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
-import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
-import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
-import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerHelpers
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
-import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
-import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
-import kotlinx.android.synthetic.main.continue_watching_dialog.*
-import kotlinx.android.synthetic.main.fragment_phone_video_player.*
-import kotlinx.android.synthetic.main.phone_exoplayer_controller_layout.*
-import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBinding>() {
     private lateinit var playerBinding: PhoneExoplayerControllerLayoutBinding

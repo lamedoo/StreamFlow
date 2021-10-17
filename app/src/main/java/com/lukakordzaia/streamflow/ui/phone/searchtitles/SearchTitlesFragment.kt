@@ -13,14 +13,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.customviews.CustomSearchInput
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSearchTitlesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
 import com.lukakordzaia.streamflow.utils.*
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
 import kotlinx.android.synthetic.main.main_top_toolbar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
-    private val searchTitlesViewModel: SearchTitlesViewModel by viewModel()
+class SearchTitlesFragment : BaseVMFragment<FragmentPhoneSearchTitlesBinding, SearchTitlesViewModel>() {
+    override val viewModel by viewModel<SearchTitlesViewModel>()
+
     private lateinit var searchTitlesAdapter: SearchTitlesAdapter
     private lateinit var topFranchisesAdapter: TopFranchisesAdapter
     private var page = 1
@@ -44,21 +45,13 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
     }
 
     private fun fragmentObservers() {
-        searchTitlesViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    searchTitlesViewModel.refreshContent()
+                    viewModel.refreshContent()
                 }, 5000)
             }
-        })
-
-        searchTitlesViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
-        })
-
-        searchTitlesViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
         })
     }
 
@@ -71,10 +64,10 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
                 if (newText.isNullOrBlank()) {
                     binding.rvSearchTitlesContainer.setGone()
                     binding.topSearchContainer.setVisible()
-                    searchTitlesViewModel.clearSearchResults()
+                    viewModel.clearSearchResults()
                 } else {
-                    searchTitlesViewModel.clearSearchResults()
-                    searchTitlesViewModel.getSearchTitles(newText, page)
+                    viewModel.clearSearchResults()
+                    viewModel.getSearchTitles(newText, page)
                     binding.rvSearchTitlesContainer.setVisible()
                     binding.topSearchContainer.setGone()
                 }
@@ -83,7 +76,7 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
     }
 
     private fun searchTitlesContainer() {
-        searchTitlesViewModel.searchLoader.observe(viewLifecycleOwner, {
+        viewModel.searchLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> binding.searchProgressBar.setVisible()
                 LoadingState.Status.SUCCESS -> binding.searchProgressBar.setGone()
@@ -92,13 +85,13 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
 
         val layoutManager = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
         searchTitlesAdapter = SearchTitlesAdapter(requireContext()) {
-            searchTitlesViewModel.onSingleTitlePressed(it)
+            viewModel.onSingleTitlePressed(it)
         }
 
         binding.rvSearchTitles.adapter = searchTitlesAdapter
         binding.rvSearchTitles.layoutManager = layoutManager
 
-        searchTitlesViewModel.searchList.observe(viewLifecycleOwner, {
+        viewModel.searchList.observe(viewLifecycleOwner, {
             searchTitlesAdapter.setSearchTitleList(it)
         })
 
@@ -119,7 +112,7 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
     }
 
     private fun franchisesContainer() {
-        searchTitlesViewModel.getTopFranchises()
+        viewModel.getTopFranchises()
 
         topFranchisesAdapter = TopFranchisesAdapter(requireContext()) { titleName, position ->
             onFranchiseAnimationEnd(titleName)
@@ -129,28 +122,28 @@ class SearchTitlesFragment : BaseFragment<FragmentPhoneSearchTitlesBinding>() {
         }
         binding.rvTopFranchises.adapter = topFranchisesAdapter
 
-        searchTitlesViewModel.franchisesLoader.observe(viewLifecycleOwner, {
+        viewModel.franchisesLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> binding.franchisesProgressBar.setVisible()
                 LoadingState.Status.SUCCESS -> binding.franchisesProgressBar.setGone()
             }
         })
 
-        searchTitlesViewModel.getTopFranchisesResponse.observe(viewLifecycleOwner, {
+        viewModel.getTopFranchisesResponse.observe(viewLifecycleOwner, {
             topFranchisesAdapter.setFranchisesList(it)
         })
     }
 
     private fun fetchMoreResults() {
         page++
-        searchTitlesViewModel.getSearchTitles(binding.searchTitleText.text.toString(), page)
+        viewModel.getSearchTitles(binding.searchTitleText.text.toString(), page)
         binding.searchProgressBar.setVisible()
         loading = false
     }
 
     private fun onFranchiseAnimationEnd(titleName: String) {
         (binding.searchTitleText as TextView).text = titleName
-        searchTitlesViewModel.getSearchTitles(titleName, 1)
+        viewModel.getSearchTitles(titleName, 1)
         binding.rvSearchTitlesContainer.setVisible()
         binding.topSearchContainer.setGone()
     }

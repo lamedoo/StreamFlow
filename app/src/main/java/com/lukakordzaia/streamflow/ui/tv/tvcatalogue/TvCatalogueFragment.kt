@@ -44,7 +44,7 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
 
-        when (activity?.intent?.getSerializableExtra("type") as Int) {
+        when (activity?.intent?.getSerializableExtra(AppConstants.CATALOGUE_TYPE) as Int) {
             AppConstants.TV_CATALOGUE_NEW_MOVIES -> {
                 tvCatalogueViewModel.getNewMoviesTv(page)
             }
@@ -121,7 +121,7 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
-                when (activity?.intent?.getSerializableExtra("type") as Int) {
+                when (activity?.intent?.getSerializableExtra(AppConstants.CATALOGUE_TYPE) as Int) {
                     AppConstants.TV_CATALOGUE_NEW_MOVIES -> {
                         tvCatalogueViewModel.getNewMoviesTv(page)
                     }

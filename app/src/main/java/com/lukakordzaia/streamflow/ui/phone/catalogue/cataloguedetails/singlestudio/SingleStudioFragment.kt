@@ -11,14 +11,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleStudioFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() {
-    private val singleCategoryViewModel: SingleCategoryViewModel by viewModel()
+class SingleStudioFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, SingleCategoryViewModel>() {
+    override val viewModel by viewModel<SingleCategoryViewModel>()
+
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private val args: SingleStudioFragmentArgs by navArgs()
     private var page = 1
@@ -33,7 +34,7 @@ class SingleStudioFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        singleCategoryViewModel.getSingleStudio(args.studioId, page)
+        viewModel.getSingleStudio(args.studioId, page)
 
         topBarListener(args.studioName, binding.toolbar)
 
@@ -42,22 +43,18 @@ class SingleStudioFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() 
     }
 
     private fun fragmentObservers() {
-        singleCategoryViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    singleCategoryViewModel.getSingleStudio(args.studioId, page)
+                    viewModel.getSingleStudio(args.studioId, page)
                 }, 5000)
             }
-        })
-
-        singleCategoryViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
         })
     }
 
     private fun studiosContainer() {
-        singleCategoryViewModel.categoryLoader.observe(viewLifecycleOwner, {
+        viewModel.categoryLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> binding.progressBar.setVisible()
                 LoadingState.Status.SUCCESS -> binding.progressBar.setGone()
@@ -66,16 +63,16 @@ class SingleStudioFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() 
 
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
-            singleCategoryViewModel.onSingleTitlePressed(it, AppConstants.NAV_STUDIO_TO_SINGLE)
+            viewModel.onSingleTitlePressed(it, AppConstants.NAV_STUDIO_TO_SINGLE)
         }
         binding.rvSingleCategory.adapter = singleCategoryAdapter
         binding.rvSingleCategory.layoutManager = layoutManager
 
-        singleCategoryViewModel.singleStudioList.observe(viewLifecycleOwner, {
+        viewModel.singleStudioList.observe(viewLifecycleOwner, {
             singleCategoryAdapter.setItems(it)
         })
 
-        singleCategoryViewModel.hasMorePage.observe(viewLifecycleOwner, {
+        viewModel.hasMorePage.observe(viewLifecycleOwner, {
             if (it) {
                 binding.rvSingleCategory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -99,7 +96,7 @@ class SingleStudioFragment : BaseFragment<FragmentPhoneSingleCategoryBinding>() 
     private fun fetchMoreTitle() {
         binding.progressBar.setVisible()
         page++
-        singleCategoryViewModel.getSingleStudio(args.studioId, page)
+        viewModel.getSingleStudio(args.studioId, page)
         loading = false
     }
 }

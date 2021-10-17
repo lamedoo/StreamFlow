@@ -21,18 +21,19 @@ import com.lukakordzaia.streamflow.databinding.FragmentTvTitleDetailsBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity.Companion.TITLE_DETAILS
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.TvTitleFilesFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
-class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
-    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by sharedViewModel()
+class TvTitleDetailsFragment : BaseVMFragment<FragmentTvTitleDetailsBinding, TvTitleDetailsViewModel>() {
+    override val viewModel by viewModel<TvTitleDetailsViewModel>()
+
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var titleInfo: SingleTitleModel
     private var hasFocus: Boolean = false
@@ -57,7 +58,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
 
     override fun onStart() {
         super.onStart()
-        tvTitleDetailsViewModel.getSingleTitleData(activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as Int)
+        viewModel.getSingleTitleData(activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as Int)
     }
 
     private fun fragmentListeners(titleId: Int, isTvShow: Boolean) {
@@ -76,7 +77,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
             binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
             binding.rvChooseLanguage.adapter = chooseLanguageAdapter
 
-            tvTitleDetailsViewModel.availableLanguages.observe(viewLifecycleOwner, {
+            viewModel.availableLanguages.observe(viewLifecycleOwner, {
                 val languages = it.reversed()
                 chooseLanguageAdapter.setLanguageList(languages)
             })
@@ -101,25 +102,25 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
     }
 
     private fun fragmentObservers(titleId: Int, isTvShow: Boolean, fromWatchlist: Int?) {
-        tvTitleDetailsViewModel.startedWatching.observe(viewLifecycleOwner, {
+        viewModel.startedWatching.observe(viewLifecycleOwner, {
             startedWatching = it
         })
 
-        tvTitleDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
 
-        tvTitleDetailsViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    tvTitleDetailsViewModel.getSingleTitleData(titleId)
-                    tvTitleDetailsViewModel.getSingleTitleFiles(titleId)
+                    viewModel.getSingleTitleData(titleId)
+                    viewModel.getSingleTitleFiles(titleId)
                 }, 5000)
             }
         })
 
-        tvTitleDetailsViewModel.dataLoader.observe(viewLifecycleOwner, {
+        viewModel.dataLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> binding.tvDetailsProgressBar.setVisible()
                 LoadingState.LOADED -> {
@@ -129,7 +130,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
             }
         })
 
-        tvTitleDetailsViewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
+        viewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             if (!it) {
                 binding.noFilesContainer.setGone()
                 binding.buttonsRow.setVisible()
@@ -138,7 +139,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
             }
         })
 
-        tvTitleDetailsViewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+        viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> {}
                 LoadingState.LOADED -> {
@@ -153,30 +154,30 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                     startActivity(intent)
                 }
                 LoadingState.ERROR -> {
-                    tvTitleDetailsViewModel.newToastMessage("სამწუხაროდ, ვერ მოხეხრდა სიიდან წაშლა")
+                    viewModel.newToastMessage("სამწუხაროდ, ვერ მოხეხრდა სიიდან წაშლა")
                 }
             }
         })
     }
 
     private fun favoriteContainer(titleId: Int, fromWatchlist: Int?) {
-        tvTitleDetailsViewModel.addToFavorites.observe(viewLifecycleOwner, {
+        viewModel.addToFavorites.observe(viewLifecycleOwner, {
             if (it) {
                 binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
                 binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
                 binding.favoriteContainer.setOnClickListener {
-                    tvTitleDetailsViewModel.deleteWatchlistTitle(titleId, fromWatchlist)
+                    viewModel.deleteWatchlistTitle(titleId, fromWatchlist)
                 }
             } else {
                 binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
                 binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
                 binding.favoriteContainer.setOnClickListener {
-                    tvTitleDetailsViewModel.addWatchlistTitle(titleId)
+                    viewModel.addWatchlistTitle(titleId)
                 }
             }
         })
 
-        tvTitleDetailsViewModel.favoriteLoader.observe(viewLifecycleOwner, {
+        viewModel.favoriteLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
                     binding.favoriteProgressBar.setVisible()
@@ -191,9 +192,9 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
     }
 
     private fun titleDetails(titleId: Int, isTvShow: Boolean) {
-        tvTitleDetailsViewModel.getSingleTitleFiles(titleId)
+        viewModel.getSingleTitleFiles(titleId)
 
-        tvTitleDetailsViewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
+        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
             titleInfo = it
 
             binding.titleName.text = it.nameEng
@@ -227,7 +228,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         binding.playButton.requestFocus()
         binding.continueButton.setGone()
 
-        tvTitleDetailsViewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
                 binding.deleteButton.setOnClickListener { _ ->
                     val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
@@ -241,9 +242,9 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
 
                     binding.continueButton.setOnClickListener { _ ->
                         if (sharedPreferences.getLoginToken() == "") {
-                            tvTitleDetailsViewModel.deleteSingleContinueWatchingFromRoom(it.titleId)
+                            viewModel.deleteSingleContinueWatchingFromRoom(it.titleId)
                         } else {
-                            tvTitleDetailsViewModel.hideSingleContinueWatching(it.titleId)
+                            viewModel.hideSingleContinueWatching(it.titleId)
                         }
                     }
                     binding.cancelButton.setOnClickListener {
@@ -282,10 +283,10 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                 }
 
                 if (continueWatching != null) {
-                    tvTitleDetailsViewModel.startedWatching.observe(viewLifecycleOwner, {
+                    viewModel.startedWatching.observe(viewLifecycleOwner, {
                         if (!it) {
                             binding.continueButton.callOnClick()
-                            tvTitleDetailsViewModel.setStartedWatching(true)
+                            viewModel.setStartedWatching(true)
                         }
                     })
                 }

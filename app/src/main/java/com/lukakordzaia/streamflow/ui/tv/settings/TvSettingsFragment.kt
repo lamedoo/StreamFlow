@@ -10,14 +10,15 @@ import android.view.ViewGroup
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTvSettingsBinding
 import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
-    private val profileViewModel: ProfileViewModel by viewModel()
+class TvSettingsFragment : BaseVMFragment<FragmentTvSettingsBinding, ProfileViewModel>() {
+    override val viewModel by viewModel<ProfileViewModel>()
+
     private var onSettingsSelected: OnSettingsSelected? = null
 
     override fun onAttach(context: Context) {
@@ -82,7 +83,7 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
             clearDbDialog.setContentView(binding.root)
 
             binding.continueButton.setOnClickListener {
-                profileViewModel.deleteContinueWatchingFromRoomFull()
+                viewModel.deleteContinueWatchingFromRoomFull()
 
                 val intent = Intent(requireContext(), TvSettingsActivity::class.java)
                 startActivity(intent)
@@ -95,7 +96,7 @@ class TvSettingsFragment : BaseFragment<FragmentTvSettingsBinding>() {
         }
 
         binding.tvSettingsSignout.setOnClickListener {
-            profileViewModel.userLogout()
+            viewModel.userLogout()
         }
     }
 

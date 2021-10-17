@@ -8,10 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTopToolbarBinding
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
+import com.lukakordzaia.streamflow.utils.EventObserver
+import com.lukakordzaia.streamflow.utils.createToast
+import com.lukakordzaia.streamflow.utils.navController
 import org.koin.android.ext.android.inject
 
-abstract class BaseFragment<VB: ViewBinding> : Fragment() {
+abstract class BaseVMFragment<VB: ViewBinding, VM: BaseViewModel> : Fragment() {
     protected val sharedPreferences: SharedPreferences by inject()
+    protected abstract val viewModel: VM
 
     private var _binding: VB? = null
     abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
@@ -25,9 +29,22 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment() {
         view.fragmentTopHeader.text = header
     }
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = bindingInflater.invoke(inflater, container, false)
         return _binding!!.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
+            navController(it)
+        })
+
+        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
+            requireContext().createToast(it)
+        })
     }
 
     override fun onDestroyView() {

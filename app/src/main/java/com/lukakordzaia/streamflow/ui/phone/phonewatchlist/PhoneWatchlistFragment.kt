@@ -13,13 +13,13 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneWatchlistBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
 import com.lukakordzaia.streamflow.ui.shared.WatchlistViewModel
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
-    private val watchlistViewModel: WatchlistViewModel by viewModel()
+class PhoneWatchlistFragment : BaseVMFragment<FragmentPhoneWatchlistBinding, WatchlistViewModel>() {
+    override val viewModel by viewModel<WatchlistViewModel>()
     private lateinit var watchlistMoviesAdapter: WatchlistAdapter
     private var type = AppConstants.WATCHLIST_MOVIES
 
@@ -45,7 +45,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
 
     private fun authCheck() {
         if (sharedPreferences.getLoginToken() != "") {
-            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false)
+            viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false)
             binding.favoriteMoviesContainer.setVisible()
             binding.favoriteNoAuth.setGone()
         } else {
@@ -56,28 +56,28 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
 
     private fun fragmentListeners() {
         binding.toolbar.homeProfile.setOnClickListener {
-            watchlistViewModel.onProfileButtonPressed()
+            viewModel.onProfileButtonPressed()
         }
 
         binding.profileButton.setOnClickListener {
-            watchlistViewModel.onProfileButtonPressed()
+            viewModel.onProfileButtonPressed()
         }
 
         binding.watchlistMovies.setOnClickListener {
-            watchlistViewModel.clearWatchlist()
+            viewModel.clearWatchlist()
 
             page = 1
-            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false)
+            viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false)
             setButtons(AppConstants.WATCHLIST_MOVIES)
 
             type = AppConstants.WATCHLIST_MOVIES
         }
 
         binding.watchlistTvShows.setOnClickListener {
-            watchlistViewModel.clearWatchlist()
+            viewModel.clearWatchlist()
 
             page = 1
-            watchlistViewModel.getUserWatchlist(page, AppConstants.WATCHLIST_TV_SHOWS, false)
+            viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_TV_SHOWS, false)
             setButtons(AppConstants.WATCHLIST_TV_SHOWS)
 
             type = AppConstants.WATCHLIST_TV_SHOWS
@@ -85,25 +85,17 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
     }
 
     private fun fragmentObservers() {
-        watchlistViewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
+        viewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
             watchlistMoviesAdapter.setItems(watchlist)
         })
 
-        watchlistViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
-        })
-
-        watchlistViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
-        })
-
-        watchlistViewModel.hasMorePage.observe(viewLifecycleOwner, {
+        viewModel.hasMorePage.observe(viewLifecycleOwner, {
             hasMore = it
         })
     }
 
     private fun favMoviesContainer() {
-        watchlistViewModel.watchListLoader.observe(viewLifecycleOwner, {
+        viewModel.watchListLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {
                     binding.favoriteMoviesProgressBar.setVisible()
@@ -116,14 +108,14 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
             }
         })
 
-        watchlistViewModel.noFavorites.observe(viewLifecycleOwner, {
+        viewModel.noFavorites.observe(viewLifecycleOwner, {
             binding.favoriteNoMovies.setVisibleOrGone(it)
         })
 
         val moviesLayout = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         watchlistMoviesAdapter = WatchlistAdapter(requireContext(),
             {
-                watchlistViewModel.onSingleTitlePressed(it)
+                viewModel.onSingleTitlePressed(it)
             },
             { titleId: Int, position: Int ->
                 removeTitleDialog(titleId, position)
@@ -155,7 +147,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         removeFavorite.setContentView(binding.root)
 
         binding.confirmButton.setOnClickListener {
-            watchlistViewModel.deleteWatchlistTitle(titleId, position)
+            viewModel.deleteWatchlistTitle(titleId, position)
             removeFavorite.dismiss()
         }
         binding.cancelButton.setOnClickListener {
@@ -168,7 +160,7 @@ class PhoneWatchlistFragment : BaseFragment<FragmentPhoneWatchlistBinding>() {
         if (hasMore) {
             binding.favoriteMoviesProgressBar.setVisible()
             page++
-            watchlistViewModel.getUserWatchlist(page, type, false)
+            viewModel.getUserWatchlist(page, type, false)
         }
     }
 

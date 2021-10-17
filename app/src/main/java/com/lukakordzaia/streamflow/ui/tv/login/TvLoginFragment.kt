@@ -10,14 +10,14 @@ import android.widget.EditText
 import com.lukakordzaia.streamflow.databinding.FragmentTvLoginBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvLoginFragment: BaseFragment<FragmentTvLoginBinding>() {
-    private val profileViewModel: ProfileViewModel by viewModel()
+class TvLoginFragment: BaseVMFragment<FragmentTvLoginBinding, ProfileViewModel>() {
+    override val viewModel by viewModel<ProfileViewModel>()
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvLoginBinding
         get() = FragmentTvLoginBinding::inflate
@@ -46,7 +46,7 @@ class TvLoginFragment: BaseFragment<FragmentTvLoginBinding>() {
             clearFocus(binding.passwordInput)
 
             if (!binding.usernameInput.text.isNullOrEmpty() && !binding.passwordInput.text.isNullOrEmpty()) {
-                profileViewModel.userLogin(
+                viewModel.userLogin(
                     PostLoginBody(
                     3,
                     "password",
@@ -59,7 +59,7 @@ class TvLoginFragment: BaseFragment<FragmentTvLoginBinding>() {
     }
 
     private fun fragmentObservers() {
-        profileViewModel.loginLoader.observe(viewLifecycleOwner, {
+        viewModel.loginLoader.observe(viewLifecycleOwner, {
             when (it.status) {
                 LoadingState.Status.RUNNING -> {}
                 LoadingState.Status.SUCCESS -> {
