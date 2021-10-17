@@ -10,11 +10,11 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneLoginBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginFragment: BaseVMFragment<FragmentPhoneLoginBinding, ProfileViewModel>() {
+class LoginFragment: BaseFragmentVM<FragmentPhoneLoginBinding, ProfileViewModel>() {
     override val viewModel by viewModel<ProfileViewModel>()
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneLoginBinding

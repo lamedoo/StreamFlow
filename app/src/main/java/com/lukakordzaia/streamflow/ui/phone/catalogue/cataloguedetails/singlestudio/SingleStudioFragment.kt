@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleStudioFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, SingleCategoryViewModel>() {
+class SingleStudioFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, SingleCategoryViewModel>() {
     override val viewModel by viewModel<SingleCategoryViewModel>()
 
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter

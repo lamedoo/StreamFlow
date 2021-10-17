@@ -12,15 +12,13 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneContinueWatchingInfoBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseBottomSheet
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseBottomSheetVM
 import com.lukakordzaia.streamflow.utils.AppConstants
-import com.lukakordzaia.streamflow.utils.EventObserver
-import com.lukakordzaia.streamflow.utils.createToast
-import com.lukakordzaia.streamflow.utils.navController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchingInfoBinding>() {
-    private val homeViewModel: HomeViewModel by viewModel()
+class ContinueWatchingInfoFragment : BaseBottomSheetVM<FragmentPhoneContinueWatchingInfoBinding, HomeViewModel>() {
+    override val viewModel by viewModel<HomeViewModel>()
+
     private val args: ContinueWatchingInfoFragmentArgs by navArgs()
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneContinueWatchingInfoBinding
@@ -32,7 +30,6 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
         binding.titleName.text = args.titleName
 
         fragmentListeners()
-        fragmentObservers()
     }
 
     private fun fragmentListeners() {
@@ -41,7 +38,7 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
         }
 
         binding.titleDetails.setOnClickListener {
-            homeViewModel.onSingleTitlePressed(AppConstants.NAV_CONTINUE_WATCHING_TO_SINGLE, args.titleId)
+            viewModel.onSingleTitlePressed(AppConstants.NAV_CONTINUE_WATCHING_TO_SINGLE, args.titleId)
         }
 
         binding.removeTitle.setOnClickListener {
@@ -55,12 +52,12 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
             }
 
            binding.continueButton.setOnClickListener {
-               homeViewModel.deleteContinueWatching(args.titleId)
+               viewModel.deleteContinueWatching(args.titleId)
                if (sharedPreferences.getLoginToken() == "") {
                    removeTitle.dismiss()
                    dismiss()
                } else {
-                   homeViewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+                   viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
                        when (it.status) {
                            LoadingState.Status.RUNNING -> {}
                            LoadingState.Status.SUCCESS -> {
@@ -76,15 +73,5 @@ class ContinueWatchingInfoFragment : BaseBottomSheet<FragmentPhoneContinueWatchi
             }
             removeTitle.show()
         }
-    }
-
-    private fun fragmentObservers() {
-        homeViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
-            navController(it)
-        })
-
-        homeViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
-        })
     }
 }

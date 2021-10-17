@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTvSettingsBinding
 import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSettingsFragment : BaseVMFragment<FragmentTvSettingsBinding, ProfileViewModel>() {
+class TvSettingsFragment : BaseFragmentVM<FragmentTvSettingsBinding, ProfileViewModel>() {
     override val viewModel by viewModel<ProfileViewModel>()
 
     private var onSettingsSelected: OnSettingsSelected? = null

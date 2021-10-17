@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import org.koin.android.ext.android.inject
 
-abstract class BaseBottomSheet<VB: ViewBinding> : BottomSheetDialogFragment() {
+abstract class BaseBottomSheetVM<VB: ViewBinding, VM: BaseViewModel> : BottomSheetDialogFragment() {
     protected val sharedPreferences: SharedPreferences by inject()
-    protected val auth = Firebase.auth
+    protected abstract val viewModel: VM
 
     private var _binding: VB? = null
     abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB

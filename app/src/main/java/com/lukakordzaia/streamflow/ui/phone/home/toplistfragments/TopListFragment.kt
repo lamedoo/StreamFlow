@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TopListFragment : BaseVMFragment<FragmentPhoneSingleCategoryBinding, SingleTopListViewModel>() {
+class TopListFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, SingleTopListViewModel>() {
     override val viewModel by viewModel<SingleTopListViewModel>()
     private val args: TopListFragmentArgs by navArgs()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter

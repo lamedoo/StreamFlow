@@ -13,7 +13,7 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeDbTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
@@ -22,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
-class HomeFragment : BaseVMFragment<FragmentPhoneHomeBinding, HomeViewModel>() {
+class HomeFragment : BaseFragmentVM<FragmentPhoneHomeBinding, HomeViewModel>() {
     override val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var homeDbTitlesAdapter: HomeDbTitlesAdapter

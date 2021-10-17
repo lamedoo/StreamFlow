@@ -13,12 +13,12 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneWatchlistBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.shared.WatchlistViewModel
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PhoneWatchlistFragment : BaseVMFragment<FragmentPhoneWatchlistBinding, WatchlistViewModel>() {
+class PhoneWatchlistFragment : BaseFragmentVM<FragmentPhoneWatchlistBinding, WatchlistViewModel>() {
     override val viewModel by viewModel<WatchlistViewModel>()
     private lateinit var watchlistMoviesAdapter: WatchlistAdapter
     private var type = AppConstants.WATCHLIST_MOVIES

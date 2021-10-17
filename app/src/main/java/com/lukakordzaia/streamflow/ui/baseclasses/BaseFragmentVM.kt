@@ -13,7 +13,7 @@ import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.navController
 import org.koin.android.ext.android.inject
 
-abstract class BaseVMFragment<VB: ViewBinding, VM: BaseViewModel> : Fragment() {
+abstract class BaseFragmentVM<VB: ViewBinding, VM: BaseViewModel> : Fragment() {
     protected val sharedPreferences: SharedPreferences by inject()
     protected abstract val viewModel: VM
 

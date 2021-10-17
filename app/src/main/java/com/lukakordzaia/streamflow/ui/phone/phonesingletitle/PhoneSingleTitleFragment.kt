@@ -22,7 +22,7 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.ChooseLanguageAdapter
@@ -31,7 +31,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
-class PhoneSingleTitleFragment : BaseVMFragment<FragmentPhoneSingleTitleBinding, PhoneSingleTitleViewModel>() {
+class PhoneSingleTitleFragment : BaseFragmentVM<FragmentPhoneSingleTitleBinding, PhoneSingleTitleViewModel>() {
     override val viewModel by viewModel<PhoneSingleTitleViewModel>()
     private val tvShowBottomSheetViewModel: TvShowBottomSheetViewModel by viewModel()
     private lateinit var titleInfo: SingleTitleModel

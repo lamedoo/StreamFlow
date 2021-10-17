@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.customviews.CustomSearchInput
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSearchTitlesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.utils.*
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
 import kotlinx.android.synthetic.main.main_top_toolbar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchTitlesFragment : BaseVMFragment<FragmentPhoneSearchTitlesBinding, SearchTitlesViewModel>() {
+class SearchTitlesFragment : BaseFragmentVM<FragmentPhoneSearchTitlesBinding, SearchTitlesViewModel>() {
     override val viewModel by viewModel<SearchTitlesViewModel>()
 
     private lateinit var searchTitlesAdapter: SearchTitlesAdapter

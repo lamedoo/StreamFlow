@@ -21,7 +21,7 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.models.trakttv.request.AddNewListRequestBody
 import com.lukakordzaia.streamflow.network.models.trakttv.request.GetUserTokenRequestBody
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.dialog_connect_traktv_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ProfileFragment : BaseVMFragment<FragmentPhoneProfileBinding, ProfileViewModel>() {
+class ProfileFragment : BaseFragmentVM<FragmentPhoneProfileBinding, ProfileViewModel>() {
     override val viewModel by viewModel<ProfileViewModel>()
 
     private var traktToken: String? = null

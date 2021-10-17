@@ -15,13 +15,13 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneCatalogueBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.helpers.DotsIndicatorDecoration
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVMFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
 import kotlinx.android.synthetic.main.main_top_toolbar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CatalogueFragment : BaseVMFragment<FragmentPhoneCatalogueBinding, CatalogueViewModel>() {
+class CatalogueFragment : BaseFragmentVM<FragmentPhoneCatalogueBinding, CatalogueViewModel>() {
     override val viewModel by viewModel<CatalogueViewModel>()
     private lateinit var genresAdapter: GenresAdapter
     private lateinit var studiosAdapter: StudiosAdapter
