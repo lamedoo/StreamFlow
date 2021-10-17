@@ -36,28 +36,28 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var titleInfo: SingleTitleModel
     private var hasFocus: Boolean = false
-    private var startedWatching = false
+      private var startedWatching = false
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvTitleDetailsBinding
         get() = FragmentTvTitleDetailsBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val titleId = activity?.intent?.getSerializableExtra("titleId") as Int
-        val isTvShow = activity?.intent?.getSerializableExtra("isTvShow") as Boolean
-        val continueWatching = activity?.intent?.getSerializableExtra("continue") as? Boolean
-        val fromWatchlist = activity?.intent?.getSerializableExtra("FromWatchlist") as? Int
+        val titleId = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as Int
+        val isTvShow = activity?.intent?.getSerializableExtra(AppConstants.IS_TV_SHOW) as Boolean
+        val continueWatching = activity?.intent?.getSerializableExtra(AppConstants.CONTINUE_WATCHING_NOW) as? Boolean
+        val fromWatchlist = activity?.intent?.getSerializableExtra(AppConstants.FROM_WATCHLIST) as? Int
 
         fragmentListeners(titleId, isTvShow)
         fragmentObservers(titleId, isTvShow, fromWatchlist)
         favoriteContainer(titleId, fromWatchlist)
         titleDetails(titleId, isTvShow)
-        checkContinueWatching(continueWatching, fromWatchlist)
+        checkContinueWatching(continueWatching)
     }
 
     override fun onStart() {
         super.onStart()
-        tvTitleDetailsViewModel.getSingleTitleData(activity?.intent?.getSerializableExtra("titleId") as Int)
+        tvTitleDetailsViewModel.getSingleTitleData(activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as Int)
     }
 
     private fun fragmentListeners(titleId: Int, isTvShow: Boolean) {
@@ -145,12 +145,15 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                     sharedPreferences.saveTvVideoPlayerOn(true)
 
                     val intent = Intent(requireContext(), TvSingleTitleActivity::class.java).apply {
-                        putExtra("titleId", titleId)
-                        putExtra("isTvShow", isTvShow)
-                        putExtra("FromWatchlist", fromWatchlist)
+                        putExtra(AppConstants.TITLE_ID, titleId)
+                        putExtra(AppConstants.IS_TV_SHOW, isTvShow)
+                        putExtra(AppConstants.FROM_WATCHLIST, fromWatchlist)
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
                     startActivity(intent)
+                }
+                LoadingState.ERROR -> {
+                    tvTitleDetailsViewModel.newToastMessage("სამწუხაროდ, ვერ მოხეხრდა სიიდან წაშლა")
                 }
             }
         })
@@ -219,7 +222,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         })
     }
 
-    private fun checkContinueWatching(continueWatching: Boolean?, fromWatchlist: Int?) {
+    private fun checkContinueWatching(continueWatching: Boolean?) {
         binding.deleteButton.setGone()
         binding.playButton.requestFocus()
         binding.continueButton.setGone()

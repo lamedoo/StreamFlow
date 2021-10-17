@@ -45,13 +45,13 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
         gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
 
         when (activity?.intent?.getSerializableExtra("type") as Int) {
-            AppConstants.TV_CATEGORY_NEW_MOVIES -> {
+            AppConstants.TV_CATALOGUE_NEW_MOVIES -> {
                 tvCatalogueViewModel.getNewMoviesTv(page)
             }
-            AppConstants.TV_CATEGORY_TOP_MOVIES -> {
+            AppConstants.TV_CATALOGUE_TOP_MOVIES -> {
                 tvCatalogueViewModel.getTopMoviesTv(page)
             }
-            AppConstants.TV_CATEGORY_TOP_TV_SHOWS -> {
+            AppConstants.TV_CATALOGUE_TOP_TV_SHOWS -> {
                 tvCatalogueViewModel.getTopTvShowsTv(page)
             }
         }
@@ -84,9 +84,10 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
 
         onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
             if (item is SingleTitleModel) {
-                val intent = Intent(context, TvSingleTitleActivity::class.java)
-                intent.putExtra("titleId", item.id)
-                intent.putExtra("isTvShow", item.isTvShow)
+                val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
+                    putExtra(AppConstants.TITLE_ID, item.id)
+                    putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
+                }
                 activity?.startActivity(intent)
             }
         }
@@ -121,13 +122,13 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
                 when (activity?.intent?.getSerializableExtra("type") as Int) {
-                    AppConstants.TV_CATEGORY_NEW_MOVIES -> {
+                    AppConstants.TV_CATALOGUE_NEW_MOVIES -> {
                         tvCatalogueViewModel.getNewMoviesTv(page)
                     }
-                    AppConstants.TV_CATEGORY_TOP_MOVIES -> {
+                    AppConstants.TV_CATALOGUE_TOP_MOVIES -> {
                         tvCatalogueViewModel.getTopMoviesTv(page)
                     }
-                    AppConstants.TV_CATEGORY_TOP_TV_SHOWS -> {
+                    AppConstants.TV_CATALOGUE_TOP_TV_SHOWS -> {
                         tvCatalogueViewModel.getTopTvShowsTv(page)
                     }
                 }

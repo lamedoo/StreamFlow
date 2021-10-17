@@ -241,9 +241,10 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
                 row: Row
         ) {
             if (item is SingleTitleModel) {
-                val intent = Intent(context, TvSingleTitleActivity::class.java)
-                intent.putExtra("titleId", item.id)
-                intent.putExtra("isTvShow", item.isTvShow)
+                val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
+                    putExtra(AppConstants.TITLE_ID, item.id)
+                    putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
+                }
                 activity?.startActivity(intent)
             }
         }

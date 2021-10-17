@@ -13,6 +13,7 @@ import com.lukakordzaia.streamflow.interfaces.TvSearchInputSelected
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
 import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCataloguePresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
+import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSearchFragmentNew : VerticalGridSupportFragment() {
@@ -81,9 +82,10 @@ class TvSearchFragmentNew : VerticalGridSupportFragment() {
 
         onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
             if (item is SingleTitleModel) {
-                val intent = Intent(context, TvSingleTitleActivity::class.java)
-                intent.putExtra("titleId", item.id)
-                intent.putExtra("isTvShow", item.isTvShow)
+                val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
+                    putExtra(AppConstants.TITLE_ID, item.id)
+                    putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
+                }
                 activity?.startActivity(intent)
             }
         }

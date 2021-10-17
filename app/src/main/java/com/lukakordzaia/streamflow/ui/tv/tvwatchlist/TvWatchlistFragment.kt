@@ -15,6 +15,7 @@ import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.WatchlistViewModel
 import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCataloguePresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
+import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -104,10 +105,11 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
             row: Row?
         ) {
             if (item is SingleTitleModel) {
-                val intent = Intent(context, TvSingleTitleActivity::class.java)
-                intent.putExtra("FromWatchlist", gridAdapter.indexOf(item))
-                intent.putExtra("titleId", item.id)
-                intent.putExtra("isTvShow", item.isTvShow)
+                val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
+                    putExtra(AppConstants.TITLE_ID, item.id)
+                    putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
+                    putExtra(AppConstants.FROM_WATCHLIST, gridAdapter.indexOf(item))
+                }
                 activity?.startActivity(intent)
             }
         }

@@ -246,16 +246,16 @@ class TvMainFragment : BrowseSupportFragment() {
             when (item) {
                 is SingleTitleModel -> {
                     val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
-                        putExtra("titleId", item.id)
-                        putExtra("isTvShow", item.isTvShow)
+                        putExtra(AppConstants.TITLE_ID, item.id)
+                        putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
                     }
                     requireActivity().startActivity(intent)
                 }
                 is ContinueWatchingModel -> {
                     val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
-                        putExtra("titleId", item.id)
-                        putExtra("isTvShow", item.isTvShow)
-                        putExtra("continue", true)
+                        putExtra(AppConstants.TITLE_ID, item.id)
+                        putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
+                        putExtra(AppConstants.CONTINUE_WATCHING_NOW, true)
                     }
                     requireActivity().startActivity(intent)
                 }
@@ -263,13 +263,13 @@ class TvMainFragment : BrowseSupportFragment() {
                     when (item.categoriesId) {
                         0 -> {
                             val intent = Intent(context, TvCatalogueActivity::class.java).apply {
-                                putExtra("type", AppConstants.TV_CATEGORY_TOP_MOVIES)
+                                putExtra(AppConstants.CATALOGUE_TYPE, AppConstants.TV_CATALOGUE_TOP_MOVIES)
                             }
                             requireActivity().startActivity(intent)
                         }
                         1 -> {
                             val intent = Intent(context, TvCatalogueActivity::class.java).apply {
-                                putExtra("type", AppConstants.TV_CATEGORY_TOP_TV_SHOWS)
+                                putExtra(AppConstants.CATALOGUE_TYPE, AppConstants.TV_CATALOGUE_TOP_TV_SHOWS)
                             }
                             requireActivity().startActivity(intent)
                         }

@@ -92,7 +92,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         }
         view.moviesButton.setOnClickListener {
             val intent = Intent(this, TvCatalogueActivity::class.java).apply {
-                putExtra("type", AppConstants.TV_CATEGORY_NEW_MOVIES)
+                putExtra(AppConstants.CATALOGUE_TYPE, AppConstants.TV_CATALOGUE_NEW_MOVIES)
             }
             startActivity(intent)
             sidebarAnimations.hideSideBar(view.tvSidebar)

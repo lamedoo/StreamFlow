@@ -275,8 +275,8 @@ class TvTitleFilesBrowse : BrowseSupportFragment() {
                 }
                 is SingleTitleModel -> {
                     val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
-                        putExtra("titleId", item.id)
-                        putExtra("isTvShow", item.isTvShow)
+                        putExtra(AppConstants.TITLE_ID, item.id)
+                        putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
                     }
                     requireActivity().startActivity(intent)
                     if (requireActivity() is TvVideoPlayerActivity) {

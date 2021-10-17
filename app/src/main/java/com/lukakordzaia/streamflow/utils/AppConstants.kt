@@ -28,9 +28,9 @@ class AppConstants {
         const val GENRE_ADVENTURE = "სათავგადასავლო"
         const val GENRE_ACTION = "მძაფრ-სიუჟეტიანი"
 
-        const val TV_CATEGORY_NEW_MOVIES = 0
-        const val TV_CATEGORY_TOP_MOVIES = 1
-        const val TV_CATEGORY_TOP_TV_SHOWS = 2
+        const val TV_CATALOGUE_NEW_MOVIES = 0
+        const val TV_CATALOGUE_TOP_MOVIES = 1
+        const val TV_CATALOGUE_TOP_TV_SHOWS = 2
 
         const val NOT_FOUND_ERROR = "404 ვერ მოიძებნა"
         const val SERVER_ERROR = "500 სერვერთან დაკავშირება ვერ მოხერხდა"
@@ -48,5 +48,11 @@ class AppConstants {
 
         const val WATCHLIST_MOVIES = "movie"
         const val WATCHLIST_TV_SHOWS = "series"
+
+        const val TITLE_ID = "title id"
+        const val IS_TV_SHOW = "is tv Show"
+        const val CONTINUE_WATCHING_NOW = "continue watching now"
+        const val CATALOGUE_TYPE = "catalogue type"
+        const val FROM_WATCHLIST = "from watchlist"
     }
 }
