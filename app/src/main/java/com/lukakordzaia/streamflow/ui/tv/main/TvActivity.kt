@@ -12,8 +12,8 @@ import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDet
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setImage
 import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.titlePosition
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.concurrent.TimeUnit
 
 class TvActivity : BaseFragmentActivity<ActivityTvBinding>(), TvCheckTitleSelected {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
@@ -42,20 +42,11 @@ class TvActivity : BaseFragmentActivity<ActivityTvBinding>(), TvCheckTitleSelect
         if (continueWatchingDetails != null) {
             binding.titleInfo.continueWatchingSeekBar.setVisible()
             binding.titleInfo.continueWatchingSeason.setVisible()
-            if (continueWatchingDetails.isTvShow) {
-                binding.titleInfo.continueWatchingSeason.text = String.format("ს${continueWatchingDetails.season} ე${continueWatchingDetails.episode} / %02d:%02d",
-                        TimeUnit.SECONDS.toMinutes(continueWatchingDetails.watchedDuration),
-                        TimeUnit.SECONDS.toSeconds(continueWatchingDetails.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(continueWatchingDetails.watchedDuration))
-                )
+
+            binding.titleInfo.continueWatchingSeason.text = if (continueWatchingDetails.isTvShow) {
+                continueWatchingDetails.watchedDuration.titlePosition(continueWatchingDetails.season, continueWatchingDetails.episode)
             } else {
-                binding.titleInfo.continueWatchingSeason.text = String.format("%02d:%02d:%02d",
-                        TimeUnit.SECONDS.toHours(continueWatchingDetails.watchedDuration),
-                        TimeUnit.SECONDS.toMinutes(continueWatchingDetails.watchedDuration) -
-                                TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(continueWatchingDetails.watchedDuration)),
-                        TimeUnit.SECONDS.toSeconds(continueWatchingDetails.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(continueWatchingDetails.watchedDuration))
-                )
+                continueWatchingDetails.watchedDuration.titlePosition(null, null)
             }
 
             binding.titleInfo.continueWatchingSeekBar.max = continueWatchingDetails.titleDuration.toInt()

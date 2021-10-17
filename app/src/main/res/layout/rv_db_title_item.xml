@@ -60,7 +60,7 @@
         android:id="@+id/continue_watching_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
         android:paddingTop="5dp"
         android:paddingStart="5dp"

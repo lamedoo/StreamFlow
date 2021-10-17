@@ -20,6 +20,7 @@ import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.G
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetContinueWatchingResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserWatchlistResponse
+import java.util.concurrent.TimeUnit
 
 inline fun <T : Fragment> T.applyBundle(block: Bundle.() -> Unit): T {
     val bundle = Bundle()
@@ -199,4 +200,41 @@ fun View.setDrawableBackground(background: Int) {
 
 fun TextView.setColor(color: Int) {
     this.setTextColor(ResourcesCompat.getColor(resources, color, null))
+}
+
+fun Long.videoPlayerPosition(): String {
+    return if (TimeUnit.MILLISECONDS.toHours(this) == "0".toLong()) {
+        String.format("%02d:%02d",
+            TimeUnit.MILLISECONDS.toMinutes(this) -
+                    TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(this)),
+            TimeUnit.MILLISECONDS.toSeconds(this) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(this))
+        )
+    } else {
+        String.format("%02d:%02d:%02d",
+            TimeUnit.MILLISECONDS.toHours(this),
+            TimeUnit.MILLISECONDS.toMinutes(this) -
+                    TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(this)),
+            TimeUnit.MILLISECONDS.toSeconds(this) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(this))
+        )
+    }
+}
+
+fun Long.titlePosition(season: Int?, episode: Int?): String {
+    return if (TimeUnit.SECONDS.toHours(this) == "0".toLong()) {
+        String.format("${if (season != null) "ს:${season} ე:${episode} / " else ""}%02d:%02d",
+            TimeUnit.SECONDS.toMinutes(this),
+            TimeUnit.SECONDS.toSeconds(this) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(this))
+        )
+    } else {
+        String.format("${if (season != null) "ს:${season} ე:${episode} / " else ""}%02d:%02d:%02d",
+            TimeUnit.SECONDS.toHours(this),
+            TimeUnit.SECONDS.toMinutes(this) -
+                    TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(this)),
+            TimeUnit.SECONDS.toSeconds(this) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(this))
+        )
+    }
 }

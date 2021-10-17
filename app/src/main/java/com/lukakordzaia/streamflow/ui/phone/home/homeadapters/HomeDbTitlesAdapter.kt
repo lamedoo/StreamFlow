@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.RvDbTitleItemBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.utils.setImage
-import java.util.concurrent.TimeUnit
+import com.lukakordzaia.streamflow.utils.titlePosition
 
 class HomeDbTitlesAdapter(
     private val context: Context,
@@ -42,20 +42,10 @@ class HomeDbTitlesAdapter(
         fun bind(model: ContinueWatchingModel) {
             view.itemPoster.setImage(model.cover, true)
 
-            if (model.isTvShow) {
-                view.continueWatchingInfo.text = String.format("ს${model.season} ე${model.episode} / %02d:%02d",
-                    TimeUnit.SECONDS.toMinutes(model.watchedDuration),
-                    TimeUnit.SECONDS.toSeconds(model.watchedDuration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(model.watchedDuration))
-                )
+            view.continueWatchingInfo.text = if (model.isTvShow) {
+                model.watchedDuration.titlePosition(model.season, model.episode)
             } else {
-                view.continueWatchingInfo.text = String.format("%02d:%02d:%02d",
-                    TimeUnit.SECONDS.toHours(model.watchedDuration),
-                    TimeUnit.SECONDS.toMinutes(model.watchedDuration) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(model.watchedDuration)),
-                    TimeUnit.SECONDS.toSeconds(model.watchedDuration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(model.watchedDuration))
-                )
+                model.watchedDuration.titlePosition(null, null)
             }
 
             view.itemSeekBar.max = model.titleDuration.toInt()

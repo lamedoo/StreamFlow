@@ -239,27 +239,16 @@ class PhoneSingleTitleFragment : BaseFragment<FragmentPhoneSingleTitleBinding>()
                 binding.continueWatchingSeekBarBottom.max = it.titleDuration.toInt()
                 binding.continueWatchingSeekBarBottom.progress = it.watchedDuration.toInt()
 
-                if (it.isTvShow) {
-                    val time = String.format(
-                        "ს${it.season} ე${it.episode} / %02d:%02d",
-                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
-                    )
-
-                    binding.continueWatchingInfo.text = time
-                    binding.continueWatchingInfoBottom.text = time
+                val time = if (it.isTvShow) {
+                    it.watchedDuration.titlePosition(it.season, it.episode)
                 } else {
-                    val time = String.format(
-                        "%02d:%02d",
-                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
-                    )
+                    it.watchedDuration.titlePosition(null, null)
+                }
 
                     binding.continueWatchingInfo.text = time
                     binding.continueWatchingInfoBottom.text = time
 
+                if (it.isTvShow) {
                     binding.replayButton.setVisible()
                     binding.replayButtonBottom.setVisible()
                     binding.replayButton.setOnClickListener { _ ->

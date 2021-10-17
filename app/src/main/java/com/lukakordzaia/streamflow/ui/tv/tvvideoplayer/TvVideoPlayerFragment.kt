@@ -1,7 +1,6 @@
 package com.lukakordzaia.streamflow.ui.tv.tvvideoplayer
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -16,20 +15,12 @@ import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
-import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
-import com.lukakordzaia.streamflow.helpers.videoplayer.VideoPlayerHelpers
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
-import com.lukakordzaia.streamflow.utils.setVisibleOrGone
-import kotlinx.android.synthetic.main.continue_watching_dialog.*
-import kotlinx.android.synthetic.main.fragment_tv_video_player.*
+import com.lukakordzaia.streamflow.utils.videoPlayerPosition
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
-import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.view.*
-import java.util.concurrent.TimeUnit
 
 
 class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBinding>() {
@@ -111,13 +102,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     tracker = ProgressTracker(player, object :
                         PositionListener {
                         override fun progress(position: Long) {
-                            playerBinding.exoLiveDuration.text = String.format("%02d:%02d:%02d",
-                                TimeUnit.MILLISECONDS.toHours(position),
-                                TimeUnit.MILLISECONDS.toMinutes(position) -
-                                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(position)),
-                                TimeUnit.MILLISECONDS.toSeconds(position) -
-                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
-                            )
+                            playerBinding.exoLiveDuration.text = position.videoPlayerPosition()
                         }
                     })
                 }

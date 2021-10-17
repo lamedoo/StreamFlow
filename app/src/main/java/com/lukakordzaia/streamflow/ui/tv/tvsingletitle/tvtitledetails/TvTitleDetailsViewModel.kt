@@ -14,7 +14,6 @@ import com.lukakordzaia.streamflow.utils.toSingleTitleModel
 import kotlinx.coroutines.launch
 
 class TvTitleDetailsViewModel : BaseViewModel() {
-    val traktFavoriteLoader = MutableLiveData<LoadingState>()
     val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
     val favoriteLoader = MutableLiveData<LoadingState>()
 

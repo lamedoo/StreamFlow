@@ -49,7 +49,7 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         val fromWatchlist = activity?.intent?.getSerializableExtra("FromWatchlist") as? Int
 
         fragmentListeners(titleId, isTvShow)
-        fragmentObservers(titleId)
+        fragmentObservers(titleId, isTvShow, fromWatchlist)
         favoriteContainer(titleId, fromWatchlist)
         titleDetails(titleId, isTvShow)
         checkContinueWatching(continueWatching, fromWatchlist)
@@ -100,26 +100,13 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
         }
     }
 
-    private fun fragmentObservers(titleId: Int) {
+    private fun fragmentObservers(titleId: Int, isTvShow: Boolean, fromWatchlist: Int?) {
         tvTitleDetailsViewModel.startedWatching.observe(viewLifecycleOwner, {
             startedWatching = it
         })
 
         tvTitleDetailsViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
-        })
-
-        tvTitleDetailsViewModel.traktFavoriteLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {
-                    binding.favoriteProgressBar.setVisible()
-                    binding.favoriteIcon.setGone()
-                }
-                LoadingState.Status.SUCCESS -> {
-                    binding.favoriteProgressBar.setGone()
-                    binding.favoriteIcon.setVisible()
-                }
-            }
         })
 
         tvTitleDetailsViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
@@ -148,6 +135,23 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                 binding.buttonsRow.setVisible()
             } else {
                 binding.favoriteContainer.requestFocus()
+            }
+        })
+
+        tvTitleDetailsViewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> {}
+                LoadingState.LOADED -> {
+                    sharedPreferences.saveTvVideoPlayerOn(true)
+
+                    val intent = Intent(requireContext(), TvSingleTitleActivity::class.java).apply {
+                        putExtra("titleId", titleId)
+                        putExtra("isTvShow", isTvShow)
+                        putExtra("FromWatchlist", fromWatchlist)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    startActivity(intent)
+                }
             }
         })
     }
@@ -238,16 +242,6 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                         } else {
                             tvTitleDetailsViewModel.hideSingleContinueWatching(it.titleId)
                         }
-
-                        sharedPreferences.saveTvVideoPlayerOn(true)
-
-                        val intent = Intent(requireContext(), TvSingleTitleActivity::class.java).apply {
-                            putExtra("titleId", it.titleId)
-                            putExtra("isTvShow", it.isTvShow)
-                            putExtra("FromWatchlist", fromWatchlist)
-                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
-                        startActivity(intent)
                     }
                     binding.cancelButton.setOnClickListener {
                         removeTitle.dismiss()
@@ -268,18 +262,10 @@ class TvTitleDetailsFragment : BaseFragment<FragmentTvTitleDetailsBinding>() {
                     ))
                 }
 
-                if (it.isTvShow) {
-                    binding.continueButton.text = String.format("განაგრძეთ - ს:${it.season} ე:${it.episode} / %02d:%02d",
-                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
-                    )
+                binding.continueButton.text = "განაგრძეთ - " + if (it.isTvShow) {
+                    it.watchedDuration.titlePosition(it.season, it.episode)
                 } else {
-                    binding.continueButton.text = String.format("განაგრძეთ - %02d:%02d",
-                        TimeUnit.SECONDS.toMinutes(it.watchedDuration),
-                        TimeUnit.SECONDS.toSeconds(it.watchedDuration) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(it.watchedDuration))
-                    )
+                    it.watchedDuration.titlePosition(null, null)
                 }
 
                 binding.continueButton.setVisible()
