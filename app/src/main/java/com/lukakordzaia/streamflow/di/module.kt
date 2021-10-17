@@ -29,7 +29,7 @@ import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueViewModel
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
-import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.SingleTopListViewModel
+import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopListViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
@@ -54,7 +54,7 @@ val viewModelModule = module {
     viewModel { ProfileViewModel() }
     viewModel { TvTitleFilesViewModel() }
     viewModel { WatchlistViewModel() }
-    viewModel { SingleTopListViewModel() }
+    viewModel { TopListViewModel() }
     viewModel { VideoPlayerViewModel() }
 }
 

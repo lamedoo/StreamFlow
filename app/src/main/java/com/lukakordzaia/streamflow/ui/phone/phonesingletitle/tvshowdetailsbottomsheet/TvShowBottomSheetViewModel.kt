@@ -13,8 +13,6 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.coroutines.launch
 
 class TvShowBottomSheetViewModel : BaseViewModel() {
-    val chooseDetailsLoader = MutableLiveData<LoadingState>()
-
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
 
@@ -50,7 +48,7 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
     fun getSeasonFiles(titleId: Int, season: Int) {
         _chosenSeason.value = season
         viewModelScope.launch {
-            chooseDetailsLoader.value = LoadingState.LOADING
+            setGeneralLoader(LoadingState.LOADING)
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, season)) {
                 is Result.Success -> {
                     val data = files.data.data
@@ -85,7 +83,7 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
                     } else {
                         _movieNotYetAdded.value = true
                     }
-                    chooseDetailsLoader.value = LoadingState.LOADED
+                    setGeneralLoader(LoadingState.LOADED)
                 }
                 is Result.Error -> {
                     when (files.exception) {

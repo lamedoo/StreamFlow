@@ -43,8 +43,6 @@ class SingleCategoryViewModel : BaseViewModel() {
     private val _hasMorePage = MutableLiveData(true)
     val hasMorePage: LiveData<Boolean> = _hasMorePage
 
-    val categoryLoader = MutableLiveData<LoadingState>()
-
     fun onSingleTitlePressed(titleId: Int, start: Int) {
         when (start) {
             AppConstants.NAV_GENRE_TO_SINGLE -> navigateToNewFragment(SingleGenreFragmentDirections.actionSingleGenreFragmentToSingleTitleFragmentNav(titleId))
@@ -54,14 +52,14 @@ class SingleCategoryViewModel : BaseViewModel() {
 
     fun getSingleGenre(genreId: Int, page: Int) {
         viewModelScope.launch {
-            categoryLoader.value = LoadingState.LOADING
+            setGeneralLoader(LoadingState.LOADING)
             when (val singleGenre = environment.catalogueRepository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
                     val data = singleGenre.data.data
                     fetchSingleGenreList.addAll(data.toTitleListModel())
                     _singleGenreList.value = fetchSingleGenreList
                     _hasMorePage.value = singleGenre.data.meta.pagination.totalPages!! > singleGenre.data.meta.pagination.currentPage!!
-                    categoryLoader.value = LoadingState.LOADED
+                    setGeneralLoader(LoadingState.LOADED)
                 }
                 is Result.Error -> {
                     newToastMessage("ჟანრი - ${singleGenre.exception}")
@@ -99,14 +97,14 @@ class SingleCategoryViewModel : BaseViewModel() {
 
     fun getSingleStudio(studioId: Int, page: Int) {
         viewModelScope.launch {
-            categoryLoader.value = LoadingState.LOADING
+            setGeneralLoader(LoadingState.LOADING)
             when (val singleStudio = environment.catalogueRepository.getSingleStudio(studioId, page)) {
                 is Result.Success -> {
                     val data = singleStudio.data.data
                     fetchSingleStudioList.addAll(data.toTitleListModel())
                     _singleStudioList.value = fetchSingleStudioList
                     _hasMorePage.value = singleStudio.data.meta.pagination.totalPages!! > singleStudio.data.meta.pagination.currentPage!!
-                    categoryLoader.value = LoadingState.LOADED
+                    setGeneralLoader(LoadingState.LOADED)
                 }
                 is Result.Error -> {
                     newToastMessage("სტუდია - ${singleStudio.exception}")

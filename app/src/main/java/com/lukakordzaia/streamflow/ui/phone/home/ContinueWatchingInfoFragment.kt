@@ -58,9 +58,9 @@ class ContinueWatchingInfoFragment : BaseBottomSheetVM<FragmentPhoneContinueWatc
                    dismiss()
                } else {
                    viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
-                       when (it.status) {
-                           LoadingState.Status.RUNNING -> {}
-                           LoadingState.Status.SUCCESS -> {
+                       when (it) {
+                           LoadingState.LOADING -> {}
+                           LoadingState.LOADED -> {
                                removeTitle.dismiss()
                                dismiss()
                            }

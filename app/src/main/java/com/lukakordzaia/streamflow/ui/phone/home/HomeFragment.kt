@@ -90,19 +90,22 @@ class HomeFragment : BaseFragmentVM<FragmentPhoneHomeBinding, HomeViewModel>() {
                 }, 5000)
             }
         })
-    }
 
-    private fun movieDayContainer() {
-        viewModel.movieDayLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.movieDayProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> {
-                    binding.movieDayProgressBar.setGone()
-                    binding.movieDayContainer.setVisible()
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> {
+                    binding.generalProgressBar.setVisible()
+                    binding.fragmentScroll.setGone()
+                }
+                LoadingState.LOADED -> {
+                    binding.generalProgressBar.setGone()
+                    binding.fragmentScroll.setVisible()
                 }
             }
         })
+    }
 
+    private fun movieDayContainer() {
         viewModel.movieDayData.observe(viewLifecycleOwner, {
             binding.movieDayContainer.setOnClickListener { _ ->
                 viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it.first().id)
@@ -115,11 +118,11 @@ class HomeFragment : BaseFragmentVM<FragmentPhoneHomeBinding, HomeViewModel>() {
 
     private fun continueWatchingContainer() {
         viewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {
+            when (it) {
+                LoadingState.LOADING -> {
                     binding.continueWatchingContainer.setGone()
                 }
-                LoadingState.Status.SUCCESS -> {
+                LoadingState.LOADED -> {
                     binding.continueWatchingContainer.setVisible()
                 }
             }
@@ -155,13 +158,6 @@ class HomeFragment : BaseFragmentVM<FragmentPhoneHomeBinding, HomeViewModel>() {
     }
 
     private fun newMoviesContainer() {
-        viewModel.newMovieLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.newMovieProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.newMovieProgressBar.setGone()
-            }
-        })
-
         val newMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeNewMovieAdapter = HomeTitlesAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
@@ -175,13 +171,6 @@ class HomeFragment : BaseFragmentVM<FragmentPhoneHomeBinding, HomeViewModel>() {
     }
 
     private fun topMoviesContainer() {
-        viewModel.topMovieLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.topMovieProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.topMovieProgressBar.setGone()
-            }
-        })
-
         val topMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeTopMovieAdapter = HomeTitlesAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
@@ -195,13 +184,6 @@ class HomeFragment : BaseFragmentVM<FragmentPhoneHomeBinding, HomeViewModel>() {
     }
 
     private fun topTvShowsContainer() {
-        viewModel.topTvShowsLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.topTvShowProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.topTvShowProgressBar.setGone()
-            }
-        })
-
         val tvShowLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         homeTvShowAdapter = HomeTitlesAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)

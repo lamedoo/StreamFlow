@@ -132,10 +132,10 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             profileViewModel.userLogout()
         }
 
-        profileViewModel.loginLoader.observe(this, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {}
-                LoadingState.Status.SUCCESS -> {
+        profileViewModel.generalLoader.observe(this, {
+            when (it) {
+                LoadingState.LOADING -> {}
+                LoadingState.LOADED -> {
                     val intent = Intent(this, TvActivity::class.java).apply {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

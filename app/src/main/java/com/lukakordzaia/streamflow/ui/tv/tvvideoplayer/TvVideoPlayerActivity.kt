@@ -223,10 +223,10 @@ class TvVideoPlayerActivity : FragmentActivity() {
             super.onBackPressed()
         } else {
             videoPlayerViewModel.saveLoader.observe(this, {
-                when (it.status) {
-                    LoadingState.Status.RUNNING -> {
+                when (it) {
+                    LoadingState.LOADING -> {
                     }
-                    LoadingState.Status.SUCCESS, LoadingState.Status.ERROR -> {
+                    LoadingState.LOADED, LoadingState.ERROR -> {
                         super.onBackPressed()
                     }
                 }

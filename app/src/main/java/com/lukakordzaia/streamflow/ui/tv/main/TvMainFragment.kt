@@ -85,7 +85,6 @@ class TvMainFragment : BrowseSupportFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            prepareEntranceTransition()
         }
 
         headersState = HEADERS_DISABLED
@@ -106,16 +105,8 @@ class TvMainFragment : BrowseSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fragmentObservers()
         initRowsAdapter()
-
-        homeViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-            if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    homeViewModel.fetchContent(1)
-                }, 5000)
-            }
-        })
 
         watchedListRowsAdapter()
         newMoviesRowsAdapter()
@@ -126,6 +117,25 @@ class TvMainFragment : BrowseSupportFragment() {
         prepareBackgroundManager()
         setupUIElements()
         setupEventListeners()
+    }
+
+    private fun fragmentObservers() {
+        homeViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                requireContext().createToast(AppConstants.NO_INTERNET)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    homeViewModel.fetchContent(1)
+                }, 5000)
+            }
+        })
+
+
+        homeViewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> prepareEntranceTransition()
+                LoadingState.LOADED -> startEntranceTransition()
+            }
+        })
     }
 
     private fun initRowsAdapter() {
@@ -148,9 +158,9 @@ class TvMainFragment : BrowseSupportFragment() {
             setSelectedPosition(if (continueWatching.isNullOrEmpty()) 1 else 0, continueWatching.isNullOrEmpty())
 
             homeViewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
-                when (it.status) {
-                    LoadingState.Status.RUNNING -> {}
-                    LoadingState.Status.SUCCESS -> {
+                when (it) {
+                    LoadingState.LOADING -> {}
+                    LoadingState.LOADED -> {
                         val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
                             continueWatching.forEach { titles ->
                                 add(titles)
@@ -168,10 +178,6 @@ class TvMainFragment : BrowseSupportFragment() {
 
     private fun newMoviesRowsAdapter() {
         homeViewModel.newMovieList.observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) {
-                startEntranceTransition()
-            }
-
             val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
                 addAll(0, it)
             }

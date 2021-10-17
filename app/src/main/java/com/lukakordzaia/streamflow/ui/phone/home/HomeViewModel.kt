@@ -13,15 +13,13 @@ import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.toContinueWatchingModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeViewModel : BaseViewModel() {
     val continueWatchingLoader = MutableLiveData<LoadingState>()
     val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
-    val movieDayLoader = MutableLiveData<LoadingState>()
-    val newMovieLoader = MutableLiveData<LoadingState>()
-    val topMovieLoader = MutableLiveData<LoadingState>()
-    val topTvShowsLoader = MutableLiveData<LoadingState>()
 
     private val _movieDayData = MutableLiveData<List<SingleTitleModel>>()
     val movieDayData: LiveData<List<SingleTitleModel>> = _movieDayData
@@ -177,88 +175,79 @@ class HomeViewModel : BaseViewModel() {
         _continueWatchingList.value = mutableListOf()
     }
 
-    fun getMovieDay() {
-        viewModelScope.launch {
-            movieDayLoader.value = LoadingState.LOADING
-            when (val movieDay = environment.homeRepository.getMovieDay()) {
-                is Result.Success -> {
-                    val data = movieDay.data.data
-                    _movieDayData.value = listOf(data[0]).toTitleListModel()
-
-                    movieDayLoader.value = LoadingState.LOADED
-                }
-                is Result.Error -> {
-                    newToastMessage("დღის ფილმი - ${movieDay.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
-                }
+    private suspend fun getMovieDay() {
+        when (val movieDay = environment.homeRepository.getMovieDay()) {
+            is Result.Success -> {
+                val data = movieDay.data.data
+                _movieDayData.postValue(listOf(data[0]).toTitleListModel())
+            }
+            is Result.Error -> {
+                newToastMessage("დღის ფილმი - ${movieDay.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
             }
         }
     }
 
-    fun getNewMovies(page: Int) {
-        viewModelScope.launch {
-            newMovieLoader.value = LoadingState.LOADING
-            when (val newMovies = environment.homeRepository.getNewMovies(page)) {
-                is Result.Success -> {
-                    val data = newMovies.data.data
-
-                    _newMovieList.value = data.toTitleListModel()
-                    newMovieLoader.value = LoadingState.LOADED
-                }
-                is Result.Error -> {
-                    newToastMessage("ახალი ფილმები - ${newMovies.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
-                }
+    private suspend fun getNewMovies(page: Int) {
+        when (val newMovies = environment.homeRepository.getNewMovies(page)) {
+            is Result.Success -> {
+                val data = newMovies.data.data
+                _newMovieList.postValue(data.toTitleListModel())
+            }
+            is Result.Error -> {
+                newToastMessage("ახალი ფილმები - ${newMovies.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
             }
         }
     }
 
-    fun getTopMovies(page: Int) {
-        viewModelScope.launch {
-            topMovieLoader.value = LoadingState.LOADING
-            when (val topMovies = environment.homeRepository.getTopMovies(page)) {
-                is Result.Success -> {
-                    val data = topMovies.data.data
-                    _topMovieList.value = data.toTitleListModel()
-                    topMovieLoader.value = LoadingState.LOADED
-                }
-                is Result.Error -> {
-                    newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
-                }
+    private suspend fun getTopMovies(page: Int) {
+        when (val topMovies = environment.homeRepository.getTopMovies(page)) {
+            is Result.Success -> {
+                val data = topMovies.data.data
+                _topMovieList.postValue(data.toTitleListModel())
+            }
+            is Result.Error -> {
+                newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
             }
         }
     }
 
-    fun getTopTvShows(page: Int) {
-        viewModelScope.launch {
-            topTvShowsLoader.value = LoadingState.LOADING
-            when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
-                is Result.Success -> {
-                    val data = topTvShows.data.data
-                    _topTvShowList.value = data.toTitleListModel()
-                    topTvShowsLoader.value = LoadingState.LOADED
-                }
-                is Result.Error -> {
-                    newToastMessage("ტოპ სერიალები- ${topTvShows.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
-                }
+    private suspend fun getTopTvShows(page: Int) {
+        when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
+            is Result.Success -> {
+                val data = topTvShows.data.data
+                _topTvShowList.postValue(data.toTitleListModel())
+            }
+            is Result.Error -> {
+                newToastMessage("ტოპ სერიალები- ${topTvShows.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
             }
         }
     }
 
     fun fetchContent(page: Int) {
-        getMovieDay()
-        getNewMovies(page)
-        getTopMovies(page)
-        getTopTvShows(page)
+        setGeneralLoader(LoadingState.LOADING)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val getData = viewModelScope.launch {
+                    getMovieDay()
+                    getNewMovies(page)
+                    getTopMovies(page)
+                    getTopTvShows(page)
+                }
+                getData.join()
+                setGeneralLoader(LoadingState.LOADED)
+            }
+        }
     }
 }

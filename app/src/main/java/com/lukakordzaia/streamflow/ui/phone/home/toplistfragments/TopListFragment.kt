@@ -17,8 +17,8 @@ import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TopListFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, SingleTopListViewModel>() {
-    override val viewModel by viewModel<SingleTopListViewModel>()
+class TopListFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, TopListViewModel>() {
+    override val viewModel by viewModel<TopListViewModel>()
     private val args: TopListFragmentArgs by navArgs()
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private var page = 1
@@ -49,7 +49,7 @@ class TopListFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, Singl
         }
 
         fragmentObservers()
-        newMoviesContainer()
+        TopListContainer()
     }
 
     private fun setTopBar(title: Int) {
@@ -65,19 +65,19 @@ class TopListFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, Singl
                 }, 3000)
             }
         })
-    }
 
-    private fun newMoviesContainer() {
-        viewModel.listLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.progressBar.setVisible()
-                LoadingState.Status.SUCCESS -> {
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> binding.progressBar.setVisible()
+                LoadingState.LOADED -> {
                     binding.progressBar.setGone()
                     loading = false
                 }
             }
         })
+    }
 
+    private fun TopListContainer() {
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(it)
@@ -98,14 +98,14 @@ class TopListFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, Singl
 
                     if (!loading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
                         loading = true
-                        fetchMoreTopMovies()
+                        fetchMoreTitles()
                     }
                 }
             }
         })
     }
 
-    private fun fetchMoreTopMovies() {
+    private fun fetchMoreTitles() {
         binding.progressBar.setVisible()
         page++
         when (args.type) {

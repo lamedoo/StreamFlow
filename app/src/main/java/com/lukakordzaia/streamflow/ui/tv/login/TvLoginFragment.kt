@@ -59,10 +59,10 @@ class TvLoginFragment: BaseFragmentVM<FragmentTvLoginBinding, ProfileViewModel>(
     }
 
     private fun fragmentObservers() {
-        viewModel.loginLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {}
-                LoadingState.Status.SUCCESS -> {
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> {}
+                LoadingState.LOADED -> {
                     val intent = Intent(requireContext(), TvActivity::class.java).apply {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

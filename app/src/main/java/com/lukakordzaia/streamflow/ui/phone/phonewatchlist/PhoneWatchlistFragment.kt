@@ -95,12 +95,12 @@ class PhoneWatchlistFragment : BaseFragmentVM<FragmentPhoneWatchlistBinding, Wat
     }
 
     private fun favMoviesContainer() {
-        viewModel.watchListLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> {
                     binding.favoriteMoviesProgressBar.setVisible()
                 }
-                LoadingState.Status.SUCCESS -> {
+                LoadingState.LOADED -> {
                     binding.favoriteMoviesProgressBar.setGone()
                     binding.rvFavoritesMovies.setVisible()
                     loading = false

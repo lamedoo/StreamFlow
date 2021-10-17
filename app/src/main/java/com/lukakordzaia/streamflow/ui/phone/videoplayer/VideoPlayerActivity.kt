@@ -31,10 +31,9 @@ class VideoPlayerActivity : AppCompatActivity() {
             super.onBackPressed()
         } else {
             videoPlayerViewModel.saveLoader.observe(this, {
-                when (it.status) {
-                    LoadingState.Status.RUNNING -> {
-                    }
-                    LoadingState.Status.SUCCESS, LoadingState.Status.ERROR -> {
+                when (it) {
+                    LoadingState.LOADING -> {}
+                    LoadingState.LOADED, LoadingState.ERROR -> {
                         super.onBackPressed()
                     }
                 }

@@ -45,7 +45,7 @@ class PhoneSingleTitleFragment : BaseFragmentVM<FragmentPhoneSingleTitleBinding,
 
     override fun onStart() {
         super.onStart()
-        viewModel.getSingleTitleData(args.titleId, "Bearer ${sharedPreferences.getTraktToken()}")
+        viewModel.fetchContent(args.titleId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,12 +80,12 @@ class PhoneSingleTitleFragment : BaseFragmentVM<FragmentPhoneSingleTitleBinding,
         })
 
         viewModel.favoriteLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {
+            when (it) {
+                LoadingState.LOADING -> {
                     binding.singleTitleFavoriteProgressBar.setVisible()
                     binding.singleTitleFavoriteIcon.setGone()
                 }
-                LoadingState.Status.SUCCESS -> {
+                LoadingState.LOADED -> {
                     binding.singleTitleFavoriteProgressBar.setGone()
                     binding.singleTitleFavoriteIcon.setVisible()
                 }
@@ -129,8 +129,20 @@ class PhoneSingleTitleFragment : BaseFragmentVM<FragmentPhoneSingleTitleBinding,
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.getSingleTitleData(args.titleId, "Bearer ${sharedPreferences.getTraktToken()}")
+                    viewModel.fetchContent(args.titleId)
                 }, 5000)
+            }
+        })
+
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> {
+                    binding.progressBar.setVisible()
+                }
+                LoadingState.LOADED -> {
+                    binding.progressBar.setGone()
+                    binding.singleTitleMainContainer.setVisible()
+                }
             }
         })
 
@@ -170,18 +182,6 @@ class PhoneSingleTitleFragment : BaseFragmentVM<FragmentPhoneSingleTitleBinding,
     }
 
     private fun titleDetailsContainer() {
-        viewModel.singleTitleLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {
-                    binding.progressBar.setVisible()
-                }
-                LoadingState.Status.SUCCESS -> {
-                    binding.progressBar.setGone()
-                    binding.singleTitleMainContainer.setVisible()
-                }
-            }
-        })
-
         viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
             titleInfo = it
 

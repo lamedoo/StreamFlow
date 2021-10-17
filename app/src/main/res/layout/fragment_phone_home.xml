@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
@@ -12,6 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/general_progressBar"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:indeterminateTint="@color/accent_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ScrollView
         android:id="@+id/fragment_scroll"
@@ -87,19 +97,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <ProgressBar
-                    android:id="@+id/movieDay_progressBar"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
-                    android:indeterminateTint="@color/accent_color"
-                    android:visibility="visible"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
@@ -150,18 +147,6 @@
                         app:title="@string/new_movies"
                         app:arrow_visibility="true"/>
 
-                    <ProgressBar
-                        android:id="@+id/newMovie_progressBar"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:indeterminateTint="@color/accent_color"
-                        android:visibility="visible"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/new_movies_header" />
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_new_movies"
                         android:layout_width="match_parent"
@@ -188,18 +173,6 @@
                         app:title="@string/top_movies"
                         app:arrow_visibility="true"/>
 
-                    <ProgressBar
-                        android:id="@+id/topMovie_progressBar"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:indeterminateTint="@color/accent_color"
-                        android:visibility="visible"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/top_movies_header" />
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_top_movies"
                         android:layout_width="match_parent"
@@ -225,18 +198,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:title="@string/top_tv_shows"
                         app:arrow_visibility="true"/>
-
-                    <ProgressBar
-                        android:id="@+id/topTvShow_progressBar"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:indeterminateTint="@color/accent_color"
-                        android:visibility="visible"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_header" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_top_tvShows"

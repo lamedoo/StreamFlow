@@ -92,39 +92,9 @@
                     android:background="@color/accent_color"/>
 
                 <LinearLayout
-                    android:id="@+id/trakt_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/icon_trakttv"/>
-
-                    <TextView
-                        android:id="@+id/trakt_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:text="@string/connect_trakt"
-                        android:textColor="@color/secondary_text_color"
-                        android:textSize="17sp"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"/>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@color/accent_color"/>
-
-                <LinearLayout
                     android:id="@+id/clear_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:gravity="center_vertical">
 
                     <ImageView

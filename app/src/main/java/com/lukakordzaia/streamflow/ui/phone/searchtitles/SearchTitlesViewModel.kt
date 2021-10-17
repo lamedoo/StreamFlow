@@ -12,7 +12,6 @@ import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class SearchTitlesViewModel : BaseViewModel() {
-    val searchLoader = MutableLiveData<LoadingState>()
     val franchisesLoader = MutableLiveData<LoadingState>()
 
     private val _searchList = MutableLiveData<List<SingleTitleModel>>()
@@ -34,13 +33,13 @@ class SearchTitlesViewModel : BaseViewModel() {
 
     fun getSearchTitles(keywords: String, page: Int) {
         viewModelScope.launch {
-            searchLoader.value = LoadingState.LOADING
+            setGeneralLoader(LoadingState.LOADING)
             when (val search = environment.searchRepository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
                     val data = search.data.data
                     fetchSearchGetTitlesResponse.addAll(data.toTitleListModel())
                     _searchList.value = fetchSearchGetTitlesResponse
-                    searchLoader.value = LoadingState.LOADED
+                    setGeneralLoader(LoadingState.LOADED)
                 }
                 is Result.Error -> {
                     newToastMessage("ძიება - ${search.exception}")

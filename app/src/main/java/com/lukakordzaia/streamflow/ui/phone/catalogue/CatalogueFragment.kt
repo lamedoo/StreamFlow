@@ -46,22 +46,26 @@ class CatalogueFragment : BaseFragmentVM<FragmentPhoneCatalogueBinding, Catalogu
             if (it) {
                 requireContext().createToast(AppConstants.NO_INTERNET)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.refreshContent()
+                    viewModel.fetchContent()
                 }, 5000)
+            }
+        })
+
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> {
+                    binding.generalProgressBar.setVisible()
+                    binding.fragmentScroll.setGone()
+                }
+                LoadingState.LOADED -> {
+                    binding.generalProgressBar.setGone()
+                    binding.fragmentScroll.setVisible()
+                }
             }
         })
     }
 
     private fun trailersContainer() {
-        viewModel.getTopTrailers()
-
-        viewModel.trailersLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.trailersProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.trailersProgressBar.setGone()
-            }
-        })
-
         val trailerLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         trailersAdapter = TrailersAdapter(requireContext(),
             { titleId, trailerUrl ->
@@ -89,15 +93,6 @@ class CatalogueFragment : BaseFragmentVM<FragmentPhoneCatalogueBinding, Catalogu
     }
 
     private fun genresContainer() {
-        viewModel.getAllGenres()
-
-        viewModel.genresLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.genresProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.genresProgressBar.setGone()
-            }
-        })
-
         val genreLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         genresAdapter = GenresAdapter(requireContext()) { genreId: Int, genreName: String ->
             viewModel.onSingleGenrePressed(genreId, genreName)
@@ -111,15 +106,6 @@ class CatalogueFragment : BaseFragmentVM<FragmentPhoneCatalogueBinding, Catalogu
     }
 
     private fun studiosContainer() {
-        viewModel.getTopStudios()
-
-        viewModel.studiosLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.studiosProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.studiosProgressBar.setGone()
-            }
-        })
-
         val studioLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         studiosAdapter = StudiosAdapter(requireContext()) { studioId: Int, studioName: String ->
             viewModel.onSingleStudioPressed(studioId, studioName)

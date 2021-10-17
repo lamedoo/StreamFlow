@@ -80,10 +80,10 @@ class TvShowBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomShe
             }
         })
 
-        viewModel.chooseDetailsLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.detailsProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> {
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> binding.detailsProgressBar.setVisible()
+                LoadingState.LOADED -> {
                     binding.detailsProgressBar.setGone()
 
                     if (viewModel.movieNotYetAdded.value == false) {

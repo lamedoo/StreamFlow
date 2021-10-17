@@ -12,11 +12,11 @@ import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.G
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.toSingleTitleModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PhoneSingleTitleViewModel : BaseViewModel() {
-    val singleTitleLoader = MutableLiveData<LoadingState>()
     val favoriteLoader = MutableLiveData<LoadingState>()
 
     private val _singleTitleData = MutableLiveData<SingleTitleModel>()
@@ -54,108 +54,91 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
         navigateToNewFragment(PhoneSingleTitleFragmentDirections.actionSingleTitleFragmentSelf(titleId))
     }
 
-    fun getSingleTitleData(titleId: Int, accessToken: String) {
+    private suspend fun getSingleTitleData(titleId: Int) {
         val fetchTitleGenres: MutableList<String> = ArrayList()
-        viewModelScope.launch {
-            singleTitleLoader.value = LoadingState.LOADING
-            coroutineScope {
-                launch {
-                    when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-                        is Result.Success -> {
-                            val data = titleData.data
-                            _singleTitleData.value = data.toSingleTitleModel()
+        when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
+            is Result.Success -> {
+                val data = titleData.data
+                _singleTitleData.postValue(data.toSingleTitleModel())
 
-                            if (sharedPreferences.getLoginToken() == "") {
-                                getSingleContinueWatchingFromRoom(titleId)
-                            } else {
-                                if (data.data.userWatch?.data?.season != null) {
-                                    _continueWatchingDetails.value = ContinueWatchingRoom(
-                                        titleId = titleId,
-                                        language = data.data.userWatch.data.language!!,
-                                        watchedDuration = data.data.userWatch.data.progress!!,
-                                        titleDuration = data.data.userWatch.data.duration!!,
-                                        isTvShow = data.data.isTvShow,
-                                        season = data.data.userWatch.data.season,
-                                        episode = data.data.userWatch.data.episode!!
-                                    )
-                                } else {
-                                    _continueWatchingDetails.value = null
-                                }
-                            }
-
-                            _addToFavorites.value = data.data.userWantsToWatch?.data?.status ?: false
-
-//                            if (data.isTvShow) {
-//                                checkTitleInTraktList("show", accessToken)
-//                            } else {
-//                                checkTitleInTraktList("movie", accessToken)
-//                            }
-
-                            data.data.genres.data.forEach {
-                                fetchTitleGenres.add(it.primaryName!!)
-                            }
-                            _titleGenres.value = fetchTitleGenres
-
-                            singleTitleLoader.value = LoadingState.LOADED
-                        }
-                        is Result.Error -> {
-                            newToastMessage("ინფორმაცია - ${titleData.exception}")
-                        }
-                        is Result.Internet -> {
-                            setNoInternet()
-                        }
+                if (sharedPreferences.getLoginToken() == "") {
+                    getSingleContinueWatchingFromRoom(titleId)
+                } else {
+                    if (data.data.userWatch?.data?.season != null) {
+                        _continueWatchingDetails.postValue(ContinueWatchingRoom(
+                            titleId = titleId,
+                            language = data.data.userWatch.data.language!!,
+                            watchedDuration = data.data.userWatch.data.progress!!,
+                            titleDuration = data.data.userWatch.data.duration!!,
+                            isTvShow = data.data.isTvShow,
+                            season = data.data.userWatch.data.season,
+                            episode = data.data.userWatch.data.episode!!
+                        ))
+                    } else {
+                        _continueWatchingDetails.postValue(null)
                     }
                 }
-                launch {
-                    when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "cast")) {
-                        is Result.Success -> {
-                            val data = cast.data.data
 
-                            _castData.value = data
-                            singleTitleLoader.value = LoadingState.LOADED
-                        }
-                        is Result.Error -> {
-                            newToastMessage("მსახიობები - ${cast.exception}")
-                        }
-                        is Result.Internet -> {
-                            setNoInternet()
-                        }
-                    }
-                }
-                launch {
-                    when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "director")) {
-                        is Result.Success -> {
-                            val data = cast.data.data
+                _addToFavorites.postValue(data.data.userWantsToWatch?.data?.status ?: false)
 
-                            if (!data.isNullOrEmpty()) {
-                                _titleDirector.value = data[0]
-                            }
-                            singleTitleLoader.value = LoadingState.LOADED
-                        }
-                        is Result.Error -> {
-                            newToastMessage("დირექტორი - ${cast.exception}")
-                        }
-                        is Result.Internet -> {
-                            setNoInternet()
-                        }
-                    }
+                data.data.genres.data.forEach {
+                    fetchTitleGenres.add(it.primaryName!!)
                 }
-                launch {
-                    when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
-                        is Result.Success -> {
-                            val data = related.data.data
-                            _singleTitleRelated.value = data.toTitleListModel()
+                _titleGenres.postValue(fetchTitleGenres)
+            }
+            is Result.Error -> {
+                newToastMessage("ინფორმაცია - ${titleData.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
+            }
+        }
+    }
 
-                            singleTitleLoader.value = LoadingState.LOADED
-                        }
-                        is Result.Error -> {
-                            newToastMessage("მსგავსი - ${related.exception}")
-                        }
-                        is Result.Internet -> {
-                            setNoInternet()
-                        }
-                    }
+    private suspend fun getTitleCast(titleId: Int) {
+        when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "cast")) {
+            is Result.Success -> {
+                val data = cast.data.data
+                _castData.postValue(data)
+            }
+            is Result.Error -> {
+                newToastMessage("მსახიობები - ${cast.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
+            }
+        }
+    }
+
+    private suspend fun getTitleDirector(titleId: Int) {
+        when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "director")) {
+            is Result.Success -> {
+                val data = cast.data.data
+
+                if (!data.isNullOrEmpty()) {
+                    _titleDirector.postValue(data[0])
                 }
+            }
+            is Result.Error -> {
+                newToastMessage("დირექტორი - ${cast.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
+            }
+        }
+    }
+
+    private suspend fun getRelatedTitles(titleId: Int) {
+        when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
+            is Result.Success -> {
+                val data = related.data.data
+                _singleTitleRelated.postValue(data.toTitleListModel())
+            }
+            is Result.Error -> {
+                newToastMessage("მსგავსი - ${related.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
             }
         }
     }
@@ -167,100 +150,6 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
             _continueWatchingDetails.value = it
         }
     }
-
-//    private fun checkTitleInTraktList(type: String, accessToken: String) {
-//        _addToFavorites.value = false
-//        traktFavoriteLoader.value = LoadingState.LOADING
-//        viewModelScope.launch {
-//            when (val list = traktRepo.getSfListByType(type, accessToken)) {
-//                is Result.Success -> {
-//                    when (type) {
-//                        "movie" -> {
-//                            list.data.forEach {
-//                                if (imdbId.value == it.movie.ids.imdb) {
-//                                    _addToFavorites.value = true
-//                                }
-//                            }
-//                        }
-//                        "show" -> {
-//                            list.data.forEach {
-//                                _addToFavorites.value = imdbId.value == it.show.ids.imdb
-//                            }
-//                        }
-//                    }
-//                    traktFavoriteLoader.value = LoadingState.LOADED
-//                }
-//            }
-//        }
-//    }
-//
-//    fun addToFavorites(accessToken: String) {
-//        if (singleTitleData.value!!.isTvShow) {
-//            addTvShowToTraktList(accessToken)
-//        } else {
-//            addMovieToTraktList(accessToken)
-//        }
-//    }
-//
-//    private fun addMovieToTraktList(accessToken: String) {
-//        val movieToTraktList = AddMovieToTraktList(
-//                movies = listOf(AddMovieToTraktList.Movy(
-//                        ids = AddMovieToTraktList.Movy.Ids(
-//                                imdb = imdbId.value!!
-//                        )
-//                ))
-//        )
-//        traktFavoriteLoader.value = LoadingState.LOADING
-//        viewModelScope.launch {
-//            when (val addToList = traktRepo.addMovieToTraktList(movieToTraktList, accessToken)) {
-//                is Result.Success -> {
-//                    newToastMessage("ფილმი დაემატა ფავორიტებში")
-//                    _addToFavorites.value = true
-//                    traktFavoriteLoader.value = LoadingState.LOADED
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun addTvShowToTraktList(accessToken: String) {
-//        val tvShowToTraktList = AddTvShowToTraktList(
-//                tvShows = listOf(AddTvShowToTraktList.Showy(
-//                        ids = AddTvShowToTraktList.Showy.Ids(
-//                                imdb = imdbId.value!!
-//                        )
-//                ))
-//        )
-//        traktFavoriteLoader.value = LoadingState.LOADING
-//        viewModelScope.launch {
-//            when (val addToList = traktRepo.addTvShowToTraktList(tvShowToTraktList, accessToken)) {
-//                is Result.Success -> {
-//                    newToastMessage("სერიალი დაემატა ფავორიტებში")
-//                    _addToFavorites.value = true
-//                    traktFavoriteLoader.value = LoadingState.LOADED
-//                }
-//            }
-//        }
-//    }
-
-//    fun removeMovieFromTraktList(accessToken: String) {
-//        val movieFromTraktList = AddMovieToTraktList(
-//                movies = listOf(AddMovieToTraktList.Movy(
-//                        ids = AddMovieToTraktList.Movy.Ids(
-//                                imdb = imdbId.value!!
-//                        )
-//                ))
-//        )
-//        traktFavoriteLoader.value = LoadingState.LOADING
-//        viewModelScope.launch {
-//            when (val removeFromList = traktRepo.removeMovieFromTraktList(movieFromTraktList, accessToken)) {
-//                is Result.Success -> {
-//                    newToastMessage("ფილმი წაიშალა ფავორიტებიდან")
-//                    _addToFavorites.value = false
-//                    traktFavoriteLoader.value = LoadingState.LOADED
-//                }
-//            }
-//        }
-//    }
 
     fun addWatchlistTitle(id: Int) {
         favoriteLoader.value = LoadingState.LOADING
@@ -284,6 +173,22 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
                     favoriteLoader.value = LoadingState.LOADED
                     newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
                 }
+            }
+        }
+    }
+
+    fun fetchContent(titleId: Int) {
+        setGeneralLoader(LoadingState.LOADING)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val getData = viewModelScope.launch {
+                    getSingleTitleData(titleId)
+                    getTitleCast(titleId)
+                    getTitleDirector(titleId)
+                    getRelatedTitles(titleId)
+                }
+                getData.join()
+                setGeneralLoader(LoadingState.LOADED)
             }
         }
     }

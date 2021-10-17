@@ -10,10 +10,11 @@ import com.lukakordzaia.streamflow.network.models.imovies.response.categories.Ge
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CatalogueViewModel : BaseViewModel() {
-
     val trailersLoader = MutableLiveData<LoadingState>()
     val genresLoader = MutableLiveData<LoadingState>()
     val studiosLoader = MutableLiveData<LoadingState>()
@@ -27,6 +28,10 @@ class CatalogueViewModel : BaseViewModel() {
     private val _topTrailerList = MutableLiveData<List<SingleTitleModel>>()
     val topTrailerList: LiveData<List<SingleTitleModel>> = _topTrailerList
 
+    init {
+        fetchContent()
+    }
+
     fun onSingleGenrePressed(genreId: Int, genreName: String) {
         navigateToNewFragment(CatalogueFragmentDirections.actionCategoriesFragmentToSingleGenreFragment(genreId, genreName))
     }
@@ -39,64 +44,61 @@ class CatalogueViewModel : BaseViewModel() {
         navigateToNewFragment(CatalogueFragmentDirections.actionCategoriesFragmentToSingleTitleFragmentNav(titleId))
     }
 
-    fun getAllGenres() {
-        viewModelScope.launch {
-            genresLoader.value = LoadingState.LOADING
-            when (val genres = environment.catalogueRepository.getAllGenres()) {
-                is Result.Success -> {
-                    _allGenresList.value = genres.data.data
-                    genresLoader.value = LoadingState.LOADED
-                }
-                is Result.Error -> {
-                    newToastMessage("ჟანრები - ${genres.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
-                }
+    private suspend fun getAllGenres() {
+        when (val genres = environment.catalogueRepository.getAllGenres()) {
+            is Result.Success -> {
+                _allGenresList.postValue(genres.data.data)
+            }
+            is Result.Error -> {
+                newToastMessage("ჟანრები - ${genres.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
             }
         }
     }
 
-    fun getTopStudios() {
-        viewModelScope.launch {
-            studiosLoader.value = LoadingState.LOADING
-            when (val studios = environment.catalogueRepository.getTopStudios()) {
-                is Result.Success -> {
-                    _topStudioList.value = studios.data.data
-                    studiosLoader.value = LoadingState.LOADED
-                }
-                is Result.Error -> {
-                    newToastMessage("სტუდიები - ${studios.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
-                }
+    private suspend fun getTopStudios() {
+        when (val studios = environment.catalogueRepository.getTopStudios()) {
+            is Result.Success -> {
+                _topStudioList.postValue(studios.data.data)
+            }
+            is Result.Error -> {
+                newToastMessage("სტუდიები - ${studios.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
             }
         }
     }
 
-    fun getTopTrailers() {
-        trailersLoader.value = LoadingState.LOADING
-        viewModelScope.launch {
-            when (val trailers = environment.catalogueRepository.getTopTrailers()) {
-                is Result.Success -> {
-                    val data = trailers.data.data
-                    _topTrailerList.value = data.toTitleListModel()
-                    trailersLoader.value = LoadingState.LOADED
-                }
-                is Result.Error -> {
-                    newToastMessage("ტრეილერები - ${trailers.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
-                }
+    private suspend fun getTopTrailers() {
+        when (val trailers = environment.catalogueRepository.getTopTrailers()) {
+            is Result.Success -> {
+                val data = trailers.data.data
+                _topTrailerList.postValue(data.toTitleListModel())
+            }
+            is Result.Error -> {
+                newToastMessage("ტრეილერები - ${trailers.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet()
             }
         }
     }
 
-    fun refreshContent() {
-        getTopTrailers()
-        getAllGenres()
-        getTopStudios()
+    fun fetchContent() {
+        setGeneralLoader(LoadingState.LOADING)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val getData = viewModelScope.launch {
+                    getTopTrailers()
+                    getAllGenres()
+                    getTopStudios()
+                }
+                getData.join()
+                setGeneralLoader(LoadingState.LOADED)
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavDirections
 import com.lukakordzaia.streamflow.helpers.Environment
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.utils.Event
 import org.koin.core.KoinComponent
@@ -23,6 +24,8 @@ abstract class BaseViewModel : ViewModel(), KoinComponent {
     private val _noInternet = MutableLiveData(Event(false))
     val noInternet: LiveData<Event<Boolean>> = _noInternet
 
+    private val _generalLoader = MutableLiveData<LoadingState>()
+    val generalLoader: LiveData<LoadingState> = _generalLoader
 
     fun navigateToNewFragment(navId: NavDirections) {
         _navigateScreen.value = Event(navId)
@@ -34,5 +37,9 @@ abstract class BaseViewModel : ViewModel(), KoinComponent {
 
     fun setNoInternet() {
         _noInternet.value = Event(true)
+    }
+
+    fun setGeneralLoader(loading: LoadingState) {
+        _generalLoader.postValue(loading)
     }
 }

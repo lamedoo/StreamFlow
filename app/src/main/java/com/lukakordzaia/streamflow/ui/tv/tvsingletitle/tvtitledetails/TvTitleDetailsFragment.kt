@@ -178,12 +178,12 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         })
 
         viewModel.favoriteLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> {
+            when (it) {
+                LoadingState.LOADING -> {
                     binding.favoriteProgressBar.setVisible()
                     binding.favoriteIcon.setGone()
                 }
-                LoadingState.Status.SUCCESS -> {
+                LoadingState.LOADED -> {
                     binding.favoriteProgressBar.setGone()
                     binding.favoriteIcon.setVisible()
                 }

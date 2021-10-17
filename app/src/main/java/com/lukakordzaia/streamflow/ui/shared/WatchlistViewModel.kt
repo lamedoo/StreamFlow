@@ -12,8 +12,6 @@ import com.lukakordzaia.streamflow.utils.toWatchListModel
 import kotlinx.coroutines.launch
 
 class WatchlistViewModel : BaseViewModel() {
-    val watchListLoader = MutableLiveData<LoadingState>()
-
     val noFavorites = MutableLiveData<Boolean>()
 
     private val fetchUserWatchlist: MutableList<SingleTitleModel> = ArrayList()
@@ -32,7 +30,7 @@ class WatchlistViewModel : BaseViewModel() {
     }
 
     fun getUserWatchlist(page: Int, type: String, isTvDevice: Boolean) {
-        watchListLoader.value = LoadingState.LOADING
+        setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val watchlist = environment.watchlistRepository.getUserWatchlist(page, type)) {
                 is Result.Success -> {
@@ -51,7 +49,7 @@ class WatchlistViewModel : BaseViewModel() {
                         }
                     }
 
-                    watchListLoader.value = LoadingState.LOADED
+                    setGeneralLoader(LoadingState.LOADED)
                 }
             }
         }

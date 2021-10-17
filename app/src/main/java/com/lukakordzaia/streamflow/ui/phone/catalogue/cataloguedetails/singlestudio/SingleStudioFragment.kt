@@ -51,16 +51,16 @@ class SingleStudioFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, 
                 }, 5000)
             }
         })
+
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> binding.progressBar.setVisible()
+                LoadingState.LOADED -> binding.progressBar.setGone()
+            }
+        })
     }
 
     private fun studiosContainer() {
-        viewModel.categoryLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.progressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.progressBar.setGone()
-            }
-        })
-
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(it, AppConstants.NAV_STUDIO_TO_SINGLE)

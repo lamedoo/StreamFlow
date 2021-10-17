@@ -53,6 +53,13 @@ class SearchTitlesFragment : BaseFragmentVM<FragmentPhoneSearchTitlesBinding, Se
                 }, 5000)
             }
         })
+
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> binding.searchProgressBar.setVisible()
+                LoadingState.LOADED -> binding.searchProgressBar.setGone()
+            }
+        })
     }
 
     private fun searchInput() {
@@ -76,13 +83,6 @@ class SearchTitlesFragment : BaseFragmentVM<FragmentPhoneSearchTitlesBinding, Se
     }
 
     private fun searchTitlesContainer() {
-        viewModel.searchLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.searchProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.searchProgressBar.setGone()
-            }
-        })
-
         val layoutManager = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
         searchTitlesAdapter = SearchTitlesAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(it)
@@ -123,9 +123,9 @@ class SearchTitlesFragment : BaseFragmentVM<FragmentPhoneSearchTitlesBinding, Se
         binding.rvTopFranchises.adapter = topFranchisesAdapter
 
         viewModel.franchisesLoader.observe(viewLifecycleOwner, {
-            when (it.status) {
-                LoadingState.Status.RUNNING -> binding.franchisesProgressBar.setVisible()
-                LoadingState.Status.SUCCESS -> binding.franchisesProgressBar.setGone()
+            when (it) {
+                LoadingState.LOADING -> binding.franchisesProgressBar.setVisible()
+                LoadingState.LOADED -> binding.franchisesProgressBar.setGone()
             }
         })
 
