@@ -53,6 +53,7 @@ class SearchTitlesViewModel : BaseViewModel() {
     }
 
     fun getSearchTitlesTv(keywords: String, page: Int) {
+        setNoInternet(false)
         viewModelScope.launch {
             when (val searchTv = environment.searchRepository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {
@@ -61,6 +62,9 @@ class SearchTitlesViewModel : BaseViewModel() {
                 }
                 is Result.Error -> {
                     newToastMessage("ძიება - ${searchTv.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }

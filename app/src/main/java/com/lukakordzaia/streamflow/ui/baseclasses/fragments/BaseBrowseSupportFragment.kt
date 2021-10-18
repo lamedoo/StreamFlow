@@ -51,6 +51,7 @@ abstract class BaseBrowseSupportFragment<VM: BaseViewModel>: BrowseSupportFragme
         super.onViewCreated(view, savedInstanceState)
 
         initObservers()
+        initListeners()
     }
 
     private fun initHeaderState() {
@@ -100,7 +101,7 @@ abstract class BaseBrowseSupportFragment<VM: BaseViewModel>: BrowseSupportFragme
     }
 
     private fun initListeners() {
-        requireActivity().findViewById<Button>(R.id.retry_button).setOnClickListener {
+        requireActivity().findViewById<Button>(R.id.retry_button)?.setOnClickListener {
             reload.invoke()
         }
     }

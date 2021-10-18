@@ -1,88 +1,48 @@
 package com.lukakordzaia.streamflow.ui.tv.tvcatalogue
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
-import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TvCatalogueFragment : VerticalGridSupportFragment() {
-    private lateinit var gridAdapter: ArrayObjectAdapter
-    private val tvCatalogueViewModel: TvCatalogueViewModel by viewModel()
-    private var page = 1
+class TvCatalogueFragment : BaseVerticalGridSupportFragment<TvCatalogueViewModel>() {
+    private var type = 0
 
-    var onTitleSelected: TvCheckTitleSelected? = null
-    var onFirstItem: TvCheckFirstItem? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        onTitleSelected = context as? TvCheckTitleSelected
-        onFirstItem = context as? TvCheckFirstItem
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        onTitleSelected = null
-        onFirstItem = null
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        title = ""
-        setupFragment()
-    }
+    override val viewModel by viewModel<TvCatalogueViewModel>()
+    override val reload: () -> Unit = { viewModel.fetchContent(type, page) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
 
-        when (activity?.intent?.getSerializableExtra(AppConstants.CATALOGUE_TYPE) as Int) {
-            AppConstants.LIST_NEW_MOVIES -> {
-                tvCatalogueViewModel.getNewMoviesTv(page)
-            }
-            AppConstants.LIST_TOP_MOVIES -> {
-                tvCatalogueViewModel.getTopMoviesTv(page)
-            }
-            AppConstants.LIST_TOP_TV_SHOWS -> {
-                tvCatalogueViewModel.getTopTvShowsTv(page)
-            }
-        }
-        loadData()
-        adapter = gridAdapter
+        type = activity?.intent?.getSerializableExtra(AppConstants.CATALOGUE_TYPE) as Int
+
+        viewModel.fetchContent(type, page)
+        
+        fragmentObservers()
+        setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }
 
-    private fun loadData() {
-        tvCatalogueViewModel.newMovieList.observe(viewLifecycleOwner, { newMovies ->
-            newMovies.forEach {
-                gridAdapter.add(it)
-            }
-        })
-        tvCatalogueViewModel.topMovieList.observe(viewLifecycleOwner, { topMovies ->
-            topMovies.forEach {
-                gridAdapter.add(it)
-            }
-        })
-        tvCatalogueViewModel.tvShowList.observe(viewLifecycleOwner, { topTvShows ->
-            topTvShows.forEach {
-                gridAdapter.add(it)
+    private fun fragmentObservers() {
+        viewModel.tvCatalogueList.observe(viewLifecycleOwner, {
+            it.forEach { title ->
+                gridAdapter.add(title)
             }
         })
     }
 
-    private fun setupFragment() {
-        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
-        gridPresenter.numberOfColumns = 6
-        setGridPresenter(gridPresenter)
-
-        onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
+    private inner class ItemViewClickedListener : OnItemViewClickedListener {
+        override fun onItemClicked(
+            itemViewHolder: Presenter.ViewHolder?,
+            item: Any?,
+            rowViewHolder: RowPresenter.ViewHolder?,
+            row: Row?
+        ) {
             if (item is SingleTitleModel) {
                 val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                     putExtra(AppConstants.TITLE_ID, item.id)
@@ -91,7 +51,6 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
                 activity?.startActivity(intent)
             }
         }
-        setOnItemViewSelectedListener(ItemViewSelectedListener())
     }
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
@@ -123,13 +82,13 @@ class TvCatalogueFragment : VerticalGridSupportFragment() {
                 page++
                 when (activity?.intent?.getSerializableExtra(AppConstants.CATALOGUE_TYPE) as Int) {
                     AppConstants.LIST_NEW_MOVIES -> {
-                        tvCatalogueViewModel.getNewMoviesTv(page)
+                        viewModel.getNewMoviesTv(page)
                     }
                     AppConstants.LIST_TOP_MOVIES -> {
-                        tvCatalogueViewModel.getTopMoviesTv(page)
+                        viewModel.getTopMoviesTv(page)
                     }
                     AppConstants.LIST_TOP_TV_SHOWS -> {
-                        tvCatalogueViewModel.getTopTvShowsTv(page)
+                        viewModel.getTopTvShowsTv(page)
                     }
                 }
             }

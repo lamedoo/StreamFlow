@@ -21,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSearchInputSelected, TvCheckTitleSelected {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
 
-    private lateinit var fragment: TvSearchFragmentNew
+    private lateinit var fragment: TvSearchFragment
     private var firstLoad = true
     private var searchInputSelected = true
 
@@ -30,7 +30,7 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSear
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragment = supportFragmentManager.findFragmentById(R.id.tv_search_fragment) as TvSearchFragmentNew
+        fragment = supportFragmentManager.findFragmentById(R.id.tv_search_fragment) as TvSearchFragment
 
         setSidebarClickListeners(binding.tvSidebar)
         setCurrentButton(binding.tvSidebar.searchButton)

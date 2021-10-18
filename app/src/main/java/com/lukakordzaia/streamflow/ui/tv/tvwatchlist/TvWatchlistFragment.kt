@@ -4,48 +4,40 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
-import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.interfaces.TvWatchListTopRow
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
+import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflow.ui.shared.WatchlistViewModel
-import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCataloguePresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvWatchlistFragment : VerticalGridSupportFragment() {
-    private val watchlistViewModel: WatchlistViewModel by viewModel()
+class TvWatchlistFragment : BaseVerticalGridSupportFragment<WatchlistViewModel>() {
+    override val viewModel by viewModel<WatchlistViewModel>()
     private val sharedPreferences: SharedPreferences by inject()
-    private lateinit var gridAdapter: ArrayObjectAdapter
     private lateinit var type: String
+
+    override val reload: () -> Unit = {
+        viewModel.getUserWatchlist(page, type, true)
+    }
 
     private var selectedItem = 0
 
-    private var page = 1
-
-    var onTitleSelected: TvCheckTitleSelected? = null
-    var onFirstItem: TvCheckFirstItem? = null
     var hasFavorites: TvHasFavoritesListener? = null
     var tvWatchListTopRow: TvWatchListTopRow? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onTitleSelected = context as? TvCheckTitleSelected
-        onFirstItem = context as? TvCheckFirstItem
         hasFavorites = context as? TvHasFavoritesListener
         tvWatchListTopRow = context as? TvWatchListTopRow
     }
 
     override fun onDetach() {
         super.onDetach()
-        onTitleSelected = null
-        onFirstItem = null
         hasFavorites = null
         tvWatchListTopRow = null
     }
@@ -58,11 +50,6 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
             sharedPreferences.saveFromWatchlist(-1)
         }
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        title = ""
-        setupFragment()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,31 +57,21 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
         val bundledType = args?.getString("type")
         type = bundledType!!
 
-        watchlistViewModel.getUserWatchlist(page, type, true)
-        gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
+        viewModel.getUserWatchlist(page, type, true)
 
-        watchlistViewModel.noFavorites.observe(viewLifecycleOwner, {
+        viewModel.noFavorites.observe(viewLifecycleOwner, {
             if (it) {
                 hasFavorites?.hasFavorites(false)
             }
         })
 
-        watchlistViewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
+        viewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
             watchlist.forEach {
                 gridAdapter.add(it)
             }
         })
 
-        adapter = gridAdapter
-    }
-
-    private fun setupFragment() {
-        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
-        gridPresenter.numberOfColumns = 6
-        setGridPresenter(gridPresenter)
-
-        onItemViewClickedListener = ItemViewClickedListener()
-        setOnItemViewSelectedListener(ItemViewSelectedListener())
+        setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
@@ -150,7 +127,7 @@ class TvWatchlistFragment : VerticalGridSupportFragment() {
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
-                watchlistViewModel.getUserWatchlist(page, type, true)
+                viewModel.getUserWatchlist(page, type, true)
             }
         }
     }

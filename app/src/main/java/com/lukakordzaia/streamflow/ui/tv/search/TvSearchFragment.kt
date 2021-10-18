@@ -4,66 +4,49 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
-import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvSearchInputSelected
+import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflow.ui.phone.searchtitles.SearchTitlesViewModel
-import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCataloguePresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSearchFragmentNew : VerticalGridSupportFragment() {
-    private val searchTitlesViewModel by viewModel<SearchTitlesViewModel>()
-    private lateinit var gridAdapter: ArrayObjectAdapter
-
-    private var page = 1
+class TvSearchFragment : BaseVerticalGridSupportFragment<SearchTitlesViewModel>() {
     private var searchQuery = ""
 
-    var onTitleSelected: TvCheckTitleSelected? = null
-    var onFirstItem: TvCheckFirstItem? = null
+    override val viewModel by viewModel<SearchTitlesViewModel>()
+    override val reload: () -> Unit = { viewModel.getSearchTitlesTv(searchQuery, page) }
+
+
     var searchInputIsSelected: TvSearchInputSelected? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onTitleSelected = context as? TvCheckTitleSelected
-        onFirstItem = context as? TvCheckFirstItem
         searchInputIsSelected = context as? TvSearchInputSelected
     }
 
     override fun onDetach() {
         super.onDetach()
-        onTitleSelected = null
-        onFirstItem = null
         searchInputIsSelected = null
-    }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setupFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        gridAdapter = ArrayObjectAdapter(TvCataloguePresenter())
 
-        searchTitlesViewModel.searchList.observe(viewLifecycleOwner, { list ->
+        viewModel.searchList.observe(viewLifecycleOwner, { list ->
             list.forEach {
                 gridAdapter.add(it)
             }
         })
 
-        adapter = gridAdapter
+        setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }
 
     fun setSearchQuery(query: String) {
         searchQuery = query
-        searchTitlesViewModel.getSearchTitlesTv(query, page)
+        viewModel.getSearchTitlesTv(query, page)
     }
 
     fun clearRowsAdapter() {
@@ -71,16 +54,13 @@ class TvSearchFragmentNew : VerticalGridSupportFragment() {
         gridAdapter.clear()
     }
 
-    fun clearSearchResults() {
-        searchTitlesViewModel.clearSearchResults()
-    }
-
-    private fun setupFragment() {
-        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
-        gridPresenter.numberOfColumns = 6
-        setGridPresenter(gridPresenter)
-
-        onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
+    private inner class ItemViewClickedListener : OnItemViewClickedListener {
+        override fun onItemClicked(
+            itemViewHolder: Presenter.ViewHolder?,
+            item: Any?,
+            rowViewHolder: RowPresenter.ViewHolder?,
+            row: Row?
+        ) {
             if (item is SingleTitleModel) {
                 val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                     putExtra(AppConstants.TITLE_ID, item.id)
@@ -89,7 +69,7 @@ class TvSearchFragmentNew : VerticalGridSupportFragment() {
                 activity?.startActivity(intent)
             }
         }
-        setOnItemViewSelectedListener(ItemViewSelectedListener())
+
     }
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
@@ -125,7 +105,7 @@ class TvSearchFragmentNew : VerticalGridSupportFragment() {
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
-                searchTitlesViewModel.getSearchTitlesTv(searchQuery, page)
+                viewModel.getSearchTitlesTv(searchQuery, page)
             }
         }
     }
