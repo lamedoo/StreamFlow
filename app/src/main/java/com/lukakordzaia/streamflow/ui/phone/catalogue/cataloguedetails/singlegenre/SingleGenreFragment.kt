@@ -1,8 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +9,22 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
-import com.lukakordzaia.streamflow.utils.*
+import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setVisible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleGenreFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, SingleCategoryViewModel>() {
+class SingleGenreFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, SingleCategoryViewModel>() {
+    private var page = 1
+
     override val viewModel by viewModel<SingleCategoryViewModel>()
+    override val reload: () -> Unit = { viewModel.getSingleGenre(args.genreId, page) }
+
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private val args: SingleGenreFragmentArgs by navArgs()
-    private var page = 1
     private var pastVisibleItems: Int = 0
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
@@ -42,15 +45,6 @@ class SingleGenreFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, S
     }
 
     private fun fragmentObservers() {
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-            if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.getSingleGenre(args.genreId, page)
-                }, 5000)
-            }
-        })
-
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> binding.progressBar.setVisible()

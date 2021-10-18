@@ -66,6 +66,8 @@
         app:itemIconSize="28dp"
         app:menu="@menu/bottom_navigation_menu"/>
 
-
+    <include
+        android:id="@+id/no_internet"
+        layout="@layout/no_internet_layout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -185,7 +185,7 @@ class HomeViewModel : BaseViewModel() {
                 newToastMessage("დღის ფილმი - ${movieDay.exception}")
             }
             is Result.Internet -> {
-                setNoInternet()
+                setNoInternet(true)
             }
         }
     }
@@ -199,9 +199,6 @@ class HomeViewModel : BaseViewModel() {
             is Result.Error -> {
                 newToastMessage("ახალი ფილმები - ${newMovies.exception}")
             }
-            is Result.Internet -> {
-                setNoInternet()
-            }
         }
     }
 
@@ -213,9 +210,6 @@ class HomeViewModel : BaseViewModel() {
             }
             is Result.Error -> {
                 newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
-            }
-            is Result.Internet -> {
-                setNoInternet()
             }
         }
     }
@@ -229,13 +223,11 @@ class HomeViewModel : BaseViewModel() {
             is Result.Error -> {
                 newToastMessage("ტოპ სერიალები- ${topTvShows.exception}")
             }
-            is Result.Internet -> {
-                setNoInternet()
-            }
         }
     }
 
     fun fetchContent(page: Int) {
+        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

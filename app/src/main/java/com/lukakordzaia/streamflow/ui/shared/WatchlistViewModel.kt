@@ -30,6 +30,7 @@ class WatchlistViewModel : BaseViewModel() {
     }
 
     fun getUserWatchlist(page: Int, type: String, isTvDevice: Boolean) {
+        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val watchlist = environment.watchlistRepository.getUserWatchlist(page, type)) {
@@ -50,6 +51,9 @@ class WatchlistViewModel : BaseViewModel() {
                     }
 
                     setGeneralLoader(LoadingState.LOADED)
+                }
+                is Result.Internet -> {
+                    setNoInternet(true)
                 }
             }
         }

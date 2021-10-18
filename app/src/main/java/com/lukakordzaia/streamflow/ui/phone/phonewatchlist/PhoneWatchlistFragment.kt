@@ -13,17 +13,20 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneWatchlistBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.shared.WatchlistViewModel
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PhoneWatchlistFragment : BaseFragmentVM<FragmentPhoneWatchlistBinding, WatchlistViewModel>() {
+class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding, WatchlistViewModel>() {
+    private var page = 1
+
     override val viewModel by viewModel<WatchlistViewModel>()
+    override val reload: () -> Unit = { viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false) }
+
     private lateinit var watchlistMoviesAdapter: WatchlistAdapter
     private var type = AppConstants.WATCHLIST_MOVIES
 
-    private var page = 1
     private var pastVisibleItems: Int = 0
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
@@ -92,9 +95,7 @@ class PhoneWatchlistFragment : BaseFragmentVM<FragmentPhoneWatchlistBinding, Wat
         viewModel.hasMorePage.observe(viewLifecycleOwner, {
             hasMore = it
         })
-    }
 
-    private fun favMoviesContainer() {
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> {
@@ -111,7 +112,9 @@ class PhoneWatchlistFragment : BaseFragmentVM<FragmentPhoneWatchlistBinding, Wat
         viewModel.noFavorites.observe(viewLifecycleOwner, {
             binding.favoriteNoMovies.setVisibleOrGone(it)
         })
+    }
 
+    private fun favMoviesContainer() {
         val moviesLayout = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         watchlistMoviesAdapter = WatchlistAdapter(requireContext(),
             {

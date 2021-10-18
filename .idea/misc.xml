@@ -22,6 +22,7 @@
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button_favorite_tv.xml" value="0.296875" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button_tv.xml" value="0.296875" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button_tv_catalogue.xml" value="0.296875" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_main.xml" value="0.30526315789473685" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_phone_video_player.xml" value="0.3087719298245614" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_tv.xml" value="0.3087719298245614" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/activity_tv_search.xml" value="0.3047619047619048" />
@@ -41,6 +42,7 @@
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_tv_title_details.xml" value="0.3458333333333333" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_tv_title_files.xml" value="0.6490713587487781" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/fragment_tv_video_player.xml" value="0.3087719298245614" />
+        <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/no_internet_layout.xml" value="0.30526315789473685" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/phone_exoplayer_controller_layout.xml" value="0.3087719298245614" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/rv_db_title_item.xml" value="0.3012987012987013" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/layout/rv_watchlist_item.xml" value="0.3087719298245614" />

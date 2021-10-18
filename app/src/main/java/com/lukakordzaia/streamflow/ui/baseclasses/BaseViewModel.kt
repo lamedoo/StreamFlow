@@ -35,8 +35,8 @@ abstract class BaseViewModel : ViewModel(), KoinComponent {
         _toastMessage.value = Event(message)
     }
 
-    fun setNoInternet() {
-        _noInternet.value = Event(true)
+    fun setNoInternet(internet: Boolean = true) {
+        _noInternet.value = Event(internet)
     }
 
     fun setGeneralLoader(loading: LoadingState) {

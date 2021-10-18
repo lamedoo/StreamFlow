@@ -1,8 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.searchtitles
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +11,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.customviews.CustomSearchInput
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSearchTitlesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
-import com.lukakordzaia.streamflow.utils.*
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
+import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setVisible
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
 import kotlinx.android.synthetic.main.main_top_toolbar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchTitlesFragment : BaseFragmentVM<FragmentPhoneSearchTitlesBinding, SearchTitlesViewModel>() {
+class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBinding, SearchTitlesViewModel>() {
+    private var page = 1
+
     override val viewModel by viewModel<SearchTitlesViewModel>()
+    override val reload: () -> Unit = {
+        if (binding.searchTitleText.text.isNullOrEmpty()) {
+            viewModel.getTopFranchises()
+        } else {
+            viewModel.getSearchTitles(binding.searchTitleText.text.toString(), page)
+        }
+    }
 
     private lateinit var searchTitlesAdapter: SearchTitlesAdapter
     private lateinit var topFranchisesAdapter: TopFranchisesAdapter
-    private var page = 1
     private var pastVisibleItems: Int = 0
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
@@ -45,15 +52,6 @@ class SearchTitlesFragment : BaseFragmentVM<FragmentPhoneSearchTitlesBinding, Se
     }
 
     private fun fragmentObservers() {
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-            if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.refreshContent()
-                }, 5000)
-            }
-        })
-
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> binding.searchProgressBar.setVisible()

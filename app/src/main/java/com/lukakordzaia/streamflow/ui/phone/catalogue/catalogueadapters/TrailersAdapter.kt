@@ -1,11 +1,9 @@
-package com.lukakordzaia.streamflow.ui.phone.catalogue
+package com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvTrailerItemBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.utils.setImage

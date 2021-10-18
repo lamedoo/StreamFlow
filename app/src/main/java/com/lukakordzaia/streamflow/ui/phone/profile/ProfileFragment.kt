@@ -12,13 +12,14 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneProfileBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ProfileFragment : BaseFragmentVM<FragmentPhoneProfileBinding, ProfileViewModel>() {
+class ProfileFragment : BaseFragmentPhoneVM<FragmentPhoneProfileBinding, ProfileViewModel>() {
     override val viewModel by viewModel<ProfileViewModel>()
+    override val reload: () -> Unit = { viewModel.refreshProfileOnLogin() }
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneProfileBinding
         get() = FragmentPhoneProfileBinding::inflate

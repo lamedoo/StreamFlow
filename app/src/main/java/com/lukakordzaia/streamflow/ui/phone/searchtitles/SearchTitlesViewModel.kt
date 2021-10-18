@@ -32,6 +32,7 @@ class SearchTitlesViewModel : BaseViewModel() {
     }
 
     fun getSearchTitles(keywords: String, page: Int) {
+        setNoInternet(false)
         viewModelScope.launch {
             setGeneralLoader(LoadingState.LOADING)
             when (val search = environment.searchRepository.getSearchTitles(keywords, page)) {
@@ -45,7 +46,7 @@ class SearchTitlesViewModel : BaseViewModel() {
                     newToastMessage("ძიება - ${search.exception}")
                 }
                 is Result.Internet -> {
-                    setNoInternet()
+                    setNoInternet(true)
                 }
             }
         }
@@ -66,6 +67,7 @@ class SearchTitlesViewModel : BaseViewModel() {
     }
 
     fun getTopFranchises() {
+        setNoInternet(false)
         viewModelScope.launch {
             franchisesLoader.value = LoadingState.LOADING
             when (val franchises = environment.searchRepository.getTopFranchises()) {
@@ -82,9 +84,5 @@ class SearchTitlesViewModel : BaseViewModel() {
                 }
             }
         }
-    }
-
-    fun refreshContent() {
-        getTopFranchises()
     }
 }

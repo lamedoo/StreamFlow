@@ -44,34 +44,6 @@ class CatalogueViewModel : BaseViewModel() {
         navigateToNewFragment(CatalogueFragmentDirections.actionCategoriesFragmentToSingleTitleFragmentNav(titleId))
     }
 
-    private suspend fun getAllGenres() {
-        when (val genres = environment.catalogueRepository.getAllGenres()) {
-            is Result.Success -> {
-                _allGenresList.postValue(genres.data.data)
-            }
-            is Result.Error -> {
-                newToastMessage("ჟანრები - ${genres.exception}")
-            }
-            is Result.Internet -> {
-                setNoInternet()
-            }
-        }
-    }
-
-    private suspend fun getTopStudios() {
-        when (val studios = environment.catalogueRepository.getTopStudios()) {
-            is Result.Success -> {
-                _topStudioList.postValue(studios.data.data)
-            }
-            is Result.Error -> {
-                newToastMessage("სტუდიები - ${studios.exception}")
-            }
-            is Result.Internet -> {
-                setNoInternet()
-            }
-        }
-    }
-
     private suspend fun getTopTrailers() {
         when (val trailers = environment.catalogueRepository.getTopTrailers()) {
             is Result.Success -> {
@@ -87,7 +59,30 @@ class CatalogueViewModel : BaseViewModel() {
         }
     }
 
+    private suspend fun getAllGenres() {
+        when (val genres = environment.catalogueRepository.getAllGenres()) {
+            is Result.Success -> {
+                _allGenresList.postValue(genres.data.data)
+            }
+            is Result.Error -> {
+                newToastMessage("ჟანრები - ${genres.exception}")
+            }
+        }
+    }
+
+    private suspend fun getTopStudios() {
+        when (val studios = environment.catalogueRepository.getTopStudios()) {
+            is Result.Success -> {
+                _topStudioList.postValue(studios.data.data)
+            }
+            is Result.Error -> {
+                newToastMessage("სტუდიები - ${studios.exception}")
+            }
+        }
+    }
+
     fun fetchContent() {
+        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.catalogue
+package com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters
 
 import android.content.Context
 import android.view.LayoutInflater

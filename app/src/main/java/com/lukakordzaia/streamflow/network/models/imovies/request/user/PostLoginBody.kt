@@ -7,12 +7,12 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PostLoginBody(
-    @SerializedName("client_id")
-    val clientId: Int,
-    @SerializedName("grant_type")
-    val grantType: String,
     @SerializedName("password")
     val password: String,
     @SerializedName("username")
-    val username: String
+    val username: String,
+    @SerializedName("client_id")
+    val clientId: Int = 3,
+    @SerializedName("grant_type")
+    val grantType: String = "password",
 ) : Parcelable

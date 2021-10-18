@@ -1,8 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.home
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,17 +11,21 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeDbTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
-import com.lukakordzaia.streamflow.utils.*
+import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setImage
+import com.lukakordzaia.streamflow.utils.setVisible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
-class HomeFragment : BaseFragmentVM<FragmentPhoneHomeBinding, HomeViewModel>() {
+class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel>() {
     override val viewModel by viewModel<HomeViewModel>()
+    override val reload: () -> Unit = { viewModel.fetchContent(1) }
 
     private lateinit var homeDbTitlesAdapter: HomeDbTitlesAdapter
     private lateinit var homeNewMovieAdapter: HomeTitlesAdapter
@@ -82,15 +84,6 @@ class HomeFragment : BaseFragmentVM<FragmentPhoneHomeBinding, HomeViewModel>() {
     }
 
     private fun fragmentObservers() {
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-            if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.fetchContent(1)
-                }, 5000)
-            }
-        })
-
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> {

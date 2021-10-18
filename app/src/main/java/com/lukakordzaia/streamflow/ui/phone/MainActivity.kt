@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.phone
 
-//import com.lukakordzaia.streamflow.utils.setupWithNavController
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -51,9 +50,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpNavigation() {
-        val navHostFragment = supportFragmentManager.findFragmentById(
-            R.id.fr_nav_host
-        ) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fr_nav_host) as NavHostFragment
         navController = navHostFragment.navController
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_main_bottom)

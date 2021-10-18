@@ -1,8 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlestudio
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +9,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
-import com.lukakordzaia.streamflow.utils.*
+import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setVisible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleStudioFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, SingleCategoryViewModel>() {
+class SingleStudioFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, SingleCategoryViewModel>() {
     override val viewModel by viewModel<SingleCategoryViewModel>()
+    override val reload: () -> Unit = { viewModel.getSingleStudio(args.studioId, page) }
 
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private val args: SingleStudioFragmentArgs by navArgs()
@@ -43,15 +44,6 @@ class SingleStudioFragment : BaseFragmentVM<FragmentPhoneSingleCategoryBinding, 
     }
 
     private fun fragmentObservers() {
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-            if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.getSingleStudio(args.studioId, page)
-                }, 5000)
-            }
-        })
-
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> binding.progressBar.setVisible()

@@ -1,8 +1,6 @@
 package com.lukakordzaia.streamflow.ui.phone.catalogue
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +13,19 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneCatalogueBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.helpers.DotsIndicatorDecoration
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
+import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.GenresAdapter
+import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.StudiosAdapter
+import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.TrailersAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
-import com.lukakordzaia.streamflow.utils.*
+import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.main_top_toolbar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CatalogueFragment : BaseFragmentVM<FragmentPhoneCatalogueBinding, CatalogueViewModel>() {
+class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, CatalogueViewModel>() {
     override val viewModel by viewModel<CatalogueViewModel>()
+    override val reload: () -> Unit = { viewModel.fetchContent() }
     private lateinit var genresAdapter: GenresAdapter
     private lateinit var studiosAdapter: StudiosAdapter
     private lateinit var trailersAdapter: TrailersAdapter
@@ -42,15 +45,6 @@ class CatalogueFragment : BaseFragmentVM<FragmentPhoneCatalogueBinding, Catalogu
     }
 
     private fun fragmentObservers() {
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-            if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.fetchContent()
-                }, 5000)
-            }
-        })
-
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> {

@@ -10,13 +10,13 @@ import android.widget.EditText
 import com.lukakordzaia.streamflow.databinding.FragmentTvLoginBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentTvVM
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvLoginFragment: BaseFragmentVM<FragmentTvLoginBinding, ProfileViewModel>() {
+class TvLoginFragment: BaseFragmentTvVM<FragmentTvLoginBinding, ProfileViewModel>() {
     override val viewModel by viewModel<ProfileViewModel>()
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvLoginBinding
@@ -48,8 +48,6 @@ class TvLoginFragment: BaseFragmentVM<FragmentTvLoginBinding, ProfileViewModel>(
             if (!binding.usernameInput.text.isNullOrEmpty() && !binding.passwordInput.text.isNullOrEmpty()) {
                 viewModel.userLogin(
                     PostLoginBody(
-                    3,
-                    "password",
                     binding.passwordInput.text.toString(),
                     binding.usernameInput.text.toString()
                 )

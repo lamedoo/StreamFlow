@@ -4,8 +4,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +20,7 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleTitleBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.ChooseLanguageAdapter
@@ -31,14 +29,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
-class PhoneSingleTitleFragment : BaseFragmentVM<FragmentPhoneSingleTitleBinding, PhoneSingleTitleViewModel>() {
+class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBinding, PhoneSingleTitleViewModel>() {
+    private val args: PhoneSingleTitleFragmentArgs by navArgs()
+
     override val viewModel by viewModel<PhoneSingleTitleViewModel>()
+    override val reload: () -> Unit = { viewModel.fetchContent(args.titleId) }
+
     private val tvShowBottomSheetViewModel: TvShowBottomSheetViewModel by viewModel()
     private lateinit var titleInfo: SingleTitleModel
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var phoneSingleTitleCastAdapter: PhoneSingleTitleCastAdapter
     private lateinit var phoneSingleTitleRelatedAdapter: PhoneSingleTitleRelatedAdapter
-    private val args: PhoneSingleTitleFragmentArgs by navArgs()
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleBinding
         get() = FragmentPhoneSingleTitleBinding::inflate
@@ -125,15 +126,6 @@ class PhoneSingleTitleFragment : BaseFragmentVM<FragmentPhoneSingleTitleBinding,
     }
 
     private fun fragmentObservers() {
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-            if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.fetchContent(args.titleId)
-                }, 5000)
-            }
-        })
-
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> {
