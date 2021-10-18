@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.home.toplistfragments
+package com.lukakordzaia.streamflow.ui.phone.home.toplistfragment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -9,6 +9,7 @@ import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetGenresResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,11 +34,11 @@ class CatalogueViewModel : BaseViewModel() {
     }
 
     fun onSingleGenrePressed(genreId: Int, genreName: String) {
-        navigateToNewFragment(CatalogueFragmentDirections.actionCategoriesFragmentToSingleGenreFragment(genreId, genreName))
+        navigateToNewFragment(CatalogueFragmentDirections.actionCategoriesFragmentToSingleCatalogueFragment(AppConstants.LIST_SINGLE_GENRE, genreId, genreName))
     }
 
     fun onSingleStudioPressed(studioId: Int, studioName: String) {
-        navigateToNewFragment(CatalogueFragmentDirections.actionCategoriesFragmentToSingleStudioFragment(studioId, studioName))
+        navigateToNewFragment(CatalogueFragmentDirections.actionCategoriesFragmentToSingleCatalogueFragment(AppConstants.LIST_SINGLE_STUDIO, studioId, studioName))
     }
 
     fun onSingleTrailerInfoPressed(titleId: Int) {

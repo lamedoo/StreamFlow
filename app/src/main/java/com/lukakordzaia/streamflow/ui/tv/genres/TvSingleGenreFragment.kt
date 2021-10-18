@@ -22,7 +22,7 @@ import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
-import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
+import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCatalogueViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
@@ -32,7 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvSingleGenreFragment : BrowseSupportFragment() {
-    private val singleGenreViewModel: SingleCategoryViewModel by viewModel()
+    private val singleGenreViewModel: SingleCatalogueViewModel by viewModel()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     lateinit var defaultBackground: Drawable
     lateinit var metrics: DisplayMetrics

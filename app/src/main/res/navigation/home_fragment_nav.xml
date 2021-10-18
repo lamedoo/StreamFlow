@@ -69,7 +69,7 @@
     <include app:graph="@navigation/profile_fragment_nav" />
     <fragment
         android:id="@+id/topListFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopListFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.home.toplistfragment.TopListFragment"
         android:label="TopListFragment" >
         <action
             android:id="@+id/action_topListFragment_to_single_title_fragment_nav"

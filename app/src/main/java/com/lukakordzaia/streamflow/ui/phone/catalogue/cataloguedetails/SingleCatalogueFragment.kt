@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre
+package com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,21 +10,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
-import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
-import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SingleGenreFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, SingleCategoryViewModel>() {
+class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, SingleCatalogueViewModel>() {
+    private val args: SingleCatalogueFragmentArgs by navArgs()
     private var page = 1
 
-    override val viewModel by viewModel<SingleCategoryViewModel>()
-    override val reload: () -> Unit = { viewModel.getSingleGenre(args.genreId, page) }
+    override val viewModel by viewModel<SingleCatalogueViewModel>()
+    override val reload: () -> Unit = { viewModel.fetchContent(args.catalogueType, args.catalogueId, page) }
 
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
-    private val args: SingleGenreFragmentArgs by navArgs()
     private var pastVisibleItems: Int = 0
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
@@ -36,12 +34,12 @@ class SingleGenreFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBindi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getSingleGenre(args.genreId, page)
+        viewModel.fetchContent(args.catalogueType, args.catalogueId, page)
 
-        topBarListener(args.genreName, binding.toolbar)
+        topBarListener(args.catalogueName, binding.toolbar)
 
         fragmentObservers()
-        genresContainer()
+        studiosContainer()
     }
 
     private fun fragmentObservers() {
@@ -53,15 +51,15 @@ class SingleGenreFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBindi
         })
     }
 
-    private fun genresContainer() {
+    private fun studiosContainer() {
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
         singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(it, AppConstants.NAV_GENRE_TO_SINGLE)
+            viewModel.onSingleTitlePressed(it)
         }
         binding.rvSingleCategory.adapter = singleCategoryAdapter
         binding.rvSingleCategory.layoutManager = layoutManager
 
-        viewModel.singleGenreList.observe(viewLifecycleOwner, {
+        viewModel.singleCatalogueList.observe(viewLifecycleOwner, {
             singleCategoryAdapter.setItems(it)
         })
 
@@ -85,10 +83,11 @@ class SingleGenreFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBindi
         })
     }
 
+
     private fun fetchMoreTitle() {
         binding.progressBar.setVisible()
         page++
-        viewModel.getSingleGenre(args.genreId, page)
+        viewModel.fetchContent(args.catalogueType, args.catalogueId, page)
         loading = false
     }
 }

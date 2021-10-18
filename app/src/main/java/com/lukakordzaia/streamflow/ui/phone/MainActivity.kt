@@ -17,10 +17,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueFragment
-import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre.SingleGenreFragment
-import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlestudio.SingleStudioFragment
+import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCatalogueFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment
-import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopListFragment
+import com.lukakordzaia.streamflow.ui.phone.home.toplistfragment.TopListFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleFragment
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment
 import com.lukakordzaia.streamflow.ui.phone.phonewatchlist.PhoneWatchlistFragment
@@ -72,9 +71,8 @@ class MainActivity : AppCompatActivity() {
                         showBottomNavigation()
                     }
                     is ProfileFragment,
-                    is SingleGenreFragment,
                     is TopListFragment,
-                    is SingleStudioFragment,
+                    is SingleCatalogueFragment,
                     is PhoneSingleTitleFragment,
                     is TvShowBottomSheetFragment, is VideoPlayerFragment -> {
                         hideBottomNavigation()

@@ -10,16 +10,6 @@
         android:label="fragment_genres_categories"
         tools:layout="@layout/fragment_phone_catalogue" >
         <action
-            android:id="@+id/action_categoriesFragment_to_singleGenreFragment"
-            app:destination="@id/singleGenreFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
-        <action
-            android:id="@+id/action_categoriesFragment_to_singleStudioFragment"
-            app:destination="@id/singleStudioFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
-        <action
             android:id="@+id/action_categoriesFragment_to_video_player_fragment_nav"
             app:destination="@id/video_player_fragment_nav">
             <argument
@@ -33,48 +23,32 @@
                 android:name="titleId"
                 app:argType="integer" />
         </action>
-    </fragment>
-    <fragment
-        android:id="@+id/singleGenreFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlegenre.SingleGenreFragment"
-        android:label="fragment_single_genre"
-        tools:layout="@layout/fragment_phone_single_category" >
-        <argument
-            android:name="genreId"
-            app:argType="integer" />
         <action
-            android:id="@+id/action_singleGenreFragment_to_single_title_fragment_nav"
-            app:destination="@id/single_title_fragment_nav"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left">
-            <argument
-                android:name="titleId"
-                app:argType="integer" />
-        </action>
-        <argument
-            android:name="genreName"
-            app:argType="string" />
+            android:id="@+id/action_categoriesFragment_to_singleCatalogueFragment"
+            app:destination="@id/singleCatalogueFragment" />
     </fragment>
     <include app:graph="@navigation/single_title_fragment_nav" />
+    <include app:graph="@navigation/video_player_fragment_nav" />
     <fragment
-        android:id="@+id/singleStudioFragment"
-        android:name="com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.singlestudio.SingleStudioFragment"
-        android:label="SingleStudioFragment" >
+        android:id="@+id/singleCatalogueFragment"
+        android:name="com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCatalogueFragment"
+        android:label="SingleCatalogueFragment" >
         <argument
-            android:name="studioId"
+            android:name="catalogueType"
             app:argType="integer" />
+        <argument
+            android:name="catalogueId"
+            app:argType="integer" />
+        <argument
+            android:name="catalogueName"
+            app:argType="string" />
         <action
-            android:id="@+id/action_singleStudioFragment_to_single_title_fragment_nav"
-            app:destination="@id/single_title_fragment_nav"
-            app:enterAnim="@anim/slide_in_right"
+            android:id="@+id/action_singleCatalogueFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav"            app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="titleId"
                 app:argType="integer" />
         </action>
-        <argument
-            android:name="studioName"
-            app:argType="string" />
     </fragment>
-    <include app:graph="@navigation/video_player_fragment_nav" />
 </navigation>

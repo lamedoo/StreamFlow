@@ -27,9 +27,9 @@ import com.lukakordzaia.streamflow.repository.watchlistrepository.DefaultWatchli
 import com.lukakordzaia.streamflow.repository.watchlistrepository.WatchlistRepository
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueViewModel
-import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCategoryViewModel
+import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCatalogueViewModel
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
-import com.lukakordzaia.streamflow.ui.phone.home.toplistfragments.TopListViewModel
+import com.lukakordzaia.streamflow.ui.phone.home.toplistfragment.TopListViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.PhoneSingleTitleViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
@@ -46,7 +46,7 @@ val viewModelModule = module {
     viewModel { HomeViewModel() }
     viewModel { PhoneSingleTitleViewModel() }
     viewModel { CatalogueViewModel() }
-    viewModel { SingleCategoryViewModel() }
+    viewModel { SingleCatalogueViewModel() }
     viewModel { SearchTitlesViewModel() }
     viewModel { TvTitleDetailsViewModel() }
     viewModel { TvCatalogueViewModel() }

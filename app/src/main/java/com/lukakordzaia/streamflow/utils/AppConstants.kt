@@ -13,13 +13,7 @@ class AppConstants {
         const val TV_SETTINGS = "პარამეტრები"
 
         const val NAV_HOME_TO_SINGLE = 0
-        const val NAV_TOP_MOVIES_TO_SINGLE = 1
-        const val NAV_TOP_TV_SHOWS_TO_SINGLE = 2
         const val NAV_CONTINUE_WATCHING_TO_SINGLE = 3
-        const val NAV_NEW_MOVIES_TO_SINGLE = 4
-
-        const val NAV_GENRE_TO_SINGLE = 0
-        const val NAV_STUDIO_TO_SINGLE = 1
 
         const val GENRE_ANIMATION = "ანიმაცია"
         const val GENRE_COMEDY = "კომედია"
@@ -31,6 +25,8 @@ class AppConstants {
         const val LIST_NEW_MOVIES = 0
         const val LIST_TOP_MOVIES = 1
         const val LIST_TOP_TV_SHOWS = 2
+        const val LIST_SINGLE_STUDIO = 3
+        const val LIST_SINGLE_GENRE = 4
 
         const val NOT_FOUND_ERROR = "404 ვერ მოიძებნა"
         const val SERVER_ERROR = "500 სერვერთან დაკავშირება ვერ მოხერხდა"

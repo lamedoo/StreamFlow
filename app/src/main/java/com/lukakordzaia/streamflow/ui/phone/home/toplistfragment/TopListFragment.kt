@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.phone.home.toplistfragments
+package com.lukakordzaia.streamflow.ui.phone.home.toplistfragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
