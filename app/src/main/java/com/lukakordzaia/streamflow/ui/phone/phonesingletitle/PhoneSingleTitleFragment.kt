@@ -263,7 +263,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     private fun castContainer() {
         val castLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         phoneSingleTitleCastAdapter = PhoneSingleTitleCastAdapter(requireContext()) {
-            requireContext().createToast(it)
+            viewModel.newToastMessage(it)
         }
         binding.singleTitleCastSimilar.rvSingleTitleCast.layoutManager = castLayout
         binding.singleTitleCastSimilar.rvSingleTitleCast.adapter = phoneSingleTitleCastAdapter

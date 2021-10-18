@@ -19,9 +19,6 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
-    private val _chosenLanguage = MutableLiveData<String>()
-    val chosenLanguage: LiveData<String> = _chosenLanguage
-
     private val _chosenSeason = MutableLiveData<Int>()
     val chosenSeason: LiveData<Int> = _chosenSeason
 
@@ -46,9 +43,10 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
     }
 
     fun getSeasonFiles(titleId: Int, season: Int) {
+        setNoInternet(false)
+        setGeneralLoader(LoadingState.LOADING)
         _chosenSeason.value = season
         viewModelScope.launch {
-            setGeneralLoader(LoadingState.LOADING)
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, season)) {
                 is Result.Success -> {
                     val data = files.data.data

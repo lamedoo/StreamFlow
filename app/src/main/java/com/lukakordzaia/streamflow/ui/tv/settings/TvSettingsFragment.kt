@@ -12,12 +12,12 @@ import com.lukakordzaia.streamflow.databinding.FragmentTvSettingsBinding
 import com.lukakordzaia.streamflow.interfaces.OnSettingsSelected
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSettingsFragment : BaseFragmentVM<FragmentTvSettingsBinding, ProfileViewModel>() {
     override val viewModel by viewModel<ProfileViewModel>()
+    override val reload: () -> Unit = { viewModel.getUserData() }
 
     private var onSettingsSelected: OnSettingsSelected? = null
 
@@ -46,11 +46,6 @@ class TvSettingsFragment : BaseFragmentVM<FragmentTvSettingsBinding, ProfileView
     }
 
     private fun fragmentFocusListeners() {
-        binding.tvSettingsTrakt.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                onSettingsSelected?.getSettingsType(0)
-            }
-        }
         binding.tvSettingsInfo.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 onSettingsSelected?.getSettingsType(1)
@@ -69,12 +64,8 @@ class TvSettingsFragment : BaseFragmentVM<FragmentTvSettingsBinding, ProfileView
     }
 
     private fun fragmentClickListeners() {
-        binding.tvSettingsTrakt.setOnClickListener {
-            requireContext().createToast("ფუნქცია მალე დაემატება")
-        }
-
         binding.tvSettingsInfo.setOnClickListener {
-            requireContext().createToast("ინფორმაცია აპლიკაციის შესახებ")
+            viewModel.newToastMessage("ინფორმაცია აპლიკაციის შესახებ")
         }
 
         binding.tvSettingsDelete.setOnClickListener {

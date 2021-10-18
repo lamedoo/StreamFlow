@@ -18,6 +18,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvLoginFragment: BaseFragmentVM<FragmentTvLoginBinding, ProfileViewModel>() {
     override val viewModel by viewModel<ProfileViewModel>()
+    override val reload: () -> Unit = {
+        viewModel.userLogin(
+            PostLoginBody(
+                binding.passwordInput.text.toString(),
+                binding.usernameInput.text.toString()
+            )
+        )
+    }
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvLoginBinding
         get() = FragmentTvLoginBinding::inflate

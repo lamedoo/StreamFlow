@@ -54,7 +54,6 @@ class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), T
         Handler(Looper.getMainLooper()).postDelayed({
             if (!hasFavorites) {
                 binding.noFavoritesContainer.setVisible()
-                this.createToast("სამწუხაროდ, არ გაქვთ ფავორიტები არჩეული")
             }
         }, 2500)
     }

@@ -28,21 +28,17 @@ class TvSettingsActivity: FragmentActivity(), OnSettingsSelected {
 
     override fun getSettingsType(type: Int) {
         when (type) {
-            0 -> {
-                binding.traktContainer.setVisible()
-                hideViews(listOf(binding.infoContainer, binding.deleteContainer, binding.signOutContainer))
-            }
             1 -> {
                 binding.infoContainer.setVisible()
-                hideViews(listOf(binding.traktContainer, binding.deleteContainer, binding.signOutContainer))
+                hideViews(listOf(binding.deleteContainer, binding.signOutContainer))
             }
             2 -> {
                 binding.deleteContainer.setVisible()
-                hideViews(listOf(binding.traktContainer, binding.infoContainer, binding.signOutContainer))
+                hideViews(listOf(binding.infoContainer, binding.signOutContainer))
             }
             3 -> {
                 binding.signOutContainer.setVisible()
-                hideViews(listOf(binding.traktContainer, binding.infoContainer, binding.deleteContainer))
+                hideViews(listOf(binding.infoContainer, binding.deleteContainer))
 
                 if (sharedPreferences.getLoginToken() != "") {
                     profileViewModel.userData.observe(this, {

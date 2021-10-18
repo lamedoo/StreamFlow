@@ -23,9 +23,6 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
 
-    private val _dataLoader = MutableLiveData<LoadingState>()
-    val dataLoader: LiveData<LoadingState> = _dataLoader
-
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
@@ -45,13 +42,13 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     fun getSingleTitleData(titleId: Int) {
         fetchTitleGenres.clear()
         viewModelScope.launch {
-            _dataLoader.value = LoadingState.LOADING
+            setGeneralLoader(LoadingState.LOADING)
             when (val info = environment.singleTitleRepository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
                     val data = info.data
                     _singleTitleData.value = data.toSingleTitleModel()
 
-                    _dataLoader.value = LoadingState.LOADED
+                    setGeneralLoader(LoadingState.LOADED)
 
                     if (sharedPreferences.getLoginToken() == "") {
                         getSingleContinueWatchingFromRoom(titleId)
@@ -112,7 +109,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
                     hideContinueWatchingLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
+                    hideContinueWatchingLoader.value = LoadingState.ERROR
                 }
                 is Result.Internet -> {
                     setNoInternet()

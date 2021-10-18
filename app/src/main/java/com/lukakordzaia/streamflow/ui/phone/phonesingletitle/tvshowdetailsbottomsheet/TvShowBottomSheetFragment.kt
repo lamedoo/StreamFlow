@@ -4,8 +4,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,17 +20,19 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseBottomSheetVM
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.ChooseLanguageAdapter
-import com.lukakordzaia.streamflow.utils.*
+import com.lukakordzaia.streamflow.utils.setGone
+import com.lukakordzaia.streamflow.utils.setVisible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvShowBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomSheetBinding, TvShowBottomSheetViewModel>() {
+    private val args: TvShowBottomSheetFragmentArgs by navArgs()
     override val viewModel by viewModel<TvShowBottomSheetViewModel>()
+    override val reload: () -> Unit = { viewModel.getSeasonFiles(args.titleId, 1) }
 
     private lateinit var tvShowBottomSheetEpisodesAdapter: TvShowBottomSheetEpisodesAdapter
     private lateinit var tvShowBottomSheetSeasonAdapter: TvShowBottomSheetSeasonAdapter
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
-    private val args: TvShowBottomSheetFragmentArgs by navArgs()
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneTvShowBottomSheetBinding
         get() = FragmentPhoneTvShowBottomSheetBinding::inflate
@@ -71,15 +71,6 @@ class TvShowBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomShe
     }
 
     private fun fragmentObservers() {
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver { noInternet ->
-            if (noInternet) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.getSeasonFiles(args.titleId, 1)
-                }, 5000)
-            }
-        })
-
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> binding.detailsProgressBar.setVisible()

@@ -2,6 +2,7 @@ package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewbinding.ViewBinding
 import com.lukakordzaia.streamflow.R
@@ -12,11 +13,19 @@ import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 abstract class BaseFragmentVM<VB: ViewBinding, VM: BaseViewModel> : BaseFragment<VB>() {
     protected abstract val viewModel: VM
+    protected abstract val reload: () -> Unit
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initObservers()
+        initListeners()
+    }
+
+    private fun initListeners() {
+        requireActivity().findViewById<Button>(R.id.retry_button).setOnClickListener {
+            reload.invoke()
+        }
     }
 
     private fun initObservers() {

@@ -5,8 +5,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +30,13 @@ import java.util.concurrent.TimeUnit
 
 
 class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvTitleDetailsViewModel>() {
+    var titleId: Int = 0
+
     override val viewModel by viewModel<TvTitleDetailsViewModel>()
+    override val reload: () -> Unit = {
+        viewModel.getSingleTitleData(titleId)
+        viewModel.getSingleTitleFiles(titleId)
+    }
 
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var titleInfo: SingleTitleModel
@@ -44,7 +48,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val titleId = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as Int
+        titleId = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as Int
         val isTvShow = activity?.intent?.getSerializableExtra(AppConstants.IS_TV_SHOW) as Boolean
         val continueWatching = activity?.intent?.getSerializableExtra(AppConstants.CONTINUE_WATCHING_NOW) as? Boolean
         val fromWatchlist = activity?.intent?.getSerializableExtra(AppConstants.FROM_WATCHLIST) as? Int
@@ -106,21 +110,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
             startedWatching = it
         })
 
-        viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
-        })
-
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-            if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.getSingleTitleData(titleId)
-                    viewModel.getSingleTitleFiles(titleId)
-                }, 5000)
-            }
-        })
-
-        viewModel.dataLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> binding.tvDetailsProgressBar.setVisible()
                 LoadingState.LOADED -> {
@@ -154,7 +144,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
                     startActivity(intent)
                 }
                 LoadingState.ERROR -> {
-                    viewModel.newToastMessage("სამწუხაროდ, ვერ მოხეხრდა სიიდან წაშლა")
+                    viewModel.newToastMessage("სამწუხაროდ, ვერ მოხეხრდა სიიდან დამალვა")
                 }
             }
         })
@@ -203,7 +193,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
                 if (it.trailer != null) {
                     playTitleTrailer(titleId, isTvShow, it.trailer)
                 } else {
-                    requireContext().createToast("ტრეილერი ვერ მოიძებნა")
+                    viewModel.newToastMessage("ტრეილერი ვერ მოიძებნა")
                 }
             }
 
