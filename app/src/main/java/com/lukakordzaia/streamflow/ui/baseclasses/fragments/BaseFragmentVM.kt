@@ -23,7 +23,7 @@ abstract class BaseFragmentVM<VB: ViewBinding, VM: BaseViewModel> : BaseFragment
     }
 
     private fun initListeners() {
-        requireActivity().findViewById<Button>(R.id.retry_button).setOnClickListener {
+        requireActivity().findViewById<Button>(R.id.retry_button)?.setOnClickListener {
             reload.invoke()
         }
     }

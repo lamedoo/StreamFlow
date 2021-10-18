@@ -143,4 +143,9 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <include
+        android:id="@+id/no_internet"
+        layout="@layout/no_internet_layout"
+        tools:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

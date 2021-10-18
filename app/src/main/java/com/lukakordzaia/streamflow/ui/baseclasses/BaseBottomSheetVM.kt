@@ -39,7 +39,7 @@ abstract class BaseBottomSheetVM<VB: ViewBinding, VM: BaseViewModel> : BottomShe
     }
 
     private fun initListeners() {
-        requireActivity().findViewById<Button>(R.id.retry_button).setOnClickListener {
+        requireActivity().findViewById<Button>(R.id.retry_button)?.setOnClickListener {
             reload.invoke()
         }
     }
