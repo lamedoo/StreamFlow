@@ -64,11 +64,12 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
 
                         if (sharedPreferences.getLoginToken() == "") {
                             data.forEach {
-                                getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+                                getEpisodeNames.add(TitleEpisodes(titleId, it.episode, it.title, it.covers.x1050!!))
                             }
                         } else {
                             data.forEach {
                                 getEpisodeNames.add(TitleEpisodes(
+                                    titleId,
                                     it.episode,
                                     it.title,
                                     it.covers.x1050!!,

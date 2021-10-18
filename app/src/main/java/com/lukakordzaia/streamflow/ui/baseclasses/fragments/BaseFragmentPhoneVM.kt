@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.baseclasses
+package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 
 import android.os.Bundle
 import android.view.View
@@ -6,6 +6,7 @@ import android.widget.Button
 import androidx.viewbinding.ViewBinding
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentTopToolbarBinding
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.navController
 

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lukakordzaia.streamflow.databinding.FragmentTvTitleFilesBinding
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity.Companion.VIDEO_PLAYER
 
 class TvVideoPlayerDetailsFragment : BaseFragment<FragmentTvTitleFilesBinding>() {

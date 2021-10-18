@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.baseclasses
+package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

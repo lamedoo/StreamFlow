@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.baseclasses
+package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 
 import android.content.res.ColorStateList
 import android.graphics.Typeface

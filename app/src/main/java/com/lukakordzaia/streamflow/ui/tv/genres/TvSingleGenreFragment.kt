@@ -2,41 +2,21 @@ package com.lukakordzaia.streamflow.ui.tv.genres
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.DisplayMetrics
-import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
-import androidx.leanback.app.BackgroundManager
-import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseBrowseSupportFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCatalogueViewModel
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvHeaderItemPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
-import com.lukakordzaia.streamflow.utils.EventObserver
-import com.lukakordzaia.streamflow.utils.createToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TvSingleGenreFragment : BrowseSupportFragment() {
-    private val singleGenreViewModel: SingleCatalogueViewModel by viewModel()
-    private lateinit var rowsAdapter: ArrayObjectAdapter
-    lateinit var defaultBackground: Drawable
-    lateinit var metrics: DisplayMetrics
-    lateinit var backgroundManager: BackgroundManager
+class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel>() {
+    override val viewModel by viewModel<SingleCatalogueViewModel>()
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
@@ -53,91 +33,55 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         onFirstItem = null
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        headersState = HEADERS_DISABLED
-
-        val listRowPresenter = CustomListRowPresenter().apply {
-            shadowEnabled = false
-            selectEffectEnabled = false
-        }
-        rowsAdapter = ArrayObjectAdapter(listRowPresenter)
-
-        setHeaderPresenterSelector(object : PresenterSelector() {
-            override fun getPresenter(item: Any?): Presenter {
-                return TvHeaderItemPresenter()
-            }
-        })
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = super.onCreateView(inflater, container, savedInstanceState)
-        val containerDock = view!!.findViewById<View>(R.id.browse_container_dock) as FrameLayout
-        val params = containerDock.layoutParams as ViewGroup.MarginLayoutParams
-        val resources: Resources = inflater.context.resources
-        val newHeaderMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, resources.displayMetrics).toInt()
-        val offsetToZero: Int = -resources.getDimensionPixelSize(R.dimen.lb_browse_rows_margin_top)
-        params.topMargin = offsetToZero + newHeaderMargin
-        containerDock.layoutParams = params
-        return view
-    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        singleGenreViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-            if (it) {
-                requireContext().createToast(AppConstants.NO_INTERNET)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    singleGenreViewModel.getSingleGenreForTv(265, 1)
-                    singleGenreViewModel.getSingleGenreForTv(258, 1)
-                    singleGenreViewModel.getSingleGenreForTv(260, 1)
-                    singleGenreViewModel.getSingleGenreForTv(255, 1)
-                    singleGenreViewModel.getSingleGenreForTv(266, 1)
-                    singleGenreViewModel.getSingleGenreForTv(248, 1)
-                }, 5000)
-            }
-        })
+//        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+//            if (it) {
+//                requireContext().createToast(AppConstants.NO_INTERNET)
+//                Handler(Looper.getMainLooper()).postDelayed({
+//                    viewModel.getSingleGenreForTv(265, 1)
+//                    viewModel.getSingleGenreForTv(258, 1)
+//                    viewModel.getSingleGenreForTv(260, 1)
+//                    viewModel.getSingleGenreForTv(255, 1)
+//                    viewModel.getSingleGenreForTv(266, 1)
+//                    viewModel.getSingleGenreForTv(248, 1)
+//                }, 5000)
+//            }
+//        })
 
-        singleGenreViewModel.getSingleGenreForTv(265, 1)
-        singleGenreViewModel.getSingleGenreForTv(258, 1)
-        singleGenreViewModel.getSingleGenreForTv(260, 1)
-        singleGenreViewModel.getSingleGenreForTv(255, 1)
-        singleGenreViewModel.getSingleGenreForTv(266, 1)
-        singleGenreViewModel.getSingleGenreForTv(248, 1)
+        viewModel.getSingleGenreForTv(265, 1)
+        viewModel.getSingleGenreForTv(258, 1)
+        viewModel.getSingleGenreForTv(260, 1)
+        viewModel.getSingleGenreForTv(255, 1)
+        viewModel.getSingleGenreForTv(266, 1)
+        viewModel.getSingleGenreForTv(248, 1)
 
-        singleGenreViewModel.singleGenreAnimation.observe(viewLifecycleOwner, {
+        viewModel.singleGenreAnimation.observe(viewLifecycleOwner, {
             firstCategoryAdapter(it)
         })
 
-        singleGenreViewModel.singleGenreComedy.observe(viewLifecycleOwner, {
+        viewModel.singleGenreComedy.observe(viewLifecycleOwner, {
             secondCategoryAdapter(it)
         })
 
-        singleGenreViewModel.singleGenreMelodrama.observe(viewLifecycleOwner, {
+        viewModel.singleGenreMelodrama.observe(viewLifecycleOwner, {
             thirdCategoryAdapter(it)
         })
 
-        singleGenreViewModel.singleGenreHorror.observe(viewLifecycleOwner, {
+        viewModel.singleGenreHorror.observe(viewLifecycleOwner, {
             fourthCategoryAdapter(it)
         })
 
-        singleGenreViewModel.singleGenreAdventure.observe(viewLifecycleOwner, {
+        viewModel.singleGenreAdventure.observe(viewLifecycleOwner, {
             fifthCategoryAdapter(it)
         })
 
-        singleGenreViewModel.singleGenreAction.observe(viewLifecycleOwner, {
+        viewModel.singleGenreAction.observe(viewLifecycleOwner, {
             sixthCategoryAdapter(it)
         })
 
-        prepareBackgroundManager()
-        setupUIElements()
-        setupEventListeners()
-
-        singleGenreViewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
-            requireContext().createToast(it)
-        })
+        setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }
 
     private fun firstCategoryAdapter(category: List<SingleTitleModel>) {
@@ -210,27 +154,6 @@ class TvSingleGenreFragment : BrowseSupportFragment() {
         HeaderItem(5, AppConstants.GENRE_ACTION).also { header ->
             rowsAdapter.add(ListRow(header, listRowAdapter))
         }
-    }
-
-    private fun prepareBackgroundManager() {
-        backgroundManager = BackgroundManager.getInstance(activity).apply {
-            attach(activity?.window)
-        }
-
-        metrics = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
-    }
-
-    private fun setupUIElements() {
-        isHeadersTransitionOnBackEnabled = true
-        brandColor = ContextCompat.getColor(requireContext(), R.color.secondary_color)
-        adapter = rowsAdapter
-    }
-
-    private fun setupEventListeners() {
-
-        onItemViewClickedListener = ItemViewClickedListener()
-        onItemViewSelectedListener = ItemViewSelectedListener()
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {

@@ -1,10 +1,11 @@
-package com.lukakordzaia.streamflow.ui.baseclasses
+package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 
 import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewbinding.ViewBinding
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.createToast
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone

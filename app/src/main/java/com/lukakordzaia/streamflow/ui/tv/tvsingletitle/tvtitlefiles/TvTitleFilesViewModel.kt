@@ -78,10 +78,10 @@ class TvTitleFilesViewModel : BaseViewModel() {
         _chosenEpisode.value = episodeNum
     }
 
-    fun getSeasonFiles(movieId: Int, season: Int) {
+    fun getSeasonFiles(titleId: Int, season: Int) {
         _chosenSeason.value = season
         viewModelScope.launch {
-            when (val files = environment.singleTitleRepository.getSingleTitleFiles(movieId, season)) {
+            when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, season)) {
                 is Result.Success -> {
                     val data = files.data.data
 
@@ -94,11 +94,12 @@ class TvTitleFilesViewModel : BaseViewModel() {
                     val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
                     if (sharedPreferences.getLoginToken() == "") {
                         data.forEach {
-                            getEpisodeNames.add(TitleEpisodes(it.episode, it.title, it.covers.x1050!!))
+                            getEpisodeNames.add(TitleEpisodes(titleId, it.episode, it.title, it.covers.x1050!!))
                         }
                     } else {
                         data.forEach {
                             getEpisodeNames.add(TitleEpisodes(
+                                titleId,
                                 it.episode,
                                 it.title,
                                 it.covers.x1050!!,

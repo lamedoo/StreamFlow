@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.datamodels
 
 data class TitleEpisodes(
+        val titleId: Int,
         val episodeNum: Int,
         val episodeName: String,
         val episodePoster: String,

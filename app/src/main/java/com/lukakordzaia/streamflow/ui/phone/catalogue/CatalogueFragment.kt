@@ -13,7 +13,7 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneCatalogueBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.helpers.DotsIndicatorDecoration
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentPhoneVM
+import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.GenresAdapter
 import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.StudiosAdapter
 import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.TrailersAdapter

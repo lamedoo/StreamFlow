@@ -13,7 +13,7 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.PhoneExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVideoPlayerFragment
 import com.lukakordzaia.streamflow.utils.setGone
 
 class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBinding>() {

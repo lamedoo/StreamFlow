@@ -16,7 +16,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseVideoPlayerFragment
+import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVideoPlayerFragment
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.videoPlayerPosition
