@@ -31,14 +31,18 @@ import kotlinx.android.synthetic.main.tv_details_season_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
-    override val viewModel by viewModel<TvTitleFilesViewModel>()
-    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
-
-    private var hasFocus = false
-
     var titleId: Int? = 0
     var isTvShow: Boolean? = false
 
+    override val viewModel by viewModel<TvTitleFilesViewModel>()
+    override val reload: () -> Unit = {
+        setSeasonsAndEpisodes(titleId!!, isTvShow!!)
+        setTitleCast(titleId!!, isTvShow!!)
+        setTitleRelated(titleId!!, isTvShow!!)
+    }
+    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
+
+    private var hasFocus = false
     private var focusedSeason = 0
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -59,13 +63,8 @@ class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
         val isTvShowFromDetails = activity?.intent?.getSerializableExtra(AppConstants.IS_TV_SHOW) as? Boolean
         val videoPlayerData = activity?.intent?.getParcelableExtra(AppConstants.VIDEO_PLAYER_DATA) as? VideoPlayerData
 
-        if (titleIdFromDetails == null) {
-            titleId = videoPlayerData?.titleId
-            isTvShow = videoPlayerData?.isTvShow
-        } else {
-            titleId = titleIdFromDetails
-            isTvShow = isTvShowFromDetails
-        }
+        titleId = titleIdFromDetails ?: videoPlayerData?.titleId
+        isTvShow = isTvShowFromDetails ?: videoPlayerData?.isTvShow
 
         initRowsAdapter(isTvShow!!)
         setTitleCast(titleId!!, isTvShow!!)

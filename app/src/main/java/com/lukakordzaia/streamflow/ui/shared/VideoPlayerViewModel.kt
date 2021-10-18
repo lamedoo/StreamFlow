@@ -87,6 +87,7 @@ class VideoPlayerViewModel : BaseViewModel() {
     }
 
     fun getTitleFiles(videoPlayerInfo: VideoPlayerInfo) {
+        setNoInternet(false)
         _videoPlayerInfo.value = VideoPlayerInfo(videoPlayerInfo.titleId,
                 videoPlayerInfo.isTvShow,
                 videoPlayerInfo.chosenSeason,
@@ -126,6 +127,9 @@ class VideoPlayerViewModel : BaseViewModel() {
                 }
                 is Result.Error -> {
                     Log.d("errornextepisode", files.exception)
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }

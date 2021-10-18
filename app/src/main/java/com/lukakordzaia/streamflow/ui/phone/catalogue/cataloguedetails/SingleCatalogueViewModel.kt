@@ -9,7 +9,9 @@ import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.toTitleListModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SingleCatalogueViewModel : BaseViewModel() {
     private val fetchSingleCatalogueList: MutableList<SingleTitleModel> = ArrayList()
@@ -61,8 +63,7 @@ class SingleCatalogueViewModel : BaseViewModel() {
         }
     }
 
-    fun getSingleGenreForTv(genreId: Int, page: Int) {
-        viewModelScope.launch {
+    private suspend fun getSingleGenreForTv(genreId: Int, page: Int = 1) {
             when (val singleGenre = environment.catalogueRepository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
                     val data = singleGenre.data.data
@@ -82,7 +83,6 @@ class SingleCatalogueViewModel : BaseViewModel() {
                     setNoInternet()
                 }
             }
-        }
     }
 
     private fun getSingleStudio(studioId: Int, page: Int) {
@@ -114,6 +114,25 @@ class SingleCatalogueViewModel : BaseViewModel() {
             }
             AppConstants.LIST_SINGLE_GENRE -> {
                 getSingleGenre(catalogueId, page)
+            }
+        }
+    }
+
+    fun fetchContentTv() {
+        setNoInternet(false)
+        setGeneralLoader(LoadingState.LOADING)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val getData = viewModelScope.launch {
+                    getSingleGenreForTv(265)
+                    getSingleGenreForTv(258)
+                    getSingleGenreForTv(260)
+                    getSingleGenreForTv(255)
+                    getSingleGenreForTv(266)
+                    getSingleGenreForTv(248)
+                }
+                getData.join()
+                setGeneralLoader(LoadingState.LOADED)
             }
         }
     }

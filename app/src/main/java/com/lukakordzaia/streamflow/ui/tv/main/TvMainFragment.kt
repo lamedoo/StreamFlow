@@ -25,8 +25,10 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
-    override val viewModel by viewModel<HomeViewModel>()
     private val sharedPreferences: SharedPreferences by inject()
+    override val viewModel by viewModel<HomeViewModel>()
+    override val reload: () -> Unit = { viewModel.fetchContent(1) }
+
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null

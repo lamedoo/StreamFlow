@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -23,6 +24,7 @@ import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 abstract class BaseBrowseSupportFragment<VM: BaseViewModel>: BrowseSupportFragment() {
     protected abstract val viewModel: VM
     protected lateinit var rowsAdapter: ArrayObjectAdapter
+    protected abstract val reload: () -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,5 +97,11 @@ abstract class BaseBrowseSupportFragment<VM: BaseViewModel>: BrowseSupportFragme
         viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)
         })
+    }
+
+    private fun initListeners() {
+        requireActivity().findViewById<Button>(R.id.retry_button).setOnClickListener {
+            reload.invoke()
+        }
     }
 }

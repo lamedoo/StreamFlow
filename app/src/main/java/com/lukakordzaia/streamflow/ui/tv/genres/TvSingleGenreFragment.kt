@@ -17,6 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel>() {
     override val viewModel by viewModel<SingleCatalogueViewModel>()
+    override val reload: () -> Unit = { viewModel.fetchContentTv() }
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
@@ -35,28 +36,14 @@ class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.fetchContentTv()
 
-//        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
-//            if (it) {
-//                requireContext().createToast(AppConstants.NO_INTERNET)
-//                Handler(Looper.getMainLooper()).postDelayed({
-//                    viewModel.getSingleGenreForTv(265, 1)
-//                    viewModel.getSingleGenreForTv(258, 1)
-//                    viewModel.getSingleGenreForTv(260, 1)
-//                    viewModel.getSingleGenreForTv(255, 1)
-//                    viewModel.getSingleGenreForTv(266, 1)
-//                    viewModel.getSingleGenreForTv(248, 1)
-//                }, 5000)
-//            }
-//        })
+        fragmentObservers()
 
-        viewModel.getSingleGenreForTv(265, 1)
-        viewModel.getSingleGenreForTv(258, 1)
-        viewModel.getSingleGenreForTv(260, 1)
-        viewModel.getSingleGenreForTv(255, 1)
-        viewModel.getSingleGenreForTv(266, 1)
-        viewModel.getSingleGenreForTv(248, 1)
+        setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
+    }
 
+    private fun fragmentObservers() {
         viewModel.singleGenreAnimation.observe(viewLifecycleOwner, {
             firstCategoryAdapter(it)
         })
@@ -81,7 +68,6 @@ class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel
             sixthCategoryAdapter(it)
         })
 
-        setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }
 
     private fun firstCategoryAdapter(category: List<SingleTitleModel>) {

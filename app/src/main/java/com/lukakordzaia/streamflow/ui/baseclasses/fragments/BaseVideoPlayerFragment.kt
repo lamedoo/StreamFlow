@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -71,9 +72,16 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         videoPlayerData = requireActivity().intent!!.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
 
+        initObservers()
         playerHasStarted()
         setUpPlayer()
         mediaPlayer.setPlayerListener(MediaTransitionListener())
+    }
+
+    private fun initObservers() {
+        videoPlayerViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+            requireActivity().findViewById<ConstraintLayout>(R.id.no_internet).setVisibleOrGone(it)
+        })
     }
 
     private fun playerHasStarted() {
