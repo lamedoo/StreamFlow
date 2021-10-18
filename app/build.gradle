@@ -15,8 +15,8 @@ android {
         applicationId "com.lukakordzaia.streamflow"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 40
-        versionName "2.0.5"
+        versionCode 41
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
