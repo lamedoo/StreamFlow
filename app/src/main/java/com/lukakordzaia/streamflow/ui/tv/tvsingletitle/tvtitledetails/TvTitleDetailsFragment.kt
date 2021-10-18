@@ -21,7 +21,7 @@ import com.lukakordzaia.streamflow.databinding.FragmentTvTitleDetailsBinding
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentTvVM
+import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity.Companion.TITLE_DETAILS
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.TvTitleFilesFragment
@@ -31,7 +31,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
-class TvTitleDetailsFragment : BaseFragmentTvVM<FragmentTvTitleDetailsBinding, TvTitleDetailsViewModel>() {
+class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvTitleDetailsViewModel>() {
     override val viewModel by viewModel<TvTitleDetailsViewModel>()
 
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter

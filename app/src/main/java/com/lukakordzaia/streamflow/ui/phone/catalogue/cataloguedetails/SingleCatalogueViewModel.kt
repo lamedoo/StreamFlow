@@ -41,7 +41,7 @@ class SingleCatalogueViewModel : BaseViewModel() {
         navigateToNewFragment(SingleCatalogueFragmentDirections.actionSingleCatalogueFragmentToSingleTitleFragmentNav(titleId))
     }
 
-    fun getSingleGenre(genreId: Int, page: Int) {
+    private fun getSingleGenre(genreId: Int, page: Int) {
         viewModelScope.launch {
             when (val singleGenre = environment.catalogueRepository.getSingleGenre(genreId, page)) {
                 is Result.Success -> {
@@ -85,7 +85,7 @@ class SingleCatalogueViewModel : BaseViewModel() {
         }
     }
 
-    fun getSingleStudio(studioId: Int, page: Int) {
+    private fun getSingleStudio(studioId: Int, page: Int) {
         viewModelScope.launch {
             when (val singleStudio = environment.catalogueRepository.getSingleStudio(studioId, page)) {
                 is Result.Success -> {
