@@ -56,6 +56,9 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
     protected var mediaItemsPlayed = 0
     protected var episodeHasEnded = false
 
+    private var lastEpisode: Int = 0
+    private var numOfSeasons: Int = 0
+
     protected fun autoBackPress(backPress: () -> Unit) = object : CountDownTimer(500000, 1000) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
@@ -81,6 +84,14 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
     private fun initObservers() {
         videoPlayerViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             requireActivity().findViewById<ConstraintLayout>(R.id.no_internet).setVisibleOrGone(it)
+        })
+
+        videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, {
+            lastEpisode = it
+        })
+
+        videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, {
+            numOfSeasons = it
         })
     }
 
@@ -165,18 +176,10 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
     }
 
     fun nextButtonClickListener(nextButton: ImageButton, view: PlayerView) {
-        if (videoPlayerInfo.isTvShow) {
-            videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
-                videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
-                    nextButton.setVisibleOrGone(!(numOfSeasons == videoPlayerInfo.chosenSeason && videoPlayerInfo.chosenEpisode == lastEpisode))
-                })
+        nextButton.setVisibleOrGone(!(videoPlayerInfo.chosenSeason == numOfSeasons && videoPlayerInfo.chosenEpisode == lastEpisode) && videoPlayerInfo.isTvShow)
 
-                nextButton.setOnClickListener {
-                    nextButtonFunction(videoPlayerInfo.chosenEpisode == lastEpisode, view)
-                }
-            })
-        } else {
-            nextButton.setGone()
+        nextButton.setOnClickListener {
+            nextButtonFunction(videoPlayerInfo.chosenEpisode == lastEpisode, view)
         }
     }
 
@@ -195,6 +198,21 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         mediaPlayer.initPlayer(view, 0, 0L)
     }
 
+    fun stateHasEnded(nextButton: ImageButton) {
+        if (episodeHasEnded) {
+            if (videoPlayerInfo.isTvShow) {
+                if (!(videoPlayerInfo.chosenSeason == numOfSeasons && videoPlayerInfo.chosenEpisode == lastEpisode)) {
+                    mediaItemsPlayed++
+                    nextButton.callOnClick()
+                } else {
+                    requireActivity().onBackPressed()
+                }
+            } else {
+                requireActivity().onBackPressed()
+            }
+        }
+    }
+
     fun saveCurrentProgress() {
         videoPlayerViewModel.setVideoPlayerInfo(
             PlayerDurationInfo(
@@ -208,26 +226,6 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         }
     }
 
-    fun stateHasEnded(nextButton: ImageButton) {
-        if (episodeHasEnded) {
-            if (videoPlayerInfo.isTvShow) {
-                videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, { lastEpisode ->
-                    videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
-                        if (!(numOfSeasons == videoPlayerInfo.chosenSeason && videoPlayerInfo.chosenEpisode == lastEpisode)) {
-                            mediaItemsPlayed++
-                            nextButton.callOnClick()
-                            episodeHasEnded = false
-                        } else {
-                            requireActivity().onBackPressed()
-                        }
-                    })
-                })
-            } else {
-                requireActivity().onBackPressed()
-            }
-        }
-    }
-
     fun releasePlayer() {
         mediaPlayer.releasePlayer {
             videoPlayerViewModel.setVideoPlayerInfo(it)
@@ -238,7 +236,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         }
     }
 
-    fun showContinueWatchingDialog(continueWatching: ContinueWatchingDialogBinding, stop: () -> Unit) {
+    fun showContinueWatchingDialog(continueWatching: ContinueWatchingDialogBinding) {
         if (mediaItemsPlayed == 3) {
             videoPlayerViewModel.addContinueWatching()
             player.pause()
@@ -251,7 +249,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
             }
 
             continueWatching.goBackButton.setOnClickListener {
-                stop.invoke()
+                requireActivity().onBackPressed()
             }
             continueWatching.confirmButton.requestFocus()
 

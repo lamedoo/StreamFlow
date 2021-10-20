@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.tv.tvvideoplayer
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -17,7 +16,6 @@ import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVideoPlayerFragment
-import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.videoPlayerPosition
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
@@ -92,12 +90,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             when (state) {
                 Player.STATE_READY -> {
                     episodeHasEnded = true
-
-                    showContinueWatchingDialog(binding.continueWatching) {
-                        val intent = Intent(requireContext(), TvActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                    }
+                    showContinueWatchingDialog(binding.continueWatching)
 
                     tracker = ProgressTracker(player, object :
                         PositionListener {

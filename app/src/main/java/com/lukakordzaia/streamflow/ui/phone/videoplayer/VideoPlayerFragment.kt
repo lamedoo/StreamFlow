@@ -88,10 +88,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
             when (state) {
                 Player.STATE_READY -> {
                     episodeHasEnded = true
-
-                    showContinueWatchingDialog(binding.continueWatching) {
-                        requireActivity().onBackPressed()
-                    }
+                    showContinueWatchingDialog(binding.continueWatching)
                 }
                 Player.STATE_ENDED -> {
                     stateHasEnded(playerBinding.nextEpisode)
