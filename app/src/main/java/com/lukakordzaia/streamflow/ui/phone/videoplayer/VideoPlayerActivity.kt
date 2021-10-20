@@ -27,7 +27,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_fragment) as VideoPlayerFragment
         parentFragment.releasePlayer()
 
-        if (videoPlayerData.trailerUrl == null || sharedPreferences.getLoginToken() != null) {
+        if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
             super.onBackPressed()
         } else {
             videoPlayerViewModel.saveLoader.observe(this, {

@@ -219,7 +219,7 @@ class TvVideoPlayerActivity : FragmentActivity() {
         val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
         parentFragment.releasePlayer()
 
-        if (videoPlayerData.trailerUrl == null || sharedPreferences.getLoginToken() != null) {
+        if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
             super.onBackPressed()
         } else {
             videoPlayerViewModel.saveLoader.observe(this, {
