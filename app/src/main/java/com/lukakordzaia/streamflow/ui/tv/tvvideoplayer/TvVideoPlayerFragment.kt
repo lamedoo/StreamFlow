@@ -23,6 +23,10 @@ import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 
 class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBinding>() {
     private lateinit var playerBinding: TvExoplayerControllerLayoutBinding
+    override val reload: () -> Unit = {
+        viewModel.getTitleFiles(videoPlayerInfo)
+        viewModel.getSingleTitleData(videoPlayerData.titleId)
+    }
 
     private var tracker: ProgressTracker? = null
 
@@ -49,7 +53,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             requireActivity().onBackPressed()
         }
 
-        videoPlayerViewModel.videoPlayerInfo.observe(viewLifecycleOwner, {
+        viewModel.videoPlayerInfo.observe(viewLifecycleOwner, {
             videoPlayerInfo = it
             nextButtonClickListener(playerBinding.nextEpisode, binding.tvTitlePlayer)
 
@@ -121,7 +125,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             ))
             subtitleFunctions(false)
         } else {
-            videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
+            viewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
 
                 subtitleFunctions(it.titleSubUri.isNotEmpty() && it.titleSubUri != "0")

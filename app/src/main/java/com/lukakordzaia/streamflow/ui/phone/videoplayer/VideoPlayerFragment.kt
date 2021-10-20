@@ -18,6 +18,11 @@ import com.lukakordzaia.streamflow.utils.setGone
 
 class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBinding>() {
     private lateinit var playerBinding: PhoneExoplayerControllerLayoutBinding
+    override val reload: () -> Unit = {
+        viewModel.getTitleFiles(videoPlayerInfo)
+        viewModel.getSingleTitleData(videoPlayerData.titleId)
+    }
+
 
     private val autoBackPress = autoBackPress {
         requireActivity().onBackPressed()
@@ -47,7 +52,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
             requireActivity().onBackPressed()
         }
 
-        videoPlayerViewModel.videoPlayerInfo.observe(viewLifecycleOwner, {
+        viewModel.videoPlayerInfo.observe(viewLifecycleOwner, {
             videoPlayerInfo = it
             nextButtonClickListener(playerBinding.nextEpisode, binding.phoneTitlePlayer)
             prevButtonClickListener()
@@ -112,7 +117,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
                 prevButton.setOnClickListener {
                     mediaItemsPlayed = 0
                     player.clearMediaItems()
-                    videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
+                    viewModel.getTitleFiles(VideoPlayerInfo(
                         videoPlayerInfo.titleId,
                         videoPlayerInfo.isTvShow,
                         videoPlayerInfo.chosenSeason,
@@ -136,7 +141,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
             ))
             subtitleFunctions(false)
         } else {
-            videoPlayerViewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
+            viewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
 
                 subtitleFunctions(it.titleSubUri.isNotEmpty() && it.titleSubUri != "0")

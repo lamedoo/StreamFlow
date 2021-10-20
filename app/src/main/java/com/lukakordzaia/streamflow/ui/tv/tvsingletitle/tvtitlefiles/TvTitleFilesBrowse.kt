@@ -206,7 +206,7 @@ class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
 
                     val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
                     chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
-                        chooseLanguageDialog.hide()
+                        chooseLanguageDialog.dismiss()
                         playEpisode(item.titleId, it)
                     }
                     binding.rvChooseLanguage.layoutManager = chooseLanguageLayout

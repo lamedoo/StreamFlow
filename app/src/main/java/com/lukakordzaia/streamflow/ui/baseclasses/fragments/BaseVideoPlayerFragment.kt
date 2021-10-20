@@ -6,15 +6,12 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -31,21 +28,14 @@ import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
 import com.lukakordzaia.streamflow.helpers.videoplayer.BuildMediaSource
 import com.lukakordzaia.streamflow.helpers.videoplayer.MediaPlayerClass
-import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
-    protected val videoPlayerViewModel: VideoPlayerViewModel by sharedViewModel()
-    protected val sharedPreferences: SharedPreferences by inject()
+abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, VideoPlayerViewModel>() {
+    override val viewModel by sharedViewModel<VideoPlayerViewModel>()
     protected val buildMediaSource: BuildMediaSource by inject()
-
-    private var _binding: VB? = null
-    abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
-    protected val binding: VB
-        get() = _binding as VB
 
     protected lateinit var videoPlayerData: VideoPlayerData
     protected lateinit var videoPlayerInfo: VideoPlayerInfo
@@ -66,11 +56,6 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = bindingInflater.invoke(inflater, container, false)
-        return _binding!!.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         videoPlayerData = requireActivity().intent!!.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
@@ -82,15 +67,15 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
     }
 
     private fun initObservers() {
-        videoPlayerViewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
             requireActivity().findViewById<ConstraintLayout>(R.id.no_internet).setVisibleOrGone(it)
         })
 
-        videoPlayerViewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, {
+        viewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, {
             lastEpisode = it
         })
 
-        videoPlayerViewModel.numOfSeasons.observe(viewLifecycleOwner, {
+        viewModel.numOfSeasons.observe(viewLifecycleOwner, {
             numOfSeasons = it
         })
     }
@@ -106,7 +91,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         mediaPlayer = MediaPlayerClass(player)
 
         if (videoPlayerData.trailerUrl == null) {
-            videoPlayerViewModel.getTitleFiles(
+            viewModel.getTitleFiles(
                 VideoPlayerInfo(
                     videoPlayerData.titleId,
                     videoPlayerData.isTvShow,
@@ -115,7 +100,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
                     videoPlayerData.chosenLanguage
                 )
             )
-            videoPlayerViewModel.getSingleTitleData(videoPlayerData.titleId)
+            viewModel.getSingleTitleData(videoPlayerData.titleId)
         }
     }
 
@@ -123,7 +108,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         if (videoPlayerData.trailerUrl != null) {
             titleView.text = "ტრეილერი"
         } else {
-            videoPlayerViewModel.setTitleName.observe(viewLifecycleOwner, { name ->
+            viewModel.setTitleName.observe(viewLifecycleOwner, { name ->
                 if (videoPlayerInfo.isTvShow) {
                     titleView.text = "ს${videoPlayerInfo.chosenSeason}. ე${videoPlayerInfo.chosenEpisode}. $name"
                 } else {
@@ -188,7 +173,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
 
         episodeHasEnded = false
         player.clearMediaItems()
-        videoPlayerViewModel.getTitleFiles(VideoPlayerInfo(
+        viewModel.getTitleFiles(VideoPlayerInfo(
             videoPlayerInfo.titleId,
             videoPlayerInfo.isTvShow,
             if (lastEpisode) videoPlayerInfo.chosenSeason+1 else videoPlayerInfo.chosenSeason,
@@ -214,7 +199,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
     }
 
     fun saveCurrentProgress() {
-        videoPlayerViewModel.setVideoPlayerInfo(
+        viewModel.setVideoPlayerInfo(
             PlayerDurationInfo(
                 player.currentPosition,
                 player.duration
@@ -222,23 +207,23 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         )
 
         if (videoPlayerData.trailerUrl == null) {
-            videoPlayerViewModel.addContinueWatching()
+            viewModel.addContinueWatching()
         }
     }
 
     fun releasePlayer() {
         mediaPlayer.releasePlayer {
-            videoPlayerViewModel.setVideoPlayerInfo(it)
+            viewModel.setVideoPlayerInfo(it)
         }
 
         if (videoPlayerData.trailerUrl == null) {
-            videoPlayerViewModel.addContinueWatching()
+            viewModel.addContinueWatching()
         }
     }
 
     fun showContinueWatchingDialog(continueWatching: ContinueWatchingDialogBinding) {
         if (mediaItemsPlayed == 3) {
-            videoPlayerViewModel.addContinueWatching()
+            viewModel.addContinueWatching()
             player.pause()
 
             continueWatching.root.setVisible()
@@ -255,11 +240,6 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
 
             mediaItemsPlayed = 0
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun onPause() {
@@ -280,7 +260,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             Handler(Looper.getMainLooper()).postDelayed({
 
-                videoPlayerViewModel.setVideoPlayerInfo(
+                viewModel.setVideoPlayerInfo(
                     PlayerDurationInfo(
                         player.currentPosition,
                         player.duration
@@ -288,7 +268,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : Fragment() {
                 )
                 if (mediaItem != null) {
                     if (videoPlayerData.trailerUrl == null) {
-                        videoPlayerViewModel.addContinueWatching()
+                        viewModel.addContinueWatching()
                     }
                 }
             }, 2000)
