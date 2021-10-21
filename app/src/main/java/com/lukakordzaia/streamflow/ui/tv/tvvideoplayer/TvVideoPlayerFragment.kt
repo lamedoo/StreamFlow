@@ -43,8 +43,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.BACK_BUTTON)
             requireActivity().onBackPressed()
         }
-
-        nextButtonClickListener(playerBinding.nextEpisode, binding.titlePlayer)
     }
 
     override fun onStart() {
@@ -67,7 +65,13 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
             when (state) {
                 Player.STATE_READY -> {
-                    baseStateReady(playerBinding.playerTitle, binding.continueWatching, playerBinding.exoLiveDuration)
+                    baseStateReady(
+                        playerBinding.playerTitle,
+                        binding.continueWatching,
+                        playerBinding.exoLiveDuration,
+                        playerBinding.nextEpisode,
+                        binding.titlePlayer
+                    )
 
                     playerBinding.exoPlay.requestFocus()
                     playerBinding.exoPause.requestFocus()

@@ -221,9 +221,16 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         }
     }
 
-    fun baseStateReady(titleView: TextView, continueWatching: ContinueWatchingDialogBinding, duration: TextView) {
+    fun baseStateReady(
+        titleView: TextView,
+        continueWatching: ContinueWatchingDialogBinding,
+        duration: TextView,
+        nextButton: ImageButton,
+        playerView: PlayerView
+    ) {
         setTitleName(titleView)
         showContinueWatchingDialog(continueWatching)
+        nextButtonClickListener(nextButton, playerView)
         episodeHasEnded = true
 
         tracker = ProgressTracker(player) {
@@ -232,6 +239,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     fun baseStateEnded(nextButton: ImageButton, titleView: TextView) {
+        nextButton.setInvisible()
         titleView.setInvisible()
         if (episodeHasEnded) {
             if (videoPlayerData.isTvShow) {

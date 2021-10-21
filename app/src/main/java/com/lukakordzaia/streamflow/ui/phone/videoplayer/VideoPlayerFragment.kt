@@ -36,8 +36,6 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
         playerBinding.backButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
-
-        nextButtonClickListener(playerBinding.nextEpisode, binding.titlePlayer)
         prevButtonClickListener()
     }
 
@@ -61,7 +59,13 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
 
             when (state) {
                 Player.STATE_READY -> {
-                    baseStateReady(playerBinding.playerTitle, binding.continueWatching, playerBinding.exoDuration)
+                    baseStateReady(
+                        playerBinding.playerTitle,
+                        binding.continueWatching,
+                        playerBinding.exoDuration,
+                        playerBinding.nextEpisode,
+                        binding.titlePlayer
+                    )
                 }
                 Player.STATE_ENDED -> {
                     baseStateEnded(playerBinding.nextEpisode, playerBinding.playerTitle)
