@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentTvTitleFilesBinding
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragment
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
@@ -19,11 +18,7 @@ class TvTitleFilesFragment : BaseFragment<FragmentTvTitleFilesBinding>() {
 
         binding.tvDetailsGoTop.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TvSingleTitleActivity.TITLE_INFO)
-                parentFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_from_top, R.anim.slide_out_down)
-                        .replace(R.id.tv_details_fr_nav_host, TvTitleDetailsFragment())
-                        .commit()
+                (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TvTitleDetailsFragment())
             }
         }
     }

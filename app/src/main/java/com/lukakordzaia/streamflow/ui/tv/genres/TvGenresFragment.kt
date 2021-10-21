@@ -15,7 +15,7 @@ import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel>() {
+class TvGenresFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel>() {
     override val viewModel by viewModel<SingleCatalogueViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContentTv() }
 
@@ -71,7 +71,7 @@ class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel
     }
 
     private fun firstCategoryAdapter(category: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter(requireContext())).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -83,7 +83,7 @@ class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel
     }
 
     private fun secondCategoryAdapter(category: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter(requireContext())).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -95,7 +95,7 @@ class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel
     }
 
     private fun thirdCategoryAdapter(category: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter(requireContext())).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -107,7 +107,7 @@ class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel
     }
 
     private fun fourthCategoryAdapter(category: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter(requireContext())).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -119,7 +119,7 @@ class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel
     }
 
     private fun fifthCategoryAdapter(category: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter(requireContext())).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }
@@ -131,7 +131,7 @@ class TvSingleGenreFragment : BaseBrowseSupportFragment<SingleCatalogueViewModel
     }
 
     private fun sixthCategoryAdapter(category: List<SingleTitleModel>) {
-        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter(requireContext())).apply {
+        val listRowAdapter = ArrayObjectAdapter(TvSingleGenrePresenter()).apply {
             category.forEach {
                 add(it)
             }

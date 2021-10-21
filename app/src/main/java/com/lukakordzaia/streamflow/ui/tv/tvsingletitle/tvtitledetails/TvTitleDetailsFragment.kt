@@ -21,7 +21,6 @@ import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
-import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity.Companion.TITLE_DETAILS
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.TvTitleFilesFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.*
@@ -95,11 +94,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
         binding.nextDetails.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TITLE_DETAILS)
-                parentFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
-                    .replace(R.id.tv_details_fr_nav_host, TvTitleFilesFragment())
-                    .commit()
+                (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TvTitleFilesFragment())
             }
             this.hasFocus = hasFocus
         }

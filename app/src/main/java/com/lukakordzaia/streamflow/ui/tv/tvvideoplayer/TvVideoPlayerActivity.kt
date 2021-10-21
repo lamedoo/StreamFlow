@@ -3,37 +3,30 @@ package com.lukakordzaia.streamflow.ui.tv.tvvideoplayer
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.ActivityTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
+import com.lukakordzaia.streamflow.ui.baseclasses.activities.BaseFragmentActivity
 import com.lukakordzaia.streamflow.ui.shared.VideoPlayerViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import kotlinx.android.synthetic.main.continue_watching_dialog.*
 import kotlinx.android.synthetic.main.fragment_tv_video_player.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.view.*
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvVideoPlayerActivity : FragmentActivity() {
+class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
-    private val sharedPreferences: SharedPreferences by inject()
-    
-    private lateinit var binding: ActivityTvVideoPlayerBinding
+
+    override fun getViewBinding() = ActivityTvVideoPlayerBinding.inflate(layoutInflater)
+
     private var currentFragment = VIDEO_PLAYER
-    private var ffIncrement = 10000
-    private var rewIncrement = 10000
 
     private lateinit var videoPlayerData: VideoPlayerData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityTvVideoPlayerBinding.inflate(layoutInflater)
-
-        setContentView(binding.root)
 
         videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
 
@@ -159,20 +152,6 @@ class TvVideoPlayerActivity : FragmentActivity() {
             }
         }
         return super.onKeyDown(keyCode, event)
-    }
-
-    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT -> {
-                rewIncrement = 10000
-                return true
-            }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                ffIncrement = 10000
-                return true
-            }
-        }
-        return super.onKeyUp(keyCode, event)
     }
 
     override fun onBackPressed() {

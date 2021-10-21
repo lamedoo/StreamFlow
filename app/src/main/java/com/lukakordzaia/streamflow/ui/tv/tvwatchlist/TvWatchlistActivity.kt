@@ -13,12 +13,12 @@ import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflow.interfaces.TvWatchListTopRow
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
+import com.lukakordzaia.streamflow.ui.baseclasses.activities.BaseSidebarFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), TvCheckTitleSelected, TvHasFavoritesListener, TvWatchListTopRow {
+class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBinding>(), TvCheckTitleSelected, TvHasFavoritesListener, TvWatchListTopRow {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
     private var hasFavorites = true
     private var isTop = true
@@ -29,13 +29,8 @@ class TvWatchlistActivity: BaseFragmentActivity<ActivityTvWatchlistBinding>(), T
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setSidebarClickListeners(binding.tvSidebar)
+        setSidebar(binding.tvSidebar)
         setCurrentButton(binding.tvSidebar.favoritesButton)
-        googleViews(binding.tvSidebar)
-
-        binding.tvSidebar.favoritesButton.setOnClickListener {
-            binding.tvSidebar.root.setGone()
-        }
 
         binding.tvSidebarCollapsed.collapsedFavoritesIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 

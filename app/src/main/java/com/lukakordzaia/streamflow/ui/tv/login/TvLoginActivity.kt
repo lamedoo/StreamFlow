@@ -1,18 +1,8 @@
 package com.lukakordzaia.streamflow.ui.tv.login
 
-import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
 import com.lukakordzaia.streamflow.databinding.ActivityTvLoginBinding
+import com.lukakordzaia.streamflow.ui.baseclasses.activities.BaseFragmentActivity
 
-class TvLoginActivity: FragmentActivity() {
-    private lateinit var binding: ActivityTvLoginBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityTvLoginBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-    }
-
-
+class TvLoginActivity: BaseFragmentActivity<ActivityTvLoginBinding>() {
+    override fun getViewBinding() = ActivityTvLoginBinding.inflate(layoutInflater)
 }

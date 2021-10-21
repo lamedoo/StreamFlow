@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.baseclasses
+package com.lukakordzaia.streamflow.ui.baseclasses.activities
 
 import android.app.Dialog
 import android.content.Intent
@@ -8,10 +8,7 @@ import android.os.Looper
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentActivity
 import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ListRowPresenter
 import androidx.viewbinding.ViewBinding
@@ -21,9 +18,8 @@ import com.lukakordzaia.streamflow.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.streamflow.databinding.TvSidebarBinding
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity
+import com.lukakordzaia.streamflow.ui.tv.genres.TvGenresActivity
 import com.lukakordzaia.streamflow.ui.tv.login.TvLoginActivity
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity
@@ -32,30 +28,23 @@ import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
 import com.lukakordzaia.streamflow.ui.tv.tvwatchlist.TvWatchlistActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.createToast
+import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import kotlinx.android.synthetic.main.tv_sidebar.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCheckFirstItem {
+abstract class BaseSidebarFragmentActivity<VB : ViewBinding> : BaseFragmentActivity<VB>(), TvCheckFirstItem {
     private val profileViewModel: ProfileViewModel by viewModel()
-    protected val sidebarAnimations: TvSidebarAnimations by inject()
-    protected val sharedPreferences: SharedPreferences by inject()
+    val sidebarAnimations: TvSidebarAnimations by inject()
 
-    private lateinit var signInButton: View
-    private lateinit var signOutButton: View
-    private lateinit var profilePhoto: ImageView
-    private lateinit var profileUsername: TextView
-
+    private lateinit var sidebar: TvSidebarBinding
     private lateinit var currentButton: View
 
     private var doubleBackToExitPressedOnce = false
     private var isFirstItem = false
     private var rowsSupportFragment: RowsSupportFragment? = null
     private var rowsPosition: Int? = null
-
-    lateinit var binding: VB
-    abstract fun getViewBinding(): VB
 
     override fun onStart() {
         super.onStart()
@@ -65,11 +54,30 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = getViewBinding()
-        setContentView(binding.root)
+        initObservers()
     }
 
-    fun setSidebarClickListeners(view: TvSidebarBinding) {
+    private fun initObservers() {
+        profileViewModel.generalLoader.observe(this, {
+            when (it) {
+                LoadingState.LOADING -> {}
+                LoadingState.LOADED -> {
+                    val intent = Intent(this, TvActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    startActivity(intent)
+                }
+            }
+        })
+    }
+
+    fun setSidebar(tvSidebar: TvSidebarBinding) {
+        sidebar = tvSidebar
+        sidebarClickListeners(sidebar)
+    }
+
+    private fun sidebarClickListeners(view: TvSidebarBinding) {
         view.searchButton.setOnClickListener {
             startActivity(Intent(this, TvSearchActivity::class.java))
             sidebarAnimations.hideSideBar(view.tvSidebar)
@@ -98,7 +106,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             sidebarAnimations.hideSideBar(view.tvSidebar)
         }
         view.genresButton.setOnClickListener {
-            val intent = Intent(this, TvSingleGenreActivity::class.java)
+            val intent = Intent(this, TvGenresActivity::class.java)
             startActivity(intent)
             sidebarAnimations.hideSideBar(view.tvSidebar)
         }
@@ -112,38 +120,17 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
             startActivity(intent)
             sidebarAnimations.hideSideBar(view.tvSidebar)
         }
+        view.signOut.setOnClickListener {
+            profileViewModel.userLogout()
+        }
     }
 
     fun setCurrentButton(currentButton: View) {
         this.currentButton = currentButton
-    }
 
-    fun googleViews(view: TvSidebarBinding) {
-        signInButton = view.signIn
-        signOutButton = view.signOut
-        profilePhoto = view.profilePhoto
-        profileUsername = view.profileUsername
-
-        fragmentListeners()
-    }
-
-    private fun fragmentListeners() {
-        signOutButton.setOnClickListener {
-            profileViewModel.userLogout()
+        currentButton.setOnClickListener {
+            sidebar.root.setGone()
         }
-
-        profileViewModel.generalLoader.observe(this, {
-            when (it) {
-                LoadingState.LOADING -> {}
-                LoadingState.LOADED -> {
-                    val intent = Intent(this, TvActivity::class.java).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                    startActivity(intent)
-                }
-            }
-        })
     }
 
     private fun showSyncDialog() {
@@ -173,14 +160,14 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
     }
 
     private fun updateProfileUI(isLoggedIn: Boolean) {
-        profilePhoto.setVisibleOrGone(isLoggedIn)
-        signInButton.setVisibleOrGone(!isLoggedIn)
-        signOutButton.setVisibleOrGone(isLoggedIn)
+        sidebar.profilePhoto.setVisibleOrGone(isLoggedIn)
+        sidebar.signIn.setVisibleOrGone(!isLoggedIn)
+        sidebar.signOut.setVisibleOrGone(isLoggedIn)
 
         if (isLoggedIn) {
             profileViewModel.userData.observe(this, {
-                profileUsername.text = "გამარჯობა, ${it.displayName.uppercase()}"
-                Glide.with(this).load(it.avatar.large).into(profilePhoto)
+                sidebar.profileUsername.text = "გამარჯობა, ${it.displayName.uppercase()}"
+                Glide.with(this).load(it.avatar.large).into(sidebar.profilePhoto)
             })
         }
     }
@@ -189,13 +176,13 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (isFirstItem) {
-                    sidebarAnimations.showSideBar(tv_sidebar)
+                    sidebarAnimations.showSideBar(sidebar.root)
                     currentButton.requestFocus()
                 }
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (tv_sidebar.isVisible) {
-                    sidebarAnimations.hideSideBar(tv_sidebar)
+                if (sidebar.root.isVisible) {
+                    sidebarAnimations.hideSideBar(sidebar.root)
                     if (rowsSupportFragment != null && rowsPosition != null) {
                         rowsSupportFragment!!.setSelectedPosition(rowsPosition!!, true, ListRowPresenter.SelectItemViewHolderTask(0))
                     }
@@ -207,9 +194,9 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
 
     override fun onBackPressed() {
         if (tv_sidebar.isVisible) {
-            sidebarAnimations.hideSideBar(tv_sidebar)
+            sidebarAnimations.hideSideBar(sidebar.root)
         } else {
-            sidebarAnimations.showSideBar(tv_sidebar)
+            sidebarAnimations.showSideBar(sidebar.root)
             currentButton.requestFocus()
         }
 

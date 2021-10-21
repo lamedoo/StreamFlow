@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.tv.genres
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.leanback.widget.HorizontalGridView
 import androidx.leanback.widget.Presenter
@@ -8,7 +7,7 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.TvDefaultCardView
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 
-class TvSingleGenrePresenter(private val context: Context) : Presenter() {
+class TvSingleGenrePresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvDefaultCardView(parent.context, null)
 

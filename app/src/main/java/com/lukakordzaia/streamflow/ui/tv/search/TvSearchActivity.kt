@@ -11,14 +11,14 @@ import com.lukakordzaia.streamflow.databinding.ActivityTvSearchBinding
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.interfaces.TvSearchInputSelected
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
+import com.lukakordzaia.streamflow.ui.baseclasses.activities.BaseSidebarFragmentActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import com.lukakordzaia.streamflow.utils.hideKeyboard
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.showKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSearchInputSelected, TvCheckTitleSelected {
+class TvSearchActivity : BaseSidebarFragmentActivity<ActivityTvSearchBinding>(), TvSearchInputSelected, TvCheckTitleSelected {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
 
     private lateinit var fragment: TvSearchFragment
@@ -32,13 +32,8 @@ class TvSearchActivity : BaseFragmentActivity<ActivityTvSearchBinding>(), TvSear
 
         fragment = supportFragmentManager.findFragmentById(R.id.tv_search_fragment) as TvSearchFragment
 
-        setSidebarClickListeners(binding.tvSidebar)
+        setSidebar(binding.tvSidebar)
         setCurrentButton(binding.tvSidebar.searchButton)
-        googleViews(binding.tvSidebar)
-
-        binding.tvSidebar.searchButton.setOnClickListener {
-            binding.tvSidebar.root.setGone()
-        }
 
         binding.tvSidebarCollapsed.collapsedSearchIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
 

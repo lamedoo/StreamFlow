@@ -1,81 +1,18 @@
 package com.lukakordzaia.streamflow.ui.tv.main
 
 import android.os.Bundle
-import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.databinding.ActivityTvBinding
-import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseFragmentActivity
-import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setImage
-import com.lukakordzaia.streamflow.utils.setVisible
-import com.lukakordzaia.streamflow.utils.titlePosition
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.lukakordzaia.streamflow.ui.baseclasses.activities.BaseInfoFragmentActivity
 
-class TvActivity : BaseFragmentActivity<ActivityTvBinding>(), TvCheckTitleSelected {
-    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
-
-    override fun getViewBinding() = ActivityTvBinding.inflate(layoutInflater)
+class TvActivity : BaseInfoFragmentActivity(), TvCheckTitleSelected {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sharedPreferences.saveTvVideoPlayerOn(false)
-
-        setSidebarClickListeners(binding.tvSidebar)
-        setCurrentButton(binding.tvSidebar.homeButton)
-        googleViews(binding.tvSidebar)
-
-        binding.tvSidebar.homeButton.setOnClickListener {
-            binding.tvSidebar.root.setGone()
-        }
-
+        setFragment(TvMainFragment())
         binding.tvSidebarCollapsed.collapsedHomeIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
-    }
-
-    override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {
-        observeTitleDetails(titleId)
-
-        if (continueWatchingDetails != null) {
-            binding.titleInfo.continueWatchingSeekBar.setVisible()
-            binding.titleInfo.continueWatchingSeason.setVisible()
-
-            binding.titleInfo.continueWatchingSeason.text = if (continueWatchingDetails.isTvShow) {
-                continueWatchingDetails.watchedDuration.titlePosition(continueWatchingDetails.season, continueWatchingDetails.episode)
-            } else {
-                continueWatchingDetails.watchedDuration.titlePosition(null, null)
-            }
-
-            binding.titleInfo.continueWatchingSeekBar.max = continueWatchingDetails.titleDuration.toInt()
-            binding.titleInfo.continueWatchingSeekBar.progress = continueWatchingDetails.watchedDuration.toInt()
-        } else {
-            binding.titleInfo.continueWatchingSeason.setGone()
-            binding.titleInfo.continueWatchingSeekBar.setGone()
-        }
-    }
-
-    private fun observeTitleDetails(titleId: Int) {
-        tvTitleDetailsViewModel.getSingleTitleData(titleId)
-
-        tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
-            binding.titleInfo.name.text = it.nameEng
-
-            binding.titleInfo.poster.setImage(it.cover, false)
-
-            binding.titleInfo.year.text = "${it.releaseYear}"
-            binding.titleInfo.duration.text = if (it.isTvShow) {
-                "${it.seasonNum} სეზონი"
-            } else {
-                "${it.duration}"
-            }
-            binding.titleInfo.imdbScore.text = "IMDB ${it.imdbScore}"
-        })
-
-        tvTitleDetailsViewModel.titleGenres.observe(this, {
-            binding.titleInfo.genres.text = TextUtils.join(", ", it)
-        })
     }
 }

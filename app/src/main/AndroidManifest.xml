@@ -54,7 +54,7 @@
             android:name="com.lukakordzaia.streamflow.ui.tv.search.TvSearchActivity"
             android:theme="@style/Theme.Leanback"/>
         <activity
-            android:name="com.lukakordzaia.streamflow.ui.tv.genres.TvSingleGenreActivity"
+            android:name="com.lukakordzaia.streamflow.ui.tv.genres.TvGenresActivity"
             android:theme="@style/Theme.Leanback"/>
         <activity
             android:name="com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity"
