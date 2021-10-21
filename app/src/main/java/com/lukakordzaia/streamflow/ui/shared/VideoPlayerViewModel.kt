@@ -7,9 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerInfo
+import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
@@ -23,14 +22,12 @@ class VideoPlayerViewModel : BaseViewModel() {
     val numOfSeasons: LiveData<Int> = _numOfSeasons
 
     private var getEpisode: String = ""
-    private var getSubtitles: String = ""
+    private var getSubtitles: String? = null
     val mediaAndSubtitle = MutableLiveData<TitleMediaItemsUri>()
 
-    private val _videoPlayerInfo = MutableLiveData<VideoPlayerInfo>()
-    val videoPlayerInfo: LiveData<VideoPlayerInfo> = _videoPlayerInfo
+    private val _videoPlayerData = MutableLiveData<VideoPlayerData>()
+    val videoPlayerData: LiveData<VideoPlayerData> = _videoPlayerData
 
-    private val playbackPositionForDb = MutableLiveData(0L)
-    private val titleDurationForDb = MutableLiveData(0L)
     private val qualityForDb = MutableLiveData("HIGH")
 
     private val _setTitleNameList = MutableLiveData<String>()
@@ -40,35 +37,39 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     val saveLoader = MutableLiveData<LoadingState>()
 
-    fun setVideoPlayerInfo(playerDurationInfo: PlayerDurationInfo) {
-        playbackPositionForDb.value = playerDurationInfo.playbackPosition
-        titleDurationForDb.value = playerDurationInfo.titleDuration
+    fun setVideoPlayerData(videoPlayerData: VideoPlayerData) {
+        _videoPlayerData.value = videoPlayerData
+
+        if (videoPlayerData.trailerUrl == null) {
+            getTitleFiles(videoPlayerData)
+            getSingleTitleData(videoPlayerData.titleId)
+        }
     }
 
-    fun addContinueWatching() {
+    fun addContinueWatching(playBackDuration: Long, titleDuration: Long) {
         val dbDetails = ContinueWatchingRoom(
-            videoPlayerInfo.value!!.titleId,
-            videoPlayerInfo.value!!.chosenLanguage,
-            TimeUnit.MILLISECONDS.toSeconds(playbackPositionForDb.value!!),
-            TimeUnit.MILLISECONDS.toSeconds(titleDurationForDb.value!!),
-            videoPlayerInfo.value!!.isTvShow,
-            videoPlayerInfo.value!!.chosenSeason,
-            videoPlayerInfo.value!!.chosenEpisode
+            videoPlayerData.value!!.titleId,
+            videoPlayerData.value!!.chosenLanguage,
+            TimeUnit.MILLISECONDS.toSeconds(playBackDuration),
+            TimeUnit.MILLISECONDS.toSeconds(titleDuration),
+            videoPlayerData.value!!.isTvShow,
+            videoPlayerData.value!!.chosenSeason,
+            videoPlayerData.value!!.chosenEpisode
         )
-        if (playbackPositionForDb.value!! > 0 && titleDurationForDb.value!! > 0) {
+        if (playBackDuration > 0 && titleDuration > 0) {
             if (sharedPreferences.getLoginToken() != "") {
                 saveLoader.value = LoadingState.LOADING
                 viewModelScope.launch {
                     when (val time = environment.userRepository.titleWatchTime(
                         PostTitleWatchTimeRequestBody(
-                            duration = TimeUnit.MILLISECONDS.toSeconds(titleDurationForDb.value!!).toInt(),
-                            progress = TimeUnit.MILLISECONDS.toSeconds(playbackPositionForDb.value!!).toInt(),
-                            language = videoPlayerInfo.value!!.chosenLanguage,
+                            duration = TimeUnit.MILLISECONDS.toSeconds(titleDuration).toInt(),
+                            progress = TimeUnit.MILLISECONDS.toSeconds(playBackDuration).toInt(),
+                            language = videoPlayerData.value!!.chosenLanguage,
                             quality = qualityForDb.value!!
                         ),
-                        videoPlayerInfo.value!!.titleId,
-                        videoPlayerInfo.value!!.chosenSeason,
-                        videoPlayerInfo.value!!.chosenEpisode
+                        videoPlayerData.value!!.titleId,
+                        videoPlayerData.value!!.chosenSeason,
+                        videoPlayerData.value!!.chosenEpisode
                     )) {
                         is Result.Success -> {
                             saveLoader.value = LoadingState.LOADED
@@ -86,39 +87,32 @@ class VideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    fun getTitleFiles(videoPlayerInfo: VideoPlayerInfo) {
+    fun getTitleFiles(videoPlayerData: VideoPlayerData) {
         setNoInternet(false)
-        _videoPlayerInfo.value = VideoPlayerInfo(videoPlayerInfo.titleId,
-                videoPlayerInfo.isTvShow,
-                videoPlayerInfo.chosenSeason,
-                videoPlayerInfo.chosenEpisode,
-                videoPlayerInfo.chosenLanguage
-        )
-
         getEpisode = ""
 
         viewModelScope.launch {
-            when (val files = environment.singleTitleRepository.getSingleTitleFiles(videoPlayerInfo.titleId, videoPlayerInfo.chosenSeason)) {
+            when (val files = environment.singleTitleRepository.getSingleTitleFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason)) {
                 is Result.Success -> {
                     totalEpisodesInSeason.value = files.data.data.size
 
-                    val season = if (videoPlayerInfo.chosenSeason == 0) {
+                    val season = if (videoPlayerData.chosenSeason == 0) {
                         files.data.data[0]
                     } else {
-                        files.data.data[videoPlayerInfo.chosenEpisode - 1]
+                        files.data.data[videoPlayerData.chosenEpisode - 1]
                     }
 
                     _setTitleNameList.value = season.title
 
                     season.files.forEach { singleFiles ->
-                        checkAvailability(singleFiles, videoPlayerInfo.chosenLanguage)
+                        checkAvailability(singleFiles, videoPlayerData.chosenLanguage)
                     }
 
                     val episodeIntoUri = if (getEpisode.isNotBlank()) {
                         MediaItem.fromUri(Uri.parse(getEpisode))
                     } else {
                         checkAvailability(season.files[0], season.files[0].lang)
-                        newToastMessage("${videoPlayerInfo.chosenLanguage} - ვერ მოიძებნა. ავტომატურად ჩაირთო - ${season.files[0].lang}")
+                        newToastMessage("${videoPlayerData.chosenLanguage} - ვერ მოიძებნა. ავტომატურად ჩაირთო - ${season.files[0].lang}")
                         MediaItem.fromUri(Uri.parse(getEpisode))
                     }
 
@@ -158,7 +152,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                     }
                 }
             } else {
-                getSubtitles = "0"
+                getSubtitles = null
             }
         }
     }

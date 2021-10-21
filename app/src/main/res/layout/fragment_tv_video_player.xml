@@ -8,7 +8,7 @@
     tools:context=".ui.phone.videoplayer.VideoPlayerFragment">
 
     <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/tv_title_player"
+        android:id="@+id/title_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:show_buffering="always"

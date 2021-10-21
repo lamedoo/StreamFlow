@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.tv.tvvideoplayer
 
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,15 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
-import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVideoPlayerFragment
-import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.videoPlayerPosition
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 
@@ -24,13 +20,13 @@ import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBinding>() {
     private lateinit var playerBinding: TvExoplayerControllerLayoutBinding
     override val reload: () -> Unit = {
-        viewModel.getTitleFiles(videoPlayerInfo)
+        viewModel.getTitleFiles(videoPlayerData)
         viewModel.getSingleTitleData(videoPlayerData.titleId)
     }
 
     private var tracker: ProgressTracker? = null
 
-    private val autoBackPress = autoBackPress {
+    override val autoBackPress = AutoBackPress {
         (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.BACK_BUTTON)
         requireActivity().onBackPressed()
     }
@@ -53,48 +49,33 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             requireActivity().onBackPressed()
         }
 
-        viewModel.videoPlayerInfo.observe(viewLifecycleOwner, {
-            videoPlayerInfo = it
-            nextButtonClickListener(playerBinding.nextEpisode, binding.tvTitlePlayer)
-
-            setTitleName(playerBinding.playerTitle)
-            playerBinding.exoPlay.requestFocus()
-            playerBinding.exoPause.requestFocus()
-        })
-
-        if (videoPlayerData.trailerUrl != null) {
-            playerBinding.nextEpisode.setGone()
-        }
+        nextButtonClickListener(playerBinding.nextEpisode, binding.titlePlayer)
     }
 
     override fun onStart() {
         super.onStart()
         if (Util.SDK_INT >= 24) {
-            initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
+            initPlayer(binding.titlePlayer, playerBinding.subtitleToggle)
         }
     }
 
     override fun onResume() {
         super.onResume()
         if (Util.SDK_INT < 24) {
-            initPlayer(videoPlayerData.watchedTime, videoPlayerData.trailerUrl)
+            initPlayer(binding.titlePlayer, playerBinding.subtitleToggle)
         }
     }
 
     inner class PlayerListeners: Player.Listener {
-        override fun onIsPlayingChanged(isPlaying: Boolean) {
-            super.onIsPlayingChanged(isPlaying)
-
-            if (isPlaying) autoBackPress.cancel() else autoBackPress.start()
-        }
-
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
 
             when (state) {
                 Player.STATE_READY -> {
-                    episodeHasEnded = true
-                    showContinueWatchingDialog(binding.continueWatching)
+                    baseStateReady(playerBinding.playerTitle, binding.continueWatching)
+
+                    playerBinding.exoPlay.requestFocus()
+                    playerBinding.exoPause.requestFocus()
 
                     tracker = ProgressTracker(player, object :
                         PositionListener {
@@ -104,34 +85,12 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     })
                 }
                 Player.STATE_ENDED -> {
-                    stateHasEnded(playerBinding.nextEpisode)
+                    baseStateEnded(playerBinding.nextEpisode)
                 }
             }
 
-            binding.tvTitlePlayer.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
+            binding.titlePlayer.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
         }
-    }
-
-    private fun subtitleFunctions(hasSubs: Boolean) {
-        subtitleFunctions(binding.tvTitlePlayer.subtitleView!!, playerBinding.subtitleToggle, hasSubs)
-    }
-
-    private fun initPlayer(watchedTime: Long, trailerUrl: String?) {
-        if (trailerUrl != null) {
-            mediaPlayer.setMediaItems(listOf(MediaItem.fromUri(Uri.parse(trailerUrl))))
-            mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(
-                TitleMediaItemsUri(MediaItem.fromUri(
-                    Uri.parse(trailerUrl)), "0")
-            ))
-            subtitleFunctions(false)
-        } else {
-            viewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
-                mediaPlayer.setPlayerMediaSource(buildMediaSource.movieMediaSource(it))
-
-                subtitleFunctions(it.titleSubUri.isNotEmpty() && it.titleSubUri != "0")
-            })
-        }
-        mediaPlayer.initPlayer(binding.tvTitlePlayer, 0, watchedTime)
     }
 
     inner class ProgressTracker(private val player: Player, private val positionListener: PositionListener) : Runnable {
@@ -158,7 +117,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     override fun onDetach() {
         super.onDetach()
         tracker?.purgeHandler()
-        autoBackPress.cancel()
     }
 
     fun onKeyUp() {
@@ -166,8 +124,8 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             binding.continueWatching.confirmButton.requestFocus()
         } else {
             when {
-                !binding.tvTitlePlayer.isControllerVisible -> {
-                    binding.tvTitlePlayer.showController()
+                !binding.titlePlayer.isControllerVisible -> {
+                    binding.titlePlayer.showController()
                     playerBinding.exoPause.requestFocus()
                 }
                 playerBinding.nextEpisode.isVisible -> {
@@ -187,19 +145,19 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     }
 
     fun onKeyCenter() {
-        if (!binding.tvTitlePlayer.isControllerVisible) {
-            binding.tvTitlePlayer.showController()
-            binding.tvTitlePlayer.player!!.pause()
-        } else if (!binding.tvTitlePlayer.player!!.isPlaying && !binding.tvTitlePlayer.isControllerVisible) {
-            binding.tvTitlePlayer.player!!.play()
+        if (!binding.titlePlayer.isControllerVisible) {
+            binding.titlePlayer.showController()
+            binding.titlePlayer.player!!.pause()
+        } else if (!binding.titlePlayer.player!!.isPlaying && !binding.titlePlayer.isControllerVisible) {
+            binding.titlePlayer.player!!.play()
         }
     }
 
     fun onKeyLeft() {
         if (!binding.continueWatching.root.isVisible) {
             when {
-                !binding.tvTitlePlayer.isControllerVisible -> {
-                    binding.tvTitlePlayer.showController()
+                !binding.titlePlayer.isControllerVisible -> {
+                    binding.titlePlayer.showController()
                     playerBinding.exoRew.callOnClick()
                 }
                 playerBinding.nextEpisode.isFocused ->
@@ -213,8 +171,8 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     fun onKeyRight() {
         if (!binding.continueWatching.root.isVisible) {
             when {
-                !binding.tvTitlePlayer.isControllerVisible -> {
-                    binding.tvTitlePlayer.showController()
+                !binding.titlePlayer.isControllerVisible -> {
+                    binding.titlePlayer.showController()
                     playerBinding.exoFfwd.callOnClick()
                 }
                 playerBinding.backButton.isFocused ->

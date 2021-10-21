@@ -252,7 +252,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
                         TimeUnit.SECONDS.toMillis(it.titleDuration),
                         it.isTvShow,
                         it.season,
-                        it.episode
+                        it.episode,
                     ))
                 }
 

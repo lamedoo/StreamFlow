@@ -69,9 +69,9 @@ class TvVideoPlayerActivity : FragmentActivity() {
                         go_back_button.requestFocus()
                     } else {
                         when {
-                            !tv_title_player.isControllerVisible -> {
-                                tv_title_player.showController()
-                                tv_title_player.exo_pause.requestFocus()
+                            !title_player.isControllerVisible -> {
+                                title_player.showController()
+                                title_player.exo_pause.requestFocus()
                                 return true
                             }
                             exo_play.isFocused || exo_pause.isFocused -> {
@@ -87,9 +87,9 @@ class TvVideoPlayerActivity : FragmentActivity() {
                                 return true
                             }
                             else -> {
-                                subtitle_toggle.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
-                                next_episode.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
-                                next_episode.nextFocusDownId = if (tv_title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
+                                subtitle_toggle.nextFocusDownId = if (title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
+                                next_episode.nextFocusDownId = if (title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
+                                next_episode.nextFocusDownId = if (title_player.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
                             }
                         }
                     }
@@ -119,42 +119,42 @@ class TvVideoPlayerActivity : FragmentActivity() {
             }
 
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
-                tv_title_player.dispatchMediaKeyEvent(event!!)
+                title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }
 
             KeyEvent.KEYCODE_MEDIA_PLAY -> {
-                tv_title_player.dispatchMediaKeyEvent(event!!)
+                title_player.dispatchMediaKeyEvent(event!!)
                 return true
             }
 
             KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
                 if (!continue_watching.isVisible) {
-                    tv_title_player.dispatchMediaKeyEvent(event!!)
+                    title_player.dispatchMediaKeyEvent(event!!)
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_MEDIA_NEXT -> {
-                if (!tv_title_player.isControllerVisible) {
-                    tv_title_player.showController()
+                if (!title_player.isControllerVisible) {
+                    title_player.showController()
                 }
-                tv_title_player.exo_ffwd.callOnClick()
+                title_player.exo_ffwd.callOnClick()
                 return true
             }
 
             KeyEvent.KEYCODE_MEDIA_REWIND -> {
                 if (!continue_watching.isVisible) {
-                    tv_title_player.dispatchMediaKeyEvent(event!!)
+                    title_player.dispatchMediaKeyEvent(event!!)
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
-                if (!tv_title_player.isControllerVisible) {
-                    tv_title_player.showController()
+                if (!title_player.isControllerVisible) {
+                    title_player.showController()
                 }
-                tv_title_player.exo_rew.callOnClick()
+                title_player.exo_rew.callOnClick()
                 return true
             }
         }
@@ -182,8 +182,8 @@ class TvVideoPlayerActivity : FragmentActivity() {
                 setCurrentFragment(VIDEO_PLAYER)
             }
             VIDEO_PLAYER -> {
-                if (tv_title_player.isControllerVisible) {
-                    tv_title_player.hideController()
+                if (title_player.isControllerVisible) {
+                    title_player.hideController()
                 } else {
                     goBack()
                 }
@@ -205,14 +205,14 @@ class TvVideoPlayerActivity : FragmentActivity() {
         currentFragment = fragment
 
         if (fragment == VIDEO_PLAYER) {
-            tv_title_player.showController()
+            title_player.showController()
             exo_pause.requestFocus()
         }
     }
 
     private fun detailsFragment() {
-        tv_title_player.player!!.pause()
-        tv_title_player.hideController()
+        title_player.player!!.pause()
+        title_player.hideController()
     }
 
     private fun goBack() {
