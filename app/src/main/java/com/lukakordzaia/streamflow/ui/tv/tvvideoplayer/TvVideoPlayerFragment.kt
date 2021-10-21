@@ -1,8 +1,6 @@
 package com.lukakordzaia.streamflow.ui.tv.tvvideoplayer
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,6 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVideoPlayerFragment
-import com.lukakordzaia.streamflow.utils.videoPlayerPosition
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
 
 
@@ -23,8 +20,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         viewModel.getTitleFiles(videoPlayerData)
         viewModel.getSingleTitleData(videoPlayerData.titleId)
     }
-
-    private var tracker: ProgressTracker? = null
 
     override val autoBackPress = AutoBackPress {
         (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.BACK_BUTTON)
@@ -72,51 +67,18 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
             when (state) {
                 Player.STATE_READY -> {
-                    baseStateReady(playerBinding.playerTitle, binding.continueWatching)
+                    baseStateReady(playerBinding.playerTitle, binding.continueWatching, playerBinding.exoLiveDuration)
 
                     playerBinding.exoPlay.requestFocus()
                     playerBinding.exoPause.requestFocus()
-
-                    tracker = ProgressTracker(player, object :
-                        PositionListener {
-                        override fun progress(position: Long) {
-                            playerBinding.exoLiveDuration.text = position.videoPlayerPosition()
-                        }
-                    })
                 }
                 Player.STATE_ENDED -> {
-                    baseStateEnded(playerBinding.nextEpisode)
+                    baseStateEnded(playerBinding.nextEpisode, playerBinding.playerTitle)
                 }
             }
 
             binding.titlePlayer.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
         }
-    }
-
-    inner class ProgressTracker(private val player: Player, private val positionListener: PositionListener) : Runnable {
-        private val handler: Handler = Handler(Looper.myLooper()!!)
-        override fun run() {
-            val position = if (player.duration <= 0) 0 else player.duration - player.currentPosition
-            positionListener.progress(position)
-            handler.postDelayed(this, 1000)
-        }
-
-        fun purgeHandler() {
-            handler.removeCallbacks(this)
-        }
-
-        init {
-            handler.post(this)
-        }
-    }
-
-    interface PositionListener {
-        fun progress(position: Long)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        tracker?.purgeHandler()
     }
 
     fun onKeyUp() {

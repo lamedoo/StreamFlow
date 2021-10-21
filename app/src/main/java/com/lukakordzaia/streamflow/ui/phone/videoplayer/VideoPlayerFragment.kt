@@ -61,10 +61,10 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
 
             when (state) {
                 Player.STATE_READY -> {
-                    baseStateReady(playerBinding.playerTitle, binding.continueWatching)
+                    baseStateReady(playerBinding.playerTitle, binding.continueWatching, playerBinding.exoDuration)
                 }
                 Player.STATE_ENDED -> {
-                    baseStateEnded(playerBinding.nextEpisode)
+                    baseStateEnded(playerBinding.nextEpisode, playerBinding.playerTitle)
                 }
             }
 

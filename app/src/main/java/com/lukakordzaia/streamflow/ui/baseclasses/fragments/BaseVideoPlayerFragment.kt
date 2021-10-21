@@ -42,13 +42,14 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     protected lateinit var player: SimpleExoPlayer
 
     protected var mediaItemsPlayed = 0
-    protected var episodeHasEnded = false
+    private var episodeHasEnded = false
 
     private var titleName: String = ""
     private var lastEpisode: Int = 0
     private var numOfSeasons: Int = 0
 
     protected abstract val autoBackPress: AutoBackPress
+    private var tracker: ProgressTracker? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -88,7 +89,8 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         })
     }
 
-    fun setTitleName(titleView: TextView) {
+    private fun setTitleName(titleView: TextView) {
+        titleView.setVisible()
         if (videoPlayerData.trailerUrl != null) {
             titleView.text = getString(R.string.trailer)
         } else {
@@ -219,13 +221,18 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         }
     }
 
-    fun baseStateReady(titleView: TextView, continueWatching: ContinueWatchingDialogBinding) {
+    fun baseStateReady(titleView: TextView, continueWatching: ContinueWatchingDialogBinding, duration: TextView) {
         setTitleName(titleView)
         showContinueWatchingDialog(continueWatching)
         episodeHasEnded = true
+
+        tracker = ProgressTracker(player) {
+            duration.text = it.videoPlayerPosition()
+        }
     }
 
-    fun baseStateEnded(nextButton: ImageButton) {
+    fun baseStateEnded(nextButton: ImageButton, titleView: TextView) {
+        titleView.setInvisible()
         if (episodeHasEnded) {
             if (videoPlayerData.isTvShow) {
                 if (!(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode)) {
@@ -255,8 +262,10 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     override fun onDetach() {
-        super.onDetach()
+        tracker?.purgeHandler()
         autoBackPress.cancel()
+
+        super.onDetach()
     }
 
     inner class MediaTransitionListener: Player.Listener {
@@ -282,6 +291,23 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
         override fun onFinish() {
             backPress.invoke()
+        }
+    }
+
+    inner class ProgressTracker(private val player: Player, private val progress: (position: Long) -> Unit) : Runnable {
+        private val handler: Handler = Handler(Looper.myLooper()!!)
+        override fun run() {
+            val position = if (player.duration <= 0) 0 else player.duration - player.currentPosition
+            progress(position)
+            handler.postDelayed(this, 1000)
+        }
+
+        fun purgeHandler() {
+            handler.removeCallbacks(this)
+        }
+
+        init {
+            handler.post(this)
         }
     }
 }
