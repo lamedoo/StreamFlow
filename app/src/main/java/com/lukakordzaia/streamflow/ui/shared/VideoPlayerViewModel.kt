@@ -30,8 +30,8 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     private val qualityForDb = MutableLiveData("HIGH")
 
-    private val _setTitleNameList = MutableLiveData<String>()
-    val setTitleName: LiveData<String> = _setTitleNameList
+    private val _setTitleName = MutableLiveData<String>()
+    val setTitleName: LiveData<String> = _setTitleName
 
     var totalEpisodesInSeason = MutableLiveData<Int>()
 
@@ -102,7 +102,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                         files.data.data[videoPlayerData.chosenEpisode - 1]
                     }
 
-                    _setTitleNameList.value = season.title
+                    _setTitleName.value = season.title
 
                     season.files.forEach { singleFiles ->
                         checkAvailability(singleFiles, videoPlayerData.chosenLanguage)

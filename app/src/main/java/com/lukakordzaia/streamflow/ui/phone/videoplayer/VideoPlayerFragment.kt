@@ -85,7 +85,6 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
         } else {
             prevButton.setOnClickListener {
                 mediaItemsPlayed = 0
-                player.clearMediaItems()
                 viewModel.setVideoPlayerData(VideoPlayerData(
                     videoPlayerData.titleId,
                     videoPlayerData.isTvShow,

@@ -179,7 +179,7 @@ abstract class BaseFragmentActivity<VB : ViewBinding> : FragmentActivity(), TvCh
 
         if (isLoggedIn) {
             profileViewModel.userData.observe(this, {
-                profileUsername.text = "გამარჯობა, ${it.displayName.toUpperCase()}"
+                profileUsername.text = "გამარჯობა, ${it.displayName.uppercase()}"
                 Glide.with(this).load(it.avatar.large).into(profilePhoto)
             })
         }
