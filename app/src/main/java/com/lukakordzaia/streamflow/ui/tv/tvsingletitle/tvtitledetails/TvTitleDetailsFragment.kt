@@ -40,7 +40,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var titleInfo: SingleTitleModel
     private var hasFocus: Boolean = false
-      private var startedWatching = false
+    private var startedWatching = false
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvTitleDetailsBinding
         get() = FragmentTvTitleDetailsBinding::inflate

@@ -51,50 +51,23 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.singleTitleAppbar.setExpanded(true)
 
-        checkFavorites()
-
+        fragmentSetUi()
         fragmentListeners()
         fragmentObservers()
-        titleDetailsContainer()
-        checkContinueWatching()
+    }
+
+    private fun fragmentSetUi() {
+        binding.singleTitleAppbar.setExpanded(true)
         castContainer()
         relatedContainer()
     }
 
-    private fun checkFavorites() {
-        viewModel.addToFavorites.observe(viewLifecycleOwner, {
-            if (it) {
-                binding.singleTitleFavoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
-                binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
-                binding.singleTitleFavorite.setOnClickListener {
-                    viewModel.deleteWatchlistTitle(args.titleId)
-                }
-            } else {
-                binding.singleTitleFavoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
-                binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
-                binding.singleTitleFavorite.setOnClickListener {
-                    viewModel.addWatchlistTitle(args.titleId)
-                }
-            }
-        })
-
-        viewModel.favoriteLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> {
-                    binding.singleTitleFavoriteProgressBar.setVisible()
-                    binding.singleTitleFavoriteIcon.setGone()
-                }
-                LoadingState.LOADED -> {
-                    binding.singleTitleFavoriteProgressBar.setGone()
-                    binding.singleTitleFavoriteIcon.setVisible()
-                }
-            }
-        })
-    }
-
     private fun fragmentListeners() {
+        binding.playButton.setOnClickListener {
+            languagePickerDialog()
+        }
+
         binding.playButtonBottom.setOnClickListener {
             binding.playButton.callOnClick()
         }
@@ -106,37 +79,6 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
         binding.replayButtonBottom.setOnClickListener {
             binding.replayButton.callOnClick()
         }
-
-        binding.singleTitleAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            if (abs(verticalOffset) == binding.singleTitleAppbar.totalScrollRange) {
-                binding.singleTitleDetailsScroll.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.primaryColor
-                    )
-                )
-            } else {
-                binding.singleTitleDetailsScroll.setDrawableBackground(R.drawable.background_single_title_cover_phone)
-            }
-        })
-
-        binding.singleTitleBackButton.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-    }
-
-    private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> {
-                    binding.progressBar.setVisible()
-                }
-                LoadingState.LOADED -> {
-                    binding.progressBar.setGone()
-                    binding.singleTitleMainContainer.setVisible()
-                }
-            }
-        })
 
         binding.singleTitleAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appbar, verticalOffset ->
             var offsetPercent = 0F
@@ -155,109 +97,172 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
                 0F
             }
 
+            if (abs(verticalOffset) == binding.singleTitleAppbar.totalScrollRange) {
+                binding.singleTitleDetailsScroll.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.primaryColor
+                    )
+                )
+            } else {
+                binding.singleTitleDetailsScroll.setDrawableBackground(R.drawable.background_single_title_cover_phone)
+            }
+
             if (abs(verticalOffset) == appbar.totalScrollRange) {
                 binding.playButton.alpha = 0F
-                binding.episodesButton.alpha = 0F
                 binding.replayButton.alpha = 0F
                 binding.continueWatchingInfo.alpha = 0F
                 binding.continueWatchingSeekBar.alpha = 0F
                 binding.playButtonBottomContainer.alpha = 1F
+                binding.episodesButton.apply {
+                    alpha = 0F
+                    setGone()
+                }
             } else {
                 binding.playButton.alpha = playButtonAlpha
-                binding.episodesButton.alpha = playButtonAlpha
                 binding.replayButton.alpha = playButtonAlpha
                 binding.continueWatchingInfo.alpha = playButtonAlpha
                 binding.continueWatchingSeekBar.alpha = playButtonAlpha
                 binding.playButtonBottomContainer.alpha = playButtonBottomAlpha
-            }
-        })
-    }
-
-    private fun titleDetailsContainer() {
-        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
-            titleInfo = it
-
-            binding.titleName.text = it.displayName
-
-            binding.singleTitleCover.setImage(it.cover, false)
-
-            binding.titleTrailer.setOnClickListener { _ ->
-                startTrailer(it)
-            }
-
-            binding.titleDescription.text = it.description
-            binding.infoDetails.imdbScore.text = "IMDB ${it.imdbScore}"
-            binding.infoDetails.year.text = it.releaseYear
-            binding.infoDetails.duration.text = it.duration
-
-            if (it.isTvShow) {
-                binding.episodesButton.setVisible()
-                binding.episodesButtonBottom.setVisible()
-                binding.episodesButton.setOnClickListener { _ ->
-                    viewModel.onEpisodesPressed(it.id, it.displayName!!, it.seasonNum!!)
+                binding.episodesButton.apply {
+                    alpha = playButtonAlpha
+                    setVisible()
                 }
             }
+        })
+
+        binding.singleTitleBackButton.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
+        binding.replayButton.setOnClickListener {
+            languagePickerDialog()
+        }
+    }
+
+    private fun fragmentObservers() {
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            binding.progressBar.setVisibleOrGone(it == LoadingState.LOADING)
+            binding.singleTitleMainContainer.setVisibleOrGone(it == LoadingState.LOADED)
+        })
+
+        viewModel.favoriteLoader.observe(viewLifecycleOwner, {
+            binding.singleTitleFavoriteProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
+            binding.singleTitleFavoriteIcon.setVisibleOrGone(it != LoadingState.LOADING)
+        })
+
+        viewModel.addToFavorites.observe(viewLifecycleOwner, {
+            checkFavorites(it)
+        })
+
+        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
+            titleDetailsContainer(it)
+            titleInfo = it
         })
 
         viewModel.titleGenres.observe(viewLifecycleOwner, {
             binding.titleGenre.text = TextUtils.join(", ", it)
         })
 
-        viewModel.getSingleTitleDirectorResponse.observe(viewLifecycleOwner, {
+        viewModel.titleDirector.observe(viewLifecycleOwner, {
             binding.titleDirector.text = it.originalName
+        })
+
+        viewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
+            phoneSingleTitleCastAdapter.setCastList(it)
+        })
+
+        viewModel.singleTitleRelated.observe(viewLifecycleOwner, {
+            phoneSingleTitleRelatedAdapter.setRelatedList(it)
+        })
+
+        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            checkContinueWatching(it)
+        })
+
+        tvShowBottomSheetViewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
+            val languages = languageList.reversed()
+            chooseLanguageAdapter.setLanguageList(languages)
         })
     }
 
-    private fun checkContinueWatching() {
-        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-            binding.continueWatchingInfo.setVisibleOrGone(it != null)
-            binding.continueWatchingSeekBar.setVisibleOrGone(it != null)
+    private fun checkFavorites(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.singleTitleFavoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
+            binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
+            binding.singleTitleFavorite.setOnClickListener {
+                viewModel.deleteWatchlistTitle(args.titleId)
+            }
+        } else {
+            binding.singleTitleFavoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
+            binding.singleTitleFavoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
+            binding.singleTitleFavorite.setOnClickListener {
+                viewModel.addWatchlistTitle(args.titleId)
+            }
+        }
+    }
 
-            binding.continueWatchingInfoBottom.setVisibleOrGone(it != null)
-            binding.continueWatchingSeekBarBottom.setVisibleOrGone(it != null)
+    private fun titleDetailsContainer(info: SingleTitleModel) {
+            binding.titleName.text = info.displayName
 
-            if (it != null) {
-                binding.continueWatchingSeekBar.max = it.titleDuration.toInt()
-                binding.continueWatchingSeekBar.progress = it.watchedDuration.toInt()
+            binding.singleTitleCover.setImage(info.cover, false)
 
-                binding.continueWatchingSeekBarBottom.max = it.titleDuration.toInt()
-                binding.continueWatchingSeekBarBottom.progress = it.watchedDuration.toInt()
+            binding.titleTrailer.setOnClickListener {
+                startTrailer(info)
+            }
 
-                val time = if (it.isTvShow) {
-                    it.watchedDuration.titlePosition(it.season, it.episode)
-                } else {
-                    it.watchedDuration.titlePosition(null, null)
-                }
+            binding.titleDescription.text = info.description
+            binding.infoDetails.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
+            binding.infoDetails.year.text = info.releaseYear
+            binding.infoDetails.duration.text = info.duration
 
-                    binding.continueWatchingInfo.text = time
-                    binding.continueWatchingInfoBottom.text = time
-
-                if (!it.isTvShow) {
-                    binding.replayButton.setVisible()
-                    binding.replayButtonBottom.setVisible()
-                    binding.replayButton.setOnClickListener { _ ->
-                        languagePickerDialog()
-                    }
-                }
-
-                binding.playButton.setOnClickListener { _ ->
-                    startVideoPlayer(
-                        ContinueWatchingRoom(
-                            it.titleId,
-                            it.language,
-                            TimeUnit.SECONDS.toMillis(it.watchedDuration),
-                            TimeUnit.SECONDS.toMillis(it.titleDuration),
-                            it.isTvShow,
-                            it.season,
-                            it.episode
-                        ), null)
-                }
-            } else {
-                binding.playButton.setOnClickListener { _ ->
-                    languagePickerDialog()
+            if (info.isTvShow) {
+                binding.episodesButton.setVisible()
+                binding.episodesButtonBottom.setVisible()
+                binding.episodesButton.setOnClickListener {
+                    viewModel.onEpisodesPressed(info.id, info.displayName!!, info.seasonNum!!)
                 }
             }
-        })
+    }
+
+    private fun checkContinueWatching(info: ContinueWatchingRoom?) {
+        binding.continueWatchingInfo.setVisibleOrGone(info != null)
+        binding.continueWatchingSeekBar.setVisibleOrGone(info != null)
+        binding.continueWatchingInfoBottom.setVisibleOrGone(info != null)
+        binding.continueWatchingSeekBarBottom.setVisibleOrGone(info != null)
+
+        if (info != null) {
+            binding.continueWatchingSeekBar.max = info.titleDuration.toInt()
+            binding.continueWatchingSeekBar.progress = info.watchedDuration.toInt()
+            binding.continueWatchingSeekBarBottom.max = info.titleDuration.toInt()
+            binding.continueWatchingSeekBarBottom.progress = info.watchedDuration.toInt()
+
+            val time = if (info.isTvShow) {
+                info.watchedDuration.titlePosition(info.season, info.episode)
+            } else {
+                info.watchedDuration.titlePosition(null, null)
+            }
+            binding.continueWatchingInfo.text = time
+            binding.continueWatchingInfoBottom.text = time
+
+            if (!info.isTvShow) {
+                binding.replayButton.setVisible()
+                binding.replayButtonBottom.setVisible()
+            }
+
+            binding.playButton.setOnClickListener {
+                startVideoPlayer(
+                    ContinueWatchingRoom(
+                        info.titleId,
+                        info.language,
+                        TimeUnit.SECONDS.toMillis(info.watchedDuration),
+                        TimeUnit.SECONDS.toMillis(info.titleDuration),
+                        info.isTvShow,
+                        info.season,
+                        info.episode
+                    ), null)
+            }
+        }
     }
 
     private fun castContainer() {
@@ -267,10 +272,6 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
         }
         binding.singleTitleCastSimilar.rvSingleTitleCast.layoutManager = castLayout
         binding.singleTitleCastSimilar.rvSingleTitleCast.adapter = phoneSingleTitleCastAdapter
-
-        viewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
-            phoneSingleTitleCastAdapter.setCastList(it)
-        })
     }
 
     private fun relatedContainer() {
@@ -280,10 +281,6 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
         }
         binding.singleTitleCastSimilar.rvSingleTitleRelated.layoutManager = relatedLayout
         binding.singleTitleCastSimilar.rvSingleTitleRelated.adapter = phoneSingleTitleRelatedAdapter
-
-        viewModel.singleTitleRelated.observe(viewLifecycleOwner, {
-            phoneSingleTitleRelatedAdapter.setRelatedList(it)
-        })
     }
 
     private fun languagePickerDialog() {
@@ -301,13 +298,10 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
             chooseLanguageDialog.hide()
             startVideoPlayer(null, language)
         }
-        binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
-        binding.rvChooseLanguage.adapter = chooseLanguageAdapter
-
-        tvShowBottomSheetViewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
-            val languages = languageList.reversed()
-            chooseLanguageAdapter.setLanguageList(languages)
-        })
+        binding.rvChooseLanguage.apply {
+            adapter = chooseLanguageAdapter
+            layoutManager = chooseLanguageLayout
+        }
     }
 
     private fun startTrailer(data: SingleTitleModel) {
@@ -323,7 +317,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
             )
             ))
         } else {
-            viewModel.newToastMessage("ტრეილერი ვერ მოიძებნა")
+            viewModel.newToastMessage(getString(R.string.no_trailer_found))
         }
     }
 

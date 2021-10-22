@@ -61,7 +61,7 @@ class WatchlistViewModel : BaseViewModel() {
 
     fun deleteWatchlistTitle(id: Int, position: Int) {
         viewModelScope.launch {
-            when (val delete = environment.watchlistRepository.deleteWatchlistTitle(id)) {
+            when (environment.watchlistRepository.deleteWatchlistTitle(id)) {
                 is Result.Success -> {
                     fetchUserWatchlist.removeAt(position)
                     _userWatchlist.value = fetchUserWatchlist

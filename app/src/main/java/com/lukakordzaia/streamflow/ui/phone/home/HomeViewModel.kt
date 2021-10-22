@@ -149,13 +149,14 @@ class HomeViewModel : BaseViewModel() {
     private fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
         viewModelScope.launch {
             environment.databaseRepository.deleteSingleContinueWatchingFromRoom(titleId)
+            hideContinueWatchingLoader.value = LoadingState.LOADED
         }
     }
 
     private fun hideSingleContinueWatching(titleId: Int) {
         hideContinueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (val hide = environment.homeRepository.hideTitleContinueWatching(titleId)) {
+            when (environment.homeRepository.hideTitleContinueWatching(titleId)) {
                 is Result.Success -> {
                     newToastMessage("წაიშალა განაგრძეთ ყურების სიიდან")
                     checkAuthDatabase()

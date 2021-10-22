@@ -3,7 +3,6 @@ package com.lukakordzaia.streamflow.ui.phone.phonesingletitle.tvshowdetailsbotto
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvChooseDetailsSeasonItemBinding
@@ -11,7 +10,8 @@ import com.lukakordzaia.streamflow.utils.setDrawableBackground
 
 class TvShowBottomSheetSeasonAdapter(
         private val context: Context,
-        private val onSeasonClick: (seasonId: Int) -> Unit
+        private val onSeasonClick: (seasonId: Int) -> Unit,
+        private val onChosenSeason: (position: Int) -> Unit
 ) : RecyclerView.Adapter<TvShowBottomSheetSeasonAdapter.ViewHolder>() {
     private var list: List<Int> = ArrayList()
     private var chosenSeason: Int = 1
@@ -23,6 +23,7 @@ class TvShowBottomSheetSeasonAdapter(
 
     fun setChosenSeason(seasonId: Int) {
         chosenSeason = seasonId
+        onChosenSeason(chosenSeason)
         notifyDataSetChanged()
     }
 
@@ -48,6 +49,7 @@ class TvShowBottomSheetSeasonAdapter(
 
             if (isChosen) {
                 view.rvSeasonContainer.setDrawableBackground(R.drawable.background_rv_season_current_phone)
+            } else {
                 view.rvSeasonContainer.setDrawableBackground(R.drawable.background_rv_season_phone)
             }
 

@@ -25,12 +25,18 @@ class ContinueWatchingInfoFragment : BaseBottomSheetVM<FragmentPhoneContinueWatc
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneContinueWatchingInfoBinding
         get() = FragmentPhoneContinueWatchingInfoBinding::inflate
 
+    private lateinit var removeTitleDialog: Dialog
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.titleName.text = args.titleName
-
+        fragmentSetUi()
+        fragmentObservers()
         fragmentListeners()
+    }
+
+    private fun fragmentSetUi() {
+        binding.titleName.text = args.titleName
     }
 
     private fun fragmentListeners() {
@@ -43,36 +49,37 @@ class ContinueWatchingInfoFragment : BaseBottomSheetVM<FragmentPhoneContinueWatc
         }
 
         binding.removeTitle.setOnClickListener {
-            val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
-            val removeTitle = Dialog(requireContext())
-            removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            removeTitle.setContentView(binding.root)
-
-            if (sharedPreferences.getLoginToken() != "") {
-                binding.title.text = resources.getString(R.string.remove_from_list_title)
-            }
-
-           binding.continueButton.setOnClickListener {
-               viewModel.deleteContinueWatching(args.titleId)
-               if (sharedPreferences.getLoginToken() == "") {
-                   removeTitle.dismiss()
-                   dismiss()
-               } else {
-                   viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
-                       when (it) {
-                           LoadingState.LOADING -> {}
-                           LoadingState.LOADED -> {
-                               removeTitle.dismiss()
-                               dismiss()
-                           }
-                       }
-                   })
-               }
-            }
-            binding.cancelButton.setOnClickListener {
-                removeTitle.dismiss()
-            }
-            removeTitle.show()
+            removeTitleDialog()
         }
+    }
+
+    private fun fragmentObservers() {
+        viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+            if (it == LoadingState.LOADED) {
+                removeTitleDialog.dismiss()
+                dismiss()
+            }
+        })
+    }
+
+    private fun removeTitleDialog() {
+        val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
+        removeTitleDialog = Dialog(requireContext())
+        removeTitleDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        removeTitleDialog.setContentView(binding.root)
+
+        if (sharedPreferences.getLoginToken() != "") {
+            binding.title.text = resources.getString(R.string.remove_from_list_title)
+        }
+
+        binding.continueButton.setOnClickListener {
+            viewModel.deleteContinueWatching(args.titleId)
+        }
+
+        binding.cancelButton.setOnClickListener {
+            removeTitleDialog.dismiss()
+        }
+
+        removeTitleDialog.show()
     }
 }

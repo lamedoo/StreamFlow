@@ -9,7 +9,7 @@ import com.lukakordzaia.streamflow.network.models.imovies.response.categories.Ge
 
 class TopFranchisesAdapter(
     private val context: Context,
-    private val onTitleClick: (titleName: String, position: Int) -> Unit
+    private val onTitleClick: (titleName: String) -> Unit
 ) : RecyclerView.Adapter<TopFranchisesAdapter.ViewHolder>() {
     private var list: List<GetTopFranchisesResponse.Data> = ArrayList()
 
@@ -27,7 +27,7 @@ class TopFranchisesAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listModel = list[position]
 
-        holder.bind(listModel, position)
+        holder.bind(listModel)
     }
 
     override fun getItemCount(): Int {
@@ -35,11 +35,11 @@ class TopFranchisesAdapter(
     }
 
     inner class ViewHolder(val view: RvFranchiseItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(model: GetTopFranchisesResponse.Data, position: Int) {
+        fun bind(model: GetTopFranchisesResponse.Data) {
             view.rvFranchiseItemName.text = model.name
 
             view.root.setOnClickListener {
-                onTitleClick(model.name, position)
+                onTitleClick(model.name)
             }
         }
     }

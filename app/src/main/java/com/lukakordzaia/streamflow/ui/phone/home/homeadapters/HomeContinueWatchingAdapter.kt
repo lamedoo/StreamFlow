@@ -9,12 +9,12 @@ import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.utils.setImage
 import com.lukakordzaia.streamflow.utils.titlePosition
 
-class HomeDbTitlesAdapter(
+class HomeContinueWatchingAdapter(
     private val context: Context,
     private val onWatchedTitleClick: (continueWatchingModel: ContinueWatchingModel) -> Unit,
     private val onInfoClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int, titleName: String) -> Unit
-) : RecyclerView.Adapter<HomeDbTitlesAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<HomeContinueWatchingAdapter.ViewHolder>() {
     private var list: List<ContinueWatchingModel> = ArrayList()
 
     fun setWatchedTitlesList(list: List<ContinueWatchingModel>) {

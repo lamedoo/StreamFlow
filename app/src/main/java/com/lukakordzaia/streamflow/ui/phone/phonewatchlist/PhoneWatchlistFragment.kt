@@ -67,46 +67,26 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
         }
 
         binding.watchlistMovies.setOnClickListener {
-            viewModel.clearWatchlist()
-
-            page = 1
-            viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false)
-            setButtons(AppConstants.WATCHLIST_MOVIES)
-
-            type = AppConstants.WATCHLIST_MOVIES
+            changeWatchlistType(AppConstants.WATCHLIST_MOVIES)
         }
 
         binding.watchlistTvShows.setOnClickListener {
-            viewModel.clearWatchlist()
-
-            page = 1
-            viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_TV_SHOWS, false)
-            setButtons(AppConstants.WATCHLIST_TV_SHOWS)
-
-            type = AppConstants.WATCHLIST_TV_SHOWS
+            changeWatchlistType(AppConstants.WATCHLIST_TV_SHOWS)
         }
     }
 
     private fun fragmentObservers() {
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            binding.favoriteMoviesProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
+            loading = it != LoadingState.LOADED
+        })
+
         viewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
             watchlistMoviesAdapter.setItems(watchlist)
         })
 
         viewModel.hasMorePage.observe(viewLifecycleOwner, {
             hasMore = it
-        })
-
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> {
-                    binding.favoriteMoviesProgressBar.setVisible()
-                }
-                LoadingState.LOADED -> {
-                    binding.favoriteMoviesProgressBar.setGone()
-                    binding.rvFavoritesMovies.setVisible()
-                    loading = false
-                }
-            }
         })
 
         viewModel.noFavorites.observe(viewLifecycleOwner, {
@@ -141,6 +121,16 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
                 }
             }
         })
+    }
+
+    private fun changeWatchlistType(type: String) {
+        viewModel.clearWatchlist()
+
+        page = 1
+        viewModel.getUserWatchlist(page, type, false)
+        setButtons(type)
+
+        this.type = type
     }
 
     private fun removeTitleDialog(titleId: Int, position: Int) {

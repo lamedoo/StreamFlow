@@ -63,9 +63,8 @@ class LoginFragment: BaseFragmentPhoneVM<FragmentPhoneLoginBinding, ProfileViewM
 
     private fun fragmentObservers() {
         viewModel.generalLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> {}
-                LoadingState.LOADED -> requireActivity().onBackPressed()
+            if (it == LoadingState.LOADED) {
+                requireActivity().onBackPressed()
             }
         })
     }

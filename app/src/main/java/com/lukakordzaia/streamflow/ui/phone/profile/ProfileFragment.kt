@@ -35,7 +35,7 @@ class ProfileFragment : BaseFragmentPhoneVM<FragmentPhoneProfileBinding, Profile
         super.onViewCreated(view, savedInstanceState)
         topBarListener(resources.getString(R.string.account), binding.toolbar)
 
-        binding.aboutTitle.text = "ვერსია v${requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName}"
+        binding.aboutTitle.text = getString(R.string.version_number, requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName)
 
         fragmentListeners()
         fragmentObservers()
@@ -71,9 +71,8 @@ class ProfileFragment : BaseFragmentPhoneVM<FragmentPhoneProfileBinding, Profile
 
     private fun fragmentObservers() {
         viewModel.generalLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> {}
-                LoadingState.LOADED -> viewModel.refreshProfileOnLogin()
+            if (it == LoadingState.LOADED) {
+                viewModel.refreshProfileOnLogin()
             }
         })
     }

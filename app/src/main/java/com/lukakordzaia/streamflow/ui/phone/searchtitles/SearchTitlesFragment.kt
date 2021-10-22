@@ -4,18 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.customviews.CustomSearchInput
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSearchTitlesBinding
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
-import kotlinx.android.synthetic.main.main_top_toolbar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBinding, SearchTitlesViewModel>() {
@@ -43,20 +45,32 @@ class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBindin
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        home_profile.setGone()
-
+        fragmentSetUi()
         fragmentObservers()
         searchInput()
-        searchTitlesContainer()
+    }
+
+    private fun fragmentSetUi() {
+        requireActivity().findViewById<ImageView>(R.id.home_profile).setGone()
         franchisesContainer()
+        searchTitlesContainer()
     }
 
     private fun fragmentObservers() {
         viewModel.generalLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> binding.searchProgressBar.setVisible()
-                LoadingState.LOADED -> binding.searchProgressBar.setGone()
-            }
+            binding.searchProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
+        })
+
+        viewModel.franchisesLoader.observe(viewLifecycleOwner, {
+            binding.franchisesProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
+        })
+
+        viewModel.getTopFranchisesResponse.observe(viewLifecycleOwner, {
+            topFranchisesAdapter.setFranchisesList(it)
+        })
+
+        viewModel.searchList.observe(viewLifecycleOwner, {
+            searchTitlesAdapter.setSearchTitleList(it)
         })
     }
 
@@ -89,10 +103,6 @@ class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBindin
         binding.rvSearchTitles.adapter = searchTitlesAdapter
         binding.rvSearchTitles.layoutManager = layoutManager
 
-        viewModel.searchList.observe(viewLifecycleOwner, {
-            searchTitlesAdapter.setSearchTitleList(it)
-        })
-
         binding.rvSearchTitles.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
@@ -112,24 +122,13 @@ class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBindin
     private fun franchisesContainer() {
         viewModel.getTopFranchises()
 
-        topFranchisesAdapter = TopFranchisesAdapter(requireContext()) { titleName, position ->
-            onFranchiseAnimationEnd(titleName)
+        topFranchisesAdapter = TopFranchisesAdapter(requireContext()) {
+            onFranchiseClick(it)
         }
         binding.rvTopFranchises.layoutManager = FlowLayoutManager().apply {
             isAutoMeasureEnabled = true
         }
         binding.rvTopFranchises.adapter = topFranchisesAdapter
-
-        viewModel.franchisesLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> binding.franchisesProgressBar.setVisible()
-                LoadingState.LOADED -> binding.franchisesProgressBar.setGone()
-            }
-        })
-
-        viewModel.getTopFranchisesResponse.observe(viewLifecycleOwner, {
-            topFranchisesAdapter.setFranchisesList(it)
-        })
     }
 
     private fun fetchMoreResults() {
@@ -139,7 +138,7 @@ class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBindin
         loading = false
     }
 
-    private fun onFranchiseAnimationEnd(titleName: String) {
+    private fun onFranchiseClick(titleName: String) {
         (binding.searchTitleText as TextView).text = titleName
         viewModel.getSearchTitles(titleName, 1)
         binding.rvSearchTitlesContainer.setVisible()

@@ -31,6 +31,8 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
     fun checkAuthDatabase(titleId: Int) {
         if (sharedPreferences.getLoginToken() == "") {
             getSingleContinueWatchingFromRoom(titleId)
+        } else {
+            getContinueWatching(titleId)
         }
     }
 
@@ -42,8 +44,39 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
         }
     }
 
+    private fun getContinueWatching(titleId: Int) {
+        viewModelScope.launch {
+            when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
+                is Result.Success -> {
+                    val data = titleData.data
+
+                    if (data.data.userWatch?.data?.season != null) {
+                        _continueWatchingDetails.postValue(ContinueWatchingRoom(
+                            titleId = titleId,
+                            language = data.data.userWatch.data.language!!,
+                            watchedDuration = data.data.userWatch.data.progress!!,
+                            titleDuration = data.data.userWatch.data.duration!!,
+                            isTvShow = data.data.isTvShow,
+                            season = data.data.userWatch.data.season,
+                            episode = data.data.userWatch.data.episode!!
+                        ))
+                    } else {
+                        _continueWatchingDetails.postValue(null)
+                    }
+                }
+                is Result.Error -> {
+                    newToastMessage("ინფორმაცია - ${titleData.exception}")
+                }
+                is Result.Internet -> {
+                    setNoInternet()
+                }
+            }
+        }
+    }
+
     fun getSeasonFiles(titleId: Int, season: Int) {
         setNoInternet(false)
+        _episodeInfo.value = emptyList()
         setGeneralLoader(LoadingState.LOADING)
         _chosenSeason.value = season
         viewModelScope.launch {

@@ -13,8 +13,8 @@ import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
 import com.lukakordzaia.streamflow.utils.AppConstants
-import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TopListFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, TopListViewModel>() {
@@ -22,22 +22,7 @@ class TopListFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, 
     private val args: TopListFragmentArgs by navArgs()
 
     override val viewModel by viewModel<TopListViewModel>()
-    override val reload: () -> Unit = {
-        when (args.type) {
-            AppConstants.LIST_NEW_MOVIES -> {
-                viewModel.getNewMovies(page)
-                setTopBar(R.string.new_movies)
-            }
-            AppConstants.LIST_TOP_MOVIES -> {
-                viewModel.getTopMovies(page)
-                setTopBar(R.string.top_movies)
-            }
-            AppConstants.LIST_TOP_TV_SHOWS -> {
-                viewModel.getTopTvShows(page)
-                setTopBar(R.string.top_tv_shows)
-            }
-        }
-    }
+    override val reload: () -> Unit = { viewModel.fetchContent(args.type, page) }
 
     private lateinit var singleCategoryAdapter: SingleCategoryAdapter
     private var pastVisibleItems: Int = 0
@@ -50,39 +35,38 @@ class TopListFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.fetchContent(args.type, page)
 
-        when (args.type) {
-            AppConstants.LIST_NEW_MOVIES -> {
-                viewModel.getNewMovies(page)
-                setTopBar(R.string.new_movies)
-            }
-            AppConstants.LIST_TOP_MOVIES -> {
-                viewModel.getTopMovies(page)
-                setTopBar(R.string.top_movies)
-            }
-            AppConstants.LIST_TOP_TV_SHOWS -> {
-                viewModel.getTopTvShows(page)
-                setTopBar(R.string.top_tv_shows)
-            }
-        }
-
+        setTopBar()
         fragmentObservers()
         topListContainer()
     }
 
-    private fun setTopBar(title: Int) {
-        topBarListener(resources.getString(title), binding.toolbar)
+    private fun setTopBar() {
+        when (args.type) {
+            AppConstants.LIST_NEW_MOVIES -> {
+                topBarListener(resources.getString(R.string.new_movies), binding.toolbar)
+            }
+            AppConstants.LIST_TOP_MOVIES -> {
+                topBarListener(resources.getString(R.string.top_movies), binding.toolbar)
+            }
+            AppConstants.LIST_TOP_TV_SHOWS -> {
+                topBarListener(resources.getString(R.string.top_tv_shows), binding.toolbar)
+
+            }
+        }
     }
 
     private fun fragmentObservers() {
         viewModel.generalLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> binding.progressBar.setVisible()
-                LoadingState.LOADED -> {
-                    binding.progressBar.setGone()
-                    loading = false
-                }
+            binding.progressBar.setVisibleOrGone(it == LoadingState.LOADING)
+            if (it == LoadingState.LOADED) {
+                loading = false
             }
+        })
+
+        viewModel.list.observe(viewLifecycleOwner, {
+            singleCategoryAdapter.setItems(it)
         })
     }
 
@@ -93,10 +77,6 @@ class TopListFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, 
         }
         binding.rvSingleCategory.adapter = singleCategoryAdapter
         binding.rvSingleCategory.layoutManager = layoutManager
-
-        viewModel.list.observe(viewLifecycleOwner, {
-            singleCategoryAdapter.setItems(it)
-        })
 
         binding.rvSingleCategory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -117,17 +97,7 @@ class TopListFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, 
     private fun fetchMoreTitles() {
         binding.progressBar.setVisible()
         page++
-        when (args.type) {
-            AppConstants.LIST_NEW_MOVIES -> {
-                viewModel.getNewMovies(page)
-            }
-            AppConstants.LIST_TOP_MOVIES -> {
-                viewModel.getTopMovies(page)
-            }
-            AppConstants.LIST_TOP_TV_SHOWS -> {
-                viewModel.getTopTvShows(page)
-            }
-        }
+        viewModel.fetchContent(args.type, page)
         loading = false
     }
 }

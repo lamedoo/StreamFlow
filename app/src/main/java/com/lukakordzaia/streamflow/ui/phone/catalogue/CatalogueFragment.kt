@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -19,8 +20,7 @@ import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.StudiosA
 import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.TrailersAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
-import kotlinx.android.synthetic.main.main_top_toolbar.*
+import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, CatalogueViewModel>() {
@@ -36,9 +36,12 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        home_profile.setGone()
-
+        fragmentSetUi()
         fragmentObservers()
+    }
+
+    private fun fragmentSetUi() {
+        requireActivity().findViewById<ImageView>(R.id.home_profile).setGone()
         trailersContainer()
         genresContainer()
         studiosContainer()
@@ -46,16 +49,20 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
 
     private fun fragmentObservers() {
         viewModel.generalLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> {
-                    binding.generalProgressBar.setVisible()
-                    binding.fragmentScroll.setGone()
-                }
-                LoadingState.LOADED -> {
-                    binding.generalProgressBar.setGone()
-                    binding.fragmentScroll.setVisible()
-                }
-            }
+            binding.generalProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
+            binding.fragmentScroll.setVisibleOrGone(it != LoadingState.LOADING)
+        })
+
+        viewModel.topTrailerList.observe(viewLifecycleOwner, {
+            trailersAdapter.setTrailerList(it)
+        })
+
+        viewModel.allGenresList.observe(viewLifecycleOwner, {
+            genresAdapter.setGenreList(it)
+        })
+
+        viewModel.topGetTopStudiosResponse.observe(viewLifecycleOwner, {
+            studiosAdapter.setStudioList(it)
         })
     }
 
@@ -72,16 +79,12 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
         binding.rvTrailers.layoutManager = trailerLayout
         binding.rvTrailers.adapter = trailersAdapter
 
-        viewModel.topTrailerList.observe(viewLifecycleOwner, {
-            trailersAdapter.setTrailerList(it)
-        })
-
         val helper: SnapHelper = PagerSnapHelper()
         helper.attachToRecyclerView(binding.rvTrailers)
 
-        val radius = resources.getDimensionPixelSize(R.dimen.radius);
-        val dotsHeight = resources.getDimensionPixelSize(R.dimen.dots_height);
-        val color = ContextCompat.getColor(requireContext(), R.color.general_text_color);
+        val radius = resources.getDimensionPixelSize(R.dimen.radius)
+        val dotsHeight = resources.getDimensionPixelSize(R.dimen.dots_height)
+        val color = ContextCompat.getColor(requireContext(), R.color.general_text_color)
 
         binding.rvTrailers.addItemDecoration(DotsIndicatorDecoration(radius, radius * 4, dotsHeight, color, color))
     }
@@ -93,10 +96,6 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
         }
         binding.rvGenres.layoutManager = genreLayout
         binding.rvGenres.adapter = genresAdapter
-
-        viewModel.allGenresList.observe(viewLifecycleOwner, {
-            genresAdapter.setGenreList(it)
-        })
     }
 
     private fun studiosContainer() {
@@ -106,10 +105,6 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
         }
         binding.rvStudios.layoutManager = studioLayout
         binding.rvStudios.adapter = studiosAdapter
-
-        viewModel.topGetTopStudiosResponse.observe(viewLifecycleOwner, {
-            studiosAdapter.setStudioList(it)
-        })
     }
 
     private fun startVideoPlayer(titleId: Int, trailerUrl: String?) {
@@ -125,7 +120,7 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
             )
             ))
         } else {
-            viewModel.newToastMessage("ტრეილერი ვერ მოიძებნა")
+            viewModel.newToastMessage(getString(R.string.no_trailer_found))
         }
     }
 }

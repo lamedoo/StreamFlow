@@ -11,8 +11,8 @@ import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBindin
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
-import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
+import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, SingleCatalogueViewModel>() {
@@ -33,7 +33,6 @@ class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryB
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.fetchContent(args.catalogueType, args.catalogueId, page)
 
         topBarListener(args.catalogueName, binding.toolbar)
@@ -44,33 +43,32 @@ class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryB
 
     private fun fragmentObservers() {
         viewModel.generalLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> binding.progressBar.setVisible()
-                LoadingState.LOADED -> binding.progressBar.setGone()
-            }
+            binding.progressBar.setVisibleOrGone(it == LoadingState.LOADING)
         })
-    }
-
-    private fun studiosContainer() {
-        val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
-        singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
-            viewModel.onSingleTitlePressed(it)
-        }
-        binding.rvSingleCategory.adapter = singleCategoryAdapter
-        binding.rvSingleCategory.layoutManager = layoutManager
 
         viewModel.singleCatalogueList.observe(viewLifecycleOwner, {
             singleCategoryAdapter.setItems(it)
         })
+    }
+
+    private fun studiosContainer() {
+        val studiosLayout = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
+        singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
+            viewModel.onSingleTitlePressed(it)
+        }
+        binding.rvSingleCategory.apply {
+            adapter = singleCategoryAdapter
+            layoutManager = studiosLayout
+        }
 
         viewModel.hasMorePage.observe(viewLifecycleOwner, {
             if (it) {
                 binding.rvSingleCategory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                         if (dy > 0) {
-                            visibleItemCount = layoutManager.childCount
-                            totalItemCount = layoutManager.itemCount
-                            pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+                            visibleItemCount = studiosLayout.childCount
+                            totalItemCount = studiosLayout.itemCount
+                            pastVisibleItems = studiosLayout.findFirstVisibleItemPosition()
 
                             if (!loading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
                                 loading = true

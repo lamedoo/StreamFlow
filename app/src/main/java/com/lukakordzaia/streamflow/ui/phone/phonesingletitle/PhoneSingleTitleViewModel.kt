@@ -29,7 +29,7 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
     val titleGenres: LiveData<List<String>> = _titleGenres
 
     private val _titleDirector = MutableLiveData<GetSingleTitleCastResponse.Data>()
-    val getSingleTitleDirectorResponse: LiveData<GetSingleTitleCastResponse.Data> = _titleDirector
+    val titleDirector: LiveData<GetSingleTitleCastResponse.Data> = _titleDirector
 
     private val _singleTitleRelated = MutableLiveData<List<SingleTitleModel>>()
     val singleTitleRelated: LiveData<List<SingleTitleModel>> = _singleTitleRelated

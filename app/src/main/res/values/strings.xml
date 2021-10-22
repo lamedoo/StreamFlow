@@ -67,6 +67,8 @@
     <string name="other_episodes">სხვა ეპიზოდები</string>
     <string name="check_internet_connection">შეამოწმეთ ინტერნეტთან კავშირი</string>
     <string name="try_again">სცადეთ თავიდან</string>
-
-    <!--    <string name="default_web_client_id">700559852856-68iooe5pueka6q1k3oejuc46h4fh9dai.apps.googleusercontent.com</string>-->
+    <string name="no_trailer_found">ტრეილერი ვერ მოიძებნა</string>
+    <string name="version_number">ვერსია v%1$s</string>
+    <string name="imdb_score">IMDB %1$s</string>
+    <string name="episode_number">ეპიზოდი %1$s</string>
 </resources>

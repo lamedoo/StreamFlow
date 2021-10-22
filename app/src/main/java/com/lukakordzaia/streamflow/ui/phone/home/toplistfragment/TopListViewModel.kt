@@ -7,6 +7,7 @@ import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
@@ -19,7 +20,7 @@ class TopListViewModel : BaseViewModel() {
         navigateToNewFragment(TopListFragmentDirections.actionTopListFragmentToSingleTitleFragmentNav(titleId))
     }
 
-    fun getNewMovies(page: Int) {
+    private fun getNewMovies(page: Int) {
         viewModelScope.launch {
             setGeneralLoader(LoadingState.LOADING)
             when (val newMovies = environment.homeRepository.getNewMovies(page)) {
@@ -39,7 +40,7 @@ class TopListViewModel : BaseViewModel() {
         }
     }
 
-    fun getTopMovies(page: Int) {
+    private fun getTopMovies(page: Int) {
         viewModelScope.launch {
             setGeneralLoader(LoadingState.LOADING)
             when (val topMovies = environment.homeRepository.getTopMovies(page)) {
@@ -59,7 +60,7 @@ class TopListViewModel : BaseViewModel() {
         }
     }
 
-    fun getTopTvShows(page: Int) {
+    private fun getTopTvShows(page: Int) {
         viewModelScope.launch {
             setGeneralLoader(LoadingState.LOADING)
             when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
@@ -75,6 +76,20 @@ class TopListViewModel : BaseViewModel() {
                 is Result.Internet -> {
                     setNoInternet()
                 }
+            }
+        }
+    }
+
+    fun fetchContent(type: Int, page: Int) {
+        when (type) {
+            AppConstants.LIST_NEW_MOVIES -> {
+                getNewMovies(page)
+            }
+            AppConstants.LIST_TOP_MOVIES -> {
+                getTopMovies(page)
+            }
+            AppConstants.LIST_TOP_TV_SHOWS -> {
+                getTopTvShows(page)
             }
         }
     }

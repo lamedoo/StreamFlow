@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvChooseDetailsEpisodesItemBinding
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
 import com.lukakordzaia.streamflow.utils.setImage
@@ -19,7 +20,6 @@ class TvShowBottomSheetEpisodesAdapter(
 
     fun setEpisodeList(list: List<TitleEpisodes>) {
         this.list = list
-        onChosenEpisode(chosenEpisode)
         notifyDataSetChanged()
     }
 
@@ -48,9 +48,11 @@ class TvShowBottomSheetEpisodesAdapter(
         fun bind(model: TitleEpisodes, position: Int) {
             val isChosen = position == chosenEpisode-1
 
+            onChosenEpisode(chosenEpisode)
+
             view.currentIndicator.setVisibleOrGone(isChosen)
 
-            view.episodeNumber.text = "ეპიზოდი ${model.episodeNum}"
+            view.episodeNumber.text = context.getString(R.string.episode_number, model.episodeNum)
             view.episodeName.text = model.episodeName
 
             view.itemPoster.setImage(model.episodePoster, false)
