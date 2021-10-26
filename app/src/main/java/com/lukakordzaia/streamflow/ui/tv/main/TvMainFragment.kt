@@ -11,7 +11,6 @@ import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
-import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseBrowseSupportFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
@@ -29,6 +28,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
     override val viewModel by viewModel<HomeViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContent(1) }
 
+    private var hasContinueWatching = false
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
@@ -65,12 +65,12 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
     }
 
     private fun baseRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, getString(R.string.continue_watching)), ArrayObjectAdapter(TvMainPresenter()))
-        val secondHeaderItem = ListRow(HeaderItem(1, getString(R.string.top_movies)), ArrayObjectAdapter(TvMainPresenter()))
-        val thirdHeaderItem = ListRow(HeaderItem(2, getString(R.string.top_tv_shows)), ArrayObjectAdapter(TvMainPresenter()))
-        val fourthHeaderItem = ListRow(HeaderItem(3, getString(R.string.categories)), ArrayObjectAdapter(TvMainPresenter()))
-        val sixthHeaderItem = ListRow(HeaderItem(5, getString(R.string.new_movies)), ArrayObjectAdapter(TvMainPresenter()))
-        val initListRows = mutableListOf(firstHeaderItem, sixthHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem)
+        val watchlistRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
+        val newMoviesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
+        val topMoviesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
+        val topTvShowsRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
+        val categoriesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
+        val initListRows = mutableListOf(watchlistRow, newMoviesRow, topMoviesRow, topTvShowsRow, categoriesRow)
         rowsAdapter.addAll(0, initListRows)
     }
 
@@ -98,15 +98,6 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
     }
 
     private fun watchedListRowsAdapter(items: List<ContinueWatchingModel>) {
-        viewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> {}
-                LoadingState.LOADED -> {
-
-                }
-            }
-        })
-
         val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
             addAll(0, items)
         }
@@ -114,6 +105,8 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         HeaderItem(0, getString(R.string.continue_watching)).also {
             rowsAdapter.replace(0, ListRow(it, listRowAdapter))
         }
+
+        hasContinueWatching = !items.isNullOrEmpty()
     }
 
     private fun newMoviesRowsAdapter(items: List<SingleTitleModel>) {
@@ -121,8 +114,8 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        HeaderItem(1, getString(R.string.new_movies)).also { header ->
-            rowsAdapter.replace(1, ListRow(header, listRowAdapter))
+        HeaderItem(if (hasContinueWatching) 1 else 0, getString(R.string.new_movies)).also { header ->
+            rowsAdapter.replace(if (hasContinueWatching) 1 else 0, ListRow(header, listRowAdapter))
         }
     }
 
@@ -131,8 +124,8 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        HeaderItem(2, getString(R.string.top_movies)).also { header ->
-            rowsAdapter.replace(2, ListRow(header, listRowAdapter))
+        HeaderItem(if (hasContinueWatching) 2 else 1, getString(R.string.top_movies)).also { header ->
+            rowsAdapter.replace(if (hasContinueWatching) 2 else 1, ListRow(header, listRowAdapter))
         }
     }
 
@@ -142,7 +135,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         }
 
         HeaderItem(3, getString(R.string.top_tv_shows)).also { header ->
-            rowsAdapter.replace(3, ListRow(header, listRowAdapter))
+            rowsAdapter.replace(if (hasContinueWatching) 3 else 2, ListRow(header, listRowAdapter))
         }
     }
 
@@ -153,7 +146,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         }
 
         HeaderItem(4, getString(R.string.categories)).also { header ->
-            rowsAdapter.replace(4, ListRow(header, listRowAdapter))
+            rowsAdapter.replace(if (hasContinueWatching) 4 else 3, ListRow(header, listRowAdapter))
         }
     }
     
