@@ -5,13 +5,6 @@ class AppConstants {
         const val TRAKTV_CLIENT_ID = "3149f4d57d07efed5a51638879923b574d3487e4e8159758835450620aaaed24"
         const val TRAKTV_CLIENT_SECRET = "6bbe62ce5aac07b6c2c00f1b290a0d5407fd444bc03e00b6f00240112179fab6"
 
-        const val TV_CONTINUE_WATCHING = "განაგრძეთ ყურება"
-        const val TV_TOP_MOVIES = "ტოპ ფილები"
-        const val TV_NEW_MOVIES = "ახალი დამატებული"
-        const val TV_TOP_TV_SHOWS = "ტოპ სერიალები"
-        const val TV_GENRES = "კატეგორიები"
-        const val TV_SETTINGS = "პარამეტრები"
-
         const val NAV_HOME_TO_SINGLE = 0
         const val NAV_CONTINUE_WATCHING_TO_SINGLE = 3
 

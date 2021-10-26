@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.ui.tv.search
+package com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.presenters
 
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
@@ -23,7 +23,5 @@ class TvSimilarPresenter : Presenter() {
         cardView.setTitle(movie.displayName)
     }
 
-    override fun onUnbindViewHolder(viewHolder: ViewHolder) {
-    }
-
+    override fun onUnbindViewHolder(viewHolder: ViewHolder) {}
 }

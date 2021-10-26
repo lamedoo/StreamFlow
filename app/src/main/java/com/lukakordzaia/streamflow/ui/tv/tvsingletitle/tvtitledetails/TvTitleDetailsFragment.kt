@@ -23,13 +23,19 @@ import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentVM
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.TvTitleFilesFragment
 import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvVideoPlayerActivity
-import com.lukakordzaia.streamflow.utils.*
+import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.setImage
+import com.lukakordzaia.streamflow.utils.setVisibleOrGone
+import com.lukakordzaia.streamflow.utils.titlePosition
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
 class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvTitleDetailsViewModel>() {
-    var titleId: Int = 0
+    private var titleId: Int = 0
+    private var isTvShow: Boolean = false
+    private var fromWatchlist: Int? = null
+    private var continueWatching: Boolean? = null
 
     override val viewModel by viewModel<TvTitleDetailsViewModel>()
     override val reload: () -> Unit = {
@@ -37,6 +43,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         viewModel.getSingleTitleFiles(titleId)
     }
 
+    private lateinit var languages: List<String>
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var titleInfo: SingleTitleModel
     private var hasFocus: Boolean = false
@@ -48,48 +55,34 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         titleId = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as Int
-        val isTvShow = activity?.intent?.getSerializableExtra(AppConstants.IS_TV_SHOW) as Boolean
-        val continueWatching = activity?.intent?.getSerializableExtra(AppConstants.CONTINUE_WATCHING_NOW) as? Boolean
-        val fromWatchlist = activity?.intent?.getSerializableExtra(AppConstants.FROM_WATCHLIST) as? Int
+        isTvShow = activity?.intent?.getSerializableExtra(AppConstants.IS_TV_SHOW) as Boolean
+        fromWatchlist = activity?.intent?.getSerializableExtra(AppConstants.FROM_WATCHLIST) as? Int
+        continueWatching = activity?.intent?.getSerializableExtra(AppConstants.CONTINUE_WATCHING_NOW) as? Boolean
 
-        fragmentListeners(titleId, isTvShow)
-        fragmentObservers(titleId, isTvShow, fromWatchlist)
-        favoriteContainer(titleId, fromWatchlist)
-        titleDetails(titleId, isTvShow)
-        checkContinueWatching(continueWatching)
+        fragmentSetUi()
+        fragmentListeners()
+        fragmentObservers()
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel.getSingleTitleData(activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as Int)
+        viewModel.getSingleTitleData(titleId)
+        viewModel.getSingleTitleFiles(titleId)
     }
 
-    private fun fragmentListeners(titleId: Int, isTvShow: Boolean) {
+    private fun fragmentSetUi() {
+        if (!isTvShow) {
+            binding.nextDetailsTitle.text = getString(R.string.cast_more)
+        }
+    }
+
+    private fun fragmentListeners() {
         binding.playButton.setOnClickListener {
-            val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
-            val chooseLanguageDialog = Dialog(requireContext())
-            chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            chooseLanguageDialog.setContentView(binding.root)
-            chooseLanguageDialog.show()
-
-            val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-            chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
-                chooseLanguageDialog.hide()
-                playTitleFromStart(titleId, isTvShow, it)
-            }
-            binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
-            binding.rvChooseLanguage.adapter = chooseLanguageAdapter
-
-            viewModel.availableLanguages.observe(viewLifecycleOwner, {
-                val languages = it.reversed()
-                chooseLanguageAdapter.setLanguageList(languages)
-            })
+            languagePickerDialog()
         }
 
-        if (isTvShow) {
-            binding.nextDetailsTitle.text = "ეპიზოდები და მეტი"
-        } else {
-            binding.nextDetailsTitle.text = "მსხახიობები და მეტი"
+        binding.deleteButton.setOnClickListener {
+            removeTitleDialog()
         }
 
         binding.nextDetails.setOnFocusChangeListener { _, hasFocus ->
@@ -100,197 +93,196 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         }
     }
 
-    private fun fragmentObservers(titleId: Int, isTvShow: Boolean, fromWatchlist: Int?) {
-        viewModel.startedWatching.observe(viewLifecycleOwner, {
-            startedWatching = it
-        })
+    private fun fragmentObservers() {
+//        viewModel.startedWatching.observe(viewLifecycleOwner, {
+//            startedWatching = it
+//        })
 
         viewModel.generalLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> binding.tvDetailsProgressBar.setVisible()
-                LoadingState.LOADED -> {
-                    binding.tvDetailsProgressBar.setGone()
-                    binding.mainContainer.setVisible()
-                }
-            }
+            binding.tvDetailsProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
         })
 
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
+            binding.noFilesContainer.setVisibleOrGone(it)
+            binding.buttonsRow.setVisibleOrGone(!it)
+
             if (!it) {
-                binding.noFilesContainer.setGone()
-                binding.buttonsRow.setVisible()
-            } else {
                 binding.favoriteContainer.requestFocus()
             }
+        })
+
+        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
+            setTitleInfo(it)
+            titleInfo = it
+        })
+
+        viewModel.favoriteLoader.observe(viewLifecycleOwner, {
+            binding.favoriteProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
+            binding.favoriteIcon.setVisibleOrGone(it != LoadingState.LOADING)
+        })
+
+        viewModel.addToFavorites.observe(viewLifecycleOwner, {
+            favoriteContainer(it)
+        })
+
+        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            checkContinueWatching(it)
         })
 
         viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
             when (it) {
                 LoadingState.LOADING -> {}
                 LoadingState.LOADED -> {
-                    sharedPreferences.saveTvVideoPlayerOn(true)
-
-                    val intent = Intent(requireContext(), TvSingleTitleActivity::class.java).apply {
-                        putExtra(AppConstants.TITLE_ID, titleId)
-                        putExtra(AppConstants.IS_TV_SHOW, isTvShow)
-                        putExtra(AppConstants.FROM_WATCHLIST, fromWatchlist)
-                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                    startActivity(intent)
+                    restartFragment()
                 }
                 LoadingState.ERROR -> {
-                    viewModel.newToastMessage("სამწუხაროდ, ვერ მოხეხრდა სიიდან დამალვა")
+                    viewModel.newToastMessage(getString(R.string.unable_to_hide_from_list))
                 }
             }
+        })
+
+        viewModel.availableLanguages.observe(viewLifecycleOwner, {
+            languages = it.reversed()
         })
     }
 
-    private fun favoriteContainer(titleId: Int, fromWatchlist: Int?) {
-        viewModel.addToFavorites.observe(viewLifecycleOwner, {
-            if (it) {
-                binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
-                binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
-                binding.favoriteContainer.setOnClickListener {
-                    viewModel.deleteWatchlistTitle(titleId, fromWatchlist)
-                }
-            } else {
-                binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
-                binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
-                binding.favoriteContainer.setOnClickListener {
-                    viewModel.addWatchlistTitle(titleId)
-                }
+    private fun favoriteContainer(isSaved: Boolean) {
+        if (isSaved) {
+            binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite_full, null))
+            binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.accent_color))
+            binding.favoriteContainer.setOnClickListener {
+                viewModel.deleteWatchlistTitle(titleId, fromWatchlist)
             }
-        })
-
-        viewModel.favoriteLoader.observe(viewLifecycleOwner, {
-            when (it) {
-                LoadingState.LOADING -> {
-                    binding.favoriteProgressBar.setVisible()
-                    binding.favoriteIcon.setGone()
-                }
-                LoadingState.LOADED -> {
-                    binding.favoriteProgressBar.setGone()
-                    binding.favoriteIcon.setVisible()
-                }
+        } else {
+            binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
+            binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
+            binding.favoriteContainer.setOnClickListener {
+                viewModel.addWatchlistTitle(titleId)
             }
-        })
+        }
     }
 
-    private fun titleDetails(titleId: Int, isTvShow: Boolean) {
-        viewModel.getSingleTitleFiles(titleId)
+    private fun setTitleInfo(info: SingleTitleModel) {
+        binding.trailerButton.setOnClickListener {
+            playTitleTrailer(info.trailer)
+        }
 
-        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
-            titleInfo = it
+        binding.backgroundPoster.setImage(info.cover, false)
 
-            binding.titleName.text = it.nameEng
-
-            binding.trailerButton.setOnClickListener { _ ->
-                if (it.trailer != null) {
-                    playTitleTrailer(titleId, isTvShow, it.trailer)
-                } else {
-                    viewModel.newToastMessage("ტრეილერი ვერ მოიძებნა")
-                }
-            }
-
-            binding.backgroundPoster.setImage(it.cover, false)
-
-            binding.year.text = it.releaseYear
-            binding.imdbScore.text = "IMDB ${it.imdbScore}"
-            binding.country.text = it.country
-
-            if (it.isTvShow) {
-                binding.duration.text = "${it.seasonNum} სეზონი"
-            } else {
-                binding.duration.text = it.duration
-            }
-
-            binding.titleDescription.text = it.description
-        })
+        binding.titleName.text = info.nameEng
+        binding.year.text = info.releaseYear
+        binding.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
+        binding.country.text = info.country
+        binding.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
+        binding.titleDescription.text = info.description
     }
 
-    private fun checkContinueWatching(continueWatching: Boolean?) {
-        binding.deleteButton.setGone()
+    private fun checkContinueWatching(info: ContinueWatchingRoom?) {
+        binding.deleteButton.setVisibleOrGone(info != null)
         binding.playButton.requestFocus()
-        binding.continueButton.setGone()
+        binding.continueButton.setVisibleOrGone(info != null)
 
-        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-            if (it != null) {
-                binding.deleteButton.setOnClickListener { _ ->
-                    val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
-                    val removeTitle = Dialog(requireContext())
-                    removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    removeTitle.setContentView(binding.root)
-
-                    if (sharedPreferences.getLoginToken() != "") {
-                        binding.title.text = resources.getString(R.string.remove_from_list_title)
-                    }
-
-                    binding.continueButton.setOnClickListener { _ ->
-                        if (sharedPreferences.getLoginToken() == "") {
-                            viewModel.deleteSingleContinueWatchingFromRoom(it.titleId)
-                        } else {
-                            viewModel.hideSingleContinueWatching(it.titleId)
-                        }
-                    }
-                    binding.cancelButton.setOnClickListener {
-                        removeTitle.dismiss()
-                    }
-                    removeTitle.show()
-                    binding.continueButton.requestFocus()
-                }
-
-                binding.continueButton.setOnClickListener { _ ->
-                    continueTitlePlay(ContinueWatchingRoom(
-                        it.titleId,
-                        it.language,
-                        TimeUnit.SECONDS.toMillis(it.watchedDuration),
-                        TimeUnit.SECONDS.toMillis(it.titleDuration),
-                        it.isTvShow,
-                        it.season,
-                        it.episode,
-                    ))
-                }
-
-                binding.continueButton.text = "განაგრძეთ - " + if (it.isTvShow) {
-                    it.watchedDuration.titlePosition(it.season, it.episode)
-                } else {
-                    it.watchedDuration.titlePosition(null, null)
-                }
-
-                binding.continueButton.setVisible()
-                binding.continueButton.requestFocus()
-                binding.playButton.text = "თავიდან ყურება"
-
-                if (sharedPreferences.getLoginToken() == "") {
-                    binding.deleteButton.setVisible()
-                } else {
-                    binding.deleteButton.setVisibleOrGone(titleInfo.visibility!!)
-                }
-
-                if (continueWatching != null) {
-                    viewModel.startedWatching.observe(viewLifecycleOwner, {
-                        if (!it) {
-                            binding.continueButton.callOnClick()
-                            viewModel.setStartedWatching(true)
-                        }
-                    })
-                }
+        if (info != null) {
+            binding.continueButton.setOnClickListener {
+                continueTitlePlay(ContinueWatchingRoom(
+                    info.titleId,
+                    info.language,
+                    TimeUnit.SECONDS.toMillis(info.watchedDuration),
+                    TimeUnit.SECONDS.toMillis(info.titleDuration),
+                    info.isTvShow,
+                    info.season,
+                    info.episode,
+                ))
             }
-        })
+
+            binding.continueButton.text = "განაგრძეთ - ${if (info.isTvShow) {
+            info.watchedDuration.titlePosition(info.season, info.episode)
+        } else {
+                info.watchedDuration.titlePosition(null, null)
+        }}"
+
+            binding.continueButton.requestFocus()
+            binding.playButton.text = getString(R.string.start_over)
+
+            if (continueWatching != null && !startedWatching) {
+                binding.continueButton.callOnClick()
+                startedWatching = true
+            }
+        }
     }
 
-    private fun playTitleTrailer(titleId: Int, isTvShow: Boolean, trailerUrl: String) {
-        val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
-            titleId,
-            isTvShow,
-            0,
-            "ENG",
-            0,
-            0L,
-            trailerUrl
-        ))
-        activity?.startActivity(intent)
+    private fun restartFragment() {
+        sharedPreferences.saveTvVideoPlayerOn(true)
+
+        val intent = Intent(requireContext(), TvSingleTitleActivity::class.java).apply {
+            putExtra(AppConstants.TITLE_ID, titleId)
+            putExtra(AppConstants.IS_TV_SHOW, isTvShow)
+            putExtra(AppConstants.FROM_WATCHLIST, fromWatchlist)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        startActivity(intent)
+    }
+
+    private fun languagePickerDialog() {
+        val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
+        val chooseLanguageDialog = Dialog(requireContext())
+        chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        chooseLanguageDialog.setContentView(binding.root)
+        chooseLanguageDialog.show()
+
+        val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
+            chooseLanguageDialog.hide()
+            playTitleFromStart(titleId, isTvShow, it)
+        }
+        binding.rvChooseLanguage.apply {
+            adapter = chooseLanguageAdapter
+            layoutManager = chooseLanguageLayout
+        }
+
+        chooseLanguageAdapter.setLanguageList(languages)
+    }
+
+    private fun removeTitleDialog() {
+        val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
+        val removeTitle = Dialog(requireContext())
+        removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        removeTitle.setContentView(binding.root)
+
+        if (sharedPreferences.getLoginToken() != "") {
+            binding.title.text = resources.getString(R.string.remove_from_list_title)
+        }
+
+        binding.continueButton.setOnClickListener {
+            if (sharedPreferences.getLoginToken() == "") {
+                viewModel.deleteSingleContinueWatchingFromRoom(titleId)
+            } else {
+                viewModel.hideSingleContinueWatching(titleId)
+            }
+        }
+        binding.cancelButton.setOnClickListener {
+            removeTitle.dismiss()
+        }
+        removeTitle.show()
+        binding.continueButton.requestFocus()
+    }
+
+    private fun playTitleTrailer(trailerUrl: String?) {
+        if (trailerUrl != null) {
+            val intent = Intent(context, TvVideoPlayerActivity::class.java)
+            intent.putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
+                titleId,
+                isTvShow,
+                0,
+                "ENG",
+                0,
+                0L,
+                trailerUrl
+            ))
+            activity?.startActivity(intent)
+        } else {
+            viewModel.newToastMessage(getString(R.string.no_trailer_found))
+        }
     }
 
     private fun playTitleFromStart(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {

@@ -71,4 +71,9 @@
     <string name="version_number">ვერსია v%1$s</string>
     <string name="imdb_score">IMDB %1$s</string>
     <string name="episode_number">ეპიზოდი %1$s</string>
+    <string name="categories">კატეგორიები</string>
+    <string name="cast_more">მსახიობები და მეტი</string>
+    <string name="unable_to_hide_from_list">სამწუხაროდ, ვერ მოხეხრდა სიიდან დამალვა</string>
+    <string name="season_number">%1$s სეზონი</string>
+    <string name="start_over">თავიდან ყურება</string>
 </resources>

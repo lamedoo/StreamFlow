@@ -103,7 +103,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     fun hideSingleContinueWatching(titleId: Int) {
         hideContinueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (val hide = environment.homeRepository.hideTitleContinueWatching(titleId)) {
+            when (environment.homeRepository.hideTitleContinueWatching(titleId)) {
                 is Result.Success -> {
                     newToastMessage("დაიმალა განაგრძეთ ყურების სიიდან")
                     hideContinueWatchingLoader.value = LoadingState.LOADED

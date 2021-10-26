@@ -55,89 +55,95 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRowsAdapter()
+        viewModel.checkAuthDatabase()
 
-        watchedListRowsAdapter()
-        newMoviesRowsAdapter()
-        topMoviesRowsAdapter()
-        topTvShowsRowsAdapter()
+        baseRowsAdapter()
+        fragmentObservers()
         categoriesRowsAdapter()
 
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }
 
-    private fun initRowsAdapter() {
-        val firstHeaderItem = ListRow(HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING), ArrayObjectAdapter(TvMainPresenter()))
-        val secondHeaderItem = ListRow(HeaderItem(1, AppConstants.TV_TOP_MOVIES), ArrayObjectAdapter(TvMainPresenter()))
-        val thirdHeaderItem = ListRow(HeaderItem(2, AppConstants.TV_TOP_TV_SHOWS), ArrayObjectAdapter(TvMainPresenter()))
-        val fourthHeaderItem = ListRow(HeaderItem(3, AppConstants.TV_GENRES), ArrayObjectAdapter(TvMainPresenter()))
-        val sixthHeaderItem = ListRow(HeaderItem(5, AppConstants.TV_NEW_MOVIES), ArrayObjectAdapter(TvMainPresenter()))
+    private fun baseRowsAdapter() {
+        val firstHeaderItem = ListRow(HeaderItem(0, getString(R.string.continue_watching)), ArrayObjectAdapter(TvMainPresenter()))
+        val secondHeaderItem = ListRow(HeaderItem(1, getString(R.string.top_movies)), ArrayObjectAdapter(TvMainPresenter()))
+        val thirdHeaderItem = ListRow(HeaderItem(2, getString(R.string.top_tv_shows)), ArrayObjectAdapter(TvMainPresenter()))
+        val fourthHeaderItem = ListRow(HeaderItem(3, getString(R.string.categories)), ArrayObjectAdapter(TvMainPresenter()))
+        val sixthHeaderItem = ListRow(HeaderItem(5, getString(R.string.new_movies)), ArrayObjectAdapter(TvMainPresenter()))
         val initListRows = mutableListOf(firstHeaderItem, sixthHeaderItem, secondHeaderItem, thirdHeaderItem, fourthHeaderItem)
         rowsAdapter.addAll(0, initListRows)
     }
 
-    private fun watchedListRowsAdapter() {
-        viewModel.checkAuthDatabase()
+    private fun fragmentObservers() {
+        //is needed if user is not signed in and titles are saved in room
         viewModel.contWatchingData.observe(viewLifecycleOwner, {
             viewModel.getContinueWatchingTitlesFromApi(it)
         })
 
-        viewModel.continueWatchingList.observe(viewLifecycleOwner, { continueWatching ->
-            setSelectedPosition(if (continueWatching.isNullOrEmpty()) 1 else 0, continueWatching.isNullOrEmpty())
-
-            viewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
-                when (it) {
-                    LoadingState.LOADING -> {}
-                    LoadingState.LOADED -> {
-                        val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
-                            continueWatching.forEach { titles ->
-                                add(titles)
-                            }
-                        }
-
-                        HeaderItem(0, AppConstants.TV_CONTINUE_WATCHING).also {
-                            rowsAdapter.replace(0, ListRow(it, listRowAdapter))
-                        }
-                    }
-                }
-            })
+        viewModel.continueWatchingList.observe(viewLifecycleOwner, {
+            watchedListRowsAdapter(it)
         })
-    }
 
-    private fun newMoviesRowsAdapter() {
         viewModel.newMovieList.observe(viewLifecycleOwner, {
-            val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
-                addAll(0, it)
-            }
-
-            HeaderItem(1, AppConstants.TV_NEW_MOVIES).also { header ->
-                rowsAdapter.replace(1, ListRow(header, listRowAdapter))
-            }
+            newMoviesRowsAdapter(it)
         })
-    }
 
-    private fun topMoviesRowsAdapter() {
         viewModel.topMovieList.observe(viewLifecycleOwner, {
-            val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
-                addAll(0, it)
-            }
+            topMoviesRowsAdapter(it)
+        })
 
-            HeaderItem(2, AppConstants.TV_TOP_MOVIES).also { header ->
-                rowsAdapter.replace(2, ListRow(header, listRowAdapter))
-            }
+        viewModel.topTvShowList.observe(viewLifecycleOwner, {
+            topTvShowsRowsAdapter(it)
         })
     }
 
-    private fun topTvShowsRowsAdapter() {
-        viewModel.topTvShowList.observe(viewLifecycleOwner, {
-            val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
-                addAll(0, it)
-            }
+    private fun watchedListRowsAdapter(items: List<ContinueWatchingModel>) {
+        viewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
+            when (it) {
+                LoadingState.LOADING -> {}
+                LoadingState.LOADED -> {
 
-            HeaderItem(3, AppConstants.TV_TOP_TV_SHOWS).also { header ->
-                rowsAdapter.replace(3, ListRow(header, listRowAdapter))
+                }
             }
         })
+
+        val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
+            addAll(0, items)
+        }
+
+        HeaderItem(0, getString(R.string.continue_watching)).also {
+            rowsAdapter.replace(0, ListRow(it, listRowAdapter))
+        }
+    }
+
+    private fun newMoviesRowsAdapter(items: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
+            addAll(0, items)
+        }
+
+        HeaderItem(1, getString(R.string.new_movies)).also { header ->
+            rowsAdapter.replace(1, ListRow(header, listRowAdapter))
+        }
+    }
+
+    private fun topMoviesRowsAdapter(items: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
+            addAll(0, items)
+        }
+
+        HeaderItem(2, getString(R.string.top_movies)).also { header ->
+            rowsAdapter.replace(2, ListRow(header, listRowAdapter))
+        }
+    }
+
+    private fun topTvShowsRowsAdapter(items: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
+            addAll(0, items)
+        }
+
+        HeaderItem(3, getString(R.string.top_tv_shows)).also { header ->
+            rowsAdapter.replace(3, ListRow(header, listRowAdapter))
+        }
     }
 
     private fun categoriesRowsAdapter() {
@@ -146,7 +152,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             add(TvCategoriesList(1, "ტოპ სერიალები", R.drawable.icon_star))
         }
 
-        HeaderItem(4, AppConstants.TV_GENRES).also { header ->
+        HeaderItem(4, getString(R.string.categories)).also { header ->
             rowsAdapter.replace(4, ListRow(header, listRowAdapter))
         }
     }

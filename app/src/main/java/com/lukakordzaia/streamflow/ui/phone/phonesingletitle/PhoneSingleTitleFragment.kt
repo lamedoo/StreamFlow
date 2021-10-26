@@ -214,7 +214,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
             binding.titleDescription.text = info.description
             binding.infoDetails.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
             binding.infoDetails.year.text = info.releaseYear
-            binding.infoDetails.duration.text = info.duration
+            binding.infoDetails.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
 
             if (info.isTvShow) {
                 binding.episodesButton.setVisible()

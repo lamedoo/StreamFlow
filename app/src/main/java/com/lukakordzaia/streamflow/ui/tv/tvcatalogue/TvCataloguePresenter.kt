@@ -22,7 +22,5 @@ class TvCataloguePresenter : Presenter() {
         cardView.setPoster(movie.poster)
     }
 
-    override fun onUnbindViewHolder(viewHolder: ViewHolder) {
-    }
-
+    override fun onUnbindViewHolder(viewHolder: ViewHolder) {}
 }
