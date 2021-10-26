@@ -60,7 +60,7 @@ class VideoPlayerViewModel : BaseViewModel() {
             if (sharedPreferences.getLoginToken() != "") {
                 saveLoader.value = LoadingState.LOADING
                 viewModelScope.launch {
-                    when (val time = environment.userRepository.titleWatchTime(
+                    when (environment.userRepository.titleWatchTime(
                         PostTitleWatchTimeRequestBody(
                             duration = TimeUnit.MILLISECONDS.toSeconds(titleDuration).toInt(),
                             progress = TimeUnit.MILLISECONDS.toSeconds(playBackDuration).toInt(),
@@ -84,6 +84,8 @@ class VideoPlayerViewModel : BaseViewModel() {
                     environment.databaseRepository.insertContinueWatchingInRoom(dbDetails)
                 }
             }
+        } else {
+            saveLoader.value = LoadingState.ERROR
         }
     }
 
