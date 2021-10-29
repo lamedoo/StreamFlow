@@ -212,12 +212,38 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="20dp"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_header"
+                        app:spanCount="2" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/new_series_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+                        android:id="@+id/new_series_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:title="@string/new_series"
+                        app:arrow_visibility="true"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_new_series"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="20dp"
                         android:clipToPadding="false"
                         android:paddingBottom="100dp"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/top_tvShows_header"
+                        app:layout_constraintTop_toBottomOf="@id/new_series_header"
                         app:spanCount="2" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

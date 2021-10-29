@@ -3,19 +3,19 @@ package com.lukakordzaia.streamflow.network.models.imovies.response.newseries
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
+import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class GetNewSeriesResponse(
     @SerializedName("data")
-    val `data`: List<Data>
+    val `data`: List<Data>?
 ) : Parcelable {
     @Parcelize
     data class Data(
         @SerializedName("movies")
-        val movies: Movies,
+        val movies: Movies?,
         @SerializedName("period")
-        val period: String
+        val period: String?
     ) : Parcelable {
         @Parcelize
         data class Movies(
@@ -25,329 +25,329 @@ data class GetNewSeriesResponse(
             @Parcelize
             data class Data(
                 @SerializedName("adjaraId")
-                val adjaraId: Int,
+                val adjaraId: Int?,
                 @SerializedName("adult")
-                val adult: Boolean,
+                val adult: Boolean?,
                 @SerializedName("budget")
-                val budget: String,
+                val budget: String?,
                 @SerializedName("canBePlayed")
-                val canBePlayed: Boolean,
+                val canBePlayed: Boolean?,
                 @SerializedName("cover")
-                val cover: Cover,
+                val cover: Cover?,
                 @SerializedName("covers")
-                val covers: Covers,
+                val covers: Covers?,
                 @SerializedName("duration")
-                val duration: Int,
+                val duration: Int?,
                 @SerializedName("genres")
-                val genres: Genres,
+                val genres: Genres?,
                 @SerializedName("hasSubtitles")
-                val hasSubtitles: Boolean,
+                val hasSubtitles: Boolean?,
                 @SerializedName("id")
-                val id: Int,
+                val id: Int?,
                 @SerializedName("imdbUrl")
-                val imdbUrl: String,
+                val imdbUrl: String?,
                 @SerializedName("income")
-                val income: String,
+                val income: String?,
                 @SerializedName("isTvShow")
-                val isTvShow: Boolean,
+                val isTvShow: Boolean?,
                 @SerializedName("languages")
-                val languages: Languages,
+                val languages: Languages?,
                 @SerializedName("lastUpdatedSeries")
-                val lastUpdatedSeries: LastUpdatedSeries,
+                val lastUpdatedSeries: LastUpdatedSeries?,
                 @SerializedName("originalName")
-                val originalName: String,
+                val originalName: String?,
                 @SerializedName("parentalControlRate")
-                val parentalControlRate: Any,
+                val parentalControlRate: String?,
                 @SerializedName("plot")
-                val plot: Plot,
+                val plot: Plot?,
                 @SerializedName("plots")
-                val plots: Plots,
+                val plots: Plots?,
                 @SerializedName("poster")
-                val poster: String,
+                val poster: String?,
                 @SerializedName("posters")
-                val posters: Posters,
+                val posters: Posters?,
                 @SerializedName("primaryName")
-                val primaryName: String,
+                val primaryName: String?,
                 @SerializedName("rating")
-                val rating: Rating,
+                val rating: Rating?,
                 @SerializedName("regionAllowed")
-                val regionAllowed: Boolean,
+                val regionAllowed: Boolean?,
                 @SerializedName("releaseDate")
-                val releaseDate: String,
+                val releaseDate: String?,
                 @SerializedName("secondaryName")
-                val secondaryName: String,
+                val secondaryName: String?,
                 @SerializedName("tertiaryName")
-                val tertiaryName: String,
+                val tertiaryName: String?,
                 @SerializedName("trailers")
-                val trailers: Trailers,
+                val trailers: Trailers?,
                 @SerializedName("userFollows")
-                val userFollows: UserFollows,
+                val userFollows: UserFollows?,
                 @SerializedName("userSubscribed")
-                val userSubscribed: UserSubscribed,
+                val userSubscribed: UserSubscribed?,
                 @SerializedName("userWantsToWatch")
-                val userWantsToWatch: UserWantsToWatch,
+                val userWantsToWatch: UserWantsToWatch?,
                 @SerializedName("userWatch")
-                val userWatch: UserWatch,
+                val userWatch: UserWatch?,
                 @SerializedName("watchCount")
-                val watchCount: Int,
+                val watchCount: Int?,
                 @SerializedName("year")
-                val year: Int
+                val year: Int?
             ) : Parcelable {
                 @Parcelize
                 data class Cover(
                     @SerializedName("large")
-                    val large: String,
+                    val large: String?,
                     @SerializedName("small")
-                    val small: String
+                    val small: String?
                 ) : Parcelable
 
                 @Parcelize
                 data class Covers(
                     @SerializedName("data")
-                    val `data`: Data
+                    val `data`: Data?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("blurhash")
-                        val blurhash: String,
+                        val blurhash: String?,
                         @SerializedName("imageHeight")
-                        val imageHeight: Any,
+                        val imageHeight: String?,
                         @SerializedName("position")
-                        val position: String,
+                        val position: String?,
                         @SerializedName("positionPercentage")
-                        val positionPercentage: String,
+                        val positionPercentage: String?,
                         @SerializedName("1050")
-                        val x1050: String,
+                        val x1050: String?,
                         @SerializedName("145")
-                        val x145: String,
+                        val x145: String?,
                         @SerializedName("1920")
-                        val x1920: String,
+                        val x1920: String?,
                         @SerializedName("367")
-                        val x367: String,
+                        val x367: String?,
                         @SerializedName("510")
-                        val x510: String
+                        val x510: String?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class Genres(
                     @SerializedName("data")
-                    val `data`: List<Data>
+                    val `data`: List<Data?>?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("backgroundImage")
-                        val backgroundImage: String,
+                        val backgroundImage: String?,
                         @SerializedName("id")
-                        val id: Int,
+                        val id: Int?,
                         @SerializedName("primaryName")
-                        val primaryName: String,
+                        val primaryName: String?,
                         @SerializedName("secondaryName")
-                        val secondaryName: String,
+                        val secondaryName: String?,
                         @SerializedName("tertiaryName")
-                        val tertiaryName: String
+                        val tertiaryName: String?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class Languages(
                     @SerializedName("data")
-                    val `data`: List<Data>
+                    val `data`: List<Data?>?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("code")
-                        val code: String,
+                        val code: String?,
                         @SerializedName("primaryName")
-                        val primaryName: String,
+                        val primaryName: String?,
                         @SerializedName("primaryNameTurned")
-                        val primaryNameTurned: String,
+                        val primaryNameTurned: String?,
                         @SerializedName("secondaryName")
-                        val secondaryName: String,
+                        val secondaryName: String?,
                         @SerializedName("tertiaryName")
-                        val tertiaryName: String
+                        val tertiaryName: String?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class LastUpdatedSeries(
                     @SerializedName("data")
-                    val `data`: Data
+                    val `data`: Data?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("episode")
-                        val episode: Int,
+                        val episode: Int?,
                         @SerializedName("season")
-                        val season: Int
+                        val season: Int?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class Plot(
                     @SerializedName("data")
-                    val `data`: Data
+                    val `data`: Data?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("description")
-                        val description: String,
+                        val description: String?,
                         @SerializedName("language")
-                        val language: String
+                        val language: String?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class Plots(
                     @SerializedName("data")
-                    val `data`: List<Data>
+                    val `data`: List<Data?>?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("description")
-                        val description: String,
+                        val description: String?,
                         @SerializedName("language")
-                        val language: String
+                        val language: String?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class Posters(
                     @SerializedName("data")
-                    val `data`: Data
+                    val `data`: Data?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("blurhash")
-                        val blurhash: String,
+                        val blurhash: String?,
                         @SerializedName("240")
-                        val x240: String
+                        val x240: String?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class Rating(
                     @SerializedName("imdb")
-                    val imdb: Imdb,
+                    val imdb: Imdb?,
                     @SerializedName("imovies")
-                    val imovies: Imovies,
+                    val imovies: Imovies?,
                     @SerializedName("metacritic")
-                    val metacritic: Metacritic,
+                    val metacritic: Metacritic?,
                     @SerializedName("rotten")
-                    val rotten: Rotten
+                    val rotten: Rotten?
                 ) : Parcelable {
                     @Parcelize
                     data class Imdb(
                         @SerializedName("score")
-                        val score: Int,
+                        val score: Double?,
                         @SerializedName("voters")
-                        val voters: Int
+                        val voters: Int?
                     ) : Parcelable
 
                     @Parcelize
                     data class Imovies(
                         @SerializedName("score")
-                        val score: Int,
+                        val score: Double?,
                         @SerializedName("voters")
-                        val voters: Int
+                        val voters: Int?
                     ) : Parcelable
 
                     @Parcelize
                     data class Metacritic(
                         @SerializedName("score")
-                        val score: Int,
+                        val score: Double?,
                         @SerializedName("voters")
-                        val voters: Any
+                        val voters: Int?
                     ) : Parcelable
 
                     @Parcelize
                     data class Rotten(
                         @SerializedName("score")
-                        val score: Int,
+                        val score: Double?,
                         @SerializedName("voters")
-                        val voters: Any
+                        val voters: Int?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class Trailers(
                     @SerializedName("data")
-                    val `data`: List<Data>
+                    val `data`: List<Data?>?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("fileUrl")
-                        val fileUrl: String,
+                        val fileUrl: String?,
                         @SerializedName("id")
-                        val id: Int,
+                        val id: Int?,
                         @SerializedName("language")
-                        val language: String,
+                        val language: String?,
                         @SerializedName("name")
-                        val name: String
+                        val name: String?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class UserFollows(
                     @SerializedName("data")
-                    val `data`: Data
+                    val `data`: Data?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("status")
-                        val status: Boolean
+                        val status: Boolean?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class UserSubscribed(
                     @SerializedName("data")
-                    val `data`: Data
+                    val `data`: Data?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("status")
-                        val status: Boolean
+                        val status: Boolean?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class UserWantsToWatch(
                     @SerializedName("data")
-                    val `data`: Data
+                    val `data`: Data?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("status")
-                        val status: Boolean
+                        val status: Boolean?
                     ) : Parcelable
                 }
 
                 @Parcelize
                 data class UserWatch(
                     @SerializedName("data")
-                    val `data`: Data
+                    val `data`: Data?
                 ) : Parcelable {
                     @Parcelize
                     data class Data(
                         @SerializedName("duration")
-                        val duration: Int,
+                        val duration: Int?,
                         @SerializedName("episode")
-                        val episode: Any,
+                        val episode: Int?,
                         @SerializedName("language")
-                        val language: String,
+                        val language: String?,
                         @SerializedName("progress")
-                        val progress: Int,
+                        val progress: Int?,
                         @SerializedName("quality")
-                        val quality: String,
+                        val quality: String?,
                         @SerializedName("season")
-                        val season: Any,
+                        val season: Int?,
                         @SerializedName("updateDate")
-                        val updateDate: String,
+                        val updateDate: String?,
                         @SerializedName("visible")
-                        val visible: Boolean,
+                        val visible: Boolean?,
                         @SerializedName("watched")
-                        val watched: Boolean
+                        val watched: Boolean?
                     ) : Parcelable
                 }
             }

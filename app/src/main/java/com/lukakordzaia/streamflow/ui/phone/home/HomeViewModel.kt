@@ -6,12 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
+import com.lukakordzaia.streamflow.datamodels.NewSeriesModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.toContinueWatchingModel
+import com.lukakordzaia.streamflow.utils.toNewSeriesModel
 import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,6 +34,9 @@ class HomeViewModel : BaseViewModel() {
 
     private val _topTvShowList = MutableLiveData<List<SingleTitleModel>>()
     val topTvShowList: LiveData<List<SingleTitleModel>> = _topTvShowList
+
+    private val _newSeriesList = MutableLiveData<List<NewSeriesModel>>()
+    val newSeriesList: LiveData<List<NewSeriesModel>> = _newSeriesList
 
     private val _continueWatchingList = MutableLiveData<List<ContinueWatchingModel>>()
     val continueWatchingList: LiveData<List<ContinueWatchingModel>> = _continueWatchingList
@@ -227,6 +232,18 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
+    private suspend fun getNewSeries(page: Int) {
+        when (val newSeries = environment.homeRepository.getNewSeries(page)) {
+            is Result.Success -> {
+                val data = newSeries.data.data?.get(0)?.movies?.data
+                _newSeriesList.postValue(data?.toNewSeriesModel())
+            }
+            is Result.Error -> {
+                newToastMessage("ახალი სერიები- ${newSeries.exception}")
+            }
+        }
+    }
+
     fun fetchContent(page: Int) {
         setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
@@ -237,6 +254,7 @@ class HomeViewModel : BaseViewModel() {
                     getNewMovies(page)
                     getTopMovies(page)
                     getTopTvShows(page)
+                    getNewSeries(page)
                 }
                 getData.join()
                 setGeneralLoader(LoadingState.LOADED)

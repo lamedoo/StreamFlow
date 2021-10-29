@@ -14,6 +14,7 @@ import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeContinueWatchingAdapter
+import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeNewSeriesAdapter
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
@@ -31,6 +32,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
     private lateinit var homeNewMovieAdapter: HomeTitlesAdapter
     private lateinit var homeTopMovieAdapter: HomeTitlesAdapter
     private lateinit var homeTvShowAdapter: HomeTitlesAdapter
+    private lateinit var homeNewSeriesAdapter: HomeNewSeriesAdapter
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneHomeBinding
         get() = FragmentPhoneHomeBinding::inflate
@@ -57,6 +59,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
         newMoviesContainer()
         topMoviesContainer()
         topTvShowsContainer()
+        newSeriesContainer()
     }
 
     private fun fragmentListeners() {
@@ -120,6 +123,10 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
         viewModel.topTvShowList.observe(viewLifecycleOwner, {
             homeTvShowAdapter.setItems(it)
         })
+
+        viewModel.newSeriesList.observe(viewLifecycleOwner, {
+            homeNewSeriesAdapter.setItems(it)
+        })
     }
 
     private fun movieDayContainer(movie: SingleTitleModel) {
@@ -179,6 +186,17 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
         binding.rvTopTvShows.apply {
             adapter = homeTvShowAdapter
             layoutManager = tvShowLayout
+        }
+    }
+
+    private fun newSeriesContainer() {
+        val newSeriesLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        homeNewSeriesAdapter = HomeNewSeriesAdapter(requireActivity()) {
+            viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
+        }
+        binding.rvNewSeries.apply {
+            adapter = homeNewSeriesAdapter
+            layoutManager = newSeriesLayout
         }
     }
 
