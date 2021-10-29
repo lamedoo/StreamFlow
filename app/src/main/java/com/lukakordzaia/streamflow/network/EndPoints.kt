@@ -10,6 +10,7 @@ class EndPoints {
         const val NEW_MOVIES = "movies?filters%5Bwith_files%5D=yes&filters%5Btype%5D=movie&sort=-upload_date&per_page=55"
         const val TOP_MOVIES = "movies/top?type=movie&period=day&page=1&per_page=55"
         const val TOP_TV_SHOWS = "movies/top?type=series&period=day&per_page=55"
+        const val NEW_SERIES = "movies/latest-episodes"
 
         const val TOP_TRAILERS = "trailers/trailer-day?page=1&per_page=5"
         const val GENRES = "genres?page=1&per_page=100"

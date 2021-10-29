@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id "androidx.navigation.safeargs.kotlin"
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -109,7 +110,8 @@ dependencies {
     implementation "org.koin:koin-androidx-scope:$koin"
 
     implementation platform('com.google.firebase:firebase-bom:26.5.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
 
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation 'com.github.bumptech.glide:glide:4.11.0'

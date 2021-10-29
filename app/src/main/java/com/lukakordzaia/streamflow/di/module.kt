@@ -8,7 +8,6 @@ import com.lukakordzaia.streamflow.network.RetrofitBuilder
 import com.lukakordzaia.streamflow.network.imovies.ImoviesNetwork
 import com.lukakordzaia.streamflow.network.interceptors.DefaultHeaderInterceptor
 import com.lukakordzaia.streamflow.network.interceptors.NetworkConnectionInterceptor
-import com.lukakordzaia.streamflow.network.trakttv.TraktTvNetwork
 import com.lukakordzaia.streamflow.repository.cataloguerepository.CatalogueRepository
 import com.lukakordzaia.streamflow.repository.cataloguerepository.DefaultCatalogueRepository
 import com.lukakordzaia.streamflow.repository.databaserepository.DatabaseRepository
@@ -19,8 +18,6 @@ import com.lukakordzaia.streamflow.repository.searchrepository.DefaultSearchRepo
 import com.lukakordzaia.streamflow.repository.searchrepository.SearchRepository
 import com.lukakordzaia.streamflow.repository.singletitlerepository.DefaultSingleTitleRepository
 import com.lukakordzaia.streamflow.repository.singletitlerepository.SingleTitleRepository
-import com.lukakordzaia.streamflow.repository.traktrepository.DefaultTraktRepository
-import com.lukakordzaia.streamflow.repository.traktrepository.TraktRepository
 import com.lukakordzaia.streamflow.repository.userrepository.DefaultUserRepository
 import com.lukakordzaia.streamflow.repository.userrepository.UserRepository
 import com.lukakordzaia.streamflow.repository.watchlistrepository.DefaultWatchlistRepository
@@ -63,7 +60,6 @@ val repositoryModule = module {
     single<SingleTitleRepository> { DefaultSingleTitleRepository(get()) }
     single<CatalogueRepository> { DefaultCatalogueRepository(get()) }
     single<SearchRepository> { DefaultSearchRepository(get()) }
-    single<TraktRepository> { DefaultTraktRepository(get()) }
     single<WatchlistRepository> { DefaultWatchlistRepository(get()) }
     single<DatabaseRepository> { DefaultDatabaseRepository(get()) }
     single<UserRepository> { DefaultUserRepository(get()) }
@@ -74,10 +70,9 @@ val generalModule = module {
     single { DefaultHeaderInterceptor(get()) }
     single { RetrofitBuilder(get(), get()) }
     single { get<RetrofitBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
-    single { get<RetrofitBuilder>().getRetrofitInstance().create(TraktTvNetwork::class.java) }
     single { BuildMediaSource(get()) }
     single { SharedPreferences(get()) }
     single { TvSidebarAnimations() }
     single { StreamFlowDatabase.getDatabase(get()) }
-    single { Environment(get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { Environment(get(), get(), get(), get(), get(), get(), get()) }
 }

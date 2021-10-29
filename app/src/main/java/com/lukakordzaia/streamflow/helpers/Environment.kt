@@ -5,7 +5,6 @@ import com.lukakordzaia.streamflow.repository.databaserepository.DatabaseReposit
 import com.lukakordzaia.streamflow.repository.homerepistory.HomeRepository
 import com.lukakordzaia.streamflow.repository.searchrepository.SearchRepository
 import com.lukakordzaia.streamflow.repository.singletitlerepository.SingleTitleRepository
-import com.lukakordzaia.streamflow.repository.traktrepository.TraktRepository
 import com.lukakordzaia.streamflow.repository.userrepository.UserRepository
 import com.lukakordzaia.streamflow.repository.watchlistrepository.WatchlistRepository
 
@@ -15,7 +14,6 @@ class Environment(
     val catalogueRepository: CatalogueRepository,
     val watchlistRepository: WatchlistRepository,
     val searchRepository: SearchRepository,
-    val traktRepository: TraktRepository,
     val databaseRepository: DatabaseRepository,
     val userRepository: UserRepository,
 )
