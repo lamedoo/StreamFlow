@@ -9,17 +9,14 @@ import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.NewSeriesModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseBrowseSupportFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
-import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvMainPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvNewSeriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvWatchedCardPresenter
-import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import org.koin.android.ext.android.inject
@@ -31,6 +28,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
     override val reload: () -> Unit = { viewModel.fetchContent(1) }
 
     private var hasContinueWatching = false
+    private var hasUserSuggestion = sharedPreferences.getLoginToken() != ""
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
@@ -61,7 +59,6 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
 
         baseRowsAdapter()
         fragmentObservers()
-        categoriesRowsAdapter()
 
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }
@@ -70,10 +67,10 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         val watchlistRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
         val newMoviesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
         val topMoviesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
+        val userSuggestionsRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
         val topTvShowsRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
         val newSeriesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
-        val categoriesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
-        val initListRows = mutableListOf(watchlistRow, newMoviesRow, topMoviesRow, topTvShowsRow, newSeriesRow, categoriesRow)
+        val initListRows = mutableListOf(watchlistRow, newMoviesRow, topMoviesRow, userSuggestionsRow, topTvShowsRow, newSeriesRow)
         rowsAdapter.addAll(0, initListRows)
     }
 
@@ -93,6 +90,10 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
 
         viewModel.topMovieList.observe(viewLifecycleOwner, {
             topMoviesRowsAdapter(it)
+        })
+
+        viewModel.userSuggestionsList.observe(viewLifecycleOwner, {
+            userSuggestionsRowsAdapter(it)
         })
 
         viewModel.topTvShowList.observe(viewLifecycleOwner, {
@@ -136,13 +137,32 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         }
     }
 
+    private fun userSuggestionsRowsAdapter(items: List<SingleTitleModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
+            addAll(0, items)
+        }
+
+        if (hasUserSuggestion) {
+            HeaderItem(if (hasContinueWatching) 3 else 2, getString(R.string.we_suggest_watching)).also { header ->
+                rowsAdapter.replace(if (hasContinueWatching) 3 else 2, ListRow(header, listRowAdapter))
+            }
+        }
+    }
+
     private fun topTvShowsRowsAdapter(items: List<SingleTitleModel>) {
         val listRowAdapter = ArrayObjectAdapter(TvMainPresenter()).apply {
             addAll(0, items)
         }
 
-        HeaderItem(if (hasContinueWatching) 3 else 2, getString(R.string.top_tv_shows)).also { header ->
-            rowsAdapter.replace(if (hasContinueWatching) 3 else 2, ListRow(header, listRowAdapter))
+        val position = when {
+            hasContinueWatching && hasUserSuggestion -> 4
+            hasContinueWatching && !hasUserSuggestion -> 3
+            !hasContinueWatching && !hasUserSuggestion -> 2
+            else -> 2
+        }
+
+        HeaderItem(position.toLong(), getString(R.string.top_tv_shows)).also { header ->
+            rowsAdapter.replace(position, ListRow(header, listRowAdapter))
         }
     }
 
@@ -151,19 +171,15 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        HeaderItem(if (hasContinueWatching) 4 else 3, getString(R.string.new_series)).also { header ->
-            rowsAdapter.replace(if (hasContinueWatching) 4 else 3, ListRow(header, listRowAdapter))
-        }
-    }
-
-    private fun categoriesRowsAdapter() {
-        val listRowAdapter = ArrayObjectAdapter(TvCategoriesPresenter()).apply {
-            add(TvCategoriesList(0, "ტოპ ფილები", R.drawable.icon_star))
-            add(TvCategoriesList(1, "ტოპ სერიალები", R.drawable.icon_star))
+        val position = when {
+            hasContinueWatching && hasUserSuggestion -> 5
+            hasContinueWatching && !hasUserSuggestion -> 4
+            !hasContinueWatching && !hasUserSuggestion -> 3
+            else -> 2
         }
 
-        HeaderItem(if (hasContinueWatching) 5 else 4, getString(R.string.categories)).also { header ->
-            rowsAdapter.replace(if (hasContinueWatching) 5 else 4, ListRow(header, listRowAdapter))
+        HeaderItem(position.toLong(), getString(R.string.new_series)).also { header ->
+            rowsAdapter.replace(position, ListRow(header, listRowAdapter))
         }
     }
     
@@ -196,22 +212,6 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
                         putExtra(AppConstants.CONTINUE_WATCHING_NOW, true)
                     }
                     requireActivity().startActivity(intent)
-                }
-                is TvCategoriesList -> {
-                    when (item.categoriesId) {
-                        0 -> {
-                            val intent = Intent(context, TvCatalogueActivity::class.java).apply {
-                                putExtra(AppConstants.CATALOGUE_TYPE, AppConstants.LIST_TOP_MOVIES)
-                            }
-                            requireActivity().startActivity(intent)
-                        }
-                        1 -> {
-                            val intent = Intent(context, TvCatalogueActivity::class.java).apply {
-                                putExtra(AppConstants.CATALOGUE_TYPE, AppConstants.LIST_TOP_TV_SHOWS)
-                            }
-                            requireActivity().startActivity(intent)
-                        }
-                    }
                 }
             }
         }
