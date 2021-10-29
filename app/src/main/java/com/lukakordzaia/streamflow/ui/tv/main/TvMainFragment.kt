@@ -7,6 +7,7 @@ import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
+import com.lukakordzaia.streamflow.datamodels.NewSeriesModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TvCategoriesList
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
@@ -16,6 +17,7 @@ import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseBrowseSupportFra
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvCategoriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvMainPresenter
+import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvNewSeriesPresenter
 import com.lukakordzaia.streamflow.ui.tv.main.presenters.TvWatchedCardPresenter
 import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.TvSingleTitleActivity
@@ -69,8 +71,9 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         val newMoviesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
         val topMoviesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
         val topTvShowsRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
+        val newSeriesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
         val categoriesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
-        val initListRows = mutableListOf(watchlistRow, newMoviesRow, topMoviesRow, topTvShowsRow, categoriesRow)
+        val initListRows = mutableListOf(watchlistRow, newMoviesRow, topMoviesRow, topTvShowsRow, newSeriesRow, categoriesRow)
         rowsAdapter.addAll(0, initListRows)
     }
 
@@ -94,6 +97,10 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
 
         viewModel.topTvShowList.observe(viewLifecycleOwner, {
             topTvShowsRowsAdapter(it)
+        })
+
+        viewModel.newSeriesList.observe(viewLifecycleOwner, {
+            newSeriesRowsAdapter(it)
         })
     }
 
@@ -134,8 +141,18 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        HeaderItem(3, getString(R.string.top_tv_shows)).also { header ->
+        HeaderItem(if (hasContinueWatching) 3 else 2, getString(R.string.top_tv_shows)).also { header ->
             rowsAdapter.replace(if (hasContinueWatching) 3 else 2, ListRow(header, listRowAdapter))
+        }
+    }
+
+    private fun newSeriesRowsAdapter(items: List<NewSeriesModel>) {
+        val listRowAdapter = ArrayObjectAdapter(TvNewSeriesPresenter()).apply {
+            addAll(0, items)
+        }
+
+        HeaderItem(if (hasContinueWatching) 4 else 3, getString(R.string.new_series)).also { header ->
+            rowsAdapter.replace(if (hasContinueWatching) 4 else 3, ListRow(header, listRowAdapter))
         }
     }
 
@@ -145,8 +162,8 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             add(TvCategoriesList(1, "ტოპ სერიალები", R.drawable.icon_star))
         }
 
-        HeaderItem(4, getString(R.string.categories)).also { header ->
-            rowsAdapter.replace(if (hasContinueWatching) 4 else 3, ListRow(header, listRowAdapter))
+        HeaderItem(if (hasContinueWatching) 5 else 4, getString(R.string.categories)).also { header ->
+            rowsAdapter.replace(if (hasContinueWatching) 5 else 4, ListRow(header, listRowAdapter))
         }
     }
     
@@ -159,6 +176,13 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         ) {
             when (item) {
                 is SingleTitleModel -> {
+                    val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
+                        putExtra(AppConstants.TITLE_ID, item.id)
+                        putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
+                    }
+                    requireActivity().startActivity(intent)
+                }
+                is NewSeriesModel -> {
                     val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                         putExtra(AppConstants.TITLE_ID, item.id)
                         putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
@@ -197,10 +221,10 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
-            if (item is SingleTitleModel) {
-                onTitleSelected?.getTitleId(item.id, null)
-            } else if (item is ContinueWatchingModel) {
-                onTitleSelected?.getTitleId(item.id, item)
+            when (item) {
+                is SingleTitleModel -> onTitleSelected?.getTitleId(item.id, null)
+                is NewSeriesModel -> onTitleSelected?.getTitleId(item.id, null)
+                is ContinueWatchingModel -> onTitleSelected?.getTitleId(item.id, item)
             }
 
             if (indexOfItem == 0) {
