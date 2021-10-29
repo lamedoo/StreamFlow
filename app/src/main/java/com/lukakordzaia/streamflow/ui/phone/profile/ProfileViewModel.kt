@@ -53,6 +53,7 @@ class ProfileViewModel : BaseViewModel() {
 
                     sharedPreferences.saveLoginToken("")
                     sharedPreferences.saveLoginRefreshToken("")
+                    sharedPreferences.saveUserId(-1)
 
                     setGeneralLoader(LoadingState.LOADED)
                 }
@@ -69,6 +70,8 @@ class ProfileViewModel : BaseViewModel() {
             when (val userData = environment.userRepository.userData()) {
                 is Result.Success -> {
                     val data = userData.data.data
+
+                    sharedPreferences.saveUserId(data.id)
 
                     _userData.value = data
                 }

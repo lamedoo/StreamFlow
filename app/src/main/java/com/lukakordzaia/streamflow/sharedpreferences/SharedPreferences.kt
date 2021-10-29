@@ -7,8 +7,7 @@ class SharedPreferences(context: Context) {
     private val loginRefreshTokenDefValue = ""
     private val usernameDefValue = ""
     private val passwordDefValue = ""
-    private val traktTokenDefValue = ""
-    private val traktRefreshTokenDefValue = ""
+    private val userIdDefValue = -1
     private val tvVideoPlayerOnDefValue = false
     private val fromWatchlistDefValue = -1
     private val authPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -68,22 +67,13 @@ class SharedPreferences(context: Context) {
         return authPrefs.getInt(IS_FROM_WATCHLIST, fromWatchlistDefValue)
     }
 
-    fun saveTraktToken(accessToken: String) {
-        authEditor.putString(TRAKT_TOKEN, accessToken)
+    fun getUserId(): Int {
+        return authPrefs.getInt(USER_ID, userIdDefValue)
+    }
+
+    fun saveUserId(userId: Int) {
+        authEditor.putInt(USER_ID, userId)
         authEditor.apply()
-    }
-
-    fun getTraktToken(): String? {
-        return authPrefs.getString(TRAKT_TOKEN, traktTokenDefValue)
-    }
-
-    fun saveTraktRefreshToken(refreshToken: String) {
-        authEditor.putString(TRAKT_REFRESH_TOKEN, refreshToken)
-        authEditor.apply()
-    }
-
-    fun getTraktRefreshToken(): String? {
-        return authPrefs.getString(TRAKT_REFRESH_TOKEN, traktRefreshTokenDefValue)
     }
 
     companion object {
@@ -92,8 +82,7 @@ class SharedPreferences(context: Context) {
         const val LOGIN_REFRESH_TOKEN = "login refresh token"
         const val USERNAME = "username"
         const val PASSWORD = "password"
-        const val TRAKT_TOKEN = "trakt token"
-        const val TRAKT_REFRESH_TOKEN = "trakt refresh token"
+        const val USER_ID = "user id"
         const val TV_VIDEO_PLAYER_ON = "video player is on"
         const val IS_FROM_WATCHLIST = "is from watchlist"
     }

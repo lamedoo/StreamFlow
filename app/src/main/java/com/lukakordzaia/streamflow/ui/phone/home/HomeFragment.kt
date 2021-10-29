@@ -33,6 +33,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
     private lateinit var homeTopMovieAdapter: HomeTitlesAdapter
     private lateinit var homeTvShowAdapter: HomeTitlesAdapter
     private lateinit var homeNewSeriesAdapter: HomeNewSeriesAdapter
+    private lateinit var homeUserSuggestionsAdapter: HomeTitlesAdapter
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneHomeBinding
         get() = FragmentPhoneHomeBinding::inflate
@@ -60,6 +61,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
         topMoviesContainer()
         topTvShowsContainer()
         newSeriesContainer()
+        userSuggestionsContainer()
     }
 
     private fun fragmentListeners() {
@@ -109,6 +111,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
         })
 
         viewModel.continueWatchingList.observe(viewLifecycleOwner, {
+            binding.continueWatchingContainer.setVisibleOrGone(!it.isNullOrEmpty())
             homeContinueWatchingAdapter.setWatchedTitlesList(it)
         })
 
@@ -126,6 +129,10 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
 
         viewModel.newSeriesList.observe(viewLifecycleOwner, {
             homeNewSeriesAdapter.setItems(it)
+        })
+
+        viewModel.userSuggestionsList.observe(viewLifecycleOwner, {
+            homeUserSuggestionsAdapter.setItems(it)
         })
     }
 
@@ -191,12 +198,25 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
 
     private fun newSeriesContainer() {
         val newSeriesLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeNewSeriesAdapter = HomeNewSeriesAdapter(requireActivity()) {
+        homeNewSeriesAdapter = HomeNewSeriesAdapter(requireContext()) {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         binding.rvNewSeries.apply {
             adapter = homeNewSeriesAdapter
             layoutManager = newSeriesLayout
+        }
+    }
+
+    private fun userSuggestionsContainer() {
+        binding.userSuggestionsContainer.setVisibleOrGone(sharedPreferences.getLoginToken() != "")
+
+        val suggestionsLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        homeUserSuggestionsAdapter = HomeTitlesAdapter(requireContext()) {
+            viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
+        }
+        binding.rvUserSuggestion.apply {
+            adapter = homeUserSuggestionsAdapter
+            layoutManager = suggestionsLayout
         }
     }
 

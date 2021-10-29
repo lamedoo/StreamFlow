@@ -36,4 +36,8 @@ class DefaultHomeRepository(private val service: ImoviesNetwork): ImoviesCall(),
     override suspend fun getNewSeries(page: Int): Result<GetNewSeriesResponse> {
         return imoviesCall { service.getNewSeries(page) }
     }
+
+    override suspend fun getUserSuggestions(user: Int): Result<GetTitlesResponse> {
+        return imoviesCall { service.getUserSuggestions(user) }
+    }
 }

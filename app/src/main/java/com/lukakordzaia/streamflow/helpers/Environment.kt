@@ -15,5 +15,5 @@ class Environment(
     val watchlistRepository: WatchlistRepository,
     val searchRepository: SearchRepository,
     val databaseRepository: DatabaseRepository,
-    val userRepository: UserRepository,
+    val userRepository: UserRepository
 )

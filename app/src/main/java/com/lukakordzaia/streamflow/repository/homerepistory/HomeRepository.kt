@@ -14,4 +14,5 @@ interface HomeRepository {
     suspend fun getTopMovies(page: Int): Result<GetTitlesResponse>
     suspend fun getTopTvShows(page: Int): Result<GetTitlesResponse>
     suspend fun getNewSeries(page: Int): Result<GetNewSeriesResponse>
+    suspend fun getUserSuggestions(user: Int): Result<GetTitlesResponse>
 }

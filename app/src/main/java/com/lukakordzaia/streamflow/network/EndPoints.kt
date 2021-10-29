@@ -26,27 +26,14 @@ class EndPoints {
         const val SINGLE_TITLE_RELATED = "movies/{id}/related?page=1&per_page=10"
         const val SINGLE_TITLE_FILES = "movies/{id}/season-files/{season_number}"
 
-        const val USER_LOGIN = "https://api.imovies.cc/api/v1/auth/token"
-        const val USER_DATA = "https://api.imovies.cc/api/v1/auth/user"
-        const val USER_LOG_OUT = "https://api.imovies.cc/api/v1/auth/revoke-token"
-        const val USER_WATCHLIST = "https://api.imovies.cc/api/v1/user/wantstowatch?per_page=50&filters%5Bgenres_related%5D=no&filters%5Bcountries_related%5D=no&filters%5Bwithout_watched_movies%5D=no&sort=last_added"
-        const val USER_WATCHLIST_STATUS = "https://api.imovies.cc/api/v1/movies/{id}/wantstowatch"
-        const val USER_IS_WATCHING = "https://api.imovies.cc/api/v1/user/watches/{id}/{season}/{episode}"
-        const val USER_CONTINUE_WATCHING = "https://api.imovies.cc/api/v1/user/watches-continue?page=1&per_page=75&filters%5Bwithout_watched_movies%5D=yes"
-        const val HIDE_CONTINUE_WATCHING = "https://api.imovies.cc/api/v1/user/watches/{id}/hide"
-
-        //TRAKT TV
-        const val DEVICE_CODE = "https://api.trakt.tv/oauth/device/code"
-
-        const val USER_TOKEN = "https://api.trakt.tv/oauth/device/token"
-        const val USER_PROFILE = "https://api.trakt.tv/users/me"
-        const val USER_LIST = "https://api.trakt.tv/users/me/lists/streamflow-list"
-        const val USER_LIST_BY_TYPE = "https://api.trakt.tv/users/me/lists/streamflow-list/items/{type}"
-
-        const val ADD_LIST = "https://api.trakt.tv/users/me/lists"
-        const val ADD_MOVIE_TO_LIST = "https://api.trakt.tv/users/me/lists/streamflow-list/items"
-        const val ADD_TV_SHOW_TO_LIST = "https://api.trakt.tv/users/me/lists/streamflow-list/items"
-        const val REMOVE_MOVIE_FROM_LIST = "https://api.trakt.tv/users/me/lists/streamflow-list/items/remove"
-        const val REMOVE_TV_SHOW_FROM_LIST = "https://api.trakt.tv/users/me/lists/streamflow-list/items/remove"
+        const val USER_LOGIN = "auth/token"
+        const val USER_DATA = "auth/user"
+        const val USER_LOG_OUT = "auth/revoke-token"
+        const val USER_WATCHLIST = "user/wantstowatch?per_page=50&filters%5Bgenres_related%5D=no&filters%5Bcountries_related%5D=no&filters%5Bwithout_watched_movies%5D=no&sort=last_added"
+        const val USER_WATCHLIST_STATUS = "movies/{id}/wantstowatch"
+        const val USER_IS_WATCHING = "user/watches/{id}/{season}/{episode}"
+        const val USER_CONTINUE_WATCHING = "user/watches-continue?page=1&per_page=75&filters%5Bwithout_watched_movies%5D=yes"
+        const val HIDE_CONTINUE_WATCHING = "user/watches/{id}/hide"
+        const val USER_SUGGESTIONS = "user/movies/suggestions?per_page=55"
     }
 }

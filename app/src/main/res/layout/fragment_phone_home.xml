@@ -169,6 +169,32 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/user_suggestions_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.lukakordzaia.streamflow.customviews.CPhoneHeaderView
+                        android:id="@+id/user_suggestion_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:title="@string/we_suggest_watching"
+                        app:arrow_visibility="false"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_user_suggestion"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="20dp"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/user_suggestion_header"
+                        app:spanCount="2" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/top_movies_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -231,7 +257,7 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toTopOf="parent"
                         app:title="@string/new_series"
-                        app:arrow_visibility="true"/>
+                        app:arrow_visibility="false"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_new_series"

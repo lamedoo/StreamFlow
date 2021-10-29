@@ -38,6 +38,9 @@ class HomeViewModel : BaseViewModel() {
     private val _newSeriesList = MutableLiveData<List<NewSeriesModel>>()
     val newSeriesList: LiveData<List<NewSeriesModel>> = _newSeriesList
 
+    private val _userSuggestionsList = MutableLiveData<List<SingleTitleModel>>()
+    val userSuggestionsList: LiveData<List<SingleTitleModel>> = _userSuggestionsList
+
     private val _continueWatchingList = MutableLiveData<List<ContinueWatchingModel>>()
     val continueWatchingList: LiveData<List<ContinueWatchingModel>> = _continueWatchingList
 
@@ -181,6 +184,22 @@ class HomeViewModel : BaseViewModel() {
         _continueWatchingList.value = mutableListOf()
     }
 
+    private fun getUserSuggestions() {
+        if (sharedPreferences.getLoginToken() != "") {
+            viewModelScope.launch {
+                when (val suggestions = environment.homeRepository.getUserSuggestions(sharedPreferences.getUserId())) {
+                    is Result.Success -> {
+                        val data = suggestions.data.data
+                        _userSuggestionsList.postValue(data.toTitleListModel())
+                    }
+                    is Result.Error -> {
+                        newToastMessage("შემოთავაზებული ფილმები - ${suggestions.exception}")
+                    }
+                }
+            }
+        }
+    }
+
     private suspend fun getMovieDay() {
         when (val movieDay = environment.homeRepository.getMovieDay()) {
             is Result.Success -> {
@@ -247,6 +266,7 @@ class HomeViewModel : BaseViewModel() {
     fun fetchContent(page: Int) {
         setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
+        getUserSuggestions()
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val getData = viewModelScope.launch {

@@ -99,9 +99,13 @@ interface ImoviesNetwork {
 
     @PATCH(EndPoints.HIDE_CONTINUE_WATCHING)
     suspend fun hideTitleContinueWatching(@Path(ID) id: Int) : Response<UserWatchListStatusResponse>
+
+    @GET(EndPoints.USER_SUGGESTIONS)
+    suspend fun getUserSuggestions(@Query(USER) user: Int) : Response<GetTitlesResponse>
     
     companion object {
         private const val ID = "id"
         private const val PAGE = "page"
+        private const val USER = "user"
     }
 }
