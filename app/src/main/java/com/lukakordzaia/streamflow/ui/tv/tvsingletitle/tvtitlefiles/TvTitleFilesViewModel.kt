@@ -9,8 +9,8 @@ import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.streamflow.network.toTitleListModel
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.launch
 
 class TvTitleFilesViewModel : BaseViewModel() {

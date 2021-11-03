@@ -9,9 +9,9 @@ import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.streamflow.network.toSingleTitleModel
+import com.lukakordzaia.streamflow.network.toTitleListModel
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.streamflow.utils.toSingleTitleModel
-import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

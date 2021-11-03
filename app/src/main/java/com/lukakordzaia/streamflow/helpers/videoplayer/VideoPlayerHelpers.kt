@@ -50,10 +50,10 @@ class VideoPlayerHelpers(private val context: Context) {
         toggle.setOnClickListener {
             if (view.isVisible) {
                 view.setInvisible()
-                VideoPlayerAnimations().setSubtitleOff(toggle, 200, context)
+                VideoPlayerAnimations().setSubtitleOff(toggle, context)
             } else {
                 view.setVisible()
-                VideoPlayerAnimations().setSubtitleOn(toggle, 200, context)
+                VideoPlayerAnimations().setSubtitleOn(toggle, context)
             }
         }
     }

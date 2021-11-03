@@ -8,13 +8,9 @@ import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingR
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
 import com.lukakordzaia.streamflow.datamodels.NewSeriesModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.*
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
-import com.lukakordzaia.streamflow.utils.toContinueWatchingModel
-import com.lukakordzaia.streamflow.utils.toNewSeriesModel
-import com.lukakordzaia.streamflow.utils.toTitleListModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

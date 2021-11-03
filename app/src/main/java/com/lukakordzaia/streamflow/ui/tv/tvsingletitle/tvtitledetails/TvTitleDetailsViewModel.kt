@@ -8,9 +8,9 @@ import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingR
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.toSingleTitleModel
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.AppConstants
-import com.lukakordzaia.streamflow.utils.toSingleTitleModel
 import kotlinx.coroutines.launch
 
 class TvTitleDetailsViewModel : BaseViewModel() {
@@ -35,9 +35,6 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     private val _titleGenres = MutableLiveData<List<String>>()
     val titleGenres: LiveData<List<String>> = _titleGenres
     private val fetchTitleGenres: MutableList<String> = ArrayList()
-
-    private val _startedWatching = MutableLiveData<Boolean>(false)
-    val startedWatching: LiveData<Boolean> = _startedWatching
 
     fun getSingleTitleData(titleId: Int) {
         fetchTitleGenres.clear()
@@ -177,9 +174,5 @@ class TvTitleDetailsViewModel : BaseViewModel() {
                 }
             }
         }
-    }
-
-    fun setStartedWatching(started: Boolean) {
-        _startedWatching.value = started
     }
 }

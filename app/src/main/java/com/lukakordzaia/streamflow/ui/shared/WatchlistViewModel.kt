@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.network.Result
+import com.lukakordzaia.streamflow.network.toWatchListModel
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.ui.phone.phonewatchlist.PhoneWatchlistFragmentDirections
-import com.lukakordzaia.streamflow.utils.toWatchListModel
 import kotlinx.coroutines.launch
 
 class WatchlistViewModel : BaseViewModel() {
