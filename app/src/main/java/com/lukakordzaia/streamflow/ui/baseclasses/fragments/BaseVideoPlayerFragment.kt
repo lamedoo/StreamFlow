@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.google.android.exoplayer2.MediaItem
@@ -105,15 +106,14 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     fun initPlayer(player: PlayerView, toggle: ImageButton) {
         if (videoPlayerData.trailerUrl != null) {
             mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(
-                TitleMediaItemsUri(MediaItem.fromUri(
-                    Uri.parse(videoPlayerData.trailerUrl)), null)
+                TitleMediaItemsUri(Uri.parse(videoPlayerData.trailerUrl), null)
             ))
             subtitleFunctions(player.subtitleView!!, toggle, false)
         } else {
             viewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(it))
 
-                subtitleFunctions(player.subtitleView!!, toggle, !it.titleSubUri.isNullOrEmpty())
+                subtitleFunctions(player.subtitleView!!, toggle, it.titleSubUri != null)
             })
         }
         mediaPlayer.initPlayer(player, 0, videoPlayerData.watchedTime)
@@ -127,11 +127,11 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
             view.setStyle(
                 CaptionStyleCompat(
-                    ContextCompat.getColor(requireContext(), R.color.white),
-                    ContextCompat.getColor(requireContext(), R.color.transparent),
-                    ContextCompat.getColor(requireContext(), R.color.transparent),
+                    ResourcesCompat.getColor(resources, R.color.white, null),
+                    ResourcesCompat.getColor(resources, R.color.transparent, null),
+                    ResourcesCompat.getColor(resources, R.color.transparent, null),
                     CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW,
-                    ContextCompat.getColor(requireContext(), R.color.black),
+                    ResourcesCompat.getColor(resources, R.color.black, null),
                     Typeface.DEFAULT_BOLD,
                 )
             )
@@ -161,7 +161,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         }
     }
 
-    fun nextButtonClickListener(nextButton: ImageButton, view: PlayerView) {
+    private fun nextButtonClickListener(nextButton: ImageButton, view: PlayerView) {
         nextButton.setVisibleOrGone(!(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode) && videoPlayerData.isTvShow && videoPlayerData.trailerUrl == null)
 
         nextButton.setOnClickListener {

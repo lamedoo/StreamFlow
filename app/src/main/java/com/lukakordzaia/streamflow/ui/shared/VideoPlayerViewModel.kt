@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.exoplayer2.MediaItem
 import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -22,7 +21,7 @@ class VideoPlayerViewModel : BaseViewModel() {
     val numOfSeasons: LiveData<Int> = _numOfSeasons
 
     private var getEpisode: String = ""
-    private var getSubtitles: String? = null
+    private var getSubtitles: Uri? = null
     val mediaAndSubtitle = MutableLiveData<TitleMediaItemsUri>()
 
     private val _videoPlayerData = MutableLiveData<VideoPlayerData>()
@@ -111,11 +110,11 @@ class VideoPlayerViewModel : BaseViewModel() {
                     }
 
                     val episodeIntoUri = if (getEpisode.isNotBlank()) {
-                        MediaItem.fromUri(Uri.parse(getEpisode))
+                        Uri.parse(getEpisode)
                     } else {
                         checkAvailability(season.files[0], season.files[0].lang)
                         newToastMessage("${videoPlayerData.chosenLanguage} - ვერ მოიძებნა. ავტომატურად ჩაირთო - ${season.files[0].lang}")
-                        MediaItem.fromUri(Uri.parse(getEpisode))
+                        Uri.parse(getEpisode)
                     }
 
                     val mediaItems = TitleMediaItemsUri(episodeIntoUri, getSubtitles)
@@ -145,11 +144,11 @@ class VideoPlayerViewModel : BaseViewModel() {
 
             if (!singleEpisodeFilesGetSingle.subtitles.isNullOrEmpty()) {
                 if (singleEpisodeFilesGetSingle.subtitles.size == 1) {
-                    getSubtitles = singleEpisodeFilesGetSingle.subtitles[0]!!.url
+                    getSubtitles = Uri.parse(singleEpisodeFilesGetSingle.subtitles[0]!!.url)
                 } else if (singleEpisodeFilesGetSingle.subtitles.size > 1) {
                     singleEpisodeFilesGetSingle.subtitles.forEach {
                         if (it!!.lang.equals(chosenLanguage, true)) {
-                            getSubtitles = it.url
+                            getSubtitles = Uri.parse(it.url)
                         }
                     }
                 }

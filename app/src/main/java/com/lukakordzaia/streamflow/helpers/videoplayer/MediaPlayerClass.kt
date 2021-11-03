@@ -1,8 +1,8 @@
 package com.lukakordzaia.streamflow.helpers.videoplayer
 
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.streamflow.datamodels.PlayerDurationInfo
 
@@ -28,8 +28,9 @@ class MediaPlayerClass(private val player: SimpleExoPlayer) {
         player.release()
     }
 
-    fun setPlayerMediaSource(mediaSource: MediaSource) {
-        player.addMediaSource(mediaSource)
+    fun setPlayerMediaSource(mediaSource: MediaItem) {
+        player.addMediaItem(mediaSource)
+//        player.addMediaSource(mediaSource)
     }
 
     fun setPlayerListener(event: Player.EventListener) {

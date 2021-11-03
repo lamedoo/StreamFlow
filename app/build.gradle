@@ -9,13 +9,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.lukakordzaia.streamflow"
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 45
         versionName "2.2.0"
 
@@ -65,11 +65,11 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "androidx.fragment:fragment-ktx:1.3.5"
+    implementation "androidx.fragment:fragment-ktx:1.3.6"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
 
@@ -87,12 +87,12 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.4.0'
 
-    def coroutines_version = "1.3.8"
+    def coroutines_version = "1.5.2"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
 
-    def nav_version = "2.4.0-alpha06"
+    def nav_version = "2.4.0-alpha10"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
@@ -113,11 +113,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
 
+    def exo_player = "2.15.1"
+    implementation "com.google.android.exoplayer:exoplayer:$exo_player"
+    implementation "com.google.android.exoplayer:extension-cast:$exo_player"
+
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-    implementation 'com.google.android.exoplayer:exoplayer:2.14.1'
-    implementation 'com.google.android.exoplayer:extension-cast:2.9.6'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.xiaofeng.android:flowlayoutmanager:1.2.3.2'
 

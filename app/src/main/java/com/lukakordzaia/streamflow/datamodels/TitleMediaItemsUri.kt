@@ -1,8 +1,8 @@
 package com.lukakordzaia.streamflow.datamodels
 
-import com.google.android.exoplayer2.MediaItem
+import android.net.Uri
 
 data class TitleMediaItemsUri(
-        val titleFileUri: MediaItem,
-        val titleSubUri: String?
+        val titleFileUri: Uri,
+        val titleSubUri: Uri?
 )

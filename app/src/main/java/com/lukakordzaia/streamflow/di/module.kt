@@ -70,7 +70,7 @@ val generalModule = module {
     single { DefaultHeaderInterceptor(get()) }
     single { RetrofitBuilder(get(), get()) }
     single { get<RetrofitBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
-    single { BuildMediaSource(get()) }
+    single { BuildMediaSource() }
     single { SharedPreferences(get()) }
     single { TvSidebarAnimations() }
     single { StreamFlowDatabase.getDatabase(get()) }
