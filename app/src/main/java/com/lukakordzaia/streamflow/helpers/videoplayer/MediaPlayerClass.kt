@@ -20,20 +20,16 @@ class MediaPlayerClass(private val player: SimpleExoPlayer) {
 
     fun releasePlayer(onRelease: (playBackOptions: PlayerDurationInfo) -> Unit) {
         onRelease(
-            PlayerDurationInfo(
-                player.currentPosition,
-                player.duration
-            )
+            PlayerDurationInfo(player.currentPosition, player.duration)
         )
         player.release()
     }
 
     fun setPlayerMediaSource(mediaSource: MediaItem) {
         player.addMediaItem(mediaSource)
-//        player.addMediaSource(mediaSource)
     }
 
-    fun setPlayerListener(event: Player.EventListener) {
+    fun setPlayerListener(event: Player.Listener) {
         player.addListener(event)
     }
 }

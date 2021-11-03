@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -11,15 +12,14 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.text.Cue
 import com.google.android.exoplayer2.ui.CaptionStyleCompat
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.ui.SubtitleView
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.animations.VideoPlayerAnimations
@@ -45,12 +45,31 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     protected var mediaItemsPlayed = 0
     private var episodeHasEnded = false
 
-    private var titleName: String = ""
-    private var lastEpisode: Int = 0
     private var numOfSeasons: Int = 0
 
     protected abstract val autoBackPress: AutoBackPress
     private var tracker: ProgressTracker? = null
+
+    abstract val playerView: PlayerView
+    abstract val subtitleButton: ImageButton
+    abstract val playerTitle: TextView
+    abstract val nextButton: ImageButton
+    abstract val exoDuration: TextView
+    abstract val continueWatchingDialog: ContinueWatchingDialogBinding
+
+    override fun onStart() {
+        super.onStart()
+        if (Util.SDK_INT >= 24) {
+            initPlayer()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (Util.SDK_INT < 24) {
+            initPlayer()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,7 +97,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         })
 
         viewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, {
-            lastEpisode = it
+            updateNextButton(it)
         })
 
         viewModel.numOfSeasons.observe(viewLifecycleOwner, {
@@ -86,104 +105,107 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         })
 
         viewModel.setTitleName.observe(viewLifecycleOwner, {
-            titleName = it
+            setTitleName(it)
         })
     }
 
-    private fun setTitleName(titleView: TextView) {
-        titleView.setVisible()
+    private fun setTitleName(name: String) {
+        playerTitle.setVisible()
         if (videoPlayerData.trailerUrl != null) {
-            titleView.text = getString(R.string.trailer)
+            playerTitle.text = getString(R.string.trailer)
         } else {
             if (videoPlayerData.isTvShow) {
-                titleView.text = "ს${videoPlayerData.chosenSeason}. ე${videoPlayerData.chosenEpisode}. $titleName"
+                playerTitle.text = "ს${videoPlayerData.chosenSeason}. ე${videoPlayerData.chosenEpisode}. $name"
             } else {
-                titleView.text = titleName
+                playerTitle.text = name
             }
         }
     }
 
-    fun initPlayer(player: PlayerView, toggle: ImageButton) {
+    private fun initPlayer() {
         if (videoPlayerData.trailerUrl != null) {
             mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(
                 TitleMediaItemsUri(Uri.parse(videoPlayerData.trailerUrl), null)
             ))
-            subtitleFunctions(player.subtitleView!!, toggle, false)
+            subtitleFunctions(false)
         } else {
             viewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(it))
 
-                subtitleFunctions(player.subtitleView!!, toggle, it.titleSubUri != null)
+                subtitleFunctions(it.titleSubUri != null)
             })
         }
-        mediaPlayer.initPlayer(player, 0, videoPlayerData.watchedTime)
+        mediaPlayer.initPlayer(playerView, 0, videoPlayerData.watchedTime)
     }
 
-    private fun subtitleFunctions(view: SubtitleView, toggle: ImageButton, hasSubs: Boolean) {
-        view.setPadding(0, 0, 0, 20)
+    private fun subtitleFunctions(hasSubs: Boolean) {
+        val style = CaptionStyleCompat(Color.WHITE, Color.TRANSPARENT, Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW, Color.BLACK, Typeface.DEFAULT_BOLD)
 
-        player.addTextOutput {
-            view.onCues(it)
-
-            view.setStyle(
-                CaptionStyleCompat(
-                    ResourcesCompat.getColor(resources, R.color.white, null),
-                    ResourcesCompat.getColor(resources, R.color.transparent, null),
-                    ResourcesCompat.getColor(resources, R.color.transparent, null),
-                    CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW,
-                    ResourcesCompat.getColor(resources, R.color.black, null),
-                    Typeface.DEFAULT_BOLD,
-                )
-            )
-            view.setFixedTextSize(2, 25F)
+        val subtitleView = playerView.subtitleView!!.apply {
+            setPadding(0, 0, 0, 20)
+            setApplyEmbeddedFontSizes(false)
+            setApplyEmbeddedStyles(false)
+            setFixedTextSize(2, 25F)
+            setStyle(style)
         }
 
         if (hasSubs) {
-            toggle.setVisible()
-            toggle.imageTintList = ColorStateList.valueOf(
+            subtitleButton.setVisible()
+            subtitleButton.imageTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.accent_color
                 )
             )
         } else {
-            toggle.setGone()
+            subtitleButton.setGone()
         }
 
-        toggle.setOnClickListener {
-            if (view.isVisible) {
-                view.setInvisible()
-                VideoPlayerAnimations().setSubtitleOff(toggle, 200, requireContext())
+        subtitleButton.setOnClickListener {
+            subtitleView.setVisibleOrGone(!subtitleView.isVisible)
+
+            if (subtitleView.isVisible) {
+                VideoPlayerAnimations().setSubtitleOff(subtitleButton, requireContext())
             } else {
-                view.setVisible()
-                VideoPlayerAnimations().setSubtitleOn(toggle, 200, requireContext())
+                VideoPlayerAnimations().setSubtitleOn(subtitleButton, requireContext())
             }
         }
     }
 
-    private fun nextButtonClickListener(nextButton: ImageButton, view: PlayerView) {
-        nextButton.setVisibleOrGone(!(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode) && videoPlayerData.isTvShow && videoPlayerData.trailerUrl == null)
+    private fun updateNextButton(lastEpisode: Int) {
+        nextButton.setVisibleOrGone(
+            !(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode) &&
+                    videoPlayerData.isTvShow && videoPlayerData.trailerUrl == null
+        )
 
         nextButton.setOnClickListener {
-            nextButtonFunction(videoPlayerData.chosenEpisode == lastEpisode, view)
+            nextButtonFunction(videoPlayerData.chosenEpisode == lastEpisode)
         }
     }
 
-    private fun nextButtonFunction(lastEpisode: Boolean, view: PlayerView) {
+    private fun nextButtonFunction(isLastEpisode: Boolean) {
         saveCurrentProgress()
 
-        episodeHasEnded = false
-        player.clearMediaItems()
-        viewModel.setVideoPlayerData(VideoPlayerData(
-            videoPlayerData.titleId,
-            videoPlayerData.isTvShow,
-            if (lastEpisode) videoPlayerData.chosenSeason+1 else videoPlayerData.chosenSeason,
-            videoPlayerData.chosenLanguage,
-            if (lastEpisode) 1 else videoPlayerData.chosenEpisode+1,
-            0L,
-            null
-        ))
-        mediaPlayer.initPlayer(view, 0, 0L)
+        if (videoPlayerData.isTvShow) {
+            if (!(videoPlayerData.chosenSeason == numOfSeasons && isLastEpisode)) {
+                episodeHasEnded = false
+                player.clearMediaItems()
+                viewModel.setVideoPlayerData(VideoPlayerData(
+                    videoPlayerData.titleId,
+                    videoPlayerData.isTvShow,
+                    if (isLastEpisode) videoPlayerData.chosenSeason+1 else videoPlayerData.chosenSeason,
+                    videoPlayerData.chosenLanguage,
+                    if (isLastEpisode) 1 else videoPlayerData.chosenEpisode+1,
+                    0L,
+                    null
+                ))
+                mediaPlayer.initPlayer(playerView, 0, 0L)
+            } else {
+                requireActivity().onBackPressed()
+            }
+        } else {
+            requireActivity().onBackPressed()
+        }
     }
 
     fun saveCurrentProgress() {
@@ -200,58 +222,22 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         }
     }
 
-    private fun showContinueWatchingDialog(continueWatching: ContinueWatchingDialogBinding) {
+    private fun showContinueWatchingDialog() {
         if (mediaItemsPlayed == 3) {
             viewModel.addContinueWatching(player.currentPosition, player.duration)
             player.pause()
 
-            continueWatching.root.setVisible()
-
-            continueWatching.confirmButton.setOnClickListener {
-                continueWatching.root.setGone()
+            continueWatchingDialog.root.setVisible()
+            continueWatchingDialog.confirmButton.setOnClickListener {
+                continueWatchingDialog.root.setGone()
                 player.play()
             }
 
-            continueWatching.goBackButton.setOnClickListener {
+            continueWatchingDialog.goBackButton.setOnClickListener {
                 requireActivity().onBackPressed()
             }
-            continueWatching.confirmButton.requestFocus()
 
             mediaItemsPlayed = 0
-        }
-    }
-
-    fun baseStateReady(
-        titleView: TextView,
-        continueWatching: ContinueWatchingDialogBinding,
-        duration: TextView,
-        nextButton: ImageButton,
-        playerView: PlayerView
-    ) {
-        setTitleName(titleView)
-        showContinueWatchingDialog(continueWatching)
-        nextButtonClickListener(nextButton, playerView)
-        episodeHasEnded = true
-
-        tracker = ProgressTracker(player) {
-            duration.text = it.videoPlayerPosition()
-        }
-    }
-
-    fun baseStateEnded(nextButton: ImageButton, titleView: TextView) {
-        nextButton.setInvisible()
-        titleView.setInvisible()
-        if (episodeHasEnded) {
-            if (videoPlayerData.isTvShow) {
-                if (!(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode)) {
-                    mediaItemsPlayed++
-                    nextButton.callOnClick()
-                } else {
-                    requireActivity().onBackPressed()
-                }
-            } else {
-                requireActivity().onBackPressed()
-            }
         }
     }
 
@@ -277,6 +263,11 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     inner class MediaTransitionListener: Player.Listener {
+        override fun onCues(cues: MutableList<Cue>) {
+            super.onCues(cues)
+            playerView.subtitleView!!.setCues(cues)
+        }
+
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             super.onIsPlayingChanged(isPlaying)
 
@@ -292,6 +283,27 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
                 }
             }, 2000)
         }
+
+        override fun onPlaybackStateChanged(state: Int) {
+            super.onPlaybackStateChanged(state)
+            playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
+
+            when (state) {
+                Player.STATE_READY -> {
+                    tracker = ProgressTracker(player, exoDuration)
+
+                    episodeHasEnded = true
+                    showContinueWatchingDialog()
+                }
+                Player.STATE_ENDED -> {
+                    nextButton.setInvisible()
+                    if (episodeHasEnded) {
+                        mediaItemsPlayed++
+                        nextButton.callOnClick()
+                    }
+                }
+            }
+        }
     }
 
     inner class AutoBackPress(private val backPress: () -> Unit): CountDownTimer(500000, 1000) {
@@ -302,11 +314,11 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         }
     }
 
-    inner class ProgressTracker(private val player: Player, private val progress: (position: Long) -> Unit) : Runnable {
+    inner class ProgressTracker(private val player: Player, private val duration: TextView) : Runnable {
         private val handler: Handler = Handler(Looper.myLooper()!!)
         override fun run() {
             val position = if (player.duration <= 0) 0 else player.duration - player.currentPosition
-            progress(position)
+            duration.text = position.videoPlayerPosition()
             handler.postDelayed(this, 1000)
         }
 

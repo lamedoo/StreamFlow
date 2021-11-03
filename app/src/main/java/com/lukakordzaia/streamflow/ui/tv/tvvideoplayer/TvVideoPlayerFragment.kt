@@ -4,15 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.core.view.isVisible
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.streamflow.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVideoPlayerFragment
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
-
 
 class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBinding>() {
     private lateinit var playerBinding: TvExoplayerControllerLayoutBinding
@@ -28,6 +30,23 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvVideoPlayerBinding
         get() = FragmentTvVideoPlayerBinding::inflate
+
+    override val playerView: PlayerView
+        get() = binding.titlePlayer
+
+    override val subtitleButton: ImageButton
+        get() = playerBinding.subtitleToggle
+
+    override val playerTitle: TextView
+        get() = playerBinding.playerTitle
+
+    override val nextButton: ImageButton
+        get() = playerBinding.nextEpisode
+    override val exoDuration: TextView
+        get() = playerBinding.exoDuration
+
+    override val continueWatchingDialog: ContinueWatchingDialogBinding
+        get() = binding.continueWatching
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,43 +64,18 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (Util.SDK_INT >= 24) {
-            initPlayer(binding.titlePlayer, playerBinding.subtitleToggle)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (Util.SDK_INT < 24) {
-            initPlayer(binding.titlePlayer, playerBinding.subtitleToggle)
-        }
-    }
-
     inner class PlayerListeners: Player.Listener {
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
 
-            when (state) {
-                Player.STATE_READY -> {
-                    baseStateReady(
-                        playerBinding.playerTitle,
-                        binding.continueWatching,
-                        playerBinding.exoLiveDuration,
-                        playerBinding.nextEpisode,
-                        binding.titlePlayer
-                    )
-
+            if (state == Player.STATE_READY) {
+                if (continueWatchingDialog.root.isVisible) {
+                    continueWatchingDialog.confirmButton.requestFocus()
+                } else {
                     playerBinding.exoPlay.requestFocus()
                     playerBinding.exoPause.requestFocus()
                 }
-                Player.STATE_ENDED -> {
-                    baseStateEnded(playerBinding.nextEpisode, playerBinding.playerTitle)
-                }
             }
-
-            binding.titlePlayer.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
         }
     }
 

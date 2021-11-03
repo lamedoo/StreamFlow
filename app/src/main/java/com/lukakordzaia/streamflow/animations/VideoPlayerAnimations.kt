@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflow.R
 
 class VideoPlayerAnimations {
-    fun setSubtitleOn(view: ImageView, duration: Long, context: Context) {
+    fun setSubtitleOn(view: ImageView, context: Context) {
             val subtitleOn = ObjectAnimator.ofObject(
                 view,
                 "colorFilter",
@@ -18,15 +18,10 @@ class VideoPlayerAnimations {
                 ContextCompat.getColor(context, R.color.white),
                 ContextCompat.getColor(context, R.color.accent_color)
             )
-        val setPlayButton = AnimatorSet().apply {
-            this.interpolator = AccelerateInterpolator()
-            this.duration = duration
-            play(subtitleOn)
-        }
-        setPlayButton.start()
+        playAnimation(subtitleOn)
     }
 
-    fun setSubtitleOff(view: ImageView, duration: Long, context: Context) {
+    fun setSubtitleOff(view: ImageView, context: Context) {
         val subtitleOff = ObjectAnimator.ofObject(
                 view,
                 "colorFilter",
@@ -34,10 +29,14 @@ class VideoPlayerAnimations {
                 ContextCompat.getColor(context, R.color.accent_color),
                 ContextCompat.getColor(context, R.color.white)
         )
+        playAnimation(subtitleOff)
+    }
+
+    private fun playAnimation(animation: ObjectAnimator) {
         val setPlayButton = AnimatorSet().apply {
             this.interpolator = AccelerateInterpolator()
-            this.duration = duration
-            play(subtitleOff)
+            this.duration = 200
+            play(animation)
         }
         setPlayButton.start()
     }

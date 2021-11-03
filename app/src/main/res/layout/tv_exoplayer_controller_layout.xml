@@ -161,7 +161,7 @@
             app:layout_constraintTop_toBottomOf="@id/barrier_top"
             app:layout_constraintBottom_toTopOf="@id/barrier_bottom"
             app:layout_constraintStart_toEndOf="@id/barrier_right"
-            tools:text="dssdd" />
+            android:text="00:00" />
 
     <com.google.android.exoplayer2.ui.DefaultTimeBar
         android:id="@+id/exo_progress"
@@ -173,9 +173,8 @@
         android:layout_marginRight="7dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:focusedByDefault="false"
         app:buffered_color="@color/white"
-        app:layout_constraintEnd_toStartOf="@id/exo_live_duration"
+        app:layout_constraintEnd_toStartOf="@id/exo_duration"
         app:layout_constraintStart_toEndOf="@id/exo_position"
         app:layout_constraintTop_toBottomOf="@id/barrier_top"
         app:layout_constraintBottom_toTopOf="@id/barrier_bottom"
@@ -185,7 +184,7 @@
         app:unplayed_color="@color/lb_grey" />
 
     <TextView
-        android:id="@+id/exo_live_duration"
+        android:id="@+id/exo_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"

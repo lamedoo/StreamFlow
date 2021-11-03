@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.util.Util
+import android.widget.ImageButton
+import android.widget.TextView
+import com.google.android.exoplayer2.ui.PlayerView
+import com.lukakordzaia.streamflow.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.PhoneExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -19,61 +21,37 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
         viewModel.getSingleTitleData(videoPlayerData.titleId)
     }
 
-
-    override val autoBackPress = AutoBackPress {
-        requireActivity().onBackPressed()
-    }
+    override val autoBackPress = AutoBackPress { requireActivity().onBackPressed() }
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneVideoPlayerBinding
         get() = FragmentPhoneVideoPlayerBinding::inflate
+
+    override val playerView: PlayerView
+        get() = binding.titlePlayer
+
+    override val subtitleButton: ImageButton
+        get() = playerBinding.subtitleToggle
+
+    override val playerTitle: TextView
+        get() = playerBinding.playerTitle
+
+    override val nextButton: ImageButton
+        get() = playerBinding.nextEpisode
+
+    override val exoDuration: TextView
+        get() = playerBinding.exoDuration
+
+    override val continueWatchingDialog: ContinueWatchingDialogBinding
+        get() = binding.continueWatching
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         playerBinding = PhoneExoplayerControllerLayoutBinding.bind(binding.root)
 
-        mediaPlayer.setPlayerListener(PlayerListeners())
-
         playerBinding.backButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
         prevButtonClickListener()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (Util.SDK_INT >= 24) {
-            initPlayer(binding.titlePlayer, playerBinding.subtitleToggle)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (Util.SDK_INT < 24) {
-            initPlayer(binding.titlePlayer, playerBinding.subtitleToggle)
-        }
-    }
-
-    inner class PlayerListeners : Player.Listener {
-        override fun onPlaybackStateChanged(state: Int) {
-            super.onPlaybackStateChanged(state)
-
-            when (state) {
-                Player.STATE_READY -> {
-                    baseStateReady(
-                        playerBinding.playerTitle,
-                        binding.continueWatching,
-                        playerBinding.exoDuration,
-                        playerBinding.nextEpisode,
-                        binding.titlePlayer
-                    )
-                }
-                Player.STATE_ENDED -> {
-                    baseStateEnded(playerBinding.nextEpisode, playerBinding.playerTitle)
-                }
-            }
-
-            binding.titlePlayer.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
-        }
     }
 
     private fun prevButtonClickListener() {
