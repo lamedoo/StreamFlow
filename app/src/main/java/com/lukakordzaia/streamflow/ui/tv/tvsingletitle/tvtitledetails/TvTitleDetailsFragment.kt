@@ -35,7 +35,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     private var titleId: Int = 0
     private var isTvShow: Boolean = false
     private var fromWatchlist: Int? = null
-    private var continueWatching: Boolean? = null
+    private var continueWatching: Boolean = false
 
     override val viewModel by viewModel<TvTitleDetailsViewModel>()
     override val reload: () -> Unit = {
@@ -54,10 +54,13 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val args = arguments
+        val isContinue = args?.getBoolean(AppConstants.CONTINUE_WATCHING_NOW) ?: false
+        continueWatching = isContinue
+
         titleId = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as Int
         isTvShow = activity?.intent?.getSerializableExtra(AppConstants.IS_TV_SHOW) as Boolean
         fromWatchlist = activity?.intent?.getSerializableExtra(AppConstants.FROM_WATCHLIST) as? Int
-        continueWatching = activity?.intent?.getSerializableExtra(AppConstants.CONTINUE_WATCHING_NOW) as? Boolean
 
         fragmentSetUi()
         fragmentListeners()
@@ -94,10 +97,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     }
 
     private fun fragmentObservers() {
-//        viewModel.startedWatching.observe(viewLifecycleOwner, {
-//            startedWatching = it
-//        })
-
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             binding.tvDetailsProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
         })
@@ -204,7 +203,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
             binding.continueButton.requestFocus()
             binding.playButton.text = getString(R.string.start_over)
 
-            if (continueWatching != null && !startedWatching) {
+            if (continueWatching && !startedWatching) {
                 binding.continueButton.callOnClick()
                 startedWatching = true
             }

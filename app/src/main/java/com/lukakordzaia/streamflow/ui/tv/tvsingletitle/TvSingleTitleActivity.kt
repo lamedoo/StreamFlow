@@ -8,6 +8,8 @@ import com.lukakordzaia.streamflow.ui.baseclasses.activities.BaseFragmentActivit
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsFragment
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitlefiles.TvTitleFilesFragment
+import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.streamflow.utils.applyBundle
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>() {
@@ -20,7 +22,9 @@ class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setCurrentFragment(TvTitleDetailsFragment())
+        setCurrentFragment(TvTitleDetailsFragment().applyBundle {
+            putBoolean(AppConstants.CONTINUE_WATCHING_NOW, intent?.getSerializableExtra(AppConstants.CONTINUE_WATCHING_NOW) as? Boolean ?: false)
+        })
     }
 
     override fun onBackPressed() {
