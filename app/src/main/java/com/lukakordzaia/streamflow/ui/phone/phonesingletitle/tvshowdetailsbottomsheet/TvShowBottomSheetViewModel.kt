@@ -84,13 +84,6 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
                 is Result.Success -> {
                     val data = files.data.data
                     if (data.isNotEmpty()) {
-                        val fetchLanguages: MutableList<String> = ArrayList()
-
-                        data[0].files.forEach {
-                            fetchLanguages.add(it.lang)
-                        }
-                        _availableLanguages.value = fetchLanguages
-
                         val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
 
                         if (sharedPreferences.getLoginToken() == "") {
@@ -129,6 +122,22 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
                 }
                 is Result.Internet -> {
                     setNoInternet()
+                }
+            }
+        }
+    }
+
+    fun getEpisodeLanguages(titleId: Int, episodeNum: Int) {
+        viewModelScope.launch {
+            when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, chosenSeason.value!!)) {
+                is Result.Success -> {
+                    val episode = files.data.data[episodeNum]
+
+                    val fetchLanguages: MutableList<String> = ArrayList()
+                    episode.files.forEach {
+                        fetchLanguages.add(it.lang)
+                    }
+                    _availableLanguages.value = fetchLanguages
                 }
             }
         }

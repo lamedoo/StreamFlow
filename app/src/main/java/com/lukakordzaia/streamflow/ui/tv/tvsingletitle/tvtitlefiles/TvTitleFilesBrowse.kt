@@ -197,25 +197,8 @@ class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
         ) {
             when (item) {
                 is TitleEpisodes -> {
-                    val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
-                    val chooseLanguageDialog = Dialog(requireContext())
-                    chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-                    chooseLanguageDialog.setContentView(binding.root)
-                    chooseLanguageDialog.show()
-
-                    val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-                    chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
-                        chooseLanguageDialog.dismiss()
-                        playEpisode(item.titleId, it)
-                    }
-                    binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
-                    binding.rvChooseLanguage.adapter = chooseLanguageAdapter
-
-                    viewModel.availableLanguages.observe(viewLifecycleOwner, {
-                        val languages = it.reversed()
-                        chooseLanguageAdapter.setLanguageList(languages)
-                    })
+                    viewModel.getEpisodeLanguages(item.titleId, item.episodeNum)
+                    languagePickerDialog(item.episodeNum)
                 }
                 is SingleTitleModel -> {
                     val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
@@ -236,23 +219,43 @@ class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
             if (item is Int) {
                 viewModel.getSeasonFiles(titleId, item)
                 focusedSeason = item
-            } else if (item is TitleEpisodes) {
-                viewModel.getEpisodeFile(item.episodeNum)
             }
         }
     }
 
-    private fun playEpisode(titleId: Int, chosenLanguage: String) {
-        val trailerUrl: String? = null
+    private fun languagePickerDialog(episode: Int) {
+        val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
+        val chooseLanguageDialog = Dialog(requireContext())
+        chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        chooseLanguageDialog.setContentView(binding.root)
+        chooseLanguageDialog.show()
+
+        val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
+            chooseLanguageDialog.dismiss()
+            playEpisode(titleId!!, episode, it)
+        }
+        binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
+        binding.rvChooseLanguage.adapter = chooseLanguageAdapter
+
+        viewModel.availableLanguages.observe(viewLifecycleOwner, {
+            val languages = it.reversed()
+            chooseLanguageAdapter.setLanguageList(languages)
+            binding.rvChooseLanguage.requestFocus()
+        })
+    }
+
+    private fun playEpisode(titleId: Int, episode: Int, chosenLanguage: String) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java).apply {
             putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
                 titleId,
                 true,
                 viewModel.chosenSeason.value!!,
                 chosenLanguage,
-                viewModel.chosenEpisode.value!!,
+                episode,
                 0L,
-                trailerUrl
+                null
             ))
         }
         requireActivity().startActivity(intent)

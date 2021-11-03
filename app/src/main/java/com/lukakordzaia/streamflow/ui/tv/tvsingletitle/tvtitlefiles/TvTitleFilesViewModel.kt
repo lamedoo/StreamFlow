@@ -23,9 +23,6 @@ class TvTitleFilesViewModel : BaseViewModel() {
     private val _chosenSeason = MutableLiveData<Int>()
     val chosenSeason: LiveData<Int> = _chosenSeason
 
-    private val _chosenEpisode = MutableLiveData<Int>()
-    val chosenEpisode: LiveData<Int> = _chosenEpisode
-
     private val _episodeNames = MutableLiveData<List<TitleEpisodes>>()
     val episodeNames: LiveData<List<TitleEpisodes>> = _episodeNames
 
@@ -74,22 +71,12 @@ class TvTitleFilesViewModel : BaseViewModel() {
         }
     }
 
-    fun getEpisodeFile(episodeNum: Int) {
-        _chosenEpisode.value = episodeNum
-    }
-
     fun getSeasonFiles(titleId: Int, season: Int) {
         _chosenSeason.value = season
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, season)) {
                 is Result.Success -> {
                     val data = files.data.data
-
-                    val fetchLanguages: MutableList<String> = ArrayList()
-                    data[0].files.forEach {
-                        fetchLanguages.add(it.lang)
-                    }
-                    _availableLanguages.value = fetchLanguages
 
                     val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
                     if (sharedPreferences.getLoginToken() == "") {
@@ -112,6 +99,22 @@ class TvTitleFilesViewModel : BaseViewModel() {
                 }
                 is Result.Error -> {
                     newToastMessage("ეპიზოდები - ${files.exception}")
+                }
+            }
+        }
+    }
+
+    fun getEpisodeLanguages(titleId: Int, episodeNum: Int) {
+        viewModelScope.launch {
+            when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, chosenSeason.value!!)) {
+                is Result.Success -> {
+                    val episode = files.data.data[episodeNum]
+
+                    val fetchLanguages: MutableList<String> = ArrayList()
+                    episode.files.forEach {
+                        fetchLanguages.add(it.lang)
+                    }
+                    _availableLanguages.value = fetchLanguages
                 }
             }
         }
