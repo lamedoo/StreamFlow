@@ -107,6 +107,8 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
             if (!it) {
                 binding.favoriteContainer.requestFocus()
+            } else {
+                binding.playButton.requestFocus()
             }
         })
 
@@ -178,7 +180,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
         binding.deleteButton.setVisibleOrGone(info != null)
-        binding.playButton.requestFocus()
         binding.continueButton.setVisibleOrGone(info != null)
 
         if (info != null) {

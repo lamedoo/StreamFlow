@@ -116,6 +116,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     }
 
     fun getSingleTitleFiles(movieId: Int) {
+        _movieNotYetAdded.value = false
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(movieId)) {
                 is Result.Success -> {
