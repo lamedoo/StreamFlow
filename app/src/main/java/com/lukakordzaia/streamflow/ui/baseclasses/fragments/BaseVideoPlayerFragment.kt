@@ -169,6 +169,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     private fun updateNextButton(lastEpisode: Int) {
+        //quick fix before viewState is introduced
         viewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
             nextButton.setVisibleOrGone(
                 !(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode) &&
