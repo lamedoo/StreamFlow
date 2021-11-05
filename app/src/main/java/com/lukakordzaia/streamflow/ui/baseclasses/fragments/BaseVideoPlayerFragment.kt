@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
@@ -11,8 +10,6 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -22,7 +19,6 @@ import com.google.android.exoplayer2.ui.CaptionStyleCompat
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.animations.VideoPlayerAnimations
 import com.lukakordzaia.streamflow.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -128,7 +124,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             viewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(it))
 
-                subtitleFunctions(it.titleSubUri != null)
+                subtitleFunctions(true)
             })
         }
         mediaPlayer.initPlayer(playerView, 0, videoPlayerData.watchedTime)
@@ -147,25 +143,25 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
         if (hasSubs) {
             subtitleButton.setVisible()
-            subtitleButton.imageTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.accent_color
-                )
-            )
+//            subtitleButton.imageTintList = ColorStateList.valueOf(
+//                ContextCompat.getColor(
+//                    requireContext(),
+//                    R.color.accent_color
+//                )
+//            )
         } else {
             subtitleButton.setGone()
         }
 
-        subtitleButton.setOnClickListener {
-            subtitleView.setVisibleOrGone(!subtitleView.isVisible)
-
-            if (subtitleView.isVisible) {
-                VideoPlayerAnimations().setSubtitleOff(subtitleButton, requireContext())
-            } else {
-                VideoPlayerAnimations().setSubtitleOn(subtitleButton, requireContext())
-            }
-        }
+//        subtitleButton.setOnClickListener {
+//            subtitleView.setVisibleOrGone(!subtitleView.isVisible)
+//
+//            if (subtitleView.isVisible) {
+//                VideoPlayerAnimations().setSubtitleOff(subtitleButton, requireContext())
+//            } else {
+//                VideoPlayerAnimations().setSubtitleOn(subtitleButton, requireContext())
+//            }
+//        }
     }
 
     private fun updateNextButton(lastEpisode: Int) {
