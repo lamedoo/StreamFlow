@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 45,
-      "versionName": "2.2.0",
-      "outputFile": "StreamFlow v2.2.0.apk"
+      "versionCode": 46,
+      "versionName": "2.2.1",
+      "outputFile": "StreamFlow v2.2.1.apk"
     }
   ],
   "elementType": "File"
