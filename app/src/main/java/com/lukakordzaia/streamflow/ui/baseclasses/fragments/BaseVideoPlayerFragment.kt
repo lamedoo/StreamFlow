@@ -100,10 +100,6 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             updateNextButton(it)
         })
 
-        viewModel.numOfSeasons.observe(viewLifecycleOwner, {
-            numOfSeasons = it
-        })
-
         viewModel.setTitleName.observe(viewLifecycleOwner, {
             setTitleName(it)
         })
@@ -173,17 +169,19 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     private fun updateNextButton(lastEpisode: Int) {
-        nextButton.setVisibleOrGone(
-            !(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode) &&
-                    videoPlayerData.isTvShow && videoPlayerData.trailerUrl == null
-        )
+        viewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+            nextButton.setVisibleOrGone(
+                !(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode) &&
+                        videoPlayerData.isTvShow && videoPlayerData.trailerUrl == null
+            )
 
-        nextButton.setOnClickListener {
-            nextButtonFunction(videoPlayerData.chosenEpisode == lastEpisode)
-        }
+            nextButton.setOnClickListener {
+                nextButtonFunction(videoPlayerData.chosenEpisode == lastEpisode, numOfSeasons)
+            }
+        })
     }
 
-    private fun nextButtonFunction(isLastEpisode: Boolean) {
+    private fun nextButtonFunction(isLastEpisode: Boolean, numOfSeasons: Int) {
         saveCurrentProgress()
 
         if (videoPlayerData.isTvShow) {
