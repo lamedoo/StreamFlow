@@ -123,6 +123,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             adapter = chooseLanguageAdapter
         }
 
+        chooseLanguageAdapter.setCurrentItem(videoPlayerData.chosenLanguage)
         chooseLanguageAdapter.setItems(languages)
     }
 
