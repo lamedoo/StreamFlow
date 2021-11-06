@@ -75,6 +75,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             binding.chooseAudioSidebar.rvSubtitles.requestFocus()
 
             binding.titlePlayer.player?.pause()
+            (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.AUDIO_SIDEBAR)
         }
 
         playerBinding.backButton.setOnClickListener {
@@ -96,8 +97,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     private fun setAvailableLanguages(languages: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
         chooseLanguageAdapter = TvChooseAudioAdapter(requireContext()) {
-            binding.chooseAudioSidebar.root.setGone()
-            playerBinding.subtitleToggle.requestFocus()
+            hideAudioSidebar()
         }
 
         binding.chooseAudioSidebar.rvLanguage.apply {
@@ -111,8 +111,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     private fun setAvailableSubtitles(subtitles: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
         chooseSubtitlesAdapter = TvChooseAudioAdapter(requireContext()) {
-            binding.chooseAudioSidebar.root.setGone()
-            playerBinding.subtitleToggle.requestFocus()
+            hideAudioSidebar()
         }
 
         binding.chooseAudioSidebar.rvSubtitles.apply {
@@ -136,6 +135,12 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                 }
             }
         }
+    }
+
+    fun hideAudioSidebar() {
+        binding.chooseAudioSidebar.root.setGone()
+        playerBinding.subtitleToggle.requestFocus()
+        (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.VIDEO_PLAYER)
     }
 
     fun onKeyUp() {

@@ -167,6 +167,10 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
                     goBack()
                 }
             }
+            AUDIO_SIDEBAR -> {
+                val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
+                parentFragment.hideAudioSidebar()
+            }
             BACK_BUTTON -> goBack()
             NEW_EPISODE -> {}
         }
@@ -218,5 +222,6 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
         const val VIDEO_DETAILS = 1
         const val NEW_EPISODE = 2
         const val BACK_BUTTON = 3
+        const val AUDIO_SIDEBAR = 4
     }
 }
