@@ -85,27 +85,13 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     }
 
     private fun audioObservers() {
-        viewModel.availableLanguages.observe(viewLifecycleOwner, {
-            setAvailableLanguages(it)
-        })
-
         viewModel.availableSubtitles.observe(viewLifecycleOwner, {
             setAvailableSubtitles(it)
         })
-    }
 
-    private fun setAvailableLanguages(languages: List<String>) {
-        val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        chooseLanguageAdapter = TvChooseAudioAdapter(requireContext()) {
-            hideAudioSidebar()
-        }
-
-        binding.chooseAudioSidebar.rvLanguage.apply {
-            layoutManager = layout
-            adapter = chooseLanguageAdapter
-        }
-
-        chooseLanguageAdapter.setItems(languages)
+        viewModel.availableLanguages.observe(viewLifecycleOwner, {
+            setAvailableLanguages(it)
+        })
     }
 
     private fun setAvailableSubtitles(subtitles: List<String>) {
@@ -116,10 +102,28 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
         binding.chooseAudioSidebar.rvSubtitles.apply {
             layoutManager = layout
-            adapter = chooseLanguageAdapter
+            adapter = chooseSubtitlesAdapter
         }
 
         chooseSubtitlesAdapter.setItems(subtitles)
+    }
+
+    private fun setAvailableLanguages(languages: List<String>) {
+        val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
+        chooseLanguageAdapter = TvChooseAudioAdapter(requireContext()) {
+            hideAudioSidebar()
+            episodeHasEnded = false
+            player.clearMediaItems()
+            viewModel.setVideoPlayerData(videoPlayerData.copy(chosenLanguage = it))
+            mediaPlayer.initPlayer(playerView, 0, 0L)
+        }
+
+        binding.chooseAudioSidebar.rvLanguage.apply {
+            layoutManager = layout
+            adapter = chooseLanguageAdapter
+        }
+
+        chooseLanguageAdapter.setItems(languages)
     }
 
     inner class PlayerListeners: Player.Listener {

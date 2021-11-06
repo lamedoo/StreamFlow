@@ -39,7 +39,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     protected lateinit var player: SimpleExoPlayer
 
     protected var mediaItemsPlayed = 0
-    private var episodeHasEnded = false
+    var episodeHasEnded = false
 
     private var numOfSeasons: Int = 0
 
