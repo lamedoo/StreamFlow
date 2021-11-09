@@ -46,6 +46,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
     override val nextButton: ImageButton
         get() = playerBinding.nextEpisode
+
     override val exoDuration: TextView
         get() = playerBinding.exoDuration
 
@@ -97,6 +98,15 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     private fun setAvailableSubtitles(subtitles: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
         chooseSubtitlesAdapter = TvChooseAudioAdapter(requireContext()) {
+            if (it == getString(R.string.turn_off)) {
+                playerView.subtitleView?.setGone()
+                videoPlayerData = videoPlayerData.copy(chosenSubtitle = it)
+                player.play()
+            } else {
+                playerView.subtitleView?.setVisible()
+                videoPlayerData = videoPlayerData.copy(chosenSubtitle = it)
+                player.play()
+            }
             hideAudioSidebar()
         }
 
@@ -106,6 +116,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         }
 
         chooseSubtitlesAdapter.setItems(subtitles)
+        videoPlayerData.chosenSubtitle?.let { chooseSubtitlesAdapter.setCurrentItem(it) }
     }
 
     private fun setAvailableLanguages(languages: List<String>) {

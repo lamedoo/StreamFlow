@@ -4,7 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvChooseAudioItemBinding
+import com.lukakordzaia.streamflow.utils.Enums
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 class TvChooseAudioAdapter(
@@ -41,12 +43,21 @@ class TvChooseAudioAdapter(
 
     inner class ViewHolder(val view: RvChooseAudioItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: String) {
-            view.languageName.text = model
+            view.languageName.text = transformLanguages(model)
 
-            view.currentIndicator.setVisibleOrGone(model == currentItem)
+            view.currentIndicator.setVisibleOrGone(currentItem.equals(model, true))
 
             view.root.setOnClickListener {
                 onLanguageClick(model)
+            }
+        }
+
+        fun transformLanguages(language: String): String {
+            return when (true) {
+                language.equals(Enums.Languages.ENG.toString(), true) -> context.resources.getString(R.string.english)
+                language.equals(Enums.Languages.RUS.toString(), true) -> context.resources.getString(R.string.russian)
+                language.equals(Enums.Languages.GEO.toString(), true)-> context.resources.getString(R.string.georgian)
+                else -> language.uppercase()
             }
         }
     }

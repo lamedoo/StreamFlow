@@ -74,8 +74,9 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
                     videoPlayerData.chosenLanguage,
                     videoPlayerData.chosenEpisode-1,
                     0L,
-                    null
-                ))
+                    null,
+                    videoPlayerData.chosenSubtitle,
+                    ))
                 mediaPlayer.initPlayer(binding.titlePlayer, 0, 0L)
             }
         }

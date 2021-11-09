@@ -192,7 +192,8 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
                     videoPlayerData.chosenLanguage,
                     if (isLastEpisode) 1 else videoPlayerData.chosenEpisode+1,
                     0L,
-                    null
+                    null,
+                    videoPlayerData.chosenSubtitle,
                 ))
                 mediaPlayer.initPlayer(playerView, 0, 0L)
             } else {

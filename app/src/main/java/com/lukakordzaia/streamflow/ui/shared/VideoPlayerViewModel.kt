@@ -24,10 +24,10 @@ class VideoPlayerViewModel : BaseViewModel() {
     val availableLanguages: LiveData<List<String>> = _availableLanguages
 
     private val _availableSubtitles = MutableLiveData<List<String>>()
-    val availableSubtitles: LiveData<List<String>> = _availableLanguages
+    val availableSubtitles: LiveData<List<String>> = _availableSubtitles
 
-    private var getEpisode: String = ""
-    private var getSubtitles: Uri? = null
+    private var getEpisode: String? = null
+    private var getSubtitles: String? = null
     val mediaAndSubtitle = MutableLiveData<TitleMediaItemsUri>()
 
     private val _videoPlayerData = MutableLiveData<VideoPlayerData>()
@@ -97,8 +97,6 @@ class VideoPlayerViewModel : BaseViewModel() {
     fun getTitleFiles(videoPlayerData: VideoPlayerData) {
         setNoInternet(false)
         getEpisode = ""
-        val languages: MutableList<String> = ArrayList()
-        val subtitles: MutableList<String> = ArrayList()
 
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason)) {
@@ -113,30 +111,9 @@ class VideoPlayerViewModel : BaseViewModel() {
 
                     _setTitleName.value = season.title
 
-                    season.files.forEach { singleFiles ->
-                        languages.add(singleFiles.lang)
+                    checkAvailability(season.files, videoPlayerData.chosenLanguage)
 
-                        singleFiles.subtitles?.let { allSubtitles ->
-                            allSubtitles.forEach {
-                                subtitles.add(it!!.lang)
-                            }
-                        }
-
-                        checkAvailability(singleFiles, videoPlayerData.chosenLanguage)
-                    }
-
-                    _availableLanguages.value = languages
-                    _availableSubtitles.value = subtitles
-
-                    val episodeIntoUri = if (getEpisode.isNotBlank()) {
-                        Uri.parse(getEpisode)
-                    } else {
-                        checkAvailability(season.files[0], season.files[0].lang)
-                        newToastMessage("${videoPlayerData.chosenLanguage} - ვერ მოიძებნა. ავტომატურად ჩაირთო - ${season.files[0].lang}")
-                        Uri.parse(getEpisode)
-                    }
-
-                    val mediaItems = TitleMediaItemsUri(episodeIntoUri, getSubtitles)
+                    val mediaItems = TitleMediaItemsUri(Uri.parse(getEpisode), Uri.parse(getSubtitles))
                     mediaAndSubtitle.value = mediaItems
                 }
                 is Result.Error -> {
@@ -149,32 +126,68 @@ class VideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    private fun checkAvailability(singleEpisodeFiles: GetSingleTitleFilesResponse.Data.File, chosenLanguage: String) {
-        if (singleEpisodeFiles.lang == chosenLanguage) {
-            if (singleEpisodeFiles.files.size == 1) {
-                getEpisode = singleEpisodeFiles.files[0].src
-            } else if (singleEpisodeFiles.files.size > 1) {
-                singleEpisodeFiles.files.forEach {
-                    if (it.quality == "HIGH") {
-                        getEpisode = it.src
-                    }
+    private fun checkAvailability(episodeFiles: List<GetSingleTitleFilesResponse.Data.File>, chosenLanguage: String) {
+        val languages: MutableList<String> = ArrayList()
+
+        episodeFiles.forEach { file ->
+            languages.add(file.lang)
+
+            if (file.lang == chosenLanguage) {
+                checkAudio(file)
+            }
+        }
+        _availableLanguages.value = languages
+
+        // If new episode is not available in same language, automatically switches to first available language
+        if (getEpisode.isNullOrEmpty()) {
+            newToastMessage("$chosenLanguage - ვერ მოიძებნა. ავტომატურად ჩაირთო - ${episodeFiles[0].lang}")
+            checkAudio(episodeFiles[0])
+        }
+    }
+
+    private fun checkAudio(singleEpisodeFiles: GetSingleTitleFilesResponse.Data.File) {
+        if (singleEpisodeFiles.files.size == 1) {
+            getEpisode = singleEpisodeFiles.files[0].src
+        } else if (singleEpisodeFiles.files.size > 1) {
+            singleEpisodeFiles.files.forEach {
+                if (it.quality == "HIGH") {
+                    getEpisode = it.src
                 }
             }
+        }
 
-            if (!singleEpisodeFiles.subtitles.isNullOrEmpty()) {
-                if (singleEpisodeFiles.subtitles.size == 1) {
-                    getSubtitles = Uri.parse(singleEpisodeFiles.subtitles[0]!!.url)
-                } else if (singleEpisodeFiles.subtitles.size > 1) {
-                    singleEpisodeFiles.subtitles.forEach {
+        checkSubtitles(singleEpisodeFiles.subtitles, singleEpisodeFiles.lang)
+    }
+
+    private fun checkSubtitles(fileSubtitles: List<GetSingleTitleFilesResponse.Data.File.Subtitle?>?, chosenLanguage: String) {
+        val subtitlesList: MutableList<String> = ArrayList()
+        subtitlesList.add(0, "გათიშვა")
+
+
+        if (!fileSubtitles.isNullOrEmpty()) {
+            fileSubtitles.forEach {
+                subtitlesList.add(it!!.lang)
+            }
+
+            when (fileSubtitles.size) {
+                1 -> {
+                    getSubtitles = fileSubtitles[0]!!.url
+                    _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = fileSubtitles[0]!!.lang)
+                }
+                else -> {
+                    fileSubtitles.forEach {
                         if (it!!.lang.equals(chosenLanguage, true)) {
-                            getSubtitles = Uri.parse(it.url)
+                            getSubtitles = it.url
+                            _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = it.lang)
                         }
                     }
                 }
-            } else {
-                getSubtitles = null
             }
+        } else {
+            getSubtitles = null
         }
+
+        _availableSubtitles.value = subtitlesList
     }
 
     fun getSingleTitleData(titleId: Int) {
