@@ -84,4 +84,5 @@
     <string name="russian">რუსული</string>
     <string name="georgian">ქართული</string>
     <string name="turn_off">გათიშვა</string>
+    <string name="return_to_video">ვიდეოზე დაბრუნება</string>
 </resources>

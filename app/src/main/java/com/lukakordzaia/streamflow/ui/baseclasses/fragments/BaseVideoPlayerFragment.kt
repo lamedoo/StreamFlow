@@ -119,49 +119,45 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(
                 TitleMediaItemsUri(Uri.parse(videoPlayerData.trailerUrl), null)
             ))
-            subtitleFunctions(false)
+            subtitleButton.setGone()
         } else {
             viewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(it))
-
-                subtitleFunctions(true)
             })
         }
+
+        subtitleFunctions()
         mediaPlayer.initPlayer(playerView, 0, videoPlayerData.watchedTime)
     }
 
-    private fun subtitleFunctions(hasSubs: Boolean) {
+    private fun subtitleFunctions() {
         val style = CaptionStyleCompat(Color.WHITE, Color.TRANSPARENT, Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW, Color.BLACK, Typeface.DEFAULT_BOLD)
-
-        val subtitleView = playerView.subtitleView!!.apply {
+        playerView.subtitleView!!.apply {
             setPadding(0, 0, 0, 20)
             setApplyEmbeddedFontSizes(false)
             setApplyEmbeddedStyles(false)
             setFixedTextSize(2, 25F)
             setStyle(style)
         }
+    }
 
-        if (hasSubs) {
-            subtitleButton.setVisible()
-//            subtitleButton.imageTintList = ColorStateList.valueOf(
-//                ContextCompat.getColor(
-//                    requireContext(),
-//                    R.color.accent_color
-//                )
-//            )
+    fun switchAudioLanguage(language: String) {
+        episodeHasEnded = false
+        viewModel.setVideoPlayerData(videoPlayerData.copy(chosenLanguage = language, watchedTime = player.currentPosition))
+        player.clearMediaItems()
+        mediaPlayer.initPlayer(playerView, 0, videoPlayerData.watchedTime)
+    }
+
+    fun switchSubtitleLanguage(language: String) {
+        if (language == getString(R.string.turn_off)) {
+            playerView.subtitleView?.setGone()
+            videoPlayerData = videoPlayerData.copy(chosenSubtitle = language)
+            player.play()
         } else {
-            subtitleButton.setGone()
+            playerView.subtitleView?.setVisible()
+            videoPlayerData = videoPlayerData.copy(chosenSubtitle = language)
+            player.play()
         }
-
-//        subtitleButton.setOnClickListener {
-//            subtitleView.setVisibleOrGone(!subtitleView.isVisible)
-//
-//            if (subtitleView.isVisible) {
-//                VideoPlayerAnimations().setSubtitleOff(subtitleButton, requireContext())
-//            } else {
-//                VideoPlayerAnimations().setSubtitleOn(subtitleButton, requireContext())
-//            }
-//        }
     }
 
     private fun updateNextButton(lastEpisode: Int) {

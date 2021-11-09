@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="5dp"
     android:focusable="true"
-    android:focusableInTouchMode="true"
     android:background="@drawable/background_button_tv"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 

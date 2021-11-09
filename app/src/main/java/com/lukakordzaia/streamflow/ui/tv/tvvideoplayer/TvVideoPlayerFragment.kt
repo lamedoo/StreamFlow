@@ -98,16 +98,8 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     private fun setAvailableSubtitles(subtitles: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
         chooseSubtitlesAdapter = TvChooseAudioAdapter(requireContext()) {
-            if (it == getString(R.string.turn_off)) {
-                playerView.subtitleView?.setGone()
-                videoPlayerData = videoPlayerData.copy(chosenSubtitle = it)
-                player.play()
-            } else {
-                playerView.subtitleView?.setVisible()
-                videoPlayerData = videoPlayerData.copy(chosenSubtitle = it)
-                player.play()
-            }
             hideAudioSidebar()
+            switchSubtitleLanguage(it)
         }
 
         binding.chooseAudioSidebar.rvSubtitles.apply {
@@ -123,10 +115,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
         chooseLanguageAdapter = TvChooseAudioAdapter(requireContext()) {
             hideAudioSidebar()
-            episodeHasEnded = false
-            player.clearMediaItems()
-            viewModel.setVideoPlayerData(videoPlayerData.copy(chosenLanguage = it))
-            mediaPlayer.initPlayer(playerView, 0, 0L)
+            switchAudioLanguage(it)
         }
 
         binding.chooseAudioSidebar.rvLanguage.apply {
