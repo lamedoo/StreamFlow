@@ -193,6 +193,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
                     videoPlayerData.chosenSubtitle,
                 ))
                 mediaPlayer.initPlayer(playerView, 0, 0L)
+                viewModel.episodeHasStarted()
             } else {
                 requireActivity().onBackPressed()
             }

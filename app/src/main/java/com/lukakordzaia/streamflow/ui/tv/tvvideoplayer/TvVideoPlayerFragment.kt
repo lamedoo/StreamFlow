@@ -16,6 +16,7 @@ import com.lukakordzaia.streamflow.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.streamflow.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.TvExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVideoPlayerFragment
+import com.lukakordzaia.streamflow.utils.EventObserver
 import com.lukakordzaia.streamflow.utils.setGone
 import com.lukakordzaia.streamflow.utils.setVisible
 import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
@@ -61,10 +62,11 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         playerBinding = TvExoplayerControllerLayoutBinding.bind(binding.root)
 
         if (!videoPlayerData.isTvShow) {
-            playerBinding.nextDetailsTitle.text = "სხვა დეტალები"
+            playerBinding.nextDetailsTitle.text = getString(R.string.other_details)
         }
 
         fragmentListeners()
+        fragmentObservers()
 
         mediaPlayer.setPlayerListener(PlayerListeners())
     }
@@ -83,6 +85,15 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.BACK_BUTTON)
             requireActivity().onBackPressed()
         }
+    }
+
+    private fun fragmentObservers() {
+        viewModel.newEpisodeStarted.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                playerBinding.exoPlay.requestFocus()
+                playerBinding.exoPause.requestFocus()
+            }
+        })
     }
 
     private fun audioObservers() {
@@ -140,9 +151,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             if (state == Player.STATE_READY) {
                 if (continueWatchingDialog.root.isVisible) {
                     continueWatchingDialog.confirmButton.requestFocus()
-                } else {
-                    playerBinding.exoPlay.requestFocus()
-                    playerBinding.exoPause.requestFocus()
                 }
             }
         }

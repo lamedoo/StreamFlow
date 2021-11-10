@@ -12,6 +12,7 @@ import com.lukakordzaia.streamflow.network.Result
 import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.streamflow.utils.Event
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -40,6 +41,9 @@ class VideoPlayerViewModel : BaseViewModel() {
     var totalEpisodesInSeason = MutableLiveData<Int>()
 
     val saveLoader = MutableLiveData<LoadingState>()
+
+    private val _newEpisodeStarted = MutableLiveData<Event<Boolean>>()
+    val newEpisodeStarted: LiveData<Event<Boolean>> = _newEpisodeStarted
 
     fun setVideoPlayerData(videoPlayerData: VideoPlayerData) {
         _videoPlayerData.value = videoPlayerData
@@ -225,5 +229,9 @@ class VideoPlayerViewModel : BaseViewModel() {
                 }
             }
         }
+    }
+
+    fun episodeHasStarted() {
+        _newEpisodeStarted.value = Event(true)
     }
 }
