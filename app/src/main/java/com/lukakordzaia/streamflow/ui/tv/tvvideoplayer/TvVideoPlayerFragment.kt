@@ -28,7 +28,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     }
 
     override val autoBackPress = AutoBackPress {
-        (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.BACK_BUTTON)
+        (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.BACK_BUTTON)
         requireActivity().onBackPressed()
     }
 
@@ -76,11 +76,11 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             binding.chooseAudioSidebar.rvSubtitles.requestFocus()
 
             binding.titlePlayer.player?.pause()
-            (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.AUDIO_SIDEBAR)
+            (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.AUDIO_SIDEBAR)
         }
 
         playerBinding.backButton.setOnClickListener {
-            (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.BACK_BUTTON)
+            (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.BACK_BUTTON)
             requireActivity().onBackPressed()
         }
     }
@@ -127,6 +127,12 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         chooseLanguageAdapter.setItems(languages)
     }
 
+    fun hideAudioSidebar() {
+        binding.chooseAudioSidebar.root.setGone()
+        playerBinding.subtitleToggle.requestFocus()
+        (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.VIDEO_PLAYER)
+    }
+
     inner class PlayerListeners: Player.Listener {
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
@@ -140,12 +146,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                 }
             }
         }
-    }
-
-    fun hideAudioSidebar() {
-        binding.chooseAudioSidebar.root.setGone()
-        playerBinding.subtitleToggle.requestFocus()
-        (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.VIDEO_PLAYER)
     }
 
     fun onKeyUp() {

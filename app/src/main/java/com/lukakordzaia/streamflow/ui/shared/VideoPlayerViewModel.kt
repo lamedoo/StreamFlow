@@ -96,7 +96,6 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     fun getTitleFiles(videoPlayerData: VideoPlayerData) {
         setNoInternet(false)
-        getEpisode = ""
 
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason)) {
@@ -111,7 +110,7 @@ class VideoPlayerViewModel : BaseViewModel() {
 
                     _setTitleName.value = season.title
 
-                    checkAvailability(season.files, videoPlayerData.chosenLanguage)
+                    checkAvailability(season.files, videoPlayerData.chosenLanguage, videoPlayerData.chosenSubtitle)
 
                     val mediaItems = TitleMediaItemsUri(Uri.parse(getEpisode), Uri.parse(getSubtitles))
                     mediaAndSubtitle.value = mediaItems
@@ -126,14 +125,14 @@ class VideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    private fun checkAvailability(episodeFiles: List<GetSingleTitleFilesResponse.Data.File>, chosenLanguage: String) {
+    private fun checkAvailability(episodeFiles: List<GetSingleTitleFilesResponse.Data.File>, chosenLanguage: String, chosenSubtitle: String?) {
         val languages: MutableList<String> = ArrayList()
 
         episodeFiles.forEach { file ->
             languages.add(file.lang)
 
             if (file.lang == chosenLanguage) {
-                checkAudio(file)
+                checkAudio(file, chosenSubtitle)
             }
         }
         _availableLanguages.value = languages
@@ -141,11 +140,13 @@ class VideoPlayerViewModel : BaseViewModel() {
         // If new episode is not available in same language, automatically switches to first available language
         if (getEpisode.isNullOrEmpty()) {
             newToastMessage("$chosenLanguage - ვერ მოიძებნა. ავტომატურად ჩაირთო - ${episodeFiles[0].lang}")
-            checkAudio(episodeFiles[0])
+            checkAudio(episodeFiles[0], chosenSubtitle)
         }
     }
 
-    private fun checkAudio(singleEpisodeFiles: GetSingleTitleFilesResponse.Data.File) {
+    private fun checkAudio(singleEpisodeFiles: GetSingleTitleFilesResponse.Data.File, chosenSubtitle: String?) {
+        getEpisode = null
+
         if (singleEpisodeFiles.files.size == 1) {
             getEpisode = singleEpisodeFiles.files[0].src
         } else if (singleEpisodeFiles.files.size > 1) {
@@ -156,10 +157,12 @@ class VideoPlayerViewModel : BaseViewModel() {
             }
         }
 
-        checkSubtitles(singleEpisodeFiles.subtitles, singleEpisodeFiles.lang)
+        checkSubtitles(singleEpisodeFiles.subtitles, singleEpisodeFiles.lang, chosenSubtitle)
     }
 
-    private fun checkSubtitles(fileSubtitles: List<GetSingleTitleFilesResponse.Data.File.Subtitle?>?, chosenLanguage: String) {
+    private fun checkSubtitles(fileSubtitles: List<GetSingleTitleFilesResponse.Data.File.Subtitle?>?, chosenLanguage: String, chosenSubtitle: String?) {
+        getSubtitles = null
+
         val subtitlesList: MutableList<String> = ArrayList()
         subtitlesList.add(0, "გათიშვა")
 
@@ -169,18 +172,33 @@ class VideoPlayerViewModel : BaseViewModel() {
                 subtitlesList.add(it!!.lang)
             }
 
-            when (fileSubtitles.size) {
-                1 -> {
-                    getSubtitles = fileSubtitles[0]!!.url
-                    _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = fileSubtitles[0]!!.lang)
-                }
-                else -> {
-                    fileSubtitles.forEach {
-                        if (it!!.lang.equals(chosenLanguage, true)) {
-                            getSubtitles = it.url
-                            _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = it.lang)
+            if (chosenSubtitle == null || chosenSubtitle == "გათიშვა") {
+                when (fileSubtitles.size) {
+                    1 -> {
+                        getSubtitles = fileSubtitles[0]!!.url
+                        _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = fileSubtitles[0]!!.lang)
+                    }
+                    else -> {
+                        fileSubtitles.forEach {
+                            if (it!!.lang.equals(chosenLanguage, true)) {
+                                getSubtitles = it.url
+                                _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = it.lang)
+                            }
                         }
                     }
+                }
+            } else {
+                fileSubtitles.forEach {
+                    if (it!!.lang.equals(chosenSubtitle, true)) {
+                        getSubtitles = it.url
+                    }
+                }
+
+                // If chosen subtitle language is not available for next episode, automatically switches to first available subtitle
+                if (getSubtitles == null) {
+                    getSubtitles = fileSubtitles[0]!!.url
+                    _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = fileSubtitles[0]!!.lang)
+                    newToastMessage("$chosenSubtitle - სუბტიტრები ვერ მოიძებნა. ავტომატურად ჩაირთო - ${fileSubtitles[0]!!.lang} სუბტიტრები")
                 }
             }
         } else {

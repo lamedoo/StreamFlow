@@ -21,7 +21,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
 
     override fun getViewBinding() = ActivityTvVideoPlayerBinding.inflate(layoutInflater)
 
-    private var currentFragment = VIDEO_PLAYER
+    private var currentFragmentState = VIDEO_PLAYER
 
     private lateinit var videoPlayerData: VideoPlayerData
 
@@ -38,7 +38,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
-                if (currentFragment == VIDEO_PLAYER) {
+                if (currentFragmentState == VIDEO_PLAYER) {
                     val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
                     parentFragment.onKeyUp()
                 } else {
@@ -47,7 +47,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
             }
 
             KeyEvent.KEYCODE_DPAD_CENTER -> {
-                return if (currentFragment == VIDEO_PLAYER) {
+                return if (currentFragmentState == VIDEO_PLAYER) {
                     val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
                     parentFragment.onKeyCenter()
                     true
@@ -57,7 +57,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
             }
 
             KeyEvent.KEYCODE_DPAD_DOWN -> {
-                if (currentFragment == VIDEO_PLAYER) {
+                if (currentFragmentState == VIDEO_PLAYER) {
                     if (continue_watching_dialog_root?.isVisible == true) {
                         go_back_button.requestFocus()
                     } else {
@@ -68,7 +68,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
                                 return true
                             }
                             exo_play.isFocused || exo_pause.isFocused -> {
-                                setCurrentFragment(VIDEO_DETAILS)
+                                setCurrentFragmentState(VIDEO_DETAILS)
                                 detailsFragment()
 
                                 val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
@@ -92,7 +92,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
             }
 
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                return if (currentFragment == VIDEO_PLAYER) {
+                return if (currentFragmentState == VIDEO_PLAYER) {
                     val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
                     parentFragment.onKeyLeft()
                     true
@@ -102,7 +102,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
             }
 
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                return if (currentFragment == VIDEO_PLAYER) {
+                return if (currentFragmentState == VIDEO_PLAYER) {
                     val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
                     parentFragment.onKeyRight()
                     true
@@ -155,10 +155,10 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     }
 
     override fun onBackPressed() {
-        when (currentFragment) {
+        when (currentFragmentState) {
             VIDEO_DETAILS -> {
                 supportFragmentManager.popBackStack()
-                setCurrentFragment(VIDEO_PLAYER)
+                setCurrentFragmentState(VIDEO_PLAYER)
             }
             VIDEO_PLAYER -> {
                 if (title_player.isControllerVisible) {
@@ -184,10 +184,10 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
             .commit()
     }
 
-    fun setCurrentFragment(fragment: Int) {
-        currentFragment = fragment
+    fun setCurrentFragmentState(state: Int) {
+        currentFragmentState = state
 
-        if (fragment == VIDEO_PLAYER) {
+        if (state == VIDEO_PLAYER) {
             title_player.showController()
             exo_pause.requestFocus()
         }

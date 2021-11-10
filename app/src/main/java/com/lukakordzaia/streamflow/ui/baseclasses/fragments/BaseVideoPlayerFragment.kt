@@ -154,9 +154,11 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             videoPlayerData = videoPlayerData.copy(chosenSubtitle = language)
             player.play()
         } else {
+            episodeHasEnded = false
             playerView.subtitleView?.setVisible()
-            videoPlayerData = videoPlayerData.copy(chosenSubtitle = language)
-            player.play()
+            viewModel.setVideoPlayerData(videoPlayerData.copy(chosenSubtitle = language, watchedTime = player.currentPosition))
+            player.clearMediaItems()
+            mediaPlayer.initPlayer(playerView, 0, videoPlayerData.watchedTime)
         }
     }
 

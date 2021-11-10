@@ -19,7 +19,7 @@ class TvVideoPlayerDetailsFragment : BaseFragment<FragmentTvTitleFilesBinding>()
 
         binding.tvDetailsGoTop.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(VIDEO_PLAYER)
+                (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(VIDEO_PLAYER)
                 parentFragmentManager.popBackStack()
             }
         }
