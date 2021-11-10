@@ -29,4 +29,13 @@
         android:id="@+id/continue_watching"
         layout="@layout/continue_watching_dialog"/>
 
+    <include
+        android:id="@+id/choose_audio_sidebar"
+        layout="@layout/tv_choose_audio_sidebar"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.3"
+        app:layout_constraintWidth_default="percent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

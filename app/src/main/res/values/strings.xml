@@ -78,4 +78,11 @@
     <string name="start_over">თავიდან ყურება</string>
     <string name="new_series">ახალი სერიები</string>
     <string name="we_suggest_watching">გირჩევთ უყურო</string>
+    <string name="subtitles">სუბტიტრები</string>
+    <string name="language">ენა</string>
+    <string name="english">ინგლისური</string>
+    <string name="russian">რუსული</string>
+    <string name="georgian">ქართული</string>
+    <string name="turn_off">გათიშვა</string>
+    <string name="return_to_video">ვიდეოზე დაბრუნება</string>
 </resources>

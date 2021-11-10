@@ -11,5 +11,6 @@ data class VideoPlayerData (
         val chosenLanguage: String,
         val chosenEpisode: Int,
         val watchedTime: Long,
-        val trailerUrl: String?
+        val trailerUrl: String?,
+        val chosenSubtitle: String? = null,
 ) : Parcelable

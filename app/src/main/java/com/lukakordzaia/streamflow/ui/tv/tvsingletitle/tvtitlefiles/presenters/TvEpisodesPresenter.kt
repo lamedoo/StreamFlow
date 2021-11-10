@@ -45,7 +45,7 @@ class TvEpisodesPresenter(private val context: Context, private val currentEpiso
                 cardView.setIndicatorDrawable(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        if (hasFocus) R.drawable.indicator_current_episode_dark else R.drawable.indicator_current_episode_light,
+                        if (hasFocus) R.drawable.indicator_current_episode_dark else R.drawable.indicator_current_episode_yellow,
                         null
                     )
                 )

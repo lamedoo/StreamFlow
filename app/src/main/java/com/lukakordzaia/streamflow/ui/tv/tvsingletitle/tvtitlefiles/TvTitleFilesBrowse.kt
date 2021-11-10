@@ -260,7 +260,7 @@ class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
         }
         requireActivity().startActivity(intent)
         if (requireActivity() is TvVideoPlayerActivity) {
-            (requireActivity() as TvVideoPlayerActivity).setCurrentFragment(TvVideoPlayerActivity.NEW_EPISODE)
+            (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.NEW_EPISODE)
             requireActivity().finish()
         }
     }

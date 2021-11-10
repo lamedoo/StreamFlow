@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
@@ -11,8 +10,6 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -22,7 +19,6 @@ import com.google.android.exoplayer2.ui.CaptionStyleCompat
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.animations.VideoPlayerAnimations
 import com.lukakordzaia.streamflow.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.streamflow.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
@@ -43,7 +39,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     protected lateinit var player: SimpleExoPlayer
 
     protected var mediaItemsPlayed = 0
-    private var episodeHasEnded = false
+    var episodeHasEnded = false
 
     private var numOfSeasons: Int = 0
 
@@ -123,48 +119,46 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(
                 TitleMediaItemsUri(Uri.parse(videoPlayerData.trailerUrl), null)
             ))
-            subtitleFunctions(false)
+            subtitleButton.setGone()
         } else {
             viewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(it))
-
-                subtitleFunctions(it.titleSubUri != null)
             })
         }
+
+        subtitleFunctions()
         mediaPlayer.initPlayer(playerView, 0, videoPlayerData.watchedTime)
     }
 
-    private fun subtitleFunctions(hasSubs: Boolean) {
+    private fun subtitleFunctions() {
         val style = CaptionStyleCompat(Color.WHITE, Color.TRANSPARENT, Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW, Color.BLACK, Typeface.DEFAULT_BOLD)
-
-        val subtitleView = playerView.subtitleView!!.apply {
+        playerView.subtitleView!!.apply {
             setPadding(0, 0, 0, 20)
             setApplyEmbeddedFontSizes(false)
             setApplyEmbeddedStyles(false)
             setFixedTextSize(2, 25F)
             setStyle(style)
         }
+    }
 
-        if (hasSubs) {
-            subtitleButton.setVisible()
-            subtitleButton.imageTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.accent_color
-                )
-            )
+    fun switchAudioLanguage(language: String) {
+        episodeHasEnded = false
+        viewModel.setVideoPlayerData(videoPlayerData.copy(chosenLanguage = language, watchedTime = player.currentPosition))
+        player.clearMediaItems()
+        mediaPlayer.initPlayer(playerView, 0, videoPlayerData.watchedTime)
+    }
+
+    fun switchSubtitleLanguage(language: String) {
+        if (language == getString(R.string.turn_off)) {
+            playerView.subtitleView?.setGone()
+            videoPlayerData = videoPlayerData.copy(chosenSubtitle = language)
+            player.play()
         } else {
-            subtitleButton.setGone()
-        }
-
-        subtitleButton.setOnClickListener {
-            subtitleView.setVisibleOrGone(!subtitleView.isVisible)
-
-            if (subtitleView.isVisible) {
-                VideoPlayerAnimations().setSubtitleOff(subtitleButton, requireContext())
-            } else {
-                VideoPlayerAnimations().setSubtitleOn(subtitleButton, requireContext())
-            }
+            episodeHasEnded = false
+            playerView.subtitleView?.setVisible()
+            viewModel.setVideoPlayerData(videoPlayerData.copy(chosenSubtitle = language, watchedTime = player.currentPosition))
+            player.clearMediaItems()
+            mediaPlayer.initPlayer(playerView, 0, videoPlayerData.watchedTime)
         }
     }
 
@@ -196,7 +190,8 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
                     videoPlayerData.chosenLanguage,
                     if (isLastEpisode) 1 else videoPlayerData.chosenEpisode+1,
                     0L,
-                    null
+                    null,
+                    videoPlayerData.chosenSubtitle,
                 ))
                 mediaPlayer.initPlayer(playerView, 0, 0L)
             } else {

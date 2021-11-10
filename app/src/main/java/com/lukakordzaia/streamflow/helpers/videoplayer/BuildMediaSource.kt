@@ -11,7 +11,6 @@ class BuildMediaSource {
             MediaItem.Builder()
                 .setUri(titleMediaItemsUri.titleFileUri)
                 .build()
-
         } else {
             val subtitle = MediaItem.Subtitle(
                 titleMediaItemsUri.titleSubUri,

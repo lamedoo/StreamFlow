@@ -20,4 +20,10 @@
         android:id="@+id/continue_watching"
         layout="@layout/continue_watching_dialog"/>
 
+    <include
+        android:id="@+id/choose_audio_sidebar"
+        layout="@layout/phone_choose_audio_sidebar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class VideoPlayerActivity : AppCompatActivity() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
     private val sharedPreferences: SharedPreferences by inject()
+
+    private var currentFragment = VIDEO_PLAYER
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phone_video_player)
@@ -24,26 +27,39 @@ class VideoPlayerActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
-
         val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_fragment) as VideoPlayerFragment
-        parentFragment.releasePlayer()
 
-        if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
-            super.onBackPressed()
-        } else {
-            videoPlayerViewModel.saveLoader.observe(this, {
-                when (it) {
-                    LoadingState.LOADING -> {}
-                    LoadingState.LOADED, LoadingState.ERROR -> {
-                        super.onBackPressed()
-                    }
+        when (currentFragment) {
+            VIDEO_PLAYER -> {
+                val videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
+
+                parentFragment.releasePlayer()
+
+                if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
+                    super.onBackPressed()
+                } else {
+                    videoPlayerViewModel.saveLoader.observe(this, {
+                        when (it) {
+                            LoadingState.LOADING -> {}
+                            LoadingState.LOADED, LoadingState.ERROR -> {
+                                super.onBackPressed()
+                            }
+                        }
+                    })
                 }
-            })
+            }
+            AUDIO_SIDEBAR -> parentFragment.hideAudioSidebar()
         }
     }
 
+    fun setCurrentFragment(fragment: Int) {
+        currentFragment = fragment
+    }
+
     companion object {
+        const val VIDEO_PLAYER = 0
+        const val AUDIO_SIDEBAR = 1
+
         fun startFromHomeScreen(context: Context, videoPlayerData: VideoPlayerData): Intent {
             return Intent(context, VideoPlayerActivity::class.java).apply {
                 putExtra(AppConstants.VIDEO_PLAYER_DATA, videoPlayerData)
