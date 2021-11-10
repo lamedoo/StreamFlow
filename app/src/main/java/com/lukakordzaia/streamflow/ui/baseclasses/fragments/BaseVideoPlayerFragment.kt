@@ -2,7 +2,6 @@ package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 
 import android.graphics.Color
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -117,7 +116,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     private fun initPlayer() {
         if (videoPlayerData.trailerUrl != null) {
             mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(
-                TitleMediaItemsUri(Uri.parse(videoPlayerData.trailerUrl), null)
+                TitleMediaItemsUri(videoPlayerData.trailerUrl, null)
             ))
             subtitleButton.setGone()
         } else {

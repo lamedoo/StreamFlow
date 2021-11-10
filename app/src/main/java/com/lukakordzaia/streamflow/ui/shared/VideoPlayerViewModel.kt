@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflow.ui.shared
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,8 +25,8 @@ class VideoPlayerViewModel : BaseViewModel() {
     private val _availableSubtitles = MutableLiveData<List<String>>()
     val availableSubtitles: LiveData<List<String>> = _availableSubtitles
 
-    private var getEpisode: String? = null
-    private var getSubtitles: String? = null
+    private var episodeLink: String? = null
+    private var subtitleLink: String? = null
     val mediaAndSubtitle = MutableLiveData<TitleMediaItemsUri>()
 
     private val _videoPlayerData = MutableLiveData<VideoPlayerData>()
@@ -112,7 +111,7 @@ class VideoPlayerViewModel : BaseViewModel() {
 
                     checkAvailability(season.files, videoPlayerData.chosenLanguage, videoPlayerData.chosenSubtitle)
 
-                    val mediaItems = TitleMediaItemsUri(Uri.parse(getEpisode), Uri.parse(getSubtitles))
+                    val mediaItems = TitleMediaItemsUri(episodeLink, subtitleLink)
                     mediaAndSubtitle.value = mediaItems
                 }
                 is Result.Error -> {
@@ -138,21 +137,21 @@ class VideoPlayerViewModel : BaseViewModel() {
         _availableLanguages.value = languages
 
         // If new episode is not available in same language, automatically switches to first available language
-        if (getEpisode.isNullOrEmpty()) {
+        if (episodeLink.isNullOrEmpty()) {
             newToastMessage("$chosenLanguage - ვერ მოიძებნა. ავტომატურად ჩაირთო - ${episodeFiles[0].lang}")
             checkAudio(episodeFiles[0], chosenSubtitle)
         }
     }
 
     private fun checkAudio(singleEpisodeFiles: GetSingleTitleFilesResponse.Data.File, chosenSubtitle: String?) {
-        getEpisode = null
+        episodeLink = null
 
         if (singleEpisodeFiles.files.size == 1) {
-            getEpisode = singleEpisodeFiles.files[0].src
+            episodeLink = singleEpisodeFiles.files[0].src
         } else if (singleEpisodeFiles.files.size > 1) {
             singleEpisodeFiles.files.forEach {
                 if (it.quality == "HIGH") {
-                    getEpisode = it.src
+                    episodeLink = it.src
                 }
             }
         }
@@ -161,7 +160,7 @@ class VideoPlayerViewModel : BaseViewModel() {
     }
 
     private fun checkSubtitles(fileSubtitles: List<GetSingleTitleFilesResponse.Data.File.Subtitle?>?, chosenLanguage: String, chosenSubtitle: String?) {
-        getSubtitles = null
+        subtitleLink = null
 
         val subtitlesList: MutableList<String> = ArrayList()
         subtitlesList.add(0, "გათიშვა")
@@ -175,13 +174,13 @@ class VideoPlayerViewModel : BaseViewModel() {
             if (chosenSubtitle == null || chosenSubtitle == "გათიშვა") {
                 when (fileSubtitles.size) {
                     1 -> {
-                        getSubtitles = fileSubtitles[0]!!.url
+                        subtitleLink = fileSubtitles[0]!!.url
                         _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = fileSubtitles[0]!!.lang)
                     }
                     else -> {
                         fileSubtitles.forEach {
                             if (it!!.lang.equals(chosenLanguage, true)) {
-                                getSubtitles = it.url
+                                subtitleLink = it.url
                                 _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = it.lang)
                             }
                         }
@@ -190,19 +189,20 @@ class VideoPlayerViewModel : BaseViewModel() {
             } else {
                 fileSubtitles.forEach {
                     if (it!!.lang.equals(chosenSubtitle, true)) {
-                        getSubtitles = it.url
+                        subtitleLink = it.url
                     }
                 }
 
                 // If chosen subtitle language is not available for next episode, automatically switches to first available subtitle
-                if (getSubtitles == null) {
-                    getSubtitles = fileSubtitles[0]!!.url
+                if (subtitleLink == null) {
+                    subtitleLink = fileSubtitles[0]!!.url
                     _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = fileSubtitles[0]!!.lang)
                     newToastMessage("$chosenSubtitle - სუბტიტრები ვერ მოიძებნა. ავტომატურად ჩაირთო - ${fileSubtitles[0]!!.lang} სუბტიტრები")
                 }
             }
         } else {
-            getSubtitles = null
+            subtitleLink = null
+            _videoPlayerData.value = _videoPlayerData.value?.copy(chosenSubtitle = "გათიშვა")
         }
 
         _availableSubtitles.value = subtitlesList
