@@ -1,9 +1,11 @@
 package com.lukakordzaia.streamflow.network
 
 import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
+import com.lukakordzaia.streamflow.datamodels.EpisodeInfoModel
 import com.lukakordzaia.streamflow.datamodels.NewSeriesModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.network.models.imovies.response.newseries.GetNewSeriesResponse
+import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetContinueWatchingResponse
@@ -143,4 +145,48 @@ fun List<GetNewSeriesResponse.Data.Movies.Data>.toNewSeriesModel(): List<NewSeri
             currentEpisode = title.lastUpdatedSeries?.data?.episode
         )
     }
+}
+
+fun List<GetSingleTitleFilesResponse.Data>.toEpisodeInfoModel(season: Int, chosenLanguage: String): EpisodeInfoModel {
+    val data = this[season]
+    val files = data.files
+
+    val languages: MutableList<String> = ArrayList()
+    val subtitles: MutableList<String> = ArrayList()
+    subtitles.add(0, "გათიშვა")
+
+    val episodeUrls: MutableList<EpisodeInfoModel.EpisodeFiles> = ArrayList()
+    val subtitleUrls: MutableList<EpisodeInfoModel.EpisodeSubtitles> = ArrayList()
+
+    files.forEach { file ->
+        languages.add(file.lang)
+
+        if (file.files.size == 1) {
+            episodeUrls.add(EpisodeInfoModel.EpisodeFiles(file.lang, file.files[0].src))
+        } else {
+            file.files.forEach {
+                if (it.quality == "HIGH") {
+                    episodeUrls.add(EpisodeInfoModel.EpisodeFiles(file.lang, it.src))
+                }
+            }
+        }
+
+        if (file.lang == chosenLanguage) {
+            if (!file.subtitles.isNullOrEmpty()) {
+                file.subtitles.forEach {
+                    subtitles.add(it!!.lang)
+                    subtitleUrls.add(EpisodeInfoModel.EpisodeSubtitles(it.lang, it.url))
+                }
+            }
+        }
+    }
+
+    return EpisodeInfoModel(
+        totalEpisodes = this.size,
+        episodeName = data.title,
+        availableLanguages = languages,
+        availableSubs = subtitles,
+        episodeFiles = episodeUrls,
+        episodeSubs = subtitleUrls
+    )
 }
