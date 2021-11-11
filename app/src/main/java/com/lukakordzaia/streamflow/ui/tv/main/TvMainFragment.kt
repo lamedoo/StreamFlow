@@ -110,13 +110,13 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
     }
 
     private fun watchedListRowsAdapter(items: List<ContinueWatchingModel>) {
+        hasContinueWatching = !items.isNullOrEmpty()
+
         val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
             addAll(0, items)
         }
 
         watchListAdapter = ListRow(HeaderItem(0, getString(R.string.continue_watching)), listRowAdapter)
-
-        hasContinueWatching = !items.isNullOrEmpty()
     }
 
     private fun newMoviesRowsAdapter(items: List<SingleTitleModel>) {

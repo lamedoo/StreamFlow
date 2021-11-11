@@ -116,7 +116,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
                 binding.playButtonBottomContainer.alpha = 1F
                 binding.episodesButton.apply {
                     alpha = 0F
-                    setGone()
+                    isClickable = false
                 }
             } else {
                 binding.playButton.alpha = playButtonAlpha
@@ -126,7 +126,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
                 binding.playButtonBottomContainer.alpha = playButtonBottomAlpha
                 binding.episodesButton.apply {
                     alpha = playButtonAlpha
-                    setVisible()
+                    isClickable = true
                 }
             }
         })
@@ -203,26 +203,26 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     }
 
     private fun titleDetailsContainer(info: SingleTitleModel) {
-            binding.titleName.text = info.displayName
+        binding.titleName.text = info.displayName
 
-            binding.singleTitleCover.setImage(info.cover, false)
+        binding.singleTitleCover.setImage(info.cover, false)
 
-            binding.titleTrailer.setOnClickListener {
-                startTrailer(info)
+        binding.titleTrailer.setOnClickListener {
+            startTrailer(info)
+        }
+
+        binding.titleDescription.text = info.description
+        binding.infoDetails.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
+        binding.infoDetails.year.text = info.releaseYear
+        binding.infoDetails.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
+
+        binding.episodesButton.setVisibleOrGone(info.isTvShow)
+        binding.episodesButtonBottom.setVisibleOrGone(info.isTvShow)
+        if (info.isTvShow) {
+            binding.episodesButton.setOnClickListener {
+                viewModel.onEpisodesPressed(info.id, info.displayName!!, info.seasonNum!!)
             }
-
-            binding.titleDescription.text = info.description
-            binding.infoDetails.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
-            binding.infoDetails.year.text = info.releaseYear
-            binding.infoDetails.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
-
-            if (info.isTvShow) {
-                binding.episodesButton.setVisible()
-                binding.episodesButtonBottom.setVisible()
-                binding.episodesButton.setOnClickListener {
-                    viewModel.onEpisodesPressed(info.id, info.displayName!!, info.seasonNum!!)
-                }
-            }
+        }
     }
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
