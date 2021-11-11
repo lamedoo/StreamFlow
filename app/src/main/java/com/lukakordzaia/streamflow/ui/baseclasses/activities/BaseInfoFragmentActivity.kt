@@ -11,10 +11,7 @@ import com.lukakordzaia.streamflow.ui.tv.genres.TvGenresActivity
 import com.lukakordzaia.streamflow.ui.tv.main.TvActivity
 import com.lukakordzaia.streamflow.ui.tv.tvcatalogue.TvCatalogueActivity
 import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setImage
-import com.lukakordzaia.streamflow.utils.setVisible
-import com.lukakordzaia.streamflow.utils.titlePosition
+import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTvBaseBinding>(), TvCheckTitleSelected {
@@ -29,20 +26,22 @@ abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTv
         setActiveButton()
     }
 
-    fun setActiveButton() {
+    private fun setActiveButton() {
         when (this) {
             is TvActivity -> setCurrentButton(binding.tvSidebar.homeButton)
             is TvCatalogueActivity -> setCurrentButton(binding.tvSidebar.moviesButton)
             is TvGenresActivity -> setCurrentButton(binding.tvSidebar.genresButton)
         }
-
-
     }
 
     fun setFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_host, fragment)
             .commit()
+    }
+
+    fun setProgressBar(isLoading: Boolean) {
+        binding.progressBar.setVisibleOrGone(isLoading)
     }
 
     override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {

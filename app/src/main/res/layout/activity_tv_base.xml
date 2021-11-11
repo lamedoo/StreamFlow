@@ -50,4 +50,18 @@
         layout="@layout/no_internet_layout"
         tools:visibility="gone"/>
 
+    <LinearLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@color/primaryColor">
+
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/accent_color" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

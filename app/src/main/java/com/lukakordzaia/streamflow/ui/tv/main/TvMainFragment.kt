@@ -11,6 +11,7 @@ import com.lukakordzaia.streamflow.datamodels.NewSeriesModel
 import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
 import com.lukakordzaia.streamflow.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflow.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseBrowseSupportFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeViewModel
@@ -32,6 +33,14 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
 
     var onTitleSelected: TvCheckTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
+
+    private lateinit var watchListAdapter: ListRow
+    private lateinit var newMoviesAdapter: ListRow
+    private lateinit var topMoviesAdapter: ListRow
+    private lateinit var suggestionsAdapter: ListRow
+    private lateinit var topTvShowsAdapter: ListRow
+    private lateinit var newSeriesAdapter: ListRow
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,21 +66,9 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.checkAuthDatabase()
 
-        baseRowsAdapter()
         fragmentObservers()
 
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
-    }
-
-    private fun baseRowsAdapter() {
-        val watchlistRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
-        val newMoviesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
-        val topMoviesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
-        val userSuggestionsRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
-        val topTvShowsRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
-        val newSeriesRow = ListRow(HeaderItem(""), ArrayObjectAdapter(TvMainPresenter()))
-        val initListRows = mutableListOf(watchlistRow, newMoviesRow, topMoviesRow, userSuggestionsRow, topTvShowsRow, newSeriesRow)
-        rowsAdapter.addAll(0, initListRows)
     }
 
     private fun fragmentObservers() {
@@ -103,6 +100,13 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
         viewModel.newSeriesList.observe(viewLifecycleOwner, {
             newSeriesRowsAdapter(it)
         })
+
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            (activity as TvActivity).setProgressBar(it == LoadingState.LOADING)
+            if (it == LoadingState.LOADED) {
+                setRowsAdapter()
+            }
+        })
     }
 
     private fun watchedListRowsAdapter(items: List<ContinueWatchingModel>) {
@@ -110,9 +114,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        HeaderItem(0, getString(R.string.continue_watching)).also {
-            rowsAdapter.replace(0, ListRow(it, listRowAdapter))
-        }
+        watchListAdapter = ListRow(HeaderItem(0, getString(R.string.continue_watching)), listRowAdapter)
 
         hasContinueWatching = !items.isNullOrEmpty()
     }
@@ -122,9 +124,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        HeaderItem(if (hasContinueWatching) 1 else 0, getString(R.string.new_movies)).also { header ->
-            rowsAdapter.replace(if (hasContinueWatching) 1 else 0, ListRow(header, listRowAdapter))
-        }
+        newMoviesAdapter = ListRow(HeaderItem(0, getString(R.string.new_movies)), listRowAdapter)
     }
 
     private fun topMoviesRowsAdapter(items: List<SingleTitleModel>) {
@@ -132,9 +132,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        HeaderItem(if (hasContinueWatching) 2 else 1, getString(R.string.top_movies)).also { header ->
-            rowsAdapter.replace(if (hasContinueWatching) 2 else 1, ListRow(header, listRowAdapter))
-        }
+        topMoviesAdapter = ListRow(HeaderItem(0, getString(R.string.top_movies)), listRowAdapter)
     }
 
     private fun userSuggestionsRowsAdapter(items: List<SingleTitleModel>) {
@@ -142,11 +140,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        if (hasUserSuggestion) {
-            HeaderItem(if (hasContinueWatching) 3 else 2, getString(R.string.we_suggest_watching)).also { header ->
-                rowsAdapter.replace(if (hasContinueWatching) 3 else 2, ListRow(header, listRowAdapter))
-            }
-        }
+        suggestionsAdapter = ListRow(HeaderItem(0, getString(R.string.we_suggest_watching)), listRowAdapter)
     }
 
     private fun topTvShowsRowsAdapter(items: List<SingleTitleModel>) {
@@ -154,16 +148,7 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        val position = when {
-            hasContinueWatching && hasUserSuggestion -> 4
-            hasContinueWatching && !hasUserSuggestion -> 3
-            !hasContinueWatching && !hasUserSuggestion -> 2
-            else -> 2
-        }
-
-        HeaderItem(position.toLong(), getString(R.string.top_tv_shows)).also { header ->
-            rowsAdapter.replace(position, ListRow(header, listRowAdapter))
-        }
+        topTvShowsAdapter = ListRow(HeaderItem(0, getString(R.string.top_tv_shows)), listRowAdapter)
     }
 
     private fun newSeriesRowsAdapter(items: List<NewSeriesModel>) {
@@ -171,16 +156,18 @@ class TvMainFragment : BaseBrowseSupportFragment<HomeViewModel>() {
             addAll(0, items)
         }
 
-        val position = when {
-            hasContinueWatching && hasUserSuggestion -> 5
-            hasContinueWatching && !hasUserSuggestion -> 4
-            !hasContinueWatching && !hasUserSuggestion -> 3
-            else -> 2
+        newSeriesAdapter = ListRow(HeaderItem(0, getString(R.string.new_series)), listRowAdapter)
+    }
+
+    private fun setRowsAdapter() {
+        val rows = when {
+            hasContinueWatching && hasUserSuggestion -> listOf(watchListAdapter, newMoviesAdapter, topMoviesAdapter, suggestionsAdapter, topTvShowsAdapter, newSeriesAdapter)
+            hasContinueWatching && !hasUserSuggestion -> listOf(watchListAdapter, newMoviesAdapter, topMoviesAdapter, topTvShowsAdapter, newSeriesAdapter)
+            !hasContinueWatching && !hasUserSuggestion -> listOf(newMoviesAdapter, topMoviesAdapter, topTvShowsAdapter, newSeriesAdapter)
+            else -> listOf(newMoviesAdapter, topMoviesAdapter, topTvShowsAdapter, newSeriesAdapter)
         }
 
-        HeaderItem(position.toLong(), getString(R.string.new_series)).also { header ->
-            rowsAdapter.replace(position, ListRow(header, listRowAdapter))
-        }
+        rowsAdapter.addAll(0, rows)
     }
     
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
