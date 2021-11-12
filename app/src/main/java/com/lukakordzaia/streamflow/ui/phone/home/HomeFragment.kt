@@ -20,12 +20,12 @@ import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
 import com.lukakordzaia.streamflow.utils.AppConstants
 import com.lukakordzaia.streamflow.utils.setImage
 import com.lukakordzaia.streamflow.utils.setVisibleOrGone
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 
 
 class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel>() {
-    override val viewModel by viewModel<HomeViewModel>()
+    override val viewModel by sharedViewModel<HomeViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContent(1) }
 
     private lateinit var homeContinueWatchingAdapter: HomeContinueWatchingAdapter
