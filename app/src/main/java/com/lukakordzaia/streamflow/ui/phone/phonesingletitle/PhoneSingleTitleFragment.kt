@@ -285,6 +285,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
 
     private fun languagePickerDialog() {
         tvShowBottomSheetViewModel.getSeasonFiles(args.titleId, 1)
+        tvShowBottomSheetViewModel.getEpisodeLanguages(args.titleId, 0)
 
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
