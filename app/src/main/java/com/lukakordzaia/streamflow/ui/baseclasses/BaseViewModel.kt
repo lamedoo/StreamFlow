@@ -8,8 +8,8 @@ import com.lukakordzaia.streamflow.helpers.Environment
 import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.utils.Event
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 abstract class BaseViewModel : ViewModel(), KoinComponent {
     protected val sharedPreferences: SharedPreferences by inject()
