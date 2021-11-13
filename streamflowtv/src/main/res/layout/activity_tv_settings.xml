@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:name="com.lukakrodzaia.streamflowtv.ui.settings.TvSettingsFragment"
+        android:name="com.lukakordzaia.streamflowtv.ui.settings.TvSettingsFragment"
         android:id="@+id/tv_settings_fragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"

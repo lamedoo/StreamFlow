@@ -7,7 +7,7 @@
     android:background="@color/primaryColor">
 
     <fragment
-        android:name="com.lukakrodzaia.streamflowtv.ui.login.TvLoginFragment"
+        android:name="com.lukakordzaia.streamflowtv.ui.login.TvLoginFragment"
         android:id="@+id/tv_login_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"

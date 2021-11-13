@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_sidebar_collapsed"/>
 
-    <com.lukakrodzaia.streamflowtv.customviews.TvCustomSearchInput
+    <com.lukakordzaia.streamflowtv.customviews.TvCustomSearchInput
         android:id="@+id/search_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
         app:layout_constraintBottom_toTopOf="@id/tv_search_fragment"/>
 
     <fragment
-        android:name="com.lukakrodzaia.streamflowtv.ui.search.TvSearchFragment"
+        android:name="com.lukakordzaia.streamflowtv.ui.search.TvSearchFragment"
         android:id="@+id/tv_search_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
