@@ -8,11 +8,12 @@ import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.lukakordzaia.core.baseclasses.BaseViewModel
+import com.lukakordzaia.core.sharedpreferences.SharedPreferences
+import com.lukakordzaia.core.utils.createToast
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.utils.EventObserver
-import com.lukakordzaia.streamflow.utils.createToast
-import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import org.koin.android.ext.android.inject
 
 abstract class BaseBottomSheetVM<VB: ViewBinding, VM: BaseViewModel> : BottomSheetDialogFragment() {

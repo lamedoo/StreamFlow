@@ -3,12 +3,12 @@ package com.lukakordzaia.streamflow.ui.phone.searchtitles
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopFranchisesResponse
-import com.lukakordzaia.streamflow.network.toTitleListModel
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.core.baseclasses.BaseViewModel
+import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.models.imovies.response.categories.GetTopFranchisesResponse
+import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.launch
 
 class SearchTitlesViewModel : BaseViewModel() {
@@ -47,24 +47,6 @@ class SearchTitlesViewModel : BaseViewModel() {
                 }
                 is Result.Internet -> {
                     setNoInternet(true)
-                }
-            }
-        }
-    }
-
-    fun getSearchTitlesTv(keywords: String, page: Int) {
-        setNoInternet(false)
-        viewModelScope.launch {
-            when (val searchTv = environment.searchRepository.getSearchTitles(keywords, page)) {
-                is Result.Success -> {
-                    val data = searchTv.data.data
-                    _searchList.value = data.toTitleListModel()
-                }
-                is Result.Error -> {
-                    newToastMessage("ძიება - ${searchTv.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
                 }
             }
         }

@@ -4,11 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.core.datamodels.TitleEpisodes
+import com.lukakordzaia.core.utils.setImage
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvChooseDetailsEpisodesItemBinding
-import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.utils.setImage
-import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 class TvShowBottomSheetEpisodesAdapter(
         private val context: Context,
@@ -52,7 +52,7 @@ class TvShowBottomSheetEpisodesAdapter(
 
             view.currentIndicator.setVisibleOrGone(isChosen)
 
-            view.episodeNumber.text = context.getString(R.string.episode_number, model.episodeNum)
+            view.episodeNumber.text = context.getString(R.string.episode_number, model.episodeNum.toString())
             view.episodeName.text = model.episodeName
 
             view.itemPoster.setImage(model.episodePoster, false)

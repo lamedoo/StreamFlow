@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.PhoneHeaderLayoutBinding
-import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 class CPhoneHeaderView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
     val binding = PhoneHeaderLayoutBinding.inflate(LayoutInflater.from(context), this, true)

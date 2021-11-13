@@ -4,13 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.lukakordzaia.streamflow.R
+import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflow.databinding.RvHomeItemBinding
-import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.utils.setImage
 
-class PhoneSingleTitleRelatedAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<PhoneSingleTitleRelatedAdapter.ViewHolder>() {
+class PhoneSingleTitleRelatedAdapter(
+    private val context: Context,
+    private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<PhoneSingleTitleRelatedAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
 
     fun setRelatedList(list: List<SingleTitleModel>) {

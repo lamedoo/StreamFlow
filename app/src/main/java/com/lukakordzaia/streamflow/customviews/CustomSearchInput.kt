@@ -7,11 +7,11 @@ import android.view.View.OnTouchListener
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.widget.doAfterTextChanged
+import com.lukakordzaia.core.utils.hideKeyboard
+import com.lukakordzaia.core.utils.showKeyboard
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.utils.hideKeyboard
 import com.lukakordzaia.streamflow.utils.setLeftDrawable
 import com.lukakordzaia.streamflow.utils.setRightDrawable
-import com.lukakordzaia.streamflow.utils.showKeyboard
 
 class CustomSearchInput
 @JvmOverloads constructor(

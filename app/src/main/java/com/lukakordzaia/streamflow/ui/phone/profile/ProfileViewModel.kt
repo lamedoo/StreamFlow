@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
-import com.lukakordzaia.streamflow.network.models.imovies.response.user.GetUserDataResponse
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.core.baseclasses.BaseViewModel
+import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
+import com.lukakordzaia.core.network.models.imovies.response.user.GetUserDataResponse
 import kotlinx.coroutines.launch
 
 class ProfileViewModel : BaseViewModel() {

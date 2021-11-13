@@ -9,17 +9,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.exoplayer2.ui.PlayerView
-import com.lukakordzaia.streamflow.databinding.ContinueWatchingDialogBinding
+import com.lukakordzaia.core.adapters.ChooseAudioAdapter
+import com.lukakordzaia.core.baseclasses.BaseVideoPlayerFragment
+import com.lukakordzaia.core.databinding.ContinueWatchingDialogBinding
+import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.utils.setGone
+import com.lukakordzaia.core.utils.setVisible
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneVideoPlayerBinding
 import com.lukakordzaia.streamflow.databinding.PhoneExoplayerControllerLayoutBinding
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
-import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseVideoPlayerFragment
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity.Companion.AUDIO_SIDEBAR
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity.Companion.VIDEO_PLAYER
-import com.lukakordzaia.streamflow.ui.tv.tvvideoplayer.TvChooseAudioAdapter
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
-import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 
 class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBinding>() {
     private lateinit var playerBinding: PhoneExoplayerControllerLayoutBinding
@@ -51,8 +51,8 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
     override val continueWatchingDialog: ContinueWatchingDialogBinding
         get() = binding.continueWatching
 
-    private lateinit var chooseSubtitlesAdapter: TvChooseAudioAdapter
-    private lateinit var chooseLanguageAdapter: TvChooseAudioAdapter
+    private lateinit var chooseSubtitlesAdapter: ChooseAudioAdapter
+    private lateinit var chooseLanguageAdapter: ChooseAudioAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -94,7 +94,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
 
     private fun setAvailableSubtitles(subtitles: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        chooseSubtitlesAdapter = TvChooseAudioAdapter(requireContext()) {
+        chooseSubtitlesAdapter = ChooseAudioAdapter(requireContext()) {
             hideAudioSidebar()
             switchSubtitleLanguage(it)
         }
@@ -110,7 +110,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
 
     private fun setAvailableLanguages(languages: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        chooseLanguageAdapter = TvChooseAudioAdapter(requireContext()) {
+        chooseLanguageAdapter = ChooseAudioAdapter(requireContext()) {
             hideAudioSidebar()
             switchAudioLanguage(it)
         }

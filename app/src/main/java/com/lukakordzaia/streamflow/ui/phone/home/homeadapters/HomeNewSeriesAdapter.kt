@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.core.datamodels.NewSeriesModel
+import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflow.databinding.RvHomeItemBinding
-import com.lukakordzaia.streamflow.datamodels.NewSeriesModel
-import com.lukakordzaia.streamflow.utils.setImage
 
 class HomeNewSeriesAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeNewSeriesAdapter.ViewHolder>() {
     private var list: List<NewSeriesModel> = ArrayList()

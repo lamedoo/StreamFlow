@@ -45,7 +45,7 @@
         android:textColor="@color/general_text_color"
         app:layout_constraintTop_toBottomOf="@id/rv_search_item_name"
         app:layout_constraintStart_toEndOf="@id/rv_search_item_poster"
-        tools:text="2011, "/>
+        tools:text="2011"/>
 
     <TextView
         android:id="@+id/rv_search_item_is_tvShow"

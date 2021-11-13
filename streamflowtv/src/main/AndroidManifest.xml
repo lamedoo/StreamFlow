@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.lukakrodzaia.streamflowtv">
+
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:fullBackupOnly="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.StreamFlow"
+        android:banner="@mipmap/ic_banner">
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.google.android.exoplayer2.ext.cast.DefaultCastOptionsProvider" />
+        <activity android:name="com.lukakrodzaia.streamflowtv.ui.main.TvActivity"
+            android:theme="@style/Theme.Leanback"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.lukakrodzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity"
+            android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name="com.lukakrodzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity"
+            android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name="com.lukakrodzaia.streamflowtv.ui.search.TvSearchActivity"
+            android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name="com.lukakrodzaia.streamflowtv.ui.genres.TvGenresActivity"
+            android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name="com.lukakrodzaia.streamflowtv.ui.tvcatalogue.TvCatalogueActivity"
+            android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name="com.lukakrodzaia.streamflowtv.ui.tvwatchlist.TvWatchlistActivity"
+            android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name="com.lukakrodzaia.streamflowtv.ui.settings.TvSettingsActivity"
+            android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name="com.lukakrodzaia.streamflowtv.ui.login.TvLoginActivity"
+            android:theme="@style/Theme.Leanback"/>
+    </application>
+
+</manifest>

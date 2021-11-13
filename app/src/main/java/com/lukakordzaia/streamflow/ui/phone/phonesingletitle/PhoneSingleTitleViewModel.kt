@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
-import com.lukakordzaia.streamflow.network.toSingleTitleModel
-import com.lukakordzaia.streamflow.network.toTitleListModel
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
+import com.lukakordzaia.core.baseclasses.BaseViewModel
+import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.core.network.toSingleTitleModel
+import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,12 +67,12 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
                     if (data.data.userWatch?.data?.season != null) {
                         _continueWatchingDetails.postValue(ContinueWatchingRoom(
                             titleId = titleId,
-                            language = data.data.userWatch.data.language!!,
-                            watchedDuration = data.data.userWatch.data.progress!!,
-                            titleDuration = data.data.userWatch.data.duration!!,
+                            language = data.data.userWatch!!.data?.language!!,
+                            watchedDuration = data.data.userWatch!!.data?.progress!!,
+                            titleDuration = data.data.userWatch!!.data?.duration!!,
                             isTvShow = data.data.isTvShow,
-                            season = data.data.userWatch.data.season,
-                            episode = data.data.userWatch.data.episode!!
+                            season = data.data.userWatch!!.data?.season!!,
+                            episode = data.data.userWatch!!.data?.episode!!
                         ))
                     } else {
                         _continueWatchingDetails.postValue(null)

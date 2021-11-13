@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.streamflow.datamodels.TitleEpisodes
-import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.network.Result
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
-import com.lukakordzaia.streamflow.utils.AppConstants
+import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.baseclasses.BaseViewModel
+import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.datamodels.TitleEpisodes
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.Result
 import kotlinx.coroutines.launch
 
 class TvShowBottomSheetViewModel : BaseViewModel() {
@@ -53,12 +53,12 @@ class TvShowBottomSheetViewModel : BaseViewModel() {
                     if (data.data.userWatch?.data?.season != null) {
                         _continueWatchingDetails.postValue(ContinueWatchingRoom(
                             titleId = titleId,
-                            language = data.data.userWatch.data.language!!,
-                            watchedDuration = data.data.userWatch.data.progress!!,
-                            titleDuration = data.data.userWatch.data.duration!!,
+                            language = data.data.userWatch!!.data?.language!!,
+                            watchedDuration = data.data.userWatch!!.data?.progress!!,
+                            titleDuration = data.data.userWatch!!.data?.duration!!,
                             isTvShow = data.data.isTvShow,
-                            season = data.data.userWatch.data.season,
-                            episode = data.data.userWatch.data.episode!!
+                            season = data.data.userWatch!!.data?.season!!,
+                            episode = data.data.userWatch!!.data?.episode!!
                         ))
                     } else {
                         _continueWatchingDetails.postValue(null)

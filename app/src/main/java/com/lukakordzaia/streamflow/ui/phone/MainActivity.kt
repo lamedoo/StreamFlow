@@ -14,8 +14,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.R
-import com.lukakordzaia.streamflow.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflow.ui.phone.catalogue.CatalogueFragment
 import com.lukakordzaia.streamflow.ui.phone.catalogue.cataloguedetails.SingleCatalogueFragment
 import com.lukakordzaia.streamflow.ui.phone.home.HomeFragment

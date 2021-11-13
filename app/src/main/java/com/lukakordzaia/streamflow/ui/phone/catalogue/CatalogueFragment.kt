@@ -9,18 +9,18 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
+import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.utils.setGone
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneCatalogueBinding
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
 import com.lukakordzaia.streamflow.helpers.DotsIndicatorDecoration
-import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.GenresAdapter
 import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.StudiosAdapter
 import com.lukakordzaia.streamflow.ui.phone.catalogue.catalogueadapters.TrailersAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, CatalogueViewModel>() {

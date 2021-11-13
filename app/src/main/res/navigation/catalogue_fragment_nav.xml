@@ -14,7 +14,7 @@
             app:destination="@id/video_player_fragment_nav">
             <argument
                 android:name="videoPlayerData"
-                app:argType="com.lukakordzaia.streamflow.datamodels.VideoPlayerData" />
+                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
         </action>
         <action
             android:id="@+id/action_categoriesFragment_to_single_title_fragment_nav"

@@ -3,10 +3,11 @@ package com.lukakordzaia.streamflow.ui.baseclasses.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.viewbinding.ViewBinding
+import com.lukakordzaia.core.baseclasses.BaseFragmentVM
+import com.lukakordzaia.core.baseclasses.BaseViewModel
+import com.lukakordzaia.core.utils.navController
 import com.lukakordzaia.streamflow.databinding.FragmentTopToolbarBinding
-import com.lukakordzaia.streamflow.ui.baseclasses.BaseViewModel
 import com.lukakordzaia.streamflow.utils.EventObserver
-import com.lukakordzaia.streamflow.utils.navController
 
 abstract class BaseFragmentPhoneVM<VB: ViewBinding, VM: BaseViewModel> : BaseFragmentVM<VB, VM>() {
 

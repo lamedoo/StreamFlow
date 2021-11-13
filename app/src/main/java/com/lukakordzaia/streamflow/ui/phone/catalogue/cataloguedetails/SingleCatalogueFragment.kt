@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.utils.setVisible
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneSingleCategoryBinding
-import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.sharedadapters.SingleCategoryAdapter
-import com.lukakordzaia.streamflow.utils.setVisible
-import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, SingleCatalogueViewModel>() {

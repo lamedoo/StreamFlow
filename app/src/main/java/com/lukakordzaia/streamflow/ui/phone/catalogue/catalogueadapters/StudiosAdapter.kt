@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.core.network.models.imovies.response.categories.GetTopStudiosResponse
+import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflow.databinding.RvStudioItemBinding
-import com.lukakordzaia.streamflow.network.models.imovies.response.categories.GetTopStudiosResponse
-import com.lukakordzaia.streamflow.utils.setImage
 
 class StudiosAdapter(private val context: Context, private val onStudiosClick: (studioId: Int, studioName: String) -> Unit) : RecyclerView.Adapter<StudiosAdapter.ViewHolder>() {
     private var list: List<GetTopStudiosResponse.Data> = ArrayList()

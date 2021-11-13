@@ -6,20 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.datamodels.ContinueWatchingModel
+import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.utils.setImage
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneHomeBinding
-import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
-import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
-import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeContinueWatchingAdapter
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeNewSeriesAdapter
 import com.lukakordzaia.streamflow.ui.phone.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
-import com.lukakordzaia.streamflow.utils.AppConstants
-import com.lukakordzaia.streamflow.utils.setImage
-import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 

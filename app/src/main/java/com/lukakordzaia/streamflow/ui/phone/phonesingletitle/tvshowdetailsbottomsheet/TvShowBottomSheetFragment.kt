@@ -13,17 +13,17 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.lukakordzaia.streamflow.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
+import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.utils.setGone
+import com.lukakordzaia.core.utils.setVisible
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflow.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneTvShowBottomSheetBinding
-import com.lukakordzaia.streamflow.datamodels.VideoPlayerData
-import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.BaseBottomSheetVM
 import com.lukakordzaia.streamflow.ui.phone.videoplayer.VideoPlayerActivity
-import com.lukakordzaia.streamflow.ui.tv.tvsingletitle.tvtitledetails.ChooseLanguageAdapter
-import com.lukakordzaia.streamflow.utils.setGone
-import com.lukakordzaia.streamflow.utils.setVisible
-import com.lukakordzaia.streamflow.utils.setVisibleOrGone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -175,7 +175,6 @@ class TvShowBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomShe
             adapter = chooseLanguageAdapter
             layoutManager = chooseLanguageLayout
         }
-//        chooseLanguageAdapter.setLanguageList(languages)
     }
 
     private fun startVideoPlayer(language: String, episode: Int) {

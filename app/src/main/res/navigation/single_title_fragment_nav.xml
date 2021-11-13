@@ -21,7 +21,7 @@
             app:destination="@id/video_player_fragment_nav">
             <argument
                 android:name="videoPlayerData"
-                app:argType="com.lukakordzaia.streamflow.datamodels.VideoPlayerData" />
+                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
         </action>
         <action
             android:id="@+id/action_singleTitleFragment_self"
@@ -46,7 +46,7 @@
             app:destination="@id/video_player_fragment_nav">
             <argument
                 android:name="videoPlayerData"
-                app:argType="com.lukakordzaia.streamflow.datamodels.VideoPlayerData" />
+                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
         </action>
     </dialog>
     <include app:graph="@navigation/video_player_fragment_nav" />

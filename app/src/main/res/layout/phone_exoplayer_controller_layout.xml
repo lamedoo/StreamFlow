@@ -223,8 +223,7 @@
             app:played_color="@color/accent_color"
             app:scrubber_enabled_size="12dp"
             app:scrubber_color="@color/accent_color"
-
-            app:unplayed_color="@color/lb_grey" />
+            app:unplayed_color="@color/grey" />
 
         <TextView
             android:id="@id/exo_duration"

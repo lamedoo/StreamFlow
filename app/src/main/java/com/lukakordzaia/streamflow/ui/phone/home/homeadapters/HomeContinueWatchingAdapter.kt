@@ -4,10 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.core.datamodels.ContinueWatchingModel
+import com.lukakordzaia.core.utils.setImage
+import com.lukakordzaia.core.utils.titlePosition
 import com.lukakordzaia.streamflow.databinding.RvDbTitleItemBinding
-import com.lukakordzaia.streamflow.datamodels.ContinueWatchingModel
-import com.lukakordzaia.streamflow.utils.setImage
-import com.lukakordzaia.streamflow.utils.titlePosition
 
 class HomeContinueWatchingAdapter(
     private val context: Context,
@@ -60,7 +60,7 @@ class HomeContinueWatchingAdapter(
             }
 
             view.itemMore.setOnClickListener {
-                onMoreMenuClick(model.id, if (model.originalName.isNullOrEmpty()) model.primaryName!! else model.originalName)
+                onMoreMenuClick(model.id, if (model.originalName.isNullOrEmpty()) model.primaryName!! else model.originalName!!)
             }
         }
     }

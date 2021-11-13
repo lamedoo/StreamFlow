@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import com.google.android.material.textfield.TextInputEditText
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
+import com.lukakordzaia.core.utils.hideKeyboard
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneLoginBinding
-import com.lukakordzaia.streamflow.network.LoadingState
-import com.lukakordzaia.streamflow.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
-import com.lukakordzaia.streamflow.utils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment: BaseFragmentPhoneVM<FragmentPhoneLoginBinding, ProfileViewModel>() {

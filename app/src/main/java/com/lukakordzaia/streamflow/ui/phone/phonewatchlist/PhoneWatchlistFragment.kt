@@ -9,13 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.utils.setColor
+import com.lukakordzaia.core.utils.setGone
+import com.lukakordzaia.core.utils.setVisible
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflow.databinding.FragmentPhoneWatchlistBinding
-import com.lukakordzaia.streamflow.network.LoadingState
 import com.lukakordzaia.streamflow.ui.baseclasses.fragments.BaseFragmentPhoneVM
-import com.lukakordzaia.streamflow.ui.shared.WatchlistViewModel
-import com.lukakordzaia.streamflow.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding, WatchlistViewModel>() {

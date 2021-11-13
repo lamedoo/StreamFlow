@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflow.databinding.RvWatchlistItemBinding
-import com.lukakordzaia.streamflow.datamodels.SingleTitleModel
-import com.lukakordzaia.streamflow.utils.setImage
 
 class WatchlistAdapter(
     private val context: Context,

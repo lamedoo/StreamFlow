@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lukakordzaia.core.utils.setDrawableBackground
 import com.lukakordzaia.streamflow.R
 import com.lukakordzaia.streamflow.databinding.RvChooseDetailsSeasonItemBinding
-import com.lukakordzaia.streamflow.utils.setDrawableBackground
 
 class TvShowBottomSheetSeasonAdapter(
         private val context: Context,
@@ -57,7 +57,7 @@ class TvShowBottomSheetSeasonAdapter(
                 onSeasonClick(model)
             }
 
-            view.rvSeasonNumber.text = "სეზონი $model"
+            view.rvSeasonNumber.text = context.getString(R.string.season_number, model.toString())
         }
     }
 }
