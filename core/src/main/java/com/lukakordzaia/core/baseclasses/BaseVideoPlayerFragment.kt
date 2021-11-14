@@ -218,7 +218,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     private fun showContinueWatchingDialog() {
-        if (mediaItemsPlayed == 3) {
+        if (mediaItemsPlayed == MAX_MEDIA_PLAYED) {
             viewModel.addContinueWatching(player.currentPosition, player.duration)
             player.pause()
 
@@ -324,5 +324,9 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         init {
             handler.post(this)
         }
+    }
+
+    companion object {
+        const val MAX_MEDIA_PLAYED = 3
     }
 }

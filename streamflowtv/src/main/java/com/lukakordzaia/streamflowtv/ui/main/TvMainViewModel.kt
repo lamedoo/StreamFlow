@@ -15,12 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TvMainViewModel : BaseViewModel() {
-    val continueWatchingLoader = MutableLiveData<LoadingState>()
-    val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
-
-    private val _movieDayData = MutableLiveData<List<SingleTitleModel>>()
-    val movieDayData: LiveData<List<SingleTitleModel>> = _movieDayData
-
     private val _newMovieList = MutableLiveData<List<SingleTitleModel>>()
     val newMovieList: LiveData<List<SingleTitleModel>> = _newMovieList
 
@@ -64,7 +58,6 @@ class TvMainViewModel : BaseViewModel() {
     }
 
     fun getContinueWatchingTitlesFromApi(dbDetails: List<ContinueWatchingRoom>) {
-        continueWatchingLoader.value = LoadingState.LOADING
         val dbTitles: MutableList<ContinueWatchingModel> = mutableListOf()
         viewModelScope.launch {
             dbDetails.forEach {
@@ -94,56 +87,19 @@ class TvMainViewModel : BaseViewModel() {
                     }
                 }
             }
-            continueWatchingLoader.value = LoadingState.LOADED
         }
     }
 
     private fun getContinueWatching() {
-        continueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (val watching = environment.homeRepository.getContinueWatching()) {
                 is Result.Success -> {
                     val data = watching.data.data
 
                     _continueWatchingList.value = data.toContinueWatchingModel()
-                    continueWatchingLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
                     newToastMessage("დღის ფილმი - ${watching.exception}")
-                }
-                is Result.Internet -> {
-                    setNoInternet()
-                }
-            }
-        }
-    }
-
-    fun deleteContinueWatching(titleId: Int) {
-        if (sharedPreferences.getLoginToken() == "") {
-            deleteSingleContinueWatchingFromRoom(titleId)
-        } else {
-            hideSingleContinueWatching(titleId)
-        }
-    }
-
-    private fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
-        viewModelScope.launch {
-            environment.databaseRepository.deleteSingleContinueWatchingFromRoom(titleId)
-            hideContinueWatchingLoader.value = LoadingState.LOADED
-        }
-    }
-
-    private fun hideSingleContinueWatching(titleId: Int) {
-        hideContinueWatchingLoader.value = LoadingState.LOADING
-        viewModelScope.launch {
-            when (environment.homeRepository.hideTitleContinueWatching(titleId)) {
-                is Result.Success -> {
-                    newToastMessage("წაიშალა განაგრძეთ ყურების სიიდან")
-                    checkAuthDatabase()
-                    hideContinueWatchingLoader.value = LoadingState.LOADED
-                }
-                is Result.Error -> {
-                    newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
                 }
                 is Result.Internet -> {
                     setNoInternet()
@@ -172,21 +128,6 @@ class TvMainViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun getMovieDay() {
-        when (val movieDay = environment.homeRepository.getMovieDay()) {
-            is Result.Success -> {
-                val data = movieDay.data.data
-                _movieDayData.postValue(listOf(data[0]).toTitleListModel())
-            }
-            is Result.Error -> {
-                newToastMessage("დღის ფილმი - ${movieDay.exception}")
-            }
-            is Result.Internet -> {
-                setNoInternet(true)
-            }
-        }
-    }
-
     private suspend fun getNewMovies(page: Int) {
         when (val newMovies = environment.homeRepository.getNewMovies(page)) {
             is Result.Success -> {
@@ -195,6 +136,9 @@ class TvMainViewModel : BaseViewModel() {
             }
             is Result.Error -> {
                 newToastMessage("ახალი ფილმები - ${newMovies.exception}")
+            }
+            is Result.Internet -> {
+                setNoInternet(true)
             }
         }
     }
@@ -242,7 +186,6 @@ class TvMainViewModel : BaseViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val getData = viewModelScope.launch {
-                    getMovieDay()
                     getNewMovies(page)
                     getTopMovies(page)
                     getTopTvShows(page)

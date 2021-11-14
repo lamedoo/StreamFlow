@@ -20,7 +20,7 @@ import com.lukakordzaia.streamflowphone.utils.EventObserver
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflowtv.databinding.TvExoplayerControllerLayoutBinding
-import kotlinx.android.synthetic.main.tv_exoplayer_controller_layout.*
+import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity.Companion.VIDEO_DETAILS
 
 class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBinding>() {
     private lateinit var playerBinding: TvExoplayerControllerLayoutBinding
@@ -217,9 +217,45 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     if (playerBinding.subtitleToggle.isVisible) playerBinding.subtitleToggle.requestFocus() else {
                         if (playerBinding.nextEpisode.isVisible) playerBinding.nextEpisode.requestFocus() else playerBinding.exoFfwd.callOnClick()
                     }
-                playerBinding.subtitleToggle.isFocused -> if (next_episode.isVisible) playerBinding.nextEpisode.requestFocus() else playerBinding.exoFfwd.callOnClick()
+                playerBinding.subtitleToggle.isFocused ->
+                    if (playerBinding.nextEpisode.isVisible) playerBinding.nextEpisode.requestFocus() else playerBinding.exoFfwd.callOnClick()
                 else -> playerBinding.exoFfwd.callOnClick()
             }
         }
     }
+
+    fun onKeyDown(): Boolean {
+        if (binding.continueWatching.root.isVisible) {
+            binding.continueWatching.goBackButton.requestFocus()
+        } else {
+            when {
+                !binding.titlePlayer.isControllerVisible -> {
+                    binding.titlePlayer.showController()
+                    playerBinding.exoPause.requestFocus()
+                    return true
+                }
+                playerBinding.exoPlay.isFocused || playerBinding.exoPause.isFocused -> {
+                    (activity as TvVideoPlayerActivity).setCurrentFragmentState(VIDEO_DETAILS)
+                    binding.titlePlayer.player!!.pause()
+                    binding.titlePlayer.hideController()
+                    saveCurrentProgress()
+
+                    if (videoPlayerData.trailerUrl == null) {
+                        (activity as TvVideoPlayerActivity).showDetails()
+                    }
+                    return true
+                }
+                else -> {
+                    playerBinding.subtitleToggle.nextFocusDownId = if (binding.titlePlayer.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
+                    playerBinding.nextEpisode.nextFocusDownId = if (binding.titlePlayer.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
+                }
+            }
+        }
+        return true
+    }
+
+    // Need this function to access from activity
+    fun getPlayer(): PlayerView = binding.titlePlayer
+    fun focusOnPause() = playerBinding.exoPause.requestFocus()
+    fun checkContinueWatchingVisibility(): Boolean = binding.continueWatching.root.isVisible
 }
