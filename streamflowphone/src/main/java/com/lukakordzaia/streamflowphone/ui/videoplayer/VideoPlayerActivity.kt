@@ -4,19 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.sharedpreferences.SharedPreferences
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflowphone.R
-import org.koin.android.ext.android.inject
+import com.lukakordzaia.streamflowphone.databinding.ActivityPhoneVideoPlayerBinding
+import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class VideoPlayerActivity : AppCompatActivity() {
+class VideoPlayerActivity : BaseActivity<ActivityPhoneVideoPlayerBinding>() {
+    override fun getViewBinding() = ActivityPhoneVideoPlayerBinding.inflate(layoutInflater)
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
-    private val sharedPreferences: SharedPreferences by inject()
 
     private var currentFragment = VIDEO_PLAYER
 

@@ -2,7 +2,6 @@ package com.lukakordzaia.streamflowphone.ui
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -14,8 +13,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflowphone.R
+import com.lukakordzaia.streamflowphone.databinding.ActivityMainBinding
+import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseActivity
 import com.lukakordzaia.streamflowphone.ui.catalogue.CatalogueFragment
 import com.lukakordzaia.streamflowphone.ui.catalogue.cataloguedetails.SingleCatalogueFragment
 import com.lukakordzaia.streamflowphone.ui.home.HomeFragment
@@ -26,18 +26,15 @@ import com.lukakordzaia.streamflowphone.ui.phonewatchlist.PhoneWatchlistFragment
 import com.lukakordzaia.streamflowphone.ui.profile.ProfileFragment
 import com.lukakordzaia.streamflowphone.ui.searchtitles.SearchTitlesFragment
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerFragment
-import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity() {
-    private val sharedPreferences: SharedPreferences by inject()
+class MainActivity : BaseActivity<ActivityMainBinding>() {
+    override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         val appToolbar: MaterialToolbar = findViewById(R.id.app_main_toolbar)
         setSupportActionBar(appToolbar)
@@ -87,7 +84,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hideBottomNavigation() {
-        with(nav_main_bottom) {
+        with(binding.navMainBottom) {
             if (visibility == View.VISIBLE && alpha == 1f) {
                 animate()
                     .alpha(0f)
@@ -97,7 +94,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBottomNavigation() {
-        with(nav_main_bottom) {
+        with(binding.navMainBottom) {
             visibility = View.VISIBLE
             animate()
                 .alpha(1f)
