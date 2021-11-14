@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_fragment_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_phone_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_video_player_fragment_nav"
+            app:destination="@id/video_player_fragment_nav"
+            app:enterAnim="@anim/slide_in_right">
+            <argument
+                android:name="videoPlayerData"
+                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_continueWatchingInfoFragment"
+            app:destination="@id/continueWatchingInfoFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profile_fragment_nav"
+            app:destination="@id/profile_fragment_nav" />
+        <action
+            android:id="@+id/action_homeFragment_to_topListFragment"
+            app:destination="@id/topListFragment" />
+    </fragment>
+    <include app:graph="@navigation/single_title_fragment_nav" />
+    <include app:graph="@navigation/video_player_fragment_nav" />
+    <dialog
+        android:id="@+id/continueWatchingInfoFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.home.ContinueWatchingInfoFragment"
+        android:label="ContinueWatchingInfoFragment">
+        <argument
+            android:name="titleId"
+            app:argType="integer" />
+        <argument
+            android:name="titleName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_continueWatchingInfoFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_continueWatchingInfoFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/homeFragment"/>
+    </dialog>
+    <include app:graph="@navigation/profile_fragment_nav" />
+    <fragment
+        android:id="@+id/topListFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.home.toplistfragment.TopListFragment"
+        android:label="TopListFragment" >
+        <action
+            android:id="@+id/action_topListFragment_to_single_title_fragment_nav"
+            app:destination="@id/single_title_fragment_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="titleId"
+                app:argType="integer" />
+        </action>
+        <argument
+            android:name="type"
+            app:argType="integer" />
+    </fragment>
+</navigation>

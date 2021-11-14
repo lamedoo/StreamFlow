@@ -11,7 +11,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/streamflow" />
+            <option value="$PROJECT_DIR$/streamflowphone" />
+            <option value="$PROJECT_DIR$/streamflowtv" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/primaryColor"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.TvActivity">
+
+    <include
+        android:id="@+id/tv_sidebar"
+        layout="@layout/tv_sidebar"
+        tools:visibility="gone"/>
+
+    <include
+        android:id="@+id/tv_sidebar_collapsed"
+        layout="@layout/tv_sidebar_collapsed"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <include
+        android:id="@+id/title_info"
+        layout="@layout/tv_top_title_header"/>
+
+    <fragment
+        android:id="@+id/fragment_host"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintHeight_percent="0.6" />
+
+    <ImageView
+        android:layout_width="270dp"
+        android:layout_height="100dp"
+        android:paddingTop="40dp"
+        android:paddingStart="60dp"
+        android:paddingBottom="5dp"
+        android:paddingEnd="15dp"
+        android:src="@drawable/logo_streamflow"
+        android:background="@drawable/background_logo_bottom_tv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        android:id="@+id/no_internet"
+        layout="@layout/no_internet_layout"
+        tools:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@color/primaryColor">
+
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/accent_color" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

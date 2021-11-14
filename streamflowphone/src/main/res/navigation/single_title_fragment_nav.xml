@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/single_title_fragment_nav"
+    app:startDestination="@id/singleTitleFragment">
+
+    <fragment
+        android:id="@+id/singleTitleFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.phonesingletitle.PhoneSingleTitleFragment"
+        android:label="fragment_single_title"
+        tools:layout="@layout/fragment_phone_single_title">
+        <action
+            android:id="@+id/action_singleTitleFragment_to_chooseTitleDetailsFragment"
+            app:destination="@id/chooseTitleDetailsFragment" />
+        <argument
+            android:name="titleId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_singleTitleFragment_to_video_player_fragment_nav"
+            app:destination="@id/video_player_fragment_nav">
+            <argument
+                android:name="videoPlayerData"
+                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
+        </action>
+        <action
+            android:id="@+id/action_singleTitleFragment_self"
+            app:destination="@id/singleTitleFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/chooseTitleDetailsFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment"
+        android:label="fragment_choose_title_details"
+        tools:layout="@layout/fragment_phone_tv_show_bottom_sheet" >
+        <argument
+            android:name="titleId"
+            app:argType="integer" />
+        <argument
+            android:name="titleName"
+            app:argType="string" />
+        <argument
+            android:name="numOfSeasons"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_chooseTitleDetailsFragment_to_video_player_fragment_nav"
+            app:destination="@id/video_player_fragment_nav">
+            <argument
+                android:name="videoPlayerData"
+                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
+        </action>
+    </dialog>
+    <include app:graph="@navigation/video_player_fragment_nav" />
+</navigation>

@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.lukakordzaia.streamflow",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 51,
+      "versionName": "2.4",
+      "outputFile": "StreamFlow v2.4.apk"
+    }
+  ],
+  "elementType": "File"
+}
