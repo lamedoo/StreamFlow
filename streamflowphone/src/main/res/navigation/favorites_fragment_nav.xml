@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/phoneFavoritesFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phone.phonewatchlist.PhoneWatchlistFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.phonewatchlist.PhoneWatchlistFragment"
         android:label="PhoneFavoritesFragment"
         tools:layout="@layout/fragment_phone_watchlist">
         <action

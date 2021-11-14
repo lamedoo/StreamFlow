@@ -2,7 +2,7 @@ package com.lukakordzaia.streamflowtv.ui.tvsingletitle
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.utils.applyBundle
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseFragmentActivity

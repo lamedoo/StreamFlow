@@ -13,12 +13,12 @@ import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseSidebarFragmentActivity
 import com.lukakordzaia.streamflowtv.customviews.TvCustomSearchInput
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvSearchBinding
-import com.lukakordzaia.streamflowtv.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.interfaces.TvSearchInputSelected
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvSearchActivity : BaseSidebarFragmentActivity<ActivityTvSearchBinding>(), TvSearchInputSelected, TvCheckTitleSelected {
+class TvSearchActivity : BaseSidebarFragmentActivity<ActivityTvSearchBinding>(), TvSearchInputSelected, TvTitleSelected {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
 
     private lateinit var fragment: TvSearchFragment

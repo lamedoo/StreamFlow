@@ -3,10 +3,10 @@ package com.lukakordzaia.streamflowtv.ui.tvvideoplayer
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.core.view.isVisible
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.viewModels.VideoPlayerViewModel
+import com.lukakordzaia.core.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseFragmentActivity
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvVideoPlayerBinding

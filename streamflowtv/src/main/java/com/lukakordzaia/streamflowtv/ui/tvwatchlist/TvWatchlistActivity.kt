@@ -7,7 +7,7 @@ import android.text.TextUtils
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.ContinueWatchingModel
 import com.lukakordzaia.core.utils.applyBundle
 import com.lukakordzaia.core.utils.setDrawableBackground
@@ -16,13 +16,13 @@ import com.lukakordzaia.core.utils.setVisible
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseSidebarFragmentActivity
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvWatchlistBinding
-import com.lukakordzaia.streamflowtv.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.interfaces.TvHasFavoritesListener
-import com.lukakordzaia.streamflowtv.interfaces.TvWatchListTopRow
+import com.lukakordzaia.streamflowtv.interfaces.TvIsVerticalFirstRow
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBinding>(), TvCheckTitleSelected, TvHasFavoritesListener, TvWatchListTopRow {
+class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBinding>(), TvTitleSelected, TvHasFavoritesListener, TvIsVerticalFirstRow {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
     private var hasFavorites = true
     private var isTop = true
@@ -82,7 +82,6 @@ class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBindin
                     isTop -> {
                         buttonFocusability(!binding.tvSidebar.tvSidebar.isVisible)
                         if (type == AppConstants.WATCHLIST_MOVIES) binding.watchlistMovies.requestFocus() else binding.watchlistTvShows.requestFocus()
-//                        true
                     }
                     else -> super.onKeyDown(keyCode, event)
 
@@ -102,9 +101,9 @@ class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBindin
 
             binding.titleInfo.year.text = "${it.releaseYear}"
             binding.titleInfo.duration.text = if (it.isTvShow) {
-                "${it.seasonNum} სეზონი"
+                getString(R.string.season_number, it.seasonNum.toString())
             } else {
-                "${it.duration}"
+                it.duration
             }
 
             binding.titleInfo.imdbScore.text = getString(R.string.imdb_score, it.imdbScore)

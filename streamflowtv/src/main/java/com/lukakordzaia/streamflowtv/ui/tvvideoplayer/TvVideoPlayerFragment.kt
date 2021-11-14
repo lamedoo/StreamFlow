@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
-import com.lukakordzaia.core.adapters.ChooseAudioAdapter
+import com.lukakordzaia.core.adapters.ChooseVideoAudioAdapter
 import com.lukakordzaia.core.baseclasses.BaseVideoPlayerFragment
 import com.lukakordzaia.core.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.core.utils.setGone
@@ -55,8 +55,8 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     override val continueWatchingDialog: ContinueWatchingDialogBinding
         get() = binding.continueWatching
 
-    private lateinit var chooseSubtitlesAdapter: ChooseAudioAdapter
-    private lateinit var chooseLanguageAdapter: ChooseAudioAdapter
+    private lateinit var chooseSubtitlesAdapter: ChooseVideoAudioAdapter
+    private lateinit var chooseLanguageAdapter: ChooseVideoAudioAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -109,7 +109,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
     private fun setAvailableSubtitles(subtitles: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        chooseSubtitlesAdapter = ChooseAudioAdapter(requireContext()) {
+        chooseSubtitlesAdapter = ChooseVideoAudioAdapter(requireContext()) {
             hideAudioSidebar()
             switchSubtitleLanguage(it)
         }
@@ -125,7 +125,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
     private fun setAvailableLanguages(languages: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        chooseLanguageAdapter = ChooseAudioAdapter(requireContext()) {
+        chooseLanguageAdapter = ChooseVideoAudioAdapter(requireContext()) {
             hideAudioSidebar()
             switchAudioLanguage(it)
         }

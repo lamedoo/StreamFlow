@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phone.profile.ProfileFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_phone_profile" >
         <action
@@ -21,6 +21,6 @@
     </fragment>
     <fragment
         android:id="@+id/loginBottomSheetFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phone.profile.LoginFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.profile.LoginFragment"
         android:label="LoginBottomSheetFragment" />
 </navigation>

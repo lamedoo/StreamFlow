@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.ContinueWatchingModel
 import com.lukakordzaia.core.datamodels.NewSeriesModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
@@ -14,7 +14,7 @@ import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.BaseBrowseSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
-import com.lukakordzaia.streamflowtv.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.ui.main.presenters.TvMainPresenter
 import com.lukakordzaia.streamflowtv.ui.main.presenters.TvNewSeriesPresenter
 import com.lukakordzaia.streamflowtv.ui.main.presenters.TvWatchedCardPresenter
@@ -30,7 +30,7 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
     private var hasContinueWatching = false
     private var hasUserSuggestion = sharedPreferences.getLoginToken() != ""
 
-    var onTitleSelected: TvCheckTitleSelected? = null
+    var onTitleSelected: TvTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
 
     private lateinit var watchListAdapter: ListRow
@@ -43,7 +43,7 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onTitleSelected = context as? TvCheckTitleSelected
+        onTitleSelected = context as? TvTitleSelected
         onFirstItem = context as? TvCheckFirstItem
     }
 

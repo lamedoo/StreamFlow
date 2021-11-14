@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:background="@color/primaryColor"
-    tools:context=".ui.phone.profile.ProfileFragment">
+    tools:context=".ui.profile.ProfileFragment">
 
     <include
         android:id="@+id/toolbar"

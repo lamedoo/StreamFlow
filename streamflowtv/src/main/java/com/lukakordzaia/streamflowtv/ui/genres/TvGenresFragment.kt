@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.BaseBrowseSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
-import com.lukakordzaia.streamflowtv.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -18,12 +20,12 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
     override val viewModel by viewModel<SingleGenreViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContentTv() }
 
-    var onTitleSelected: TvCheckTitleSelected? = null
+    var onTitleSelected: TvTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onTitleSelected = context as? TvCheckTitleSelected
+        onTitleSelected = context as? TvTitleSelected
         onFirstItem = context as? TvCheckFirstItem
     }
 
@@ -67,6 +69,9 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
             sixthCategoryAdapter(it)
         })
 
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            (activity as TvGenresActivity).setProgressBar(it == LoadingState.LOADING)
+        })
     }
 
     private fun firstCategoryAdapter(category: List<SingleTitleModel>) {
@@ -76,7 +81,7 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
             }
         }
 
-        HeaderItem(0, AppConstants.GENRE_ANIMATION). also {
+        HeaderItem(getString(R.string.animation)). also {
             rowsAdapter.add(ListRow(it, listRowAdapter))
         }
     }
@@ -88,7 +93,7 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
             }
         }
 
-        HeaderItem(1, AppConstants.GENRE_COMEDY).also { header ->
+        HeaderItem(getString(R.string.comedy)).also { header ->
             rowsAdapter.add(ListRow(header, listRowAdapter))
         }
     }
@@ -100,7 +105,7 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
             }
         }
 
-        HeaderItem(2, AppConstants.GENRE_MELODRAMA).also { header ->
+        HeaderItem(getString(R.string.melodrama)).also { header ->
             rowsAdapter.add(ListRow(header, listRowAdapter))
         }
     }
@@ -112,7 +117,7 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
             }
         }
 
-        HeaderItem(3, AppConstants.GENRE_HORROR).also { header ->
+        HeaderItem(getString(R.string.horror)).also { header ->
             rowsAdapter.add(ListRow(header, listRowAdapter))
         }
     }
@@ -124,7 +129,7 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
             }
         }
 
-        HeaderItem(4, AppConstants.GENRE_ADVENTURE).also { header ->
+        HeaderItem(getString(R.string.adventure)).also { header ->
             rowsAdapter.add(ListRow(header, listRowAdapter))
         }
     }
@@ -136,7 +141,7 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
             }
         }
 
-        HeaderItem(5, AppConstants.GENRE_ACTION).also { header ->
+        HeaderItem(5, getString(R.string.action)).also { header ->
             rowsAdapter.add(ListRow(header, listRowAdapter))
         }
     }

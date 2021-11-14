@@ -1,15 +1,15 @@
 package com.lukakordzaia.streamflowphone.di
 
-import com.lukakordzaia.core.viewModels.VideoPlayerViewModel
-import com.lukakordzaia.streamflowphone.ui.phone.catalogue.CatalogueViewModel
-import com.lukakordzaia.streamflowphone.ui.phone.catalogue.cataloguedetails.SingleCatalogueViewModel
-import com.lukakordzaia.streamflowphone.ui.phone.home.HomeViewModel
-import com.lukakordzaia.streamflowphone.ui.phone.home.toplistfragment.TopListViewModel
-import com.lukakordzaia.streamflowphone.ui.phone.phonesingletitle.PhoneSingleTitleViewModel
-import com.lukakordzaia.streamflowphone.ui.phone.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
-import com.lukakordzaia.streamflowphone.ui.phone.phonewatchlist.WatchlistViewModel
-import com.lukakordzaia.streamflowphone.ui.phone.profile.ProfileViewModel
-import com.lukakordzaia.streamflowphone.ui.phone.searchtitles.SearchTitlesViewModel
+import com.lukakordzaia.core.videoplayer.VideoPlayerViewModel
+import com.lukakordzaia.streamflowphone.ui.catalogue.CatalogueViewModel
+import com.lukakordzaia.streamflowphone.ui.catalogue.cataloguedetails.SingleCatalogueViewModel
+import com.lukakordzaia.streamflowphone.ui.home.HomeViewModel
+import com.lukakordzaia.streamflowphone.ui.home.toplistfragment.TopListViewModel
+import com.lukakordzaia.streamflowphone.ui.phonesingletitle.PhoneSingleTitleViewModel
+import com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
+import com.lukakordzaia.streamflowphone.ui.phonewatchlist.WatchlistViewModel
+import com.lukakordzaia.streamflowphone.ui.profile.ProfileViewModel
+import com.lukakordzaia.streamflowphone.ui.searchtitles.SearchTitlesViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

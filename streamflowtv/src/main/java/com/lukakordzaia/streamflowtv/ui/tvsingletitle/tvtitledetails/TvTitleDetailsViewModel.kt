@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.datamodels.SingleTitleModel
@@ -150,7 +150,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     fun addWatchlistTitle(id: Int) {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (val delete = environment.watchlistRepository.addWatchlistTitle(id)) {
+            when (environment.watchlistRepository.addWatchlistTitle(id)) {
                 is Result.Success -> {
                     newToastMessage("ფილმი დაემატა ფავორიტებში")
                     _addToFavorites.value = true
@@ -163,7 +163,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     fun deleteWatchlistTitle(id: Int, fromWatchlist: Int?) {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (val delete = environment.watchlistRepository.deleteWatchlistTitle(id)) {
+            when (environment.watchlistRepository.deleteWatchlistTitle(id)) {
                 is Result.Success -> {
                     _addToFavorites.value = false
                     favoriteLoader.value = LoadingState.LOADED

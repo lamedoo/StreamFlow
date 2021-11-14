@@ -17,7 +17,7 @@ import com.google.android.exoplayer2.text.Cue
 import com.google.android.exoplayer2.ui.CaptionStyleCompat
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.util.Util
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.R
 import com.lukakordzaia.core.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.core.datamodels.TitleMediaItemsUri
@@ -25,7 +25,7 @@ import com.lukakordzaia.core.datamodels.VideoPlayerData
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.core.videoplayer.BuildMediaSource
 import com.lukakordzaia.core.videoplayer.MediaPlayerClass
-import com.lukakordzaia.core.viewModels.VideoPlayerViewModel
+import com.lukakordzaia.core.videoplayer.VideoPlayerViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -107,7 +107,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             playerTitle.text = getString(R.string.trailer)
         } else {
             if (videoPlayerData.isTvShow) {
-                playerTitle.text = "ს${videoPlayerData.chosenSeason}. ე${videoPlayerData.chosenEpisode}. $name"
+                playerTitle.text = getString(R.string.episode_title, videoPlayerData.chosenSeason.toString(), videoPlayerData.chosenEpisode.toString(), name)
             } else {
                 playerTitle.text = name
             }

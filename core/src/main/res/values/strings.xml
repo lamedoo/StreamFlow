@@ -2,6 +2,7 @@
     <string name="app_name">StreamFlow</string>
     <string name="default_data">N/A</string>
     <string name="tv_show">სერიალი</string>
+    <string name="movie">ფილმი</string>
     <string name="middle_dot">·</string>
     <string name="continue_watching">განაგრძეთ ყურება</string>
     <string name="watch">ყურება</string>
@@ -40,7 +41,7 @@
     <string name="similar">მსგავსი</string>
     <string name="favorite_movies">ფავორიტი ფილმები</string>
     <string name="favorite_tv_shows">ფავორიტი სერიალები</string>
-    <string name="log_in_to_see_favorites">ფავორიტების სანახავად, გთხოვ გაიაროთ ავტორიზაცია</string>
+    <string name="log_in_to_see_watchlist">შენახული სიის სანახავად, გთხოვ გაიაროთ ავტორიზაცია</string>
     <string name="add_favorite_movies_body">სამწუხაროდ, სიცარიელეა. დაამატეთ ფილმები ფავორიტებში</string>
     <string name="add_favorite_tv_shows_body">სამწუხაროდ, სიცარიელეა. დაამატეთ სერიალები ფავორიტებში</string>
     <string name="details">დეტალები</string>
@@ -89,4 +90,13 @@
     <string name="zero_time">00:00</string>
     <string name="logged_in_as">შესული ხართ, როგორც %1$s</string>
     <string name="hello_user">გამარჯობა, %1$s</string>
+    <string name="click_to_quit_app">გასავლელად, კიდევ ერთხელ დააჭირეთ</string>
+    <string name="animation">ანიმაცია</string>
+    <string name="comedy">კომედია</string>
+    <string name="melodrama">მელოდრამა</string>
+    <string name="horror">საშინელებათა</string>
+    <string name="adventure">სათავგადასავლო</string>
+    <string name="action">მძაფრ-სიუჟეტიანი</string>
+    <string name="episode_title">ს%1$s. ე%2$s. %3$s</string>
+    <string name="continue_watching_button">განაგრძეთ - %1$s</string>
 </resources>

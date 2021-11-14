@@ -6,7 +6,7 @@
     android:background="@color/transparent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.phone.phonesingletitle.PhoneSingleTitleFragment">
+    tools:context=".ui.phonesingletitle.PhoneSingleTitleFragment">
 
     <ProgressBar
         android:id="@+id/progressBar"

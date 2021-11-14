@@ -65,10 +65,7 @@ abstract class BaseBrowseSupportFragment<VM: BaseViewModel>: BrowseSupportFragme
     }
 
     private fun initRowsAdapter() {
-        val listRowPresenter = CustomListRowPresenter().apply {
-            shadowEnabled = false
-            selectEffectEnabled = false
-        }
+        val listRowPresenter = CustomListRowPresenter()
         rowsAdapter = ArrayObjectAdapter(listRowPresenter)
     }
 

@@ -7,7 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowtv.databinding.TvSimilarCardViewBinding
 
-open class TvSimilarCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class TvSimilarCardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     val binding = TvSimilarCardViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     fun setPoster(poster: String?) {

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phone.home.HomeFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_phone_home" >
         <action
@@ -43,7 +43,7 @@
     <include app:graph="@navigation/video_player_fragment_nav" />
     <dialog
         android:id="@+id/continueWatchingInfoFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phone.home.ContinueWatchingInfoFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.home.ContinueWatchingInfoFragment"
         android:label="ContinueWatchingInfoFragment">
         <argument
             android:name="titleId"
@@ -69,7 +69,7 @@
     <include app:graph="@navigation/profile_fragment_nav" />
     <fragment
         android:id="@+id/topListFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phone.home.toplistfragment.TopListFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.home.toplistfragment.TopListFragment"
         android:label="TopListFragment" >
         <action
             android:id="@+id/action_topListFragment_to_single_title_fragment_nav"

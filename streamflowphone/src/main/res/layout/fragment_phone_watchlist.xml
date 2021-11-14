@@ -16,7 +16,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.phone.phonewatchlist.PhoneWatchlistFragment">
+        tools:context=".ui.phonewatchlist.PhoneWatchlistFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/log_in_to_see_favorites"
+                    android:text="@string/log_in_to_see_watchlist"
                     android:fontFamily="@font/helvetica_neue_lt_geo_75_bold"
                     android:textAlignment="center"
                     android:textSize="18sp" />

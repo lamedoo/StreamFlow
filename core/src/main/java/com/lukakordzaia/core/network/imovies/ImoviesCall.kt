@@ -1,6 +1,6 @@
 package com.lukakordzaia.core.network.imovies
 
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.network.InternetConnection
 import com.lukakordzaia.core.network.Result
 import retrofit2.Response

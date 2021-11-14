@@ -7,14 +7,14 @@ import com.lukakordzaia.core.datamodels.ContinueWatchingModel
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvBaseBinding
-import com.lukakordzaia.streamflowtv.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.ui.genres.TvGenresActivity
 import com.lukakordzaia.streamflowtv.ui.main.TvActivity
 import com.lukakordzaia.streamflowtv.ui.tvcatalogue.TvCatalogueActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTvBaseBinding>(), TvCheckTitleSelected {
+abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTvBaseBinding>(), TvTitleSelected {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
 
     override fun getViewBinding() = ActivityTvBaseBinding.inflate(layoutInflater)
@@ -75,9 +75,9 @@ abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTv
 
             binding.titleInfo.year.text = "${it.releaseYear}"
             binding.titleInfo.duration.text = if (it.isTvShow) {
-                "${it.seasonNum} სეზონი"
+                getString(R.string.season_number, it.seasonNum.toString())
             } else {
-                "${it.duration}"
+                it.duration
             }
             binding.titleInfo.imdbScore.text = getString(R.string.imdb_score, it.imdbScore)
         })

@@ -12,7 +12,7 @@ import android.view.View
 import androidx.leanback.widget.*
 import androidx.leanback.widget.BrowseFrameLayout.OnFocusSearchListener
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.core.datamodels.SingleTitleModel
@@ -249,7 +249,8 @@ class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
 
     private fun playEpisode(titleId: Int, episode: Int, chosenLanguage: String) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java).apply {
-            putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
+            putExtra(
+                AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
                 titleId,
                 true,
                 viewModel.chosenSeason.value!!,

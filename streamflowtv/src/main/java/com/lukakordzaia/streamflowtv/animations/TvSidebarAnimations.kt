@@ -18,7 +18,6 @@ class TvSidebarAnimations {
 
         animatorSet.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(p0: Animator?) {
-                Log.d("sadasdsadas", "dadasdada'")
                 view.setVisible()
             }
             override fun onAnimationEnd(p0: Animator?) {}

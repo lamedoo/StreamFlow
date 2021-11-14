@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.baseclasses.BaseFragmentVM
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
@@ -196,11 +196,13 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
                 ))
             }
 
-            binding.continueButton.text = "განაგრძეთ - ${if (info.isTvShow) {
-            info.watchedDuration.titlePosition(info.season, info.episode)
-        } else {
-                info.watchedDuration.titlePosition(null, null)
-        }}"
+            binding.continueButton.text =
+                getString(R.string.continue_watching_button,
+                    if (info.isTvShow) {
+                        info.watchedDuration.titlePosition(info.season, info.episode)
+                    } else {
+                        info.watchedDuration.titlePosition(null, null)
+                    })
 
             binding.continueButton.requestFocus()
             binding.playButton.text = getString(R.string.start_over)
@@ -271,7 +273,8 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     private fun playTitleTrailer(trailerUrl: String?) {
         if (trailerUrl != null) {
             val intent = Intent(context, TvVideoPlayerActivity::class.java)
-            intent.putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
+            intent.putExtra(
+                AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
                 titleId,
                 isTvShow,
                 0,
@@ -289,7 +292,8 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     private fun playTitleFromStart(titleId: Int, isTvShow: Boolean, chosenLanguage: String) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
+        intent.putExtra(
+            AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
             titleId,
             isTvShow,
             if (isTvShow) 1 else 0,
@@ -303,7 +307,8 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     private fun continueTitlePlay(item: ContinueWatchingRoom) {
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
-        intent.putExtra(AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
+        intent.putExtra(
+            AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
             item.titleId,
             item.isTvShow,
             item.season,

@@ -14,7 +14,7 @@ import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflowphone.utils.EventObserver
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
-import com.lukakordzaia.streamflowtv.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.ui.tvcatalogue.TvCataloguePresenter
 
 abstract class BaseVerticalGridSupportFragment<VM: BaseViewModel> : VerticalGridSupportFragment() {
@@ -23,12 +23,12 @@ abstract class BaseVerticalGridSupportFragment<VM: BaseViewModel> : VerticalGrid
     protected lateinit var gridAdapter: ArrayObjectAdapter
     protected abstract val reload: () -> Unit
 
-    protected var onTitleSelected: TvCheckTitleSelected? = null
+    protected var onTitleSelected: TvTitleSelected? = null
     protected var onFirstItem: TvCheckFirstItem? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onTitleSelected = context as? TvCheckTitleSelected
+        onTitleSelected = context as? TvTitleSelected
         onFirstItem = context as? TvCheckFirstItem
     }
 

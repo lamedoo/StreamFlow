@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseInfoFragmentActivity
-import com.lukakordzaia.streamflowtv.interfaces.TvCheckTitleSelected
+import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 
-class TvActivity : BaseInfoFragmentActivity(), TvCheckTitleSelected {
+class TvActivity : BaseInfoFragmentActivity(), TvTitleSelected {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

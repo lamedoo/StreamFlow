@@ -4,8 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,6 +34,10 @@ class TvCatalogueFragment : BaseVerticalGridSupportFragment<TvCatalogueViewModel
             it.forEach { title ->
                 gridAdapter.add(title)
             }
+        })
+
+        viewModel.generalLoader.observe(viewLifecycleOwner, {
+            (activity as TvCatalogueActivity).setProgressBar(it == LoadingState.LOADING)
         })
     }
 

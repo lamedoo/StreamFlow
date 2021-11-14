@@ -11,6 +11,8 @@ import com.lukakordzaia.streamflowtv.R
 class CustomListRowPresenter : ListRowPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false) {
     init {
         headerPresenter = CustomRowHeaderPresenter()
+        shadowEnabled = false
+        selectEffectEnabled = false
     }
 
     override fun createRowViewHolder(parent: ViewGroup?): RowPresenter.ViewHolder {

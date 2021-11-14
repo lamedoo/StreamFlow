@@ -5,12 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvHasFavoritesListener
-import com.lukakordzaia.streamflowtv.interfaces.TvWatchListTopRow
+import com.lukakordzaia.streamflowtv.interfaces.TvIsVerticalFirstRow
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,12 +27,12 @@ class TvWatchlistFragment : BaseVerticalGridSupportFragment<TvWatchlistViewModel
     private var selectedItem = 0
 
     var hasFavorites: TvHasFavoritesListener? = null
-    var tvWatchListTopRow: TvWatchListTopRow? = null
+    var tvWatchListTopRow: TvIsVerticalFirstRow? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         hasFavorites = context as? TvHasFavoritesListener
-        tvWatchListTopRow = context as? TvWatchListTopRow
+        tvWatchListTopRow = context as? TvIsVerticalFirstRow
     }
 
     override fun onDetach() {

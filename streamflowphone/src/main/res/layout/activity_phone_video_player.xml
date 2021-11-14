@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:background="@color/fragment_background"
     android:layout_height="match_parent"
-    tools:context=".ui.phone.MainActivity">
+    tools:context=".ui.MainActivity">
 
     <fragment
-        android:name="com.lukakordzaia.streamflowphone.ui.phone.videoplayer.VideoPlayerFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerFragment"
         android:id="@+id/tv_video_player_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

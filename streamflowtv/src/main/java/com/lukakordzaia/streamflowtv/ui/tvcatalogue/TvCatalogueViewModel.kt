@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflowtv.ui.tvcatalogue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState

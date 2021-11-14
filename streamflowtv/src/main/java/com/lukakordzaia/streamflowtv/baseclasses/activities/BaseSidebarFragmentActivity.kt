@@ -13,7 +13,7 @@ import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ListRowPresenter
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
-import com.lukakordzaia.core.AppConstants
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.createToast
@@ -94,7 +94,7 @@ abstract class BaseSidebarFragmentActivity<VB : ViewBinding> : BaseFragmentActiv
             if (sharedPreferences.getLoginToken() != "") {
                 startActivity(Intent(this, TvWatchlistActivity::class.java))
             } else {
-                this.createToast("ფავორიტების სანახავად, გაიარეთ ავტორიზაცია")
+                this.createToast(getString(R.string.log_in_to_see_watchlist))
             }
             sidebarAnimations.hideSideBar(view.tvSidebar)
         }
@@ -209,7 +209,7 @@ abstract class BaseSidebarFragmentActivity<VB : ViewBinding> : BaseFragmentActiv
         Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
 
         if (this is TvActivity) {
-            this.createToast("გასავლელად, კიდევ ერთხელ დააჭირეთ")
+            this.createToast(getString(R.string.click_to_quit_app))
         }
     }
 

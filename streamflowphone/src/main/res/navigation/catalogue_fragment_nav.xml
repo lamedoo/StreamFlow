@@ -6,7 +6,7 @@
     app:startDestination="@id/categoriesFragment">
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phone.catalogue.CatalogueFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.catalogue.CatalogueFragment"
         android:label="fragment_genres_categories"
         tools:layout="@layout/fragment_phone_catalogue" >
         <action
@@ -31,7 +31,7 @@
     <include app:graph="@navigation/video_player_fragment_nav" />
     <fragment
         android:id="@+id/singleCatalogueFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phone.catalogue.cataloguedetails.SingleCatalogueFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.catalogue.cataloguedetails.SingleCatalogueFragment"
         android:label="SingleCatalogueFragment" >
         <argument
             android:name="catalogueType"
