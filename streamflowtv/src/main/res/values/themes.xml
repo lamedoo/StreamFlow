@@ -1,4 +1,3 @@
 <resources>
-
     <style name="Theme.StreamFlow" parent="@style/Theme.Leanback" />
 </resources>

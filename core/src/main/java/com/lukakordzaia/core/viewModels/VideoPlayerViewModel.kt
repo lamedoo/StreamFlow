@@ -13,7 +13,7 @@ import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.Result
 import com.lukakordzaia.core.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
 import com.lukakordzaia.core.network.toEpisodeInfoModel
-import com.lukakordzaia.streamflow.utils.Event
+import com.lukakordzaia.streamflowphone.utils.Event
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 

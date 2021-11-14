@@ -7,7 +7,7 @@ import androidx.navigation.NavDirections
 import com.lukakordzaia.core.network.Environment
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
-import com.lukakordzaia.streamflow.utils.Event
+import com.lukakordzaia.streamflowphone.utils.Event
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

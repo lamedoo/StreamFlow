@@ -1,4 +1,5 @@
-include ':app'
+include ':streamflowphone'
 rootProject.name = "StreamFlow"
 include ':streamflowtv'
 include ':core'
+include ':streamflow'

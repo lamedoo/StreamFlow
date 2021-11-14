@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_fragment_nav"
+    app:startDestination="@id/profileFragment">
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.phone.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_phone_profile" >
+        <action
+            android:id="@+id/action_profileFragment_self"
+            app:destination="@id/profileFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/profileFragment"/>
+        <action
+            android:id="@+id/action_profileFragment_to_loginBottomSheetFragment"
+            app:destination="@id/loginBottomSheetFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginBottomSheetFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.phone.profile.LoginFragment"
+        android:label="LoginBottomSheetFragment" />
+</navigation>

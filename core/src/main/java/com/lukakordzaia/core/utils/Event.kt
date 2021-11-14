@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflow.utils
+package com.lukakordzaia.streamflowphone.utils
 
 import androidx.lifecycle.Observer
 

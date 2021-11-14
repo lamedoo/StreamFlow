@@ -7,8 +7,8 @@ import android.view.View.OnTouchListener
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.widget.doAfterTextChanged
-import com.lukakordzaia.streamflow.utils.setLeftDrawable
-import com.lukakordzaia.streamflow.utils.setRightDrawable
+import com.lukakordzaia.streamflowphone.utils.setLeftDrawable
+import com.lukakordzaia.streamflowphone.utils.setRightDrawable
 import com.lukakordzaia.streamflowtv.R
 
 class TvCustomSearchInput
