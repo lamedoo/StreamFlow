@@ -301,7 +301,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         }
     }
 
-    inner class AutoBackPress(private val backPress: () -> Unit): CountDownTimer(500000, 1000) {
+    inner class AutoBackPress(private val backPress: () -> Unit): CountDownTimer(AUTO_BACK_COUNTER_TIME.toLong(), AUTO_BACK_COUNTER_INTERVAL.toLong()) {
         override fun onTick(millisUntilFinished: Long) {}
 
         override fun onFinish() {
@@ -314,7 +314,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         override fun run() {
             val position = if (player.duration <= 0) 0 else player.duration - player.currentPosition
             duration.text = position.videoPlayerPosition()
-            handler.postDelayed(this, 1000)
+            handler.postDelayed(this, PLAYER_TIME_INTERVAL.toLong())
         }
 
         fun purgeHandler() {
@@ -328,5 +328,8 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     companion object {
         const val MAX_MEDIA_PLAYED = 3
+        const val AUTO_BACK_COUNTER_TIME = 500000
+        const val AUTO_BACK_COUNTER_INTERVAL = 1000
+        const val PLAYER_TIME_INTERVAL = 1000
     }
 }
