@@ -13,7 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
-    val videoPlayerFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
+    private lateinit var videoPlayerFragment: TvVideoPlayerFragment
 
     override fun getViewBinding() = ActivityTvVideoPlayerBinding.inflate(layoutInflater)
 
@@ -24,7 +24,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
+        videoPlayerData = intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.tv_video_player_nav_host, TvVideoPlayerFragment())
@@ -87,15 +87,19 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
             }
 
             KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
-                if (!videoPlayerFragment.checkContinueWatchingVisibility()) {
-                    dispatchEvent(event)
+                if (currentFragmentState == VIDEO_PLAYER) {
+                    if (!videoPlayerFragment.checkContinueWatchingVisibility()) {
+                        dispatchEvent(event)
+                    }
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_MEDIA_REWIND -> {
-                if (!videoPlayerFragment.checkContinueWatchingVisibility()) {
-                    dispatchEvent(event)
+                if (currentFragmentState == VIDEO_PLAYER) {
+                    if (!videoPlayerFragment.checkContinueWatchingVisibility()) {
+                        dispatchEvent(event)
+                    }
                 }
                 return true
             }
@@ -163,6 +167,10 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
         if (currentFragmentState == VIDEO_PLAYER) {
             videoPlayerFragment.getPlayer().dispatchMediaKeyEvent(event!!)
         }
+    }
+
+    fun setVideoPlayerFragment() {
+        videoPlayerFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_nav_host) as TvVideoPlayerFragment
     }
 
     companion object {

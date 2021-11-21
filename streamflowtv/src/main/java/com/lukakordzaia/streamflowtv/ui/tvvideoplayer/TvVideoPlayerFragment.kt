@@ -70,6 +70,8 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         fragmentObservers()
 
         mediaPlayer.setPlayerListener(PlayerListeners())
+
+        (activity as TvVideoPlayerActivity).setVideoPlayerFragment()
     }
 
     private fun fragmentListeners() {
