@@ -137,9 +137,7 @@ class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
             }
 
             if (currentEpisode != null && isFirst) {
-                Handler(Looper.myLooper()!!).postDelayed({
-                    setPosition(1, currentEpisode-1)
-                }, 400)
+                setPosition(1, currentEpisode-1)
                 isFirst = false
             }
         })
