@@ -1,5 +1,6 @@
 package com.lukakordzaia.core.network
 
+import com.lukakordzaia.core.BuildConfig
 import com.lukakordzaia.core.network.interceptors.DefaultHeaderInterceptor
 import com.lukakordzaia.core.network.interceptors.NetworkConnectionInterceptor
 import okhttp3.OkHttpClient
@@ -11,20 +12,24 @@ class RetrofitBuilder(private val networkConnectionInterceptor: NetworkConnectio
     private var retrofitInstance: Retrofit? = null
 
     fun getRetrofitInstance(): Retrofit {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val okHttpClient = OkHttpClient()
             .newBuilder()
             .addInterceptor(defaultHeaderInterceptor)
             .addInterceptor(networkConnectionInterceptor)
-            .addInterceptor(loggingInterceptor)
-            .build()
+
+        if (BuildConfig.DEBUG) {
+            val loggingInterceptor = HttpLoggingInterceptor()
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
+            okHttpClient
+                .addInterceptor(loggingInterceptor)
+        }
 
         if (retrofitInstance == null) {
             retrofitInstance = Retrofit.Builder()
                 .baseUrl(EndPoints.BASE_URL)
-                .client(okHttpClient)
+                .client(okHttpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }
