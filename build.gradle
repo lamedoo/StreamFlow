@@ -3,8 +3,9 @@ buildscript {
     ext {
         sdk_version = 31
         min_sdk_version = 23
-        version_code = 52
-        version_name = "2.4.1"
+
+        version_code = 53
+        version_name = "2.4.2"
 
         gradle_version = "7.0.3"
         kotlin_version = "1.5.31"

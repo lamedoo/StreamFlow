@@ -58,6 +58,7 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
         if (sharedPreferences.getTvVideoPlayerOn()) {
             viewModel.checkAuthDatabase()
             sharedPreferences.saveTvVideoPlayerOn(false)
+            setRowsAdapter()
         }
     }
 
@@ -159,8 +160,11 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
     }
 
     private fun setRowsAdapter() {
+        rowsAdapter.clear()
+
         val rows = when {
-            hasContinueWatching && hasUserSuggestion -> listOf(watchListAdapter, newMoviesAdapter, topMoviesAdapter, suggestionsAdapter, topTvShowsAdapter, newSeriesAdapter)
+            hasContinueWatching && hasUserSuggestion ->
+                listOf(watchListAdapter, newMoviesAdapter, topMoviesAdapter, suggestionsAdapter, topTvShowsAdapter, newSeriesAdapter)
             hasContinueWatching && !hasUserSuggestion -> listOf(watchListAdapter, newMoviesAdapter, topMoviesAdapter, topTvShowsAdapter, newSeriesAdapter)
             !hasContinueWatching && !hasUserSuggestion -> listOf(newMoviesAdapter, topMoviesAdapter, topTvShowsAdapter, newSeriesAdapter)
             else -> listOf(newMoviesAdapter, topMoviesAdapter, topTvShowsAdapter, newSeriesAdapter)

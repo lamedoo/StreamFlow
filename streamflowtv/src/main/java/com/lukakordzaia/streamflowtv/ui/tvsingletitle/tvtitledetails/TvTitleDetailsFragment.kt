@@ -105,17 +105,20 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             binding.noFilesContainer.setVisibleOrGone(it)
             binding.buttonsRow.setVisibleOrGone(!it)
-
-            if (!it) {
-                binding.favoriteContainer.requestFocus()
-            } else {
-                binding.playButton.requestFocus()
-            }
         })
 
         viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
             setTitleInfo(it)
             titleInfo = it
+        })
+
+        viewModel.focusedButton.observe(viewLifecycleOwner, {
+            when (it) {
+                TvTitleDetailsViewModel.Buttons.PLAY -> binding.playButton.requestFocus()
+                TvTitleDetailsViewModel.Buttons.CONTINUE_WATCHING -> binding.continueButton.requestFocus()
+                TvTitleDetailsViewModel.Buttons.FAVORITES -> binding.favoriteContainer.requestFocus()
+                else -> binding.playButton.requestFocus()
+            }
         })
 
         viewModel.favoriteLoader.observe(viewLifecycleOwner, {
@@ -129,6 +132,9 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
         viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             checkContinueWatching(it)
+            if (it != null) {
+                viewModel.setFocusedButton(TvTitleDetailsViewModel.Buttons.CONTINUE_WATCHING)
+            }
         })
 
         viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
@@ -204,7 +210,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
                         info.watchedDuration.titlePosition(null, null)
                     })
 
-            binding.continueButton.requestFocus()
             binding.playButton.text = getString(R.string.start_over)
 
             if (continueWatching && !startedWatching) {
