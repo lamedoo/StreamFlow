@@ -108,7 +108,7 @@ class TvTitleFilesViewModel : BaseViewModel() {
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, chosenSeason.value!!)) {
                 is Result.Success -> {
-                    val episode = files.data.data[episodeNum]
+                    val episode = files.data.data[episodeNum-1]
 
                     val fetchLanguages: MutableList<String> = ArrayList()
                     episode.files.forEach {
