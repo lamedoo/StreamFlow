@@ -202,8 +202,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
                 ))
             }
 
-            binding.continueButton.text =
-                getString(R.string.continue_watching_button,
+            binding.continueButton.text = getString(R.string.continue_watching_button,
                     if (info.isTvShow) {
                         info.watchedDuration.titlePosition(info.season, info.episode)
                     } else {
