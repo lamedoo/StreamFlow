@@ -8,7 +8,7 @@ class SharedPreferences(context: Context) {
     private val usernameDefValue = ""
     private val passwordDefValue = ""
     private val userIdDefValue = -1
-    private val tvVideoPlayerOnDefValue = false
+    private val refreshContinueWatchingDefValue = false
     private val fromWatchlistDefValue = -1
     private val authPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     private val authEditor = authPrefs.edit()
@@ -49,13 +49,13 @@ class SharedPreferences(context: Context) {
         return authPrefs.getString(PASSWORD, passwordDefValue)
     }
 
-    fun saveTvVideoPlayerOn(playerIsOn: Boolean) {
-        authEditor.putBoolean(TV_VIDEO_PLAYER_ON, playerIsOn)
+    fun saveRefreshContinueWatching(refresh: Boolean) {
+        authEditor.putBoolean(REFRESH_CONTINUE_WATCHING, refresh)
         authEditor.apply()
     }
 
-    fun getTvVideoPlayerOn(): Boolean {
-        return authPrefs.getBoolean(TV_VIDEO_PLAYER_ON, tvVideoPlayerOnDefValue)
+    fun getRefreshContinueWatching(): Boolean {
+        return authPrefs.getBoolean(REFRESH_CONTINUE_WATCHING, refreshContinueWatchingDefValue)
     }
 
     fun saveFromWatchlist(position: Int) {
@@ -83,7 +83,7 @@ class SharedPreferences(context: Context) {
         const val USERNAME = "username"
         const val PASSWORD = "password"
         const val USER_ID = "user id"
-        const val TV_VIDEO_PLAYER_ON = "video player is on"
+        const val REFRESH_CONTINUE_WATCHING = "refresh continue watching"
         const val IS_FROM_WATCHLIST = "is from watchlist"
     }
 }

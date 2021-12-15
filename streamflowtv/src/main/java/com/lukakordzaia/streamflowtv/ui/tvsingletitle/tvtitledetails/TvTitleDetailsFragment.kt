@@ -140,6 +140,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
             when (it) {
                 LoadingState.LOADING -> {}
                 LoadingState.LOADED -> {
+                    sharedPreferences.saveRefreshContinueWatching(true)
                     restartFragment()
                 }
                 LoadingState.ERROR -> {
@@ -182,10 +183,14 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         binding.country.text = info.country
         binding.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
         binding.titleDescription.text = info.description
+
+        info.visibility?.let { binding.deleteButton.setVisibleOrGone(it) }
     }
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
-        binding.deleteButton.setVisibleOrGone(info != null)
+        if (sharedPreferences.getLoginToken() == "") {
+            binding.deleteButton.setVisibleOrGone(info != null)
+        }
         binding.continueButton.setVisibleOrGone(info != null)
 
         if (info != null) {
@@ -218,7 +223,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     }
 
     private fun restartFragment() {
-        sharedPreferences.saveTvVideoPlayerOn(true)
+        sharedPreferences.saveRefreshContinueWatching(true)
 
         val intent = Intent(requireContext(), TvSingleTitleActivity::class.java).apply {
             putExtra(AppConstants.TITLE_ID, titleId)

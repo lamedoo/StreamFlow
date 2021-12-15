@@ -55,10 +55,9 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
 
     override fun onStart() {
         super.onStart()
-        if (sharedPreferences.getTvVideoPlayerOn()) {
+        if (sharedPreferences.getRefreshContinueWatching()) {
             viewModel.checkAuthDatabase()
-            sharedPreferences.saveTvVideoPlayerOn(false)
-            setRowsAdapter()
+//            sharedPreferences.saveTvVideoPlayerOn(false)
         }
     }
 
@@ -79,6 +78,10 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
 
         viewModel.continueWatchingList.observe(viewLifecycleOwner, {
             watchedListRowsAdapter(it)
+
+            if (!it.isNullOrEmpty() && sharedPreferences.getRefreshContinueWatching()) {
+                sharedPreferences.saveRefreshContinueWatching(false)
+            }
         })
 
         viewModel.newMovieList.observe(viewLifecycleOwner, {
@@ -117,6 +120,10 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
         }
 
         watchListAdapter = ListRow(HeaderItem(0, getString(R.string.continue_watching)), listRowAdapter)
+
+        if (sharedPreferences.getRefreshContinueWatching()) {
+            setRowsAdapter()
+        }
     }
 
     private fun newMoviesRowsAdapter(items: List<SingleTitleModel>) {

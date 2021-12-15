@@ -40,9 +40,9 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
 
     override fun onStart() {
         super.onStart()
-        if (sharedPreferences.getTvVideoPlayerOn()) {
+        if (sharedPreferences.getRefreshContinueWatching()) {
             viewModel.checkAuthDatabase()
-            sharedPreferences.saveTvVideoPlayerOn(false)
+            sharedPreferences.saveRefreshContinueWatching(false)
         }
     }
 

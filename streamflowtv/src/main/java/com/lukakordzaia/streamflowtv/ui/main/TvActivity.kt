@@ -11,7 +11,7 @@ class TvActivity : BaseInfoFragmentActivity(), TvTitleSelected {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        sharedPreferences.saveTvVideoPlayerOn(false)
+        sharedPreferences.saveRefreshContinueWatching(false)
         setFragment(TvMainFragment())
         binding.tvSidebarCollapsed.collapsedHomeIcon.setColorFilter(ContextCompat.getColor(this, R.color.accent_color))
     }

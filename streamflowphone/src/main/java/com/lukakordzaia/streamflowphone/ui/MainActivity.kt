@@ -42,7 +42,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         setUpNavigation()
         observeFragments()
 
-        sharedPreferences.saveTvVideoPlayerOn(false)
+        sharedPreferences.saveRefreshContinueWatching(false)
     }
 
     private fun setUpNavigation() {
