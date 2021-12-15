@@ -114,7 +114,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
         viewModel.focusedButton.observe(viewLifecycleOwner, {
             when (it) {
-                TvTitleDetailsViewModel.Buttons.PLAY -> binding.playButton.requestFocus()
                 TvTitleDetailsViewModel.Buttons.CONTINUE_WATCHING -> binding.continueButton.requestFocus()
                 TvTitleDetailsViewModel.Buttons.FAVORITES -> binding.favoriteContainer.requestFocus()
                 else -> binding.playButton.requestFocus()

@@ -25,7 +25,6 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
         super.onCreate(savedInstanceState)
 
         videoPlayerData = intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
-
         supportFragmentManager.beginTransaction()
             .replace(R.id.tv_video_player_nav_host, TvVideoPlayerFragment())
             .commit()

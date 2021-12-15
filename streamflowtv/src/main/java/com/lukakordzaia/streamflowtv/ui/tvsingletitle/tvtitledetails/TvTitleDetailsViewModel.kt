@@ -132,8 +132,6 @@ class TvTitleDetailsViewModel : BaseViewModel() {
                         _availableLanguages.value = fetchLanguages
 
                         _movieNotYetAdded.value = false
-
-                        _focusedButton.value = Buttons.PLAY
                     } else {
                         _movieNotYetAdded.value = true
                         _focusedButton.value = Buttons.FAVORITES
