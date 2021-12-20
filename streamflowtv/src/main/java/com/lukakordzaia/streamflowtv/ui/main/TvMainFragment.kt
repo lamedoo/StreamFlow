@@ -57,7 +57,6 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
         super.onStart()
         if (sharedPreferences.getRefreshContinueWatching()) {
             viewModel.checkAuthDatabase()
-//            sharedPreferences.saveTvVideoPlayerOn(false)
         }
     }
 

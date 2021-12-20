@@ -226,7 +226,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         }
     }
 
-    fun onKeyDown(): Boolean {
+    fun onKeyDown() {
         if (binding.continueWatching.root.isVisible) {
             binding.continueWatching.goBackButton.requestFocus()
         } else {
@@ -234,7 +234,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                 !binding.titlePlayer.isControllerVisible -> {
                     binding.titlePlayer.showController()
                     playerBinding.exoPause.requestFocus()
-                    return true
                 }
                 playerBinding.exoPlay.isFocused || playerBinding.exoPause.isFocused -> {
                     (activity as TvVideoPlayerActivity).setCurrentFragmentState(VIDEO_DETAILS)
@@ -245,7 +244,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     if (videoPlayerData.trailerUrl == null) {
                         (activity as TvVideoPlayerActivity).showDetails()
                     }
-                    return true
                 }
                 else -> {
                     playerBinding.subtitleToggle.nextFocusDownId = if (binding.titlePlayer.player!!.isPlaying) R.id.exo_pause else R.id.exo_play
@@ -253,7 +251,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                 }
             }
         }
-        return true
     }
 
     // Need this function to access from activity

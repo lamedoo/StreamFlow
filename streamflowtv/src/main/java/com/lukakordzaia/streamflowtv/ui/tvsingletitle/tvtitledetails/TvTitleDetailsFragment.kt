@@ -70,14 +70,21 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     override fun onStart() {
         super.onStart()
-        viewModel.getSingleTitleData(titleId)
-        viewModel.getSingleTitleFiles(titleId)
+        if (sharedPreferences.getRefreshTitleDetails()) {
+            viewModel.getSingleTitleData(titleId)
+            viewModel.getSingleTitleFiles(titleId)
+
+            sharedPreferences.saveRefreshTitleDetails(false)
+        }
     }
 
     private fun fragmentSetUi() {
         if (!isTvShow) {
             binding.nextDetailsTitle.text = getString(R.string.cast_more)
         }
+
+        viewModel.getSingleTitleData(titleId)
+        viewModel.getSingleTitleFiles(titleId)
     }
 
     private fun fragmentListeners() {
@@ -140,7 +147,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
             when (it) {
                 LoadingState.LOADING -> {}
                 LoadingState.LOADED -> {
-                    sharedPreferences.saveRefreshContinueWatching(true)
                     restartFragment()
                 }
                 LoadingState.ERROR -> {
