@@ -85,7 +85,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     private fun playerHasStarted() {
         sharedPreferences.saveRefreshContinueWatching(videoPlayerData.trailerUrl == null)
-        sharedPreferences.saveRefreshTitleDetails(videoPlayerData.trailerUrl == null)
+//        sharedPreferences.saveRefreshTitleDetails(videoPlayerData.trailerUrl == null)
     }
 
     private fun initObservers() {

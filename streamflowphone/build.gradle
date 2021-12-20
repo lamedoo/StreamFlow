@@ -33,8 +33,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorlayout_version"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     implementation "com.google.android.exoplayer:extension-cast:$exo_player"

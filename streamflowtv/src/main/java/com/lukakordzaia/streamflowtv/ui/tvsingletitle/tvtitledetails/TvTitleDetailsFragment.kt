@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
@@ -70,12 +71,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     override fun onStart() {
         super.onStart()
-        if (sharedPreferences.getRefreshTitleDetails()) {
-            viewModel.getSingleTitleData(titleId)
-            viewModel.getSingleTitleFiles(titleId)
-
-            sharedPreferences.saveRefreshTitleDetails(false)
-        }
+        viewModel.getContinueWatching(titleId)
     }
 
     private fun fragmentSetUi() {
@@ -122,7 +118,11 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         viewModel.focusedButton.observe(viewLifecycleOwner, {
             when (it) {
                 TvTitleDetailsViewModel.Buttons.CONTINUE_WATCHING -> binding.continueButton.requestFocus()
-                TvTitleDetailsViewModel.Buttons.FAVORITES -> binding.favoriteContainer.requestFocus()
+                TvTitleDetailsViewModel.Buttons.FAVORITES -> {
+                    if (binding.buttonsRow.isGone) {
+                        binding.favoriteContainer.requestFocus()
+                    }
+                }
                 else -> binding.playButton.requestFocus()
             }
         })

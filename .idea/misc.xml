@@ -17,6 +17,7 @@
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_details_episodes_item.xml" value="0.46510416666666665" />
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_sidebar.xml" value="0.3171171171171171" />
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_top_title_header.xml" value="0.33" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/fragment_tv_login.xml" value="0.5805555555555556" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_bottom_fragment_sheet.xml" value="0.296875" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button.xml" value="0.296875" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button_favorite_tv.xml" value="0.296875" />
@@ -80,7 +81,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

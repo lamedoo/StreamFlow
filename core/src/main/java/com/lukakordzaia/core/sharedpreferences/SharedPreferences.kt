@@ -9,7 +9,6 @@ class SharedPreferences(context: Context) {
     private val passwordDefValue = ""
     private val userIdDefValue = -1
     private val refreshContinueWatchingDefValue = false
-    private val refreshTitleDetailsDefValue = false
     private val fromWatchlistDefValue = -1
     private val authPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     private val authEditor = authPrefs.edit()
@@ -59,15 +58,6 @@ class SharedPreferences(context: Context) {
         return authPrefs.getBoolean(REFRESH_CONTINUE_WATCHING, refreshContinueWatchingDefValue)
     }
 
-    fun saveRefreshTitleDetails(refresh: Boolean) {
-        authEditor.putBoolean(REFRESH_TITLE_DETAILS, refresh)
-        authEditor.apply()
-    }
-
-    fun getRefreshTitleDetails(): Boolean {
-        return authPrefs.getBoolean(REFRESH_TITLE_DETAILS, refreshTitleDetailsDefValue)
-    }
-
     fun saveFromWatchlist(position: Int) {
         authEditor.putInt(IS_FROM_WATCHLIST, position)
         authEditor.apply()
@@ -94,7 +84,6 @@ class SharedPreferences(context: Context) {
         const val PASSWORD = "password"
         const val USER_ID = "user id"
         const val REFRESH_CONTINUE_WATCHING = "refresh continue watching"
-        const val REFRESH_TITLE_DETAILS = "refresh title details"
         const val IS_FROM_WATCHLIST = "is from watchlist"
     }
 }

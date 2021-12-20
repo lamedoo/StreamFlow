@@ -13,11 +13,14 @@ import com.lukakordzaia.core.network.models.imovies.response.user.GetUserDataRes
 import kotlinx.coroutines.launch
 
 class TvProfileViewModel : BaseViewModel() {
+    val loginLoader = MutableLiveData(LoadingState.LOADED)
+
     private val _userData = MutableLiveData<GetUserDataResponse.Data>()
     val userData: LiveData<GetUserDataResponse.Data> = _userData
 
     fun userLogin(loginBody: PostLoginBody) {
         setNoInternet(false)
+        loginLoader.value = LoadingState.LOADING
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val login = environment.userRepository.userLogin(loginBody)) {
@@ -29,6 +32,7 @@ class TvProfileViewModel : BaseViewModel() {
                     sharedPreferences.saveUsername(loginBody.username)
                     sharedPreferences.savePassword(loginBody.password)
 
+                    loginLoader.value = LoadingState.LOADED
                     setGeneralLoader(LoadingState.LOADED)
                 }
                 is Result.Error -> {

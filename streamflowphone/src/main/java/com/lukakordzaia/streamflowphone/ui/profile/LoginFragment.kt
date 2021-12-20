@@ -64,6 +64,7 @@ class LoginFragment: BaseFragmentPhoneVM<FragmentPhoneLoginBinding, ProfileViewM
     private fun fragmentObservers() {
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             if (it == LoadingState.LOADED) {
+                viewModel.newToastMessage(getString(R.string.authorization_is_successful))
                 requireActivity().onBackPressed()
             }
         })

@@ -11,6 +11,8 @@ import com.lukakordzaia.core.baseclasses.BaseFragmentVM
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.core.utils.hideKeyboard
+import com.lukakordzaia.core.utils.setVisibleOrGone
+import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvLoginBinding
 import com.lukakordzaia.streamflowtv.ui.main.TvActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -64,10 +66,16 @@ class TvLoginFragment: BaseFragmentVM<FragmentTvLoginBinding, TvProfileViewModel
     }
 
     private fun fragmentObservers() {
+        viewModel.loginLoader.observe(viewLifecycleOwner, {
+            binding.loginLoader.setVisibleOrGone(it == LoadingState.LOADING)
+        })
+
         viewModel.generalLoader.observe(viewLifecycleOwner, {
             when (it) {
-                LoadingState.LOADING -> {}
+                LoadingState.LOADING -> {
+                }
                 LoadingState.LOADED -> {
+                    viewModel.newToastMessage(getString(R.string.authorization_is_successful))
                     val intent = Intent(requireContext(), TvActivity::class.java).apply {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

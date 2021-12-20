@@ -33,12 +33,12 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
     var onTitleSelected: TvTitleSelected? = null
     var onFirstItem: TvCheckFirstItem? = null
 
-    private lateinit var watchListAdapter: ListRow
-    private lateinit var newMoviesAdapter: ListRow
-    private lateinit var topMoviesAdapter: ListRow
-    private lateinit var suggestionsAdapter: ListRow
-    private lateinit var topTvShowsAdapter: ListRow
-    private lateinit var newSeriesAdapter: ListRow
+    private var watchListAdapter: ListRow? = null
+    private var newMoviesAdapter: ListRow? = null
+    private var topMoviesAdapter: ListRow? = null
+    private var suggestionsAdapter: ListRow? = null
+    private var topTvShowsAdapter: ListRow? = null
+    private var newSeriesAdapter: ListRow? = null
 
 
     override fun onAttach(context: Context) {
@@ -166,17 +166,48 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
     }
 
     private fun setRowsAdapter() {
+        val row: MutableList<ListRow> = ArrayList()
         rowsAdapter.clear()
 
-        val rows = when {
-            hasContinueWatching && hasUserSuggestion ->
-                listOf(watchListAdapter, newMoviesAdapter, topMoviesAdapter, suggestionsAdapter, topTvShowsAdapter, newSeriesAdapter)
-            hasContinueWatching && !hasUserSuggestion -> listOf(watchListAdapter, newMoviesAdapter, topMoviesAdapter, topTvShowsAdapter, newSeriesAdapter)
-            !hasContinueWatching && !hasUserSuggestion -> listOf(newMoviesAdapter, topMoviesAdapter, topTvShowsAdapter, newSeriesAdapter)
-            else -> listOf(newMoviesAdapter, topMoviesAdapter, topTvShowsAdapter, newSeriesAdapter)
+
+        when {
+            hasContinueWatching && hasUserSuggestion -> {
+                watchListAdapter?.let { row.add(it) }
+                newMoviesAdapter?.let { row.add(it) }
+                topMoviesAdapter?.let { row.add(it) }
+                suggestionsAdapter?.let { row.add(it) }
+                topTvShowsAdapter?.let { row.add(it) }
+                newSeriesAdapter?.let { row.add(it) }
+            }
+            hasContinueWatching && !hasUserSuggestion -> {
+                watchListAdapter?.let { row.add(it) }
+                newMoviesAdapter?.let { row.add(it) }
+                topMoviesAdapter?.let { row.add(it) }
+                topTvShowsAdapter?.let { row.add(it) }
+                newSeriesAdapter?.let { row.add(it) }
+            }
+            !hasContinueWatching && hasUserSuggestion -> {
+                newMoviesAdapter?.let { row.add(it) }
+                topMoviesAdapter?.let { row.add(it) }
+                suggestionsAdapter?.let { row.add(it) }
+                topTvShowsAdapter?.let { row.add(it) }
+                newSeriesAdapter?.let { row.add(it) }
+            }
+            !hasContinueWatching && !hasUserSuggestion -> {
+                newMoviesAdapter?.let { row.add(it) }
+                topMoviesAdapter?.let { row.add(it) }
+                topTvShowsAdapter?.let { row.add(it) }
+                newSeriesAdapter?.let { row.add(it) }
+            }
+            else -> {
+                newMoviesAdapter?.let { row.add(it) }
+                topMoviesAdapter?.let { row.add(it) }
+                topTvShowsAdapter?.let { row.add(it) }
+                newSeriesAdapter?.let { row.add(it) }
+            }
         }
 
-        rowsAdapter.addAll(0, rows)
+        rowsAdapter.addAll(0, row)
     }
     
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
