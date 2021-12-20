@@ -16,7 +16,7 @@ import com.lukakordzaia.core.baseclasses.BaseVideoPlayerFragment
 import com.lukakordzaia.core.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.core.utils.setGone
 import com.lukakordzaia.core.utils.setVisible
-import com.lukakordzaia.streamflowphone.utils.EventObserver
+import com.lukakordzaia.core.utils.EventObserver
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflowtv.databinding.TvExoplayerControllerLayoutBinding

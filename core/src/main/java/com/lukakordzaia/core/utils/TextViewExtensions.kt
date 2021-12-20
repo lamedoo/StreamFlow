@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflowphone.utils
+package com.lukakordzaia.core.utils
 
 import android.widget.TextView
 import androidx.annotation.DrawableRes

@@ -8,7 +8,7 @@ import androidx.viewbinding.ViewBinding
 import com.lukakordzaia.core.R
 import com.lukakordzaia.core.utils.createToast
 import com.lukakordzaia.core.utils.setVisibleOrGone
-import com.lukakordzaia.streamflowphone.utils.EventObserver
+import com.lukakordzaia.core.utils.EventObserver
 
 abstract class BaseFragmentVM<VB: ViewBinding, VM: BaseViewModel> : BaseFragment<VB>() {
     protected abstract val viewModel: VM

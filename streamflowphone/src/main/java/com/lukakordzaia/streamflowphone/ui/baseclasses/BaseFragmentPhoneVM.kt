@@ -7,7 +7,7 @@ import com.lukakordzaia.core.baseclasses.BaseFragmentVM
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.utils.navController
 import com.lukakordzaia.streamflowphone.databinding.FragmentTopToolbarBinding
-import com.lukakordzaia.streamflowphone.utils.EventObserver
+import com.lukakordzaia.core.utils.EventObserver
 
 abstract class BaseFragmentPhoneVM<VB: ViewBinding, VM: BaseViewModel> : BaseFragmentVM<VB, VM>() {
 

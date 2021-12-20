@@ -10,8 +10,8 @@ import androidx.core.widget.doAfterTextChanged
 import com.lukakordzaia.core.utils.hideKeyboard
 import com.lukakordzaia.core.utils.showKeyboard
 import com.lukakordzaia.streamflowphone.R
-import com.lukakordzaia.streamflowphone.utils.setLeftDrawable
-import com.lukakordzaia.streamflowphone.utils.setRightDrawable
+import com.lukakordzaia.core.utils.setLeftDrawable
+import com.lukakordzaia.core.utils.setRightDrawable
 
 class CustomSearchInput
 @JvmOverloads constructor(

@@ -13,7 +13,7 @@ import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.core.utils.createToast
 import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflowphone.R
-import com.lukakordzaia.streamflowphone.utils.EventObserver
+import com.lukakordzaia.core.utils.EventObserver
 import org.koin.android.ext.android.inject
 
 abstract class BaseBottomSheetVM<VB: ViewBinding, VM: BaseViewModel> : BottomSheetDialogFragment() {

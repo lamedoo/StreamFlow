@@ -203,7 +203,6 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     }
 
     enum class Buttons {
-        PLAY,
         CONTINUE_WATCHING,
         FAVORITES
     }

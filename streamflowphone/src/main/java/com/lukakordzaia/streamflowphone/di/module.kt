@@ -1,6 +1,7 @@
 package com.lukakordzaia.streamflowphone.di
 
 import com.lukakordzaia.core.videoplayer.VideoPlayerViewModel
+import com.lukakordzaia.streamflowphone.helpers.NavigationHelper
 import com.lukakordzaia.streamflowphone.ui.catalogue.CatalogueViewModel
 import com.lukakordzaia.streamflowphone.ui.catalogue.cataloguedetails.SingleCatalogueViewModel
 import com.lukakordzaia.streamflowphone.ui.home.HomeViewModel
@@ -24,4 +25,8 @@ val phoneViewModelModule = module {
     viewModel { WatchlistViewModel() }
     viewModel { TopListViewModel() }
     viewModel { VideoPlayerViewModel() }
+}
+
+val phoneGeneralModule = module {
+    single { NavigationHelper() }
 }

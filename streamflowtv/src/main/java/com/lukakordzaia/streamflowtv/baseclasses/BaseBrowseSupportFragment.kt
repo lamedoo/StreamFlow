@@ -16,7 +16,7 @@ import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.createToast
 import com.lukakordzaia.core.utils.setVisibleOrGone
-import com.lukakordzaia.streamflowphone.utils.EventObserver
+import com.lukakordzaia.core.utils.EventObserver
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.helpers.CustomListRowPresenter
 import com.lukakordzaia.streamflowtv.ui.main.presenters.TvHeaderItemPresenter
