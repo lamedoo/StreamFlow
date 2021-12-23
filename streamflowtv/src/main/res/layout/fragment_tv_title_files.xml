@@ -28,7 +28,7 @@
 
         <fragment
             android:id="@+id/files_layout"
-            android:name="com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles.TvTitleFilesBrowse"
+            android:name="com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedBrowse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/go_top_text"/>

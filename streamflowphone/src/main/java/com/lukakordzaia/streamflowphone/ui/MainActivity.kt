@@ -21,7 +21,7 @@ import com.lukakordzaia.streamflowphone.ui.catalogue.cataloguedetails.SingleCata
 import com.lukakordzaia.streamflowphone.ui.home.HomeFragment
 import com.lukakordzaia.streamflowphone.ui.home.toplistfragment.TopListFragment
 import com.lukakordzaia.streamflowphone.ui.phonesingletitle.PhoneSingleTitleFragment
-import com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetFragment
+import com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet.TvEpisodesBottomSheetFragment
 import com.lukakordzaia.streamflowphone.ui.phonewatchlist.PhoneWatchlistFragment
 import com.lukakordzaia.streamflowphone.ui.profile.ProfileFragment
 import com.lukakordzaia.streamflowphone.ui.searchtitles.SearchTitlesFragment
@@ -71,7 +71,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     is TopListFragment,
                     is SingleCatalogueFragment,
                     is PhoneSingleTitleFragment,
-                    is TvShowBottomSheetFragment, is VideoPlayerFragment -> {
+                    is TvEpisodesBottomSheetFragment, is VideoPlayerFragment -> {
                         hideBottomNavigation()
                     }
                 }

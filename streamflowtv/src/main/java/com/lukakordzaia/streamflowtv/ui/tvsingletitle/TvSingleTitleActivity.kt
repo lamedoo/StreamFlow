@@ -7,13 +7,16 @@ import com.lukakordzaia.core.utils.applyBundle
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseFragmentActivity
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvSingleTitleBinding
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesFragment
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesViewModel
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsFragment
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles.TvTitleFilesFragment
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>() {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
+    private val tvEpisodesViewModel: TvEpisodesViewModel by viewModel()
 
     override fun getViewBinding() = ActivityTvSingleTitleBinding.inflate(layoutInflater)
 
@@ -28,7 +31,7 @@ class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>
     }
 
     override fun onBackPressed() {
-        if (currentFragment == TITLE_FILES) {
+        if (currentFragment == TITLE_RELATED) {
             setCurrentFragment(TvTitleDetailsFragment())
         } else {
             super.onBackPressed()
@@ -38,7 +41,8 @@ class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>
     fun setCurrentFragment(fragment: Fragment) {
         currentFragment = when (fragment) {
             is TvTitleDetailsFragment -> TITLE_DETAILS
-            is TvTitleFilesFragment -> TITLE_FILES
+            is TvRelatedFragment -> TITLE_RELATED
+            is TvEpisodesFragment -> TITLE_FILES
             else -> TITLE_DETAILS
         }
 
@@ -53,6 +57,7 @@ class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>
 
     companion object {
         const val TITLE_DETAILS = 0
-        const val TITLE_FILES = 1
+        const val TITLE_RELATED = 1
+        const val TITLE_FILES = 2
     }
 }

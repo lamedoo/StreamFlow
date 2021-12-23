@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles.presenters
+package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters
 
 import android.content.Context
 import android.view.ViewGroup
@@ -8,7 +8,7 @@ import com.lukakordzaia.core.datamodels.TitleEpisodes
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.customviews.TvEpisodesCardView
 
-class TvEpisodesPresenter(private val context: Context, private val currentEpisode: Int?, private val isSeason: Boolean) : Presenter() {
+class TvEpisodesPresenter(private val context: Context) : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvEpisodesCardView(parent.context, null)
 
@@ -23,9 +23,9 @@ class TvEpisodesPresenter(private val context: Context, private val currentEpiso
         val episode = item as TitleEpisodes
         val cardView = viewHolder.view as TvEpisodesCardView
 
-        if (isSeason) {
-            cardView.currentIndicatorVisibility(episode.episodeNum == currentEpisode)
-        }
+//        if (isSeason) {
+//            cardView.currentIndicatorVisibility(episode.episodeNum == currentEpisode)
+//        }
 
         cardView.setNumber("ეპიზოდი ${episode.episodeNum}")
         cardView.setName(episode.episodeName)
@@ -33,7 +33,7 @@ class TvEpisodesPresenter(private val context: Context, private val currentEpiso
 
         cardView.setSeekbarVisibility(episode.titleDuration?.toInt() != 0)
         if (episode.titleDuration?.toInt() != 0) {
-            cardView.binding.itemSeekBar.max =  episode.titleDuration!!.toInt()
+            cardView.binding.itemSeekBar.max = episode.titleDuration!!.toInt()
             cardView.binding.itemSeekBar.progress = episode.watchDuration!!.toInt()
         }
 
@@ -41,15 +41,15 @@ class TvEpisodesPresenter(private val context: Context, private val currentEpiso
             cardView.posterDimVisibility(hasFocus)
             cardView.nameVisibility(hasFocus)
 
-            if (episode.episodeNum == currentEpisode) {
-                cardView.setIndicatorDrawable(
-                    ResourcesCompat.getDrawable(
-                        context.resources,
-                        if (hasFocus) R.drawable.indicator_current_episode_dark else R.drawable.indicator_current_episode_yellow,
-                        null
-                    )
-                )
-            }
+//            if (episode.episodeNum == currentEpisode) {
+//                cardView.setIndicatorDrawable(
+//                    ResourcesCompat.getDrawable(
+//                        context.resources,
+//                        if (hasFocus) R.drawable.indicator_current_episode_dark else R.drawable.indicator_current_episode_yellow,
+//                        null
+//                    )
+//                )
+//            }
         }
     }
 

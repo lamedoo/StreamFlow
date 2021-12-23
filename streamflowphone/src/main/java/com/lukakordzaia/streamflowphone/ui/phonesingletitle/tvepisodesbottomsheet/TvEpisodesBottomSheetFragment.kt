@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvshowdetailsbottomsheet
+package com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet
 
 import android.app.Dialog
 import android.graphics.Color
@@ -27,13 +27,13 @@ import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TvShowBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomSheetBinding, TvShowBottomSheetViewModel>() {
-    private val args: TvShowBottomSheetFragmentArgs by navArgs()
-    override val viewModel by viewModel<TvShowBottomSheetViewModel>()
+class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomSheetBinding, TvEpisodeBottomSheetViewModel>() {
+    private val args: TvEpisodesBottomSheetFragmentArgs by navArgs()
+    override val viewModel by viewModel<TvEpisodeBottomSheetViewModel>()
     override val reload: () -> Unit = { viewModel.getSeasonFiles(args.titleId, 1) }
 
-    private lateinit var episodeAdapter: TvShowBottomSheetEpisodesAdapter
-    private lateinit var seasonAdapter: TvShowBottomSheetSeasonAdapter
+    private lateinit var episodeAdapter: TvEpisodesBottomSheetEpisodesAdapter
+    private lateinit var seasonAdapter: TvEpisodesBottomSheetSeasonAdapter
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
 
     private var scrolledOnce = false
@@ -117,7 +117,8 @@ class TvShowBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomShe
 
     private fun seasonsContainer() {
         val seasonLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        seasonAdapter = TvShowBottomSheetSeasonAdapter(requireContext(),
+        seasonAdapter = TvEpisodesBottomSheetSeasonAdapter(
+            requireContext(),
             {
                 viewModel.getSeasonFiles(args.titleId, it)
                 seasonAdapter.setChosenSeason(it)
@@ -143,13 +144,13 @@ class TvShowBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomShe
     }
 
     private fun episodesContainer() {
-        episodeAdapter = TvShowBottomSheetEpisodesAdapter(requireContext(),
+        episodeAdapter = TvEpisodesBottomSheetEpisodesAdapter(requireContext(),
             {
                 languagePickerDialog(it)
             },
             {
                 if (!scrolledOnce) {
-                    binding.rvEpisodes.smoothScrollToPosition(it+1)
+                    binding.rvEpisodes.smoothScrollToPosition(it + 1)
                     scrolledOnce = true
                 }
             })

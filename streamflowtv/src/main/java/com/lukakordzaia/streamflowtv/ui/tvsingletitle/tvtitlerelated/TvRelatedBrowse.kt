@@ -1,12 +1,10 @@
-package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles
+package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated
 
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.leanback.widget.*
@@ -23,19 +21,19 @@ import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.BaseBrowseSupportFragment
 import com.lukakordzaia.streamflowtv.ui.main.presenters.TvMainPresenter
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles.presenters.TvCastPresenter
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles.presenters.TvEpisodesPresenter
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles.presenters.TvSeasonsPresenter
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles.presenters.TvSimilarPresenter
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvCastPresenter
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvEpisodesPresenter
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvSeasonsPresenter
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvSimilarPresenter
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
 import com.lukakordzaia.streamflowtv.ui.tvwatchlist.TvWatchlistActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
+class TvRelatedBrowse : BaseBrowseSupportFragment<TvRelatedViewModel>() {
     var titleId: Int? = 0
     var isTvShow: Boolean? = false
 
-    override val viewModel by viewModel<TvTitleFilesViewModel>()
+    override val viewModel by viewModel<TvRelatedViewModel>()
     override val reload: () -> Unit = {
         setSeasonsAndEpisodes(titleId!!, isTvShow!!)
         setTitleCast(titleId!!, isTvShow!!)
@@ -78,12 +76,12 @@ class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
         if (isTvShow) {
             val secondHeaderItem = ListRow(HeaderItem(0, "სეზონები"), ArrayObjectAdapter(TvSeasonsPresenter()))
             val firstHeaderItem = ListRow(HeaderItem(1, "ეპიზოდები"), ArrayObjectAdapter(TvMainPresenter()))
-            val fourthItem = ListRow(HeaderItem(2, "მსახიობები"), ArrayObjectAdapter(TvCastPresenter()))
+            val fourthItem = ListRow(HeaderItem(2, getString(R.string.actors)), ArrayObjectAdapter(TvCastPresenter()))
             val fifthItem = ListRow(HeaderItem(3, "მსგავსი"), ArrayObjectAdapter(TvSimilarPresenter()))
             val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, fourthItem, fifthItem)
             rowsAdapter.addAll(0, initListRows)
         } else {
-            val fourthItem = ListRow(HeaderItem(0, "მსახიობები"), ArrayObjectAdapter(TvCastPresenter()))
+            val fourthItem = ListRow(HeaderItem(0, getString(R.string.actors)), ArrayObjectAdapter(TvCastPresenter()))
             val fifthItem = ListRow(HeaderItem(1, "მსგავსი"), ArrayObjectAdapter(TvSimilarPresenter()))
             val initListRows = mutableListOf(fourthItem, fifthItem)
             rowsAdapter.addAll(0, initListRows)
@@ -125,22 +123,22 @@ class TvTitleFilesBrowse : BaseBrowseSupportFragment<TvTitleFilesViewModel>() {
     private fun episodesRowsAdapter(currentEpisode: Int?, currentSeason: Int? = null) {
         var isFirst = true
 
-        viewModel.episodeNames.observe(viewLifecycleOwner, { episodeList ->
-            val listRowAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext(), currentEpisode, currentSeason == focusedSeason)).apply {
-                episodeList.forEach {
-                    add(it)
-                }
-            }
-
-            HeaderItem(1, "ეპიზოდები"). also {
-                rowsAdapter.replace(1, ListRow(it, listRowAdapter))
-            }
-
-            if (currentEpisode != null && isFirst) {
-                setPosition(1, currentEpisode-1)
-                isFirst = false
-            }
-        })
+//        viewModel.episodeNames.observe(viewLifecycleOwner, { episodeList ->
+//            val listRowAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext(), currentEpisode, currentSeason == focusedSeason)).apply {
+//                episodeList.forEach {
+//                    add(it)
+//                }
+//            }
+//
+//            HeaderItem(1, "ეპიზოდები"). also {
+//                rowsAdapter.replace(1, ListRow(it, listRowAdapter))
+//            }
+//
+//            if (currentEpisode != null && isFirst) {
+//                setPosition(1, currentEpisode-1)
+//                isFirst = false
+//            }
+//        })
     }
 
     private fun castRowsAdapter(castResponseListGetSingle: List<GetSingleTitleCastResponse.Data>, isTvShow: Boolean) {

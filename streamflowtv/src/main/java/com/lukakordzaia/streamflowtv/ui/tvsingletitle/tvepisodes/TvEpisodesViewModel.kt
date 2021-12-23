@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles
+package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -10,10 +10,14 @@ import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.datamodels.TitleEpisodes
 import com.lukakordzaia.core.network.Result
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.core.network.toSingleTitleModel
 import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.launch
 
-class TvTitleFilesViewModel : BaseViewModel() {
+class TvEpisodesViewModel : BaseViewModel() {
+    private val _singleTitleData = MutableLiveData<SingleTitleModel>()
+    val getSingleTitleResponse: LiveData<SingleTitleModel> = _singleTitleData
+
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
@@ -29,12 +33,6 @@ class TvTitleFilesViewModel : BaseViewModel() {
     private val _numOfSeasons = MutableLiveData<Int>()
     val numOfSeasons: LiveData<Int> = _numOfSeasons
 
-    private val _castData = MutableLiveData<List<GetSingleTitleCastResponse.Data>>()
-    val castResponseDataGetSingle: LiveData<List<GetSingleTitleCastResponse.Data>> = _castData
-
-    private val _singleTitleRelated = MutableLiveData<List<SingleTitleModel>>()
-    val singleTitleRelated: LiveData<List<SingleTitleModel>> = _singleTitleRelated
-
     private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom?>()
     val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
 
@@ -42,6 +40,8 @@ class TvTitleFilesViewModel : BaseViewModel() {
         viewModelScope.launch {
             when (val data = environment.singleTitleRepository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
+                    _singleTitleData.value = data.data.toSingleTitleModel()
+
                     if (data.data.data.seasons != null) {
                         _numOfSeasons.value = data.data.data.seasons!!.data.size
 
@@ -120,40 +120,15 @@ class TvTitleFilesViewModel : BaseViewModel() {
         }
     }
 
-    fun getSingleTitleCast(titleId: Int) {
-        viewModelScope.launch {
-            when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "cast")) {
-                is Result.Success -> {
-                    val data = cast.data.data
-
-                    _castData.value = data
-                }
-                is Result.Error -> {
-                    newToastMessage("მსახიობები - ${cast.exception}")
-                }
-            }
-        }
-    }
-
-    fun getSingleTitleRelated(titleId: Int) {
-        viewModelScope.launch {
-            when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
-                is Result.Success -> {
-                    val data = related.data.data
-                    _singleTitleRelated.value = data.toTitleListModel()
-                }
-                is Result.Error -> {
-                    newToastMessage("მსგავსი - ${related.exception}")
-                }
-            }
-        }
-    }
-
-    private fun getSingleContinueWatchingFromRoom(titleId: Int){
+    private fun getSingleContinueWatchingFromRoom(titleId: Int) {
         val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
 
         _continueWatchingDetails.addSource(data) {
             _continueWatchingDetails.value = it
         }
+    }
+
+    fun setChosenSeason(season: Int) {
+        _chosenSeason.value = season
     }
 }

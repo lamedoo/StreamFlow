@@ -49,12 +49,17 @@ fun View.setMargin(left: Int? = null, top: Int? = null, right: Int? = null, bott
         left ?: params.leftMargin,
         top ?: params.topMargin,
         right ?: params.rightMargin,
-        bottom ?: params.bottomMargin)
+        bottom ?: params.bottomMargin
+    )
     layoutParams = params
 }
 
 fun View.setVisibleOrGone(visibility: Boolean) {
     this.visibility = if (visibility) View.VISIBLE else View.GONE
+}
+
+fun View.setVisibleOrInvisible(visibility: Boolean) {
+    this.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
 }
 
 fun View.showKeyboard() {

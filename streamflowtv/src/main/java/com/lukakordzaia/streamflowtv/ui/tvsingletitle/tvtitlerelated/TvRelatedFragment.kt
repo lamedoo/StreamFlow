@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles
+package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import com.lukakordzaia.streamflowtv.databinding.FragmentTvTitleFilesBinding
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsFragment
 
-class TvTitleFilesFragment : BaseFragment<FragmentTvTitleFilesBinding>() {
+class TvRelatedFragment : BaseFragment<FragmentTvTitleFilesBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvTitleFilesBinding
         get() = FragmentTvTitleFilesBinding::inflate
 

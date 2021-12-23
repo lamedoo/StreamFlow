@@ -17,7 +17,20 @@
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_details_episodes_item.xml" value="0.46510416666666665" />
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_sidebar.xml" value="0.3171171171171171" />
         <entry key="..\:/AndroidProjects/StreamFlow/app/src/main/res/layout/tv_top_title_header.xml" value="0.33" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/core/src/main/res/drawable/background_button_favorite_tv.xml" value="0.4708333333333333" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/core/src/main/res/drawable/background_button_phone.xml" value="0.7203125" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/core/src/main/res/drawable/background_button_tv.xml" value="0.7203125" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/core/src/main/res/drawable/background_play_icon_round.xml" value="0.7203125" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/core/src/main/res/drawable/background_play_icon_round_tv.xml" value="0.7092307692307692" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowphone/src/main/res/layout/fragment_phone_single_title.xml" value="0.7041666666666667" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/activity_tv_base.xml" value="0.42291666666666666" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/activity_tv_watchlist.xml" value="0.7421875" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/fragment_tv_episodes.xml" value="0.4" />
         <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/fragment_tv_login.xml" value="0.5805555555555556" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/fragment_tv_title_details.xml" value="0.4" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/fragment_tv_title_files.xml" value="0.9432291666666667" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/tv_details_season_item.xml" value="0.536" />
+        <entry key="..\:/Users/admlkordzaia/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/tv_top_title_header.xml" value="0.9432291666666667" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_bottom_fragment_sheet.xml" value="0.296875" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button.xml" value="0.296875" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/app/src/main/res/drawable/background_button_favorite_tv.xml" value="0.296875" />

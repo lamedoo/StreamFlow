@@ -7,7 +7,7 @@ import com.lukakordzaia.streamflowphone.ui.catalogue.cataloguedetails.SingleCata
 import com.lukakordzaia.streamflowphone.ui.home.HomeViewModel
 import com.lukakordzaia.streamflowphone.ui.home.toplistfragment.TopListViewModel
 import com.lukakordzaia.streamflowphone.ui.phonesingletitle.PhoneSingleTitleViewModel
-import com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
+import com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet.TvEpisodeBottomSheetViewModel
 import com.lukakordzaia.streamflowphone.ui.phonewatchlist.WatchlistViewModel
 import com.lukakordzaia.streamflowphone.ui.profile.ProfileViewModel
 import com.lukakordzaia.streamflowphone.ui.searchtitles.SearchTitlesViewModel
@@ -20,7 +20,7 @@ val phoneViewModelModule = module {
     viewModel { CatalogueViewModel() }
     viewModel { SingleCatalogueViewModel() }
     viewModel { SearchTitlesViewModel() }
-    viewModel { TvShowBottomSheetViewModel() }
+    viewModel { TvEpisodeBottomSheetViewModel() }
     viewModel { ProfileViewModel() }
     viewModel { WatchlistViewModel() }
     viewModel { TopListViewModel() }

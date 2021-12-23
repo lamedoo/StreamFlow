@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles.presenters
+package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters
 
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="true" >
+    <item android:state_focused="true">
         <shape>
-            <solid android:color="#66b2b2b2" />
-            <corners android:radius="30dp" />
-            <stroke android:color="@color/accent_color" android:width="2dp" />
+            <solid android:color="@color/accent_color" />
+            <corners android:radius="100dp" />
         </shape>
     </item>
     <item android:state_focused="false">
-        <shape>
+        <shape android:shape="oval">
             <solid android:color="#66b2b2b2" />
             <corners android:radius="30dp" />
         </shape>

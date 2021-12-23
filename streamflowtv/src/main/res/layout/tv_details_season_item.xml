@@ -2,10 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rv_tv_files_season_container"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    tools:background="@drawable/background_episodes_card_tv"
+    android:padding="15dp"
+    android:background="@drawable/background_episodes_card_tv"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -14,15 +17,12 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:paddingTop="5dp"
-        android:paddingBottom="3dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         tools:text="სეზონი 1"
         android:fontFamily="@font/helvetica_neue_lt_geo_caps_65_medium"
         android:textSize="12sp"
         android:textStyle="bold"
         android:textColor="@color/text_on_accent_color"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

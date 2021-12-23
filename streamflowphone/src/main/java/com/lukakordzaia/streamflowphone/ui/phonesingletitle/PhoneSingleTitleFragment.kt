@@ -23,7 +23,7 @@ import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneSingleTitleBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseFragmentPhoneVM
-import com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvshowdetailsbottomsheet.TvShowBottomSheetViewModel
+import com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet.TvEpisodeBottomSheetViewModel
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -35,7 +35,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     override val viewModel by viewModel<PhoneSingleTitleViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContent(args.titleId) }
 
-    private val tvShowBottomSheetViewModel: TvShowBottomSheetViewModel by viewModel()
+    private val tvEpisodeBottomSheetViewModel: TvEpisodeBottomSheetViewModel by viewModel()
     private lateinit var titleInfo: SingleTitleModel
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var phoneSingleTitleCastAdapter: PhoneSingleTitleCastAdapter
@@ -180,7 +180,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
             checkContinueWatching(it)
         })
 
-        tvShowBottomSheetViewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
+        tvEpisodeBottomSheetViewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
             val languages = languageList.reversed()
             chooseLanguageAdapter.setLanguageList(languages)
         })
@@ -226,10 +226,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     }
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
-        binding.continueWatchingInfo.setVisibleOrGone(info != null)
-        binding.continueWatchingSeekBar.setVisibleOrGone(info != null)
-        binding.continueWatchingInfoBottom.setVisibleOrGone(info != null)
-        binding.continueWatchingSeekBarBottom.setVisibleOrGone(info != null)
+
 
         if (info != null) {
             binding.continueWatchingSeekBar.max = info.titleDuration.toInt()
@@ -284,8 +281,8 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     }
 
     private fun languagePickerDialog() {
-        tvShowBottomSheetViewModel.getSeasonFiles(args.titleId, 1)
-        tvShowBottomSheetViewModel.getEpisodeLanguages(args.titleId, 0)
+        tvEpisodeBottomSheetViewModel.getSeasonFiles(args.titleId, 1)
+        tvEpisodeBottomSheetViewModel.getEpisodeLanguages(args.titleId, 0)
 
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())

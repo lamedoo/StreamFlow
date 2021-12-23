@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/fragment_padding"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="#99282A38"
+    android:focusableInTouchMode="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/title_info"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.23"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.4">
+
+        <include
+            android:id="@+id/back_button_info"
+            layout="@layout/tv_back_button_info_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/title_name"
+            app:layout_constraintStart_toStartOf="@id/title_name" />
+
+        <TextView
+            android:id="@+id/title_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="50dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textColor="@color/secondary_text_color"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Friends" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/title_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_name">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    tools:text="2015"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                    android:textColor="@color/general_text_color" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="@string/middle_dot"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                    android:textColor="@color/general_text_color" />
+
+                <TextView
+                    android:id="@+id/duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    tools:text="1:37:43"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                    android:textColor="@color/general_text_color" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="@string/middle_dot"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                    android:textColor="@color/general_text_color" />
+
+                <TextView
+                    android:id="@+id/imdb_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    tools:text="8.6"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                    android:textColor="@color/accent_color" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="@string/middle_dot"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                    android:textColor="@color/general_text_color" />
+
+                <TextView
+                    android:id="@+id/country"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    tools:text="USA"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                    android:textColor="@color/general_text_color" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <fragment
+        android:id="@+id/season_fragment"
+        android:name="com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvSeasonBrowse"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintTop_toBottomOf="@id/title_info"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <fragment
+        android:id="@+id/episode_fragment"
+        android:name="com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesBrowse"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.55"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

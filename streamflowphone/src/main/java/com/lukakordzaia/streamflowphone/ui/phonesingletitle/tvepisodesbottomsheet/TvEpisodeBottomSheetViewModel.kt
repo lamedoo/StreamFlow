@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvshowdetailsbottomsheet
+package com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -12,7 +12,7 @@ import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.Result
 import kotlinx.coroutines.launch
 
-class TvShowBottomSheetViewModel : BaseViewModel() {
+class TvEpisodeBottomSheetViewModel : BaseViewModel() {
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
 

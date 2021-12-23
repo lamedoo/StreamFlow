@@ -10,9 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isGone
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.baseclasses.BaseFragmentVM
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
@@ -21,13 +19,12 @@ import com.lukakordzaia.core.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.datamodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.utils.setImage
-import com.lukakordzaia.core.utils.setVisibleOrGone
-import com.lukakordzaia.core.utils.titlePosition
+import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvTitleDetailsBinding
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlefiles.TvTitleFilesFragment
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesFragment
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedFragment
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -47,7 +44,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     private lateinit var languages: List<String>
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
-    private lateinit var titleInfo: SingleTitleModel
     private var hasFocus: Boolean = false
     private var startedWatching = false
 
@@ -64,7 +60,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         isTvShow = activity?.intent?.getSerializableExtra(AppConstants.IS_TV_SHOW) as Boolean
         fromWatchlist = activity?.intent?.getSerializableExtra(AppConstants.FROM_WATCHLIST) as? Int
 
-        fragmentSetUi()
+        callData()
         fragmentListeners()
         fragmentObservers()
     }
@@ -74,11 +70,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         viewModel.getContinueWatching(titleId)
     }
 
-    private fun fragmentSetUi() {
-        if (!isTvShow) {
-            binding.nextDetailsTitle.text = getString(R.string.cast_more)
-        }
-
+    private fun callData() {
         viewModel.getSingleTitleData(titleId)
         viewModel.getSingleTitleFiles(titleId)
     }
@@ -88,13 +80,21 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
             languagePickerDialog()
         }
 
+        binding.replayButton.setOnClickListener {
+            languagePickerDialog()
+        }
+
         binding.deleteButton.setOnClickListener {
             removeTitleDialog()
         }
 
+        binding.episodesButton.setOnClickListener {
+            (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TvEpisodesFragment())
+        }
+
         binding.nextDetails.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TvTitleFilesFragment())
+                (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TvRelatedFragment())
             }
             this.hasFocus = hasFocus
         }
@@ -107,25 +107,24 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
             binding.noFilesContainer.setVisibleOrGone(it)
-            binding.buttonsRow.setVisibleOrGone(!it)
+            binding.buttonsRow.setVisibleOrInvisible(!it)
         })
 
         viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
             setTitleInfo(it)
-            titleInfo = it
         })
 
-        viewModel.focusedButton.observe(viewLifecycleOwner, {
-            when (it) {
-                TvTitleDetailsViewModel.Buttons.CONTINUE_WATCHING -> binding.continueButton.requestFocus()
-                TvTitleDetailsViewModel.Buttons.FAVORITES -> {
-                    if (binding.buttonsRow.isGone) {
-                        binding.favoriteContainer.requestFocus()
-                    }
-                }
-                else -> binding.playButton.requestFocus()
-            }
-        })
+//        viewModel.focusedButton.observe(viewLifecycleOwner, {
+//            when (it) {
+//                TvTitleDetailsViewModel.Buttons.CONTINUE_WATCHING -> binding.continueButton.requestFocus()
+//                TvTitleDetailsViewModel.Buttons.FAVORITES -> {
+//                    if (binding.buttonsRow.isGone) {
+//                        binding.favoriteContainer.requestFocus()
+//                    }
+//                }
+//                else -> binding.playButton.requestFocus()
+//            }
+//        })
 
         viewModel.favoriteLoader.observe(viewLifecycleOwner, {
             binding.favoriteProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
@@ -191,38 +190,46 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         binding.titleDescription.text = info.description
 
         info.visibility?.let { binding.deleteButton.setVisibleOrGone(it) }
+        binding.episodesButton.setVisibleOrGone(info.isTvShow)
     }
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
+        binding.continueWatchingInfo.setVisibleOrGone(info != null)
+        binding.continueWatchingSeekBar.setVisibleOrGone(info != null)
+
         if (sharedPreferences.getLoginToken() == "") {
             binding.deleteButton.setVisibleOrGone(info != null)
         }
-        binding.continueButton.setVisibleOrGone(info != null)
 
         if (info != null) {
-            binding.continueButton.setOnClickListener {
-                continueTitlePlay(ContinueWatchingRoom(
-                    info.titleId,
-                    info.language,
-                    TimeUnit.SECONDS.toMillis(info.watchedDuration),
-                    TimeUnit.SECONDS.toMillis(info.titleDuration),
-                    info.isTvShow,
-                    info.season,
-                    info.episode,
-                ))
+            binding.continueWatchingSeekBar.max = info.titleDuration.toInt()
+            binding.continueWatchingSeekBar.progress = info.watchedDuration.toInt()
+
+            val time = if (info.isTvShow) {
+                info.watchedDuration.titlePosition(info.season, info.episode)
+            } else {
+                info.watchedDuration.titlePosition(null, null)
+            }
+            binding.continueWatchingInfo.text = time
+
+            binding.replayButton.setVisibleOrGone(!info.isTvShow)
+
+            binding.playButton.setOnClickListener {
+                continueTitlePlay(
+                    ContinueWatchingRoom(
+                        info.titleId,
+                        info.language,
+                        TimeUnit.SECONDS.toMillis(info.watchedDuration),
+                        TimeUnit.SECONDS.toMillis(info.titleDuration),
+                        info.isTvShow,
+                        info.season,
+                        info.episode,
+                    )
+                )
             }
 
-            binding.continueButton.text = getString(R.string.continue_watching_button,
-                    if (info.isTvShow) {
-                        info.watchedDuration.titlePosition(info.season, info.episode)
-                    } else {
-                        info.watchedDuration.titlePosition(null, null)
-                    })
-
-            binding.playButton.text = getString(R.string.start_over)
-
             if (continueWatching && !startedWatching) {
-                binding.continueButton.callOnClick()
+                binding.playButton.callOnClick()
                 startedWatching = true
             }
         }
