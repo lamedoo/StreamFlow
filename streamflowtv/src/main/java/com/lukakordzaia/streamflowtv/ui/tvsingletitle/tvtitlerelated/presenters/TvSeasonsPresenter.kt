@@ -11,7 +11,7 @@ class TvSeasonsPresenter : Presenter() {
         val cardView = TvSeasonsCardView(parent.context, null)
 
         val height = ViewGroup.LayoutParams.WRAP_CONTENT
-        val width = parent.context.resources.displayMetrics.widthPixels
+        val width = ViewGroup.LayoutParams.MATCH_PARENT
         cardView.layoutParams = ViewGroup.LayoutParams(width, height)
 
         return ViewHolder(cardView)

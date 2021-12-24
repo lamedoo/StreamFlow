@@ -10,6 +10,7 @@ import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
@@ -18,6 +19,7 @@ import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvSeasonsPresenter
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.component.getScopeId
 
 
 class TvSeasonBrowse : VerticalGridSupportFragment() {
@@ -91,7 +93,7 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
 
     private fun initGridPresenter() {
         title = ""
-        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
+        val gridPresenter = StandardGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
         gridPresenter.numberOfColumns = 1
         gridPresenter.shadowEnabled = false
         setGridPresenter(gridPresenter)
