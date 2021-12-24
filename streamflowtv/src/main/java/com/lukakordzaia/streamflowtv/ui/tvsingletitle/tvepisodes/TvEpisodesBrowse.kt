@@ -53,6 +53,16 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
             gridAdapter.clear()
             gridAdapter.addAll(0, it)
         })
+
+        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+            if (it != null) {
+                viewModel.setChoseEpisode(it.episode)
+            }
+        })
+
+        viewModel.chosenEpisode.observe(viewLifecycleOwner, {
+            setSelectedPosition(it - 1)
+        })
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
@@ -74,8 +84,9 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
 
     private fun initGridPresenter() {
         title = ""
-        val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
+        val gridPresenter = StandardGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
         gridPresenter.numberOfColumns = 1
+        gridPresenter.shadowEnabled = false
         setGridPresenter(gridPresenter)
     }
 

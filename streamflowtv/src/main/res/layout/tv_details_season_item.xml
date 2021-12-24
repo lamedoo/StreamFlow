@@ -4,9 +4,9 @@
     android:id="@+id/rv_tv_files_season_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_marginTop="20dp"
     android:padding="15dp"
-    android:background="@drawable/background_episodes_card_tv"
+    android:background="@drawable/background_seasons_card_tv"
     android:focusable="true"
     android:focusableInTouchMode="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">

@@ -27,6 +27,9 @@ class TvEpisodesViewModel : BaseViewModel() {
     private val _chosenSeason = MutableLiveData<Int>()
     val chosenSeason: LiveData<Int> = _chosenSeason
 
+    private val _chosenEpisode = MutableLiveData<Int>()
+    val chosenEpisode: LiveData<Int> = _chosenEpisode
+
     private val _episodeNames = MutableLiveData<List<TitleEpisodes>>()
     val episodeNames: LiveData<List<TitleEpisodes>> = _episodeNames
 
@@ -130,5 +133,9 @@ class TvEpisodesViewModel : BaseViewModel() {
 
     fun setChosenSeason(season: Int) {
         _chosenSeason.value = season
+    }
+
+    fun setChoseEpisode(episode: Int) {
+        _chosenEpisode.value = episode
     }
 }

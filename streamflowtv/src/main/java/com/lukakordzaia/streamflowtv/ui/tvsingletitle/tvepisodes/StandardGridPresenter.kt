@@ -19,7 +19,10 @@ class StandardGridPresenter(focusZoomFactor: Int, useFocusDimmer: Boolean) : Ver
             parent, false
         )
         gridView = root.findViewById(R.id.browse_grid)
-        gridView!!.setColumnWidth(500)
+
+        val width = gridView!!.context.resources.displayMetrics.widthPixels * 0.3.toInt()
+
+        gridView!!.setColumnWidth(width)
         return ViewHolder(gridView)
     }
 

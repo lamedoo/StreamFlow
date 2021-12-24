@@ -34,10 +34,6 @@ class TvEpisodesCardView(context: Context, attrs: AttributeSet?) : ConstraintLay
         binding.posterDim.setVisibleOrGone(visibility)
     }
 
-    fun nameVisibility(visibility: Boolean) {
-        binding.episodeName.setVisibleOrGone(visibility)
-    }
-
     fun setIndicatorDrawable(drawable: Drawable?) {
         binding.currentIndicator.setImageDrawable(drawable)
     }

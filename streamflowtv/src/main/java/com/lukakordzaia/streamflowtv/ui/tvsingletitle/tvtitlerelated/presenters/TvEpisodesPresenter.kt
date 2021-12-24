@@ -12,9 +12,11 @@ class TvEpisodesPresenter(private val context: Context) : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvEpisodesCardView(parent.context, null)
 
-        cardView.isFocusable = true
         cardView.background = ResourcesCompat.getDrawable(context.resources, R.drawable.background_episodes_card_tv, null)
-        cardView.isFocusableInTouchMode = true
+
+        val height = ViewGroup.LayoutParams.WRAP_CONTENT
+        val width = ViewGroup.LayoutParams.MATCH_PARENT
+        cardView.layoutParams = ViewGroup.LayoutParams(width, height)
 
         return ViewHolder(cardView)
     }
@@ -38,9 +40,6 @@ class TvEpisodesPresenter(private val context: Context) : Presenter() {
         }
 
         cardView.setOnFocusChangeListener { _, hasFocus ->
-            cardView.posterDimVisibility(hasFocus)
-            cardView.nameVisibility(hasFocus)
-
 //            if (episode.episodeNum == currentEpisode) {
 //                cardView.setIndicatorDrawable(
 //                    ResourcesCompat.getDrawable(
@@ -53,7 +52,6 @@ class TvEpisodesPresenter(private val context: Context) : Presenter() {
         }
     }
 
-    override fun onUnbindViewHolder(viewHolder: ViewHolder) {
-    }
+    override fun onUnbindViewHolder(viewHolder: ViewHolder) {}
 
 }
