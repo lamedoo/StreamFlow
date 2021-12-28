@@ -8,6 +8,7 @@ import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.datamodels.TitleEpisodes
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
@@ -27,7 +28,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     private var onTitleSelected: TvTitleSelected? = null
     private var onFirstItem: TvCheckFirstItem? = null
 
-    private var continueEpisode = 0
+    private var continueEpisode = 1
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -108,6 +109,10 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
+
+            if (item is TitleEpisodes) {
+                continueEpisode = 1
+            }
 
             if (item is SingleTitleModel) {
                 onTitleSelected?.getTitleId(item.id, null)

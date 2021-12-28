@@ -31,8 +31,6 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
     private var onTitleSelected: TvTitleSelected? = null
     private var onFirstItem: TvCheckFirstItem? = null
 
-    private var firstSelect = true
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onTitleSelected = context as? TvTitleSelected
@@ -115,11 +113,6 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             if (item is Int) {
                 viewModel.getSeasonFiles(titleId!!, item)
-
-                if (!firstSelect) {
-                    viewModel.setChoseEpisode(0)
-                }
-                firstSelect = false
             }
         }
     }
