@@ -27,6 +27,8 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     private var onTitleSelected: TvTitleSelected? = null
     private var onFirstItem: TvCheckFirstItem? = null
 
+    private var continueEpisode = 0
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onTitleSelected = context as? TvTitleSelected
@@ -52,6 +54,8 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         viewModel.episodeNames.observe(viewLifecycleOwner, {
             gridAdapter.clear()
             gridAdapter.addAll(0, it)
+
+            setSelectedPosition(continueEpisode - 1)
         })
 
         viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
@@ -61,7 +65,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         })
 
         viewModel.chosenEpisode.observe(viewLifecycleOwner, {
-            setSelectedPosition(it - 1)
+            continueEpisode = it
         })
     }
 

@@ -33,7 +33,6 @@ class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesV
         titleId = titleIdFromDetails
 
         viewModel.getSingleTitleData(titleId!!)
-//        binding.root.findViewById<View>(R.id.season_fragment).requestFocus()
 
         fragmentObservers()
     }
@@ -44,12 +43,20 @@ class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesV
         })
 
         viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+//            setFragments()
             if (it != null) {
                 binding.root.findViewById<View>(R.id.episode_fragment).requestFocus()
             } else {
                 binding.root.findViewById<View>(R.id.season_fragment).requestFocus()
             }
         })
+    }
+
+    private fun setFragments() {
+        childFragmentManager.beginTransaction()
+            .replace(R.id.season_fragment, TvSeasonBrowse())
+            .replace(R.id.episode_fragment, TvEpisodesBrowse())
+            .commit()
     }
 
     private fun setTitleInfo(info: SingleTitleModel) {
