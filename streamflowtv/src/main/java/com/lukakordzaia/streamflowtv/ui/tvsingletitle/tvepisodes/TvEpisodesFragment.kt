@@ -43,7 +43,6 @@ class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesV
         })
 
         viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-//            setFragments()
             if (it != null) {
                 binding.root.findViewById<View>(R.id.episode_fragment).requestFocus()
             } else {
@@ -52,18 +51,16 @@ class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesV
         })
     }
 
-    private fun setFragments() {
-        childFragmentManager.beginTransaction()
-            .replace(R.id.season_fragment, TvSeasonBrowse())
-            .replace(R.id.episode_fragment, TvEpisodesBrowse())
-            .commit()
-    }
-
     private fun setTitleInfo(info: SingleTitleModel) {
         binding.titleName.text = info.nameEng
         binding.year.text = info.releaseYear
         binding.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
         binding.country.text = info.country
         binding.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
+    }
+
+    override fun onDetach() {
+        viewModel
+        super.onDetach()
     }
 }

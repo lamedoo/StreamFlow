@@ -1,14 +1,22 @@
 package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
+import androidx.recyclerview.widget.GridLayoutManager
+import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
+import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.datamodels.TitleEpisodes
+import com.lukakordzaia.core.datamodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
@@ -17,6 +25,7 @@ import com.lukakordzaia.streamflowtv.ui.tvcatalogue.TvCataloguePresenter
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvEpisodesPresenter
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvSeasonsPresenter
+import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,6 +36,8 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
 
     private var onTitleSelected: TvTitleSelected? = null
     private var onFirstItem: TvCheckFirstItem? = null
+
+    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
 
     private var continueEpisode = 1
 
@@ -70,23 +81,6 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         })
     }
 
-    private inner class ItemViewClickedListener : OnItemViewClickedListener {
-        override fun onItemClicked(
-            itemViewHolder: Presenter.ViewHolder?,
-            item: Any?,
-            rowViewHolder: RowPresenter.ViewHolder?,
-            row: Row?
-        ) {
-            if (item is SingleTitleModel) {
-                val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
-                    putExtra(AppConstants.TITLE_ID, item.id)
-                    putExtra(AppConstants.IS_TV_SHOW, item.isTvShow)
-                }
-                activity?.startActivity(intent)
-            }
-        }
-    }
-
     private fun initGridPresenter() {
         title = ""
         val gridPresenter = StandardGridPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false)
@@ -103,6 +97,20 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     private fun setupEventListeners(click: OnItemViewClickedListener, select: OnItemViewSelectedListener) {
         onItemViewClickedListener = click
         setOnItemViewSelectedListener(select)
+    }
+
+    private inner class ItemViewClickedListener : OnItemViewClickedListener {
+        override fun onItemClicked(
+            itemViewHolder: Presenter.ViewHolder?,
+            item: Any?,
+            rowViewHolder: RowPresenter.ViewHolder?,
+            row: Row?
+        ) {
+            if (item is TitleEpisodes) {
+                viewModel.getEpisodeLanguages(item.titleId, item.episodeNum)
+                languagePickerDialog(item.episodeNum)
+            }
+        }
     }
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
@@ -133,6 +141,50 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun languagePickerDialog(episode: Int) {
+        val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
+        val chooseLanguageDialog = Dialog(requireContext())
+        chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        chooseLanguageDialog.setContentView(binding.root)
+        chooseLanguageDialog.show()
+
+        val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
+            chooseLanguageDialog.dismiss()
+            playEpisode(episode, it)
+        }
+        binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
+        binding.rvChooseLanguage.adapter = chooseLanguageAdapter
+
+        viewModel.availableLanguages.observe(viewLifecycleOwner, {
+            val languages = it.reversed()
+            chooseLanguageAdapter.setLanguageList(languages)
+            binding.rvChooseLanguage.requestFocus()
+        })
+    }
+
+    private fun playEpisode(episode: Int, chosenLanguage: String) {
+        val intent = Intent(context, TvVideoPlayerActivity::class.java).apply {
+            putExtra(
+                AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
+                    (parentFragment as TvEpisodesFragment).titleId!!,
+                    true,
+                    viewModel.chosenSeason.value!!,
+                    chosenLanguage,
+                    episode,
+                    0L,
+                    null
+                )
+            )
+        }
+        requireActivity().startActivity(intent)
+        if (requireActivity() is TvVideoPlayerActivity) {
+            (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.NEW_EPISODE)
+            requireActivity().finish()
         }
     }
 

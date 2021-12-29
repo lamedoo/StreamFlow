@@ -31,10 +31,13 @@ class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>
     }
 
     override fun onBackPressed() {
-        if (currentFragment == TITLE_RELATED) {
-            setCurrentFragment(TvTitleDetailsFragment())
-        } else {
-            super.onBackPressed()
+        when (currentFragment) {
+            TITLE_RELATED, TITLE_FILES -> {
+                setCurrentFragment(TvTitleDetailsFragment())
+            }
+            else -> {
+                super.onBackPressed()
+            }
         }
     }
 
