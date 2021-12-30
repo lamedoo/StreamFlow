@@ -39,6 +39,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
 
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
 
+    private var firstSelection = true
     private var continueEpisode = 1
 
     override fun onAttach(context: Context) {
@@ -55,6 +56,8 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val args = arguments
+        continueEpisode = args?.getInt("episode") ?: 1
 
         fragmentObservers()
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
@@ -68,16 +71,11 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
             gridAdapter.addAll(0, it)
 
             setSelectedPosition(continueEpisode - 1)
-        })
 
-        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-            if (it != null) {
-                viewModel.setChoseEpisode(it.episode)
+            if (firstSelection) {
+                (parentFragment as TvEpisodesFragment).setFragmentFocus("episode")
+                firstSelection = false
             }
-        })
-
-        viewModel.chosenEpisode.observe(viewLifecycleOwner, {
-            continueEpisode = it
         })
     }
 
@@ -171,7 +169,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         val intent = Intent(context, TvVideoPlayerActivity::class.java).apply {
             putExtra(
                 AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
-                    (parentFragment as TvEpisodesFragment).titleId!!,
+                    (parentFragment as TvEpisodesFragment).titleId,
                     true,
                     viewModel.chosenSeason.value!!,
                     chosenLanguage,
@@ -184,8 +182,8 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         requireActivity().startActivity(intent)
         if (requireActivity() is TvVideoPlayerActivity) {
             (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.NEW_EPISODE)
-            requireActivity().finish()
         }
+        requireActivity().finish()
     }
 
     override fun onDetach() {

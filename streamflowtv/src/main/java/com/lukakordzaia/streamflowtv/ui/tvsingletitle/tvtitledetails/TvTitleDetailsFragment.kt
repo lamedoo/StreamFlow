@@ -23,7 +23,7 @@ import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvTitleDetailsBinding
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesFragment
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedFragment
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -89,7 +89,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         }
 
         binding.episodesButton.setOnClickListener {
-            (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TvEpisodesFragment())
+            startActivity(TvEpisodesActivity.newIntent(requireContext(), titleId))
         }
 
         binding.nextDetails.setOnFocusChangeListener { _, hasFocus ->

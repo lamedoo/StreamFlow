@@ -47,28 +47,44 @@ class TvEpisodesViewModel : BaseViewModel() {
 
                     if (data.data.data.seasons != null) {
                         _numOfSeasons.value = data.data.data.seasons!!.data.size
-
-                        if (sharedPreferences.getLoginToken() == "") {
-                            getSingleContinueWatchingFromRoom(titleId)
-                        } else {
-                            if (data.data.data.userWatch?.data?.season != null) {
-                                _continueWatchingDetails.value = ContinueWatchingRoom(
-                                    titleId = titleId,
-                                    language = data.data.data.userWatch!!.data?.language!!,
-                                    watchedDuration = data.data.data.userWatch!!.data?.progress!!,
-                                    titleDuration = data.data.data.userWatch!!.data?.duration!!,
-                                    isTvShow = data.data.data.isTvShow,
-                                    season = data.data.data.userWatch!!.data?.season!!,
-                                    episode = data.data.data.userWatch!!.data?.episode!!
-                                )
-                            } else {
-                                _continueWatchingDetails.value = null
-                            }
-                        }
                     }
                 }
                 is Result.Error -> {
                     newToastMessage(data.exception)
+                }
+            }
+        }
+    }
+
+    fun getContinueWatching(titleId: Int) {
+        viewModelScope.launch {
+            when (val info = environment.singleTitleRepository.getSingleTitleData(titleId)) {
+                is Result.Success -> {
+                    val data = info.data
+
+                    if (sharedPreferences.getLoginToken() == "") {
+                        getSingleContinueWatchingFromRoom(titleId)
+                    } else {
+                        if (data.data.userWatch?.data?.season != null) {
+                            _continueWatchingDetails.value = ContinueWatchingRoom(
+                                titleId = titleId,
+                                language = data.data.userWatch!!.data?.language!!,
+                                watchedDuration = data.data.userWatch!!.data?.progress!!,
+                                titleDuration = data.data.userWatch!!.data?.duration!!,
+                                isTvShow = data.data.isTvShow,
+                                season = data.data.userWatch!!.data?.season!!,
+                                episode = data.data.userWatch!!.data?.episode!!
+                            )
+                        } else {
+                            _continueWatchingDetails.value = null
+                        }
+                    }
+                }
+                is Result.Error -> {
+                    newToastMessage(info.exception)
+                }
+                is Result.Internet -> {
+                    setNoInternet()
                 }
             }
         }

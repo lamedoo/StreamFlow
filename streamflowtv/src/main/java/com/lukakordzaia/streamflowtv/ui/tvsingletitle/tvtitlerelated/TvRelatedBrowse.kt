@@ -31,158 +31,76 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvRelatedBrowse : BaseBrowseSupportFragment<TvRelatedViewModel>() {
     var titleId: Int? = 0
-    var isTvShow: Boolean? = false
 
     override val viewModel by viewModel<TvRelatedViewModel>()
     override val reload: () -> Unit = {
-        setSeasonsAndEpisodes(titleId!!, isTvShow!!)
-        setTitleCast(titleId!!, isTvShow!!)
-        setTitleRelated(titleId!!, isTvShow!!)
+        setTitleCast(titleId!!)
+        setTitleRelated(titleId!!)
     }
-    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
 
     private var hasFocus = false
-    private var focusedSeason = 0
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         workaroundFocus()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        setSeasonsAndEpisodes(titleId!!, isTvShow!!)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val titleIdFromDetails = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as? Int
-        val isTvShowFromDetails = activity?.intent?.getSerializableExtra(AppConstants.IS_TV_SHOW) as? Boolean
         val videoPlayerData = activity?.intent?.getParcelableExtra(AppConstants.VIDEO_PLAYER_DATA) as? VideoPlayerData
 
         titleId = titleIdFromDetails ?: videoPlayerData?.titleId
-        isTvShow = isTvShowFromDetails ?: videoPlayerData?.isTvShow
 
-        initRowsAdapter(isTvShow!!)
-        setTitleCast(titleId!!, isTvShow!!)
-        setTitleRelated(titleId!!, isTvShow!!)
+        initRowsAdapter()
+        setTitleCast(titleId!!)
+        setTitleRelated(titleId!!)
 
-        setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener(titleId!!))
+        setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }
 
-    private fun initRowsAdapter(isTvShow: Boolean) {
-        if (isTvShow) {
-            val secondHeaderItem = ListRow(HeaderItem(0, "სეზონები"), ArrayObjectAdapter(TvSeasonsPresenter()))
-            val firstHeaderItem = ListRow(HeaderItem(1, "ეპიზოდები"), ArrayObjectAdapter(TvMainPresenter()))
-            val fourthItem = ListRow(HeaderItem(2, getString(R.string.actors)), ArrayObjectAdapter(TvCastPresenter()))
-            val fifthItem = ListRow(HeaderItem(3, "მსგავსი"), ArrayObjectAdapter(TvSimilarPresenter()))
-            val initListRows = mutableListOf(firstHeaderItem, secondHeaderItem, fourthItem, fifthItem)
-            rowsAdapter.addAll(0, initListRows)
-        } else {
-            val fourthItem = ListRow(HeaderItem(0, getString(R.string.actors)), ArrayObjectAdapter(TvCastPresenter()))
-            val fifthItem = ListRow(HeaderItem(1, "მსგავსი"), ArrayObjectAdapter(TvSimilarPresenter()))
-            val initListRows = mutableListOf(fourthItem, fifthItem)
-            rowsAdapter.addAll(0, initListRows)
-        }
+    private fun initRowsAdapter() {
+        val fourthItem = ListRow(HeaderItem(0, getString(R.string.actors)), ArrayObjectAdapter(TvCastPresenter()))
+        val fifthItem = ListRow(HeaderItem(1, "მსგავსი"), ArrayObjectAdapter(TvSimilarPresenter()))
+        val initListRows = mutableListOf(fourthItem, fifthItem)
+        rowsAdapter.addAll(0, initListRows)
     }
 
-    private fun setSeasonsAndEpisodes(titleId: Int, isTvShow: Boolean) {
-        if (isTvShow) {
-            viewModel.getSingleTitleData(titleId)
+    private fun setTitleCast(titleId: Int) {
+        viewModel.getSingleTitleCast(titleId)
 
-            viewModel.numOfSeasons.observe(viewLifecycleOwner, {
-                val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
-                seasonsRowsAdapter(seasonCount)
-            })
-
-            episodesRowsAdapter(null)
-        }
-    }
-
-    private fun seasonsRowsAdapter(seasonList: List<Int>) {
-        val listRowAdapter = ArrayObjectAdapter(TvSeasonsPresenter()).apply {
-            seasonList.forEach {
-                add(it)
-            }
-        }
-        HeaderItem(0, "სეზონები"). also {
-            rowsAdapter.replace(0, ListRow(it, listRowAdapter))
-        }
-
-        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-            if (it != null) {
-                setPosition(0, it.season-1)
-                focusedSeason = it.season
-                episodesRowsAdapter(it.episode, it.season)
-            }
+        viewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
+            castRowsAdapter(it)
         })
     }
 
-    private fun episodesRowsAdapter(currentEpisode: Int?, currentSeason: Int? = null) {
-        var isFirst = true
+    private fun setTitleRelated(titleId: Int) {
+        viewModel.getSingleTitleRelated(titleId)
 
-//        viewModel.episodeNames.observe(viewLifecycleOwner, { episodeList ->
-//            val listRowAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext(), currentEpisode, currentSeason == focusedSeason)).apply {
-//                episodeList.forEach {
-//                    add(it)
-//                }
-//            }
-//
-//            HeaderItem(1, "ეპიზოდები"). also {
-//                rowsAdapter.replace(1, ListRow(it, listRowAdapter))
-//            }
-//
-//            if (currentEpisode != null && isFirst) {
-//                setPosition(1, currentEpisode-1)
-//                isFirst = false
-//            }
-//        })
+        viewModel.singleTitleRelated.observe(viewLifecycleOwner, {
+            relatedRowsAdapter(it)
+        })
     }
 
-    private fun castRowsAdapter(castResponseListGetSingle: List<GetSingleTitleCastResponse.Data>, isTvShow: Boolean) {
+    private fun castRowsAdapter(castResponseListGetSingle: List<GetSingleTitleCastResponse.Data>) {
         val listRowAdapter = ArrayObjectAdapter(TvCastPresenter()).apply {
             castResponseListGetSingle.forEach {
                 add(it)
             }
         }
-        HeaderItem(if (isTvShow) 2 else 0, "მსახიობები"). also {
-            rowsAdapter.replace(if (isTvShow) 2 else 0, ListRow(it, listRowAdapter))
+        HeaderItem("მსახიობები"). also {
+            rowsAdapter.replace( 0, ListRow(it, listRowAdapter))
         }
     }
 
-    private fun relatedRowsAdapter(relatedList: List<SingleTitleModel>, isTvShow: Boolean) {
+    private fun relatedRowsAdapter(relatedList: List<SingleTitleModel>) {
         val listRowAdapter = ArrayObjectAdapter(TvSimilarPresenter()).apply {
             addAll(0, relatedList)
         }
-        HeaderItem(if (isTvShow) 3 else 1, "მსგავსი"). also {
-            rowsAdapter.replace(if (isTvShow) 3 else 1, ListRow(it, listRowAdapter))
+        HeaderItem("მსგავსი"). also {
+            rowsAdapter.replace(1, ListRow(it, listRowAdapter))
         }
-    }
-
-    private fun setTitleCast(titleId: Int, isTvShow: Boolean) {
-        viewModel.getSingleTitleCast(titleId)
-
-        viewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
-            castRowsAdapter(it, isTvShow)
-        })
-    }
-
-    private fun setTitleRelated(titleId: Int, isTvShow: Boolean) {
-        viewModel.getSingleTitleRelated(titleId)
-
-        viewModel.singleTitleRelated.observe(viewLifecycleOwner, {
-            relatedRowsAdapter(it, isTvShow)
-        })
-    }
-
-    private fun setPosition(row: Int, item: Int) {
-        val isSmoothScroll = false
-        val task = ListRowPresenter.SelectItemViewHolderTask(item)
-        task.isSmoothScroll = isSmoothScroll
-
-        rowsSupportFragment.setSelectedPosition(row, isSmoothScroll, task)
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
@@ -193,10 +111,6 @@ class TvRelatedBrowse : BaseBrowseSupportFragment<TvRelatedViewModel>() {
                 row: Row
         ) {
             when (item) {
-                is TitleEpisodes -> {
-                    viewModel.getEpisodeLanguages(item.titleId, item.episodeNum)
-                    languagePickerDialog(item.episodeNum)
-                }
                 is SingleTitleModel -> {
                     val intent = Intent(context, TvSingleTitleActivity::class.java).apply {
                         putExtra(AppConstants.TITLE_ID, item.id)
@@ -211,55 +125,9 @@ class TvRelatedBrowse : BaseBrowseSupportFragment<TvRelatedViewModel>() {
         }
     }
 
-    private inner class ItemViewSelectedListener(val titleId: Int) : OnItemViewSelectedListener {
+    private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            if (item is Int) {
-                viewModel.getSeasonFiles(titleId, item)
-                focusedSeason = item
-            }
-        }
-    }
 
-    private fun languagePickerDialog(episode: Int) {
-        val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
-        val chooseLanguageDialog = Dialog(requireContext())
-        chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        chooseLanguageDialog.setContentView(binding.root)
-        chooseLanguageDialog.show()
-
-        val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
-            chooseLanguageDialog.dismiss()
-            playEpisode(titleId!!, episode, it)
-        }
-        binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
-        binding.rvChooseLanguage.adapter = chooseLanguageAdapter
-
-        viewModel.availableLanguages.observe(viewLifecycleOwner, {
-            val languages = it.reversed()
-            chooseLanguageAdapter.setLanguageList(languages)
-            binding.rvChooseLanguage.requestFocus()
-        })
-    }
-
-    private fun playEpisode(titleId: Int, episode: Int, chosenLanguage: String) {
-        val intent = Intent(context, TvVideoPlayerActivity::class.java).apply {
-            putExtra(
-                AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
-                titleId,
-                true,
-                viewModel.chosenSeason.value!!,
-                chosenLanguage,
-                episode,
-                0L,
-                null
-            ))
-        }
-        requireActivity().startActivity(intent)
-        if (requireActivity() is TvVideoPlayerActivity) {
-            (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.NEW_EPISODE)
-            requireActivity().finish()
         }
     }
 

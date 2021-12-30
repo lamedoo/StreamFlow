@@ -9,6 +9,7 @@ import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.datamodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
@@ -31,6 +32,9 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
     private var onTitleSelected: TvTitleSelected? = null
     private var onFirstItem: TvCheckFirstItem? = null
 
+    private var firstSelection = true
+    private var continueSeason = 1
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onTitleSelected = context as? TvTitleSelected
@@ -45,10 +49,13 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val args = arguments
+        continueSeason = args?.getInt("season") ?: 1
 
-        val titleIdFromDetails = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as? Int
+        val titleId = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as? Int
+        val videoPlayerData = activity?.intent?.getParcelableExtra(AppConstants.VIDEO_PLAYER_DATA) as? VideoPlayerData
 
-        titleId = titleIdFromDetails
+        this.titleId = titleId ?: videoPlayerData!!.titleId
 
         fragmentObservers()
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
@@ -63,14 +70,13 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
             seasonCount.forEach { season ->
                 gridAdapter.add(season)
             }
-        })
 
-        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
-            viewModel.setChosenSeason(it?.season ?: 1)
-        })
+            setSelectedPosition(continueSeason - 1)
 
-        viewModel.chosenSeason.observe(viewLifecycleOwner, {
-            setSelectedPosition(it - 1)
+            if (firstSelection) {
+                (parentFragment as TvEpisodesFragment).setFragmentFocus("season")
+                firstSelection = false
+            }
         })
     }
 

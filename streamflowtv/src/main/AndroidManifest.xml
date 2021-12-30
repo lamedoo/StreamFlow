@@ -47,6 +47,9 @@
         <activity
             android:name=".ui.login.TvLoginActivity"
             android:theme="@style/Theme.Leanback"/>
+        <activity
+            android:name=".ui.tvsingletitle.tvepisodes.TvEpisodesActivity"
+            android:theme="@style/Theme.Leanback"/>
     </application>
 
 </manifest>

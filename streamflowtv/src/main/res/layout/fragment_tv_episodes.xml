@@ -130,7 +130,7 @@
 
     <fragment
         android:id="@+id/season_fragment"
-        android:name="com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvSeasonBrowse"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
@@ -142,7 +142,7 @@
 
     <fragment
         android:id="@+id/episode_fragment"
-        android:name="com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesBrowse"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"

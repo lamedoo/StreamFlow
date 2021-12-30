@@ -20,6 +20,7 @@ import com.lukakordzaia.core.utils.EventObserver
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflowtv.databinding.TvExoplayerControllerLayoutBinding
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesActivity
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity.Companion.VIDEO_DETAILS
 
 class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBinding>() {
@@ -243,6 +244,8 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
                     if (videoPlayerData.trailerUrl == null) {
                         (activity as TvVideoPlayerActivity).showDetails()
+//                        (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.NEW_EPISODE)
+//                        startActivity(TvEpisodesActivity.newIntent(requireContext(), videoPlayerData.titleId))
                     }
                 }
                 else -> {

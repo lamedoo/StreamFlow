@@ -16,7 +16,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>() {
     private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
-    private val tvEpisodesViewModel: TvEpisodesViewModel by viewModel()
 
     override fun getViewBinding() = ActivityTvSingleTitleBinding.inflate(layoutInflater)
 
@@ -32,7 +31,7 @@ class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>
 
     override fun onBackPressed() {
         when (currentFragment) {
-            TITLE_RELATED, TITLE_FILES -> {
+            TITLE_RELATED -> {
                 setCurrentFragment(TvTitleDetailsFragment())
             }
             else -> {
@@ -45,7 +44,6 @@ class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>
         currentFragment = when (fragment) {
             is TvTitleDetailsFragment -> TITLE_DETAILS
             is TvRelatedFragment -> TITLE_RELATED
-            is TvEpisodesFragment -> TITLE_FILES
             else -> TITLE_DETAILS
         }
 
@@ -61,6 +59,5 @@ class TvSingleTitleActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>
     companion object {
         const val TITLE_DETAILS = 0
         const val TITLE_RELATED = 1
-        const val TITLE_FILES = 2
     }
 }

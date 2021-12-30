@@ -9,10 +9,14 @@ import com.lukakordzaia.core.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseFragmentActivity
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvVideoPlayerBinding
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesFragment
+import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
+    private val tvEpisodesViewModel: TvEpisodesViewModel by viewModel()
+
     private lateinit var videoPlayerFragment: TvVideoPlayerFragment
 
     override fun getViewBinding() = ActivityTvVideoPlayerBinding.inflate(layoutInflater)
@@ -109,6 +113,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     override fun onBackPressed() {
         when (currentFragmentState) {
             VIDEO_DETAILS -> {
+                tvEpisodesViewModel.clearData()
                 supportFragmentManager.popBackStack()
                 setCurrentFragmentState(VIDEO_PLAYER)
             }
@@ -130,7 +135,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     fun showDetails() {
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.slide_from_down, R.anim.slide_out_top)
-            .add(R.id.tv_video_player_nav_host, TvVideoPlayerDetailsFragment())
+            .add(R.id.tv_video_player_nav_host, TvEpisodesFragment())
             .addToBackStack(null)
             .commit()
     }
