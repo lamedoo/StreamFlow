@@ -224,7 +224,8 @@
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
             android:text="@string/other_episodes"
             android:drawablePadding="5dp"
-            android:focusable="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:drawableBottom="@drawable/icon_arrow_down"
             tools:ignore="UseCompatTextViewDrawableXml" />
 

@@ -44,10 +44,6 @@ class TvEpisodesViewModel : BaseViewModel() {
             when (val data = environment.singleTitleRepository.getSingleTitleData(titleId)) {
                 is Result.Success -> {
                     _singleTitleData.value = data.data.toSingleTitleModel()
-
-                    if (data.data.data.seasons != null) {
-                        _numOfSeasons.value = data.data.data.seasons!!.data.size
-                    }
                 }
                 is Result.Error -> {
                     newToastMessage(data.exception)
@@ -85,6 +81,21 @@ class TvEpisodesViewModel : BaseViewModel() {
                 }
                 is Result.Internet -> {
                     setNoInternet()
+                }
+            }
+        }
+    }
+
+    fun getNumOfSeasons(titleId: Int) {
+        viewModelScope.launch {
+            when (val data = environment.singleTitleRepository.getSingleTitleData(titleId)) {
+                is Result.Success -> {
+                    if (data.data.data.seasons != null) {
+                        _numOfSeasons.value = data.data.data.seasons!!.data.size
+                    }
+                }
+                is Result.Error -> {
+                    newToastMessage(data.exception)
                 }
             }
         }

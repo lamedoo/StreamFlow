@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.fragment.app.Fragment
 import com.lukakordzaia.core.baseclasses.BaseFragmentVM
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.datamodels.VideoPlayerData
@@ -13,13 +11,14 @@ import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.utils.applyBundle
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvEpisodesBinding
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesViewModel>() {
     var titleId: Int = 0
 
-    override val viewModel by sharedViewModel<TvEpisodesViewModel>()
+    private var firstSelection = true
+
+    override val viewModel by viewModel<TvEpisodesViewModel>()
     override val reload: () -> Unit = {
         viewModel.getSingleTitleData(titleId)
     }
@@ -52,23 +51,34 @@ class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesV
 
         viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
             if (it != null) {
-                setChildFragments(it.season, it.episode)
+                setSeasonsFragment(it.season, it.episode)
             } else {
-                setChildFragments()
+                setSeasonsFragment()
             }
         })
     }
 
-    private fun setChildFragments(season: Int? = null, episode: Int? = null) {
+    private fun setSeasonsFragment(season: Int? = null, episode: Int? = null) {
         childFragmentManager.beginTransaction()
             .replace(R.id.season_fragment, TvSeasonBrowse().applyBundle {
                 if (season != null) {
                     putInt("season", season)
                 }
-            })
-            .replace(R.id.episode_fragment, TvEpisodesBrowse().applyBundle {
                 if (episode != null) {
                     putInt("episode", episode)
+                }
+            })
+            .commit()
+    }
+
+    fun setEpisodesFragment(season: Int? = null, episode: Int? = null) {
+        childFragmentManager.beginTransaction()
+            .replace(R.id.episode_fragment, TvEpisodesBrowse().applyBundle {
+                if (season != null) {
+                    putInt("season", season)
+                }
+                if (episode != null) {
+                    putInt("episode", if (firstSelection) episode else 1)
                 }
             })
             .commit()
@@ -93,8 +103,8 @@ class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesV
         binding.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
     }
 
-    override fun onDetach() {
-        viewModel
-        super.onDetach()
+    fun isEpisodeFirstSelection(): Boolean = firstSelection
+    fun setEpisodeFirstSelection(isFirst: Boolean) {
+        firstSelection = isFirst
     }
 }

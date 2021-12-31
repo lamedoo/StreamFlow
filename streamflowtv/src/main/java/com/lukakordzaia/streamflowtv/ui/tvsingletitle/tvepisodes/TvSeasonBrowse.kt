@@ -24,9 +24,9 @@ import org.koin.core.component.getScopeId
 
 
 class TvSeasonBrowse : VerticalGridSupportFragment() {
-    var titleId: Int? = 0
+    var titleId: Int = 0
 
-    val viewModel by sharedViewModel<TvEpisodesViewModel>()
+    val viewModel by viewModel<TvEpisodesViewModel>()
     private lateinit var gridAdapter: ArrayObjectAdapter
 
     private var onTitleSelected: TvTitleSelected? = null
@@ -34,6 +34,9 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
 
     private var firstSelection = true
     private var continueSeason = 1
+    private var continueEpisode = 1
+
+    private var currentSeason = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -43,7 +46,6 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initGridPresenter()
     }
 
@@ -51,12 +53,14 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         val args = arguments
         continueSeason = args?.getInt("season") ?: 1
+        continueEpisode = args?.getInt("episode") ?: 1
 
         val titleId = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as? Int
         val videoPlayerData = activity?.intent?.getParcelableExtra(AppConstants.VIDEO_PLAYER_DATA) as? VideoPlayerData
 
         this.titleId = titleId ?: videoPlayerData!!.titleId
 
+        viewModel.getNumOfSeasons(this.titleId)
         fragmentObservers()
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
 
@@ -67,9 +71,8 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
         viewModel.numOfSeasons.observe(viewLifecycleOwner, {
             val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
 
-            seasonCount.forEach { season ->
-                gridAdapter.add(season)
-            }
+            gridAdapter.clear()
+            gridAdapter.addAll(0, seasonCount)
 
             setSelectedPosition(continueSeason - 1)
 
@@ -118,7 +121,10 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             if (item is Int) {
-                viewModel.getSeasonFiles(titleId!!, item)
+                if (currentSeason != item) {
+                    (parentFragment as TvEpisodesFragment).setEpisodesFragment(item, continueEpisode)
+                    currentSeason = item
+                }
             }
         }
     }

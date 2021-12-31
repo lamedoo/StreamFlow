@@ -31,7 +31,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TvEpisodesBrowse : VerticalGridSupportFragment() {
-    val viewModel by sharedViewModel<TvEpisodesViewModel>()
+    var titleId: Int = 0
+
+    val viewModel by viewModel<TvEpisodesViewModel>()
     private lateinit var gridAdapter: ArrayObjectAdapter
 
     private var onTitleSelected: TvTitleSelected? = null
@@ -39,13 +41,22 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
 
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
 
-    private var firstSelection = true
+    private var continueSeason = 1
     private var continueEpisode = 1
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onTitleSelected = context as? TvTitleSelected
         onFirstItem = context as? TvCheckFirstItem
+
+        val args = arguments
+        continueSeason = args?.getInt("season") ?: 1
+        continueEpisode = args?.getInt("episode") ?: 1
+
+        val titleId = activity?.intent?.getSerializableExtra(AppConstants.TITLE_ID) as? Int
+        val videoPlayerData = activity?.intent?.getParcelableExtra(AppConstants.VIDEO_PLAYER_DATA) as? VideoPlayerData
+
+        this.titleId = titleId ?: videoPlayerData!!.titleId
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,9 +67,8 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val args = arguments
-        continueEpisode = args?.getInt("episode") ?: 1
 
+        viewModel.getSeasonFiles(this.titleId, continueSeason)
         fragmentObservers()
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
 
@@ -70,11 +80,11 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
             gridAdapter.clear()
             gridAdapter.addAll(0, it)
 
-            setSelectedPosition(continueEpisode - 1)
 
-            if (firstSelection) {
+            if ((parentFragment as TvEpisodesFragment).isEpisodeFirstSelection()) {
+                setSelectedPosition(continueEpisode - 1)
                 (parentFragment as TvEpisodesFragment).setFragmentFocus("episode")
-                firstSelection = false
+                (parentFragment as TvEpisodesFragment).setEpisodeFirstSelection(false)
             }
         })
     }
@@ -179,7 +189,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
                 )
             )
         }
-        requireActivity().startActivity(intent)
+        startActivity(intent)
         if (requireActivity() is TvVideoPlayerActivity) {
             (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.NEW_EPISODE)
         }

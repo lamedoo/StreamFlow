@@ -15,7 +15,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
-    private val tvEpisodesViewModel: TvEpisodesViewModel by viewModel()
 
     private lateinit var videoPlayerFragment: TvVideoPlayerFragment
 
@@ -113,8 +112,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     override fun onBackPressed() {
         when (currentFragmentState) {
             VIDEO_DETAILS -> {
-                tvEpisodesViewModel.clearData()
-                supportFragmentManager.popBackStack()
+                super.onBackPressed()
                 setCurrentFragmentState(VIDEO_PLAYER)
             }
             VIDEO_PLAYER -> {

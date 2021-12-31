@@ -64,7 +64,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         playerBinding = TvExoplayerControllerLayoutBinding.bind(binding.root)
 
         if (!videoPlayerData.isTvShow) {
-            playerBinding.nextDetailsTitle.text = getString(R.string.other_details)
+            playerBinding.nextDetailsTitle.setGone()
         }
 
         fragmentListeners()
@@ -160,26 +160,31 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         }
     }
 
-    fun onKeyUp() {
-        if (binding.continueWatching.root.isVisible) {
+    fun onKeyUp(): Boolean {
+        return if (binding.continueWatching.root.isVisible) {
             binding.continueWatching.confirmButton.requestFocus()
+            true
         } else {
-            when {
+            return when {
                 !binding.titlePlayer.isControllerVisible -> {
                     binding.titlePlayer.showController()
                     playerBinding.exoPause.requestFocus()
+                    true
                 }
                 playerBinding.nextEpisode.isVisible -> {
                     playerBinding.exoPause.nextFocusUpId = R.id.next_episode
                     playerBinding.exoPlay.nextFocusUpId = R.id.next_episode
+                    true
                 }
                 playerBinding.subtitleToggle.isVisible -> {
                     playerBinding.exoPause.nextFocusUpId = R.id.subtitle_toggle
                     playerBinding.exoPlay.nextFocusUpId = R.id.subtitle_toggle
+                    true
                 }
                 else -> {
                     playerBinding.exoPause.nextFocusUpId = R.id.back_button
                     playerBinding.exoPlay.nextFocusUpId = R.id.back_button
+                    true
                 }
             }
         }
@@ -237,15 +242,15 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     playerBinding.exoPause.requestFocus()
                 }
                 playerBinding.exoPlay.isFocused || playerBinding.exoPause.isFocused -> {
-                    (activity as TvVideoPlayerActivity).setCurrentFragmentState(VIDEO_DETAILS)
-                    binding.titlePlayer.player!!.pause()
-                    binding.titlePlayer.hideController()
-                    saveCurrentProgress()
+                    if (videoPlayerData.isTvShow) {
+                        (activity as TvVideoPlayerActivity).setCurrentFragmentState(VIDEO_DETAILS)
+                        binding.titlePlayer.player!!.pause()
+                        binding.titlePlayer.hideController()
+                        saveCurrentProgress()
 
-                    if (videoPlayerData.trailerUrl == null) {
-                        (activity as TvVideoPlayerActivity).showDetails()
-//                        (requireActivity() as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.NEW_EPISODE)
-//                        startActivity(TvEpisodesActivity.newIntent(requireContext(), videoPlayerData.titleId))
+                        if (videoPlayerData.trailerUrl == null) {
+                            (activity as TvVideoPlayerActivity).showDetails()
+                        }
                     }
                 }
                 else -> {

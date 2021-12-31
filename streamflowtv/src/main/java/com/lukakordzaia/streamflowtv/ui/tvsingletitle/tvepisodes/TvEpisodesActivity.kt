@@ -17,8 +17,6 @@ import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedFr
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvEpisodesActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>() {
-    private val tvEpisodesViewModel: TvEpisodesViewModel by viewModel()
-
     override fun getViewBinding() = ActivityTvSingleTitleBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
