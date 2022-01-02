@@ -8,8 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lukakordzaia.core.baseclasses.BaseFragmentVM
-import com.lukakordzaia.core.databinding.DialogRemoveTitleBinding
+import com.lukakordzaia.core.utils.DialogUtils
 import com.lukakordzaia.core.utils.setGone
+import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvSettingsBinding
 import com.lukakordzaia.streamflowtv.interfaces.OnSettingsSelected
 import com.lukakordzaia.streamflowtv.ui.login.TvProfileViewModel
@@ -69,21 +70,16 @@ class TvSettingsFragment : BaseFragmentVM<FragmentTvSettingsBinding, TvProfileVi
         }
 
         binding.tvSettingsDelete.setOnClickListener {
-            val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
-            val clearDbDialog = Dialog(requireContext())
-            clearDbDialog.setContentView(binding.root)
-
-            binding.continueButton.setOnClickListener {
+            DialogUtils.generalAlertDialog(
+                requireContext(),
+                R.string.dialog_remove_history_title,
+                R.drawable.icon_remove
+            ) {
                 viewModel.deleteContinueWatchingFromRoomFull()
 
                 val intent = Intent(requireContext(), TvSettingsActivity::class.java)
                 startActivity(intent)
             }
-            binding.cancelButton.setOnClickListener {
-                clearDbDialog.dismiss()
-            }
-            clearDbDialog.show()
-            binding.continueButton.requestFocus()
         }
 
         binding.tvSettingsSignout.setOnClickListener {

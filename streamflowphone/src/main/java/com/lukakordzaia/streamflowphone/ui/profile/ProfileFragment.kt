@@ -1,17 +1,14 @@
 package com.lukakordzaia.streamflowphone.ui.profile
 
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.utils.DialogUtils
 import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflowphone.R
-import com.lukakordzaia.streamflowphone.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneProfileBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseFragmentPhoneVM
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,21 +48,15 @@ class ProfileFragment : BaseFragmentPhoneVM<FragmentPhoneProfileBinding, Profile
         }
 
         binding.clearContainer.setOnClickListener {
-            val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
-            val clearHistory = Dialog(requireContext())
-            clearHistory.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            clearHistory.setContentView(binding.root)
-
-            binding.continueButton.setOnClickListener {
+            DialogUtils.generalAlertDialog(
+                requireContext(),
+                R.string.dialog_remove_history_title,
+                R.drawable.icon_remove
+            ) {
                 if (sharedPreferences.getLoginToken() == "") {
                     viewModel.deleteContinueWatchingFromRoomFull()
                 }
-                clearHistory.dismiss()
             }
-            binding.cancelButton.setOnClickListener {
-                clearHistory.dismiss()
-            }
-            clearHistory.show()
         }
     }
 

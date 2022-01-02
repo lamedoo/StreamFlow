@@ -156,7 +156,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        chooseLanguageDialog.window?.setDimAmount(0.6F)
         chooseLanguageDialog.setContentView(binding.root)
         chooseLanguageDialog.show()
 

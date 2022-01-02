@@ -20,7 +20,7 @@ import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.setGone
 import com.lukakordzaia.core.utils.setVisible
 import com.lukakordzaia.core.utils.setVisibleOrGone
-import com.lukakordzaia.streamflowphone.databinding.DialogChooseLanguageBinding
+import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneTvShowBottomSheetBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseBottomSheetVM
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
@@ -163,7 +163,7 @@ class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBotto
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        chooseLanguageDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        chooseLanguageDialog.window?.setDimAmount(0.6F)
         chooseLanguageDialog.setContentView(binding.root)
         chooseLanguageDialog.show()
 

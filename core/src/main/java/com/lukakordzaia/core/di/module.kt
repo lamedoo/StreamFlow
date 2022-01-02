@@ -21,6 +21,7 @@ import com.lukakordzaia.core.repository.userrepository.UserRepository
 import com.lukakordzaia.core.repository.watchlistrepository.DefaultWatchlistRepository
 import com.lukakordzaia.core.repository.watchlistrepository.WatchlistRepository
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
+import com.lukakordzaia.core.utils.DialogUtils
 import com.lukakordzaia.core.videoplayer.BuildMediaSource
 import org.koin.dsl.module
 

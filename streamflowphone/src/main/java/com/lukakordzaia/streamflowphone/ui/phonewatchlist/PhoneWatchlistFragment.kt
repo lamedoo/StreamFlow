@@ -1,22 +1,14 @@
 package com.lukakordzaia.streamflowphone.ui.phonewatchlist
 
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.utils.setColor
-import com.lukakordzaia.core.utils.setGone
-import com.lukakordzaia.core.utils.setVisible
-import com.lukakordzaia.core.utils.setVisibleOrGone
+import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowphone.R
-import com.lukakordzaia.streamflowphone.databinding.DialogRemoveFavoriteBinding
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneWatchlistBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseFragmentPhoneVM
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -137,19 +129,13 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
     }
 
     private fun removeTitleDialog(titleId: Int, position: Int) {
-        val binding = DialogRemoveFavoriteBinding.inflate(LayoutInflater.from(requireContext()))
-        val removeFavorite = Dialog(requireContext())
-        removeFavorite.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        removeFavorite.setContentView(binding.root)
-
-        binding.confirmButton.setOnClickListener {
+        DialogUtils.generalAlertDialog(
+            requireContext(),
+            R.string.dialog_remove_favorite_title,
+            R.drawable.icon_remove
+        ) {
             viewModel.deleteWatchlistTitle(titleId, position)
-            removeFavorite.dismiss()
         }
-        binding.cancelButton.setOnClickListener {
-            removeFavorite.dismiss()
-        }
-        removeFavorite.show()
     }
 
     private fun fetchMoreTitle() {

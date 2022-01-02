@@ -15,7 +15,6 @@ import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.baseclasses.BaseFragmentVM
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
-import com.lukakordzaia.core.databinding.DialogRemoveTitleBinding
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.datamodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
@@ -28,7 +27,6 @@ import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedFr
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
-
 
 class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvTitleDetailsViewModel>() {
     private var titleId: Int = 0
@@ -43,7 +41,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     }
 
     private lateinit var languages: List<String>
-    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private var hasFocus: Boolean = false
     private var startedWatching = false
 
@@ -113,18 +110,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
             setTitleInfo(it)
         })
-
-//        viewModel.focusedButton.observe(viewLifecycleOwner, {
-//            when (it) {
-//                TvTitleDetailsViewModel.Buttons.CONTINUE_WATCHING -> binding.continueButton.requestFocus()
-//                TvTitleDetailsViewModel.Buttons.FAVORITES -> {
-//                    if (binding.buttonsRow.isGone) {
-//                        binding.favoriteContainer.requestFocus()
-//                    }
-//                }
-//                else -> binding.playButton.requestFocus()
-//            }
-//        })
 
         viewModel.favoriteLoader.observe(viewLifecycleOwner, {
             binding.favoriteProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
@@ -251,11 +236,12 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        chooseLanguageDialog.window?.setDimAmount(0.6F)
         chooseLanguageDialog.setContentView(binding.root)
         chooseLanguageDialog.show()
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
+        val chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
             chooseLanguageDialog.hide()
             playTitleFromStart(titleId, isTvShow, it)
         }
@@ -268,27 +254,17 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     }
 
     private fun removeTitleDialog() {
-        val binding = DialogRemoveTitleBinding.inflate(LayoutInflater.from(requireContext()))
-        val removeTitle = Dialog(requireContext())
-        removeTitle.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        removeTitle.setContentView(binding.root)
-
-        if (sharedPreferences.getLoginToken() != "") {
-            binding.title.text = resources.getString(R.string.remove_from_list_title)
-        }
-
-        binding.continueButton.setOnClickListener {
+        DialogUtils.generalAlertDialog(
+            requireContext(),
+            R.string.remove_from_list_title,
+            R.drawable.icon_remove
+        ) {
             if (sharedPreferences.getLoginToken() == "") {
                 viewModel.deleteSingleContinueWatchingFromRoom(titleId)
             } else {
                 viewModel.hideSingleContinueWatching(titleId)
             }
         }
-        binding.cancelButton.setOnClickListener {
-            removeTitle.dismiss()
-        }
-        removeTitle.show()
-        binding.continueButton.requestFocus()
     }
 
     private fun playTitleTrailer(trailerUrl: String?) {
