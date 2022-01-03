@@ -147,7 +147,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
 
     private fun continueWatchingContainer() {
         val dbLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeContinueWatchingAdapter = HomeContinueWatchingAdapter(requireContext(),
+        homeContinueWatchingAdapter = HomeContinueWatchingAdapter(
             {
                 startVideoPlayer(it)
             },
@@ -157,7 +157,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
             { titleId: Int, titleName: String ->
                 viewModel.onContinueWatchingInfoPressed(titleId, titleName)
             })
-        binding.continueWatchingTitles.apply {
+        binding.rvContinueWatching.apply {
             adapter = homeContinueWatchingAdapter
             layoutManager = dbLayout
         }
@@ -165,7 +165,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
 
     private fun newMoviesContainer() {
         val newMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeNewMovieAdapter = HomeTitlesAdapter(requireContext()) {
+        homeNewMovieAdapter = HomeTitlesAdapter {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         binding.rvNewMovies.apply {
@@ -176,7 +176,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
 
     private fun topMoviesContainer() {
         val topMovieLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeTopMovieAdapter = HomeTitlesAdapter(requireContext()) {
+        homeTopMovieAdapter = HomeTitlesAdapter {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         binding.rvTopMovies.apply {
@@ -187,7 +187,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
 
     private fun topTvShowsContainer() {
         val tvShowLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeTvShowAdapter = HomeTitlesAdapter(requireContext()) {
+        homeTvShowAdapter = HomeTitlesAdapter {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         binding.rvTopTvShows.apply {
@@ -198,7 +198,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
 
     private fun newSeriesContainer() {
         val newSeriesLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeNewSeriesAdapter = HomeNewSeriesAdapter(requireContext()) {
+        homeNewSeriesAdapter = HomeNewSeriesAdapter {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         binding.rvNewSeries.apply {
@@ -211,7 +211,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
         binding.userSuggestionsContainer.setVisibleOrGone(sharedPreferences.getLoginToken() != "")
 
         val suggestionsLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        homeUserSuggestionsAdapter = HomeTitlesAdapter(requireContext()) {
+        homeUserSuggestionsAdapter = HomeTitlesAdapter {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, it)
         }
         binding.rvUserSuggestion.apply {
@@ -223,14 +223,27 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
     private fun startVideoPlayer(data: ContinueWatchingModel) {
         requireActivity().startActivity(
             VideoPlayerActivity.startFromHomeScreen(requireContext(), VideoPlayerData(
-            data.id,
-            data.isTvShow,
-            if (data.isTvShow) data.season else 0,
-            data.language,
-            if (data.isTvShow) data.episode else 0,
-            TimeUnit.SECONDS.toMillis(data.watchedDuration),
-            null
+                data.id,
+                data.isTvShow,
+                if (data.isTvShow) data.season else 0,
+                data.language,
+                if (data.isTvShow) data.episode else 0,
+                TimeUnit.SECONDS.toMillis(data.watchedDuration),
+                null
+            )
+            )
         )
-        ))
+    }
+
+    override fun onDestroyView() {
+        with(binding) {
+            rvContinueWatching.adapter = null
+            rvNewMovies.adapter = null
+            rvTopMovies.adapter = null
+            rvUserSuggestion.adapter = null
+            rvTopTvShows.adapter = null
+            rvNewSeries.adapter = null
+        }
+        super.onDestroyView()
     }
 }

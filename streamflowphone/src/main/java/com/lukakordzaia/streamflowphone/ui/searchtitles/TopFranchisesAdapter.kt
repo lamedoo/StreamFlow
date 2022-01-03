@@ -8,7 +8,6 @@ import com.lukakordzaia.core.network.models.imovies.response.categories.GetTopFr
 import com.lukakordzaia.streamflowphone.databinding.RvFranchiseItemBinding
 
 class TopFranchisesAdapter(
-    private val context: Context,
     private val onTitleClick: (titleName: String) -> Unit
 ) : RecyclerView.Adapter<TopFranchisesAdapter.ViewHolder>() {
     private var list: List<GetTopFranchisesResponse.Data> = ArrayList()
@@ -20,7 +19,7 @@ class TopFranchisesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvFranchiseItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvFranchiseItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

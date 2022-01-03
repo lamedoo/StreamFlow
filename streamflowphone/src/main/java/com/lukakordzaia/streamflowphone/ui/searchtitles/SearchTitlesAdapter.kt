@@ -9,7 +9,7 @@ import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.RvSearchItemBinding
 
-class SearchTitlesAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SearchTitlesAdapter.ViewHolder>() {
+class SearchTitlesAdapter(private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<SearchTitlesAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
 
     fun setSearchTitleList(list: List<SingleTitleModel>) {
@@ -19,7 +19,7 @@ class SearchTitlesAdapter(private val context: Context, private val onTitleClick
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvSearchItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvSearchItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -40,7 +40,7 @@ class SearchTitlesAdapter(private val context: Context, private val onTitleClick
 
             view.rvSearchItemPoster.setImage(model.poster, true)
 
-            view.rvSearchItemIsTvShow.text = if (model.isTvShow) context.getString(R.string.tv_show) else context.getString(R.string.movie)
+            view.rvSearchItemIsTvShow.text = if (model.isTvShow) view.root.context.getString(R.string.tv_show) else view.root.context.getString(R.string.movie)
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)

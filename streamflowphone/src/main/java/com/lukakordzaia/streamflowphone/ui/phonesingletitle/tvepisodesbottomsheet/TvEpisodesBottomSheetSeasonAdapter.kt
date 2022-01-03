@@ -9,7 +9,6 @@ import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.RvChooseDetailsSeasonItemBinding
 
 class TvEpisodesBottomSheetSeasonAdapter(
-    private val context: Context,
     private val onSeasonClick: (seasonId: Int) -> Unit,
     private val onChosenSeason: (position: Int) -> Unit
 ) : RecyclerView.Adapter<TvEpisodesBottomSheetSeasonAdapter.ViewHolder>() {
@@ -29,7 +28,7 @@ class TvEpisodesBottomSheetSeasonAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvChooseDetailsSeasonItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvChooseDetailsSeasonItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -57,7 +56,7 @@ class TvEpisodesBottomSheetSeasonAdapter(
                 onSeasonClick(model)
             }
 
-            view.rvSeasonNumber.text = context.getString(R.string.season_number, model.toString())
+            view.rvSeasonNumber.text = view.root.context.getString(R.string.season_number, model.toString())
         }
     }
 }

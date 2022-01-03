@@ -8,7 +8,7 @@ import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowphone.databinding.RvHomeItemBinding
 
-class HomeTitlesAdapter(private val context: Context, private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeTitlesAdapter.ViewHolder>() {
+class HomeTitlesAdapter(private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<HomeTitlesAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
 
     fun setItems(list: List<SingleTitleModel>) {
@@ -18,7 +18,7 @@ class HomeTitlesAdapter(private val context: Context, private val onTitleClick: 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvHomeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvHomeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

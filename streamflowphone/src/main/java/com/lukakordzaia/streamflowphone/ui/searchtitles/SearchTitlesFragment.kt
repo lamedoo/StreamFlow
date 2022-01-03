@@ -34,6 +34,7 @@ class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBindin
 
     private lateinit var searchTitlesAdapter: SearchTitlesAdapter
     private lateinit var topFranchisesAdapter: TopFranchisesAdapter
+
     private var pastVisibleItems: Int = 0
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
@@ -96,7 +97,7 @@ class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBindin
 
     private fun searchTitlesContainer() {
         val layoutManager = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        searchTitlesAdapter = SearchTitlesAdapter(requireContext()) {
+        searchTitlesAdapter = SearchTitlesAdapter {
             viewModel.onSingleTitlePressed(it)
         }
 
@@ -122,7 +123,7 @@ class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBindin
     private fun franchisesContainer() {
         viewModel.getTopFranchises()
 
-        topFranchisesAdapter = TopFranchisesAdapter(requireContext()) {
+        topFranchisesAdapter = TopFranchisesAdapter {
             onFranchiseClick(it)
         }
         binding.rvTopFranchises.layoutManager = FlowLayoutManager().apply {
@@ -143,5 +144,13 @@ class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBindin
         viewModel.getSearchTitles(titleName, 1)
         binding.rvSearchTitlesContainer.setVisible()
         binding.topSearchContainer.setGone()
+    }
+
+    override fun onDestroyView() {
+        with(binding) {
+            rvSearchTitles.adapter = null
+            rvTopFranchises.adapter = null
+        }
+        super.onDestroyView()
     }
 }

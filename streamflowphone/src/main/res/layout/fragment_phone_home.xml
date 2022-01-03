@@ -120,7 +120,7 @@
                         app:arrow_visibility="false"/>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/continue_watching_titles"
+                        android:id="@+id/rv_continue_watching"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="20dp"

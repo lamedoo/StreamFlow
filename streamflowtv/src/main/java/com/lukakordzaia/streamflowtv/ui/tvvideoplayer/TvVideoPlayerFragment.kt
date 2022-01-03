@@ -56,9 +56,6 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     override val continueWatchingDialog: ContinueWatchingDialogBinding
         get() = binding.continueWatching
 
-    private lateinit var chooseSubtitlesAdapter: ChooseVideoAudioAdapter
-    private lateinit var chooseLanguageAdapter: ChooseVideoAudioAdapter
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         playerBinding = TvExoplayerControllerLayoutBinding.bind(binding.root)
@@ -112,7 +109,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
     private fun setAvailableSubtitles(subtitles: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        chooseSubtitlesAdapter = ChooseVideoAudioAdapter(requireContext()) {
+        val chooseSubtitlesAdapter = ChooseVideoAudioAdapter {
             hideAudioSidebar()
             switchSubtitleLanguage(it)
         }
@@ -128,7 +125,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
 
     private fun setAvailableLanguages(languages: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        chooseLanguageAdapter = ChooseVideoAudioAdapter(requireContext()) {
+        val chooseLanguageAdapter = ChooseVideoAudioAdapter {
             hideAudioSidebar()
             switchAudioLanguage(it)
         }

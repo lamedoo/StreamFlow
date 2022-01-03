@@ -8,7 +8,6 @@ import com.lukakordzaia.core.network.models.imovies.response.categories.GetGenre
 import com.lukakordzaia.streamflowphone.databinding.RvGenreItemBinding
 
 class GenresAdapter(
-    private val context: Context,
     private val onGenreClick: (genreId: Int, genreName: String) -> Unit
 ) : RecyclerView.Adapter<GenresAdapter.ViewHolder>() {
     private var list: List<GetGenresResponse.Data> = ArrayList()
@@ -20,7 +19,7 @@ class GenresAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvGenreItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvGenreItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

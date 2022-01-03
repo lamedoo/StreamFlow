@@ -9,7 +9,6 @@ import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowphone.databinding.RvWatchlistItemBinding
 
 class WatchlistAdapter(
-    private val context: Context,
     private val onTitleClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int, position: Int) -> Unit
 ) : RecyclerView.Adapter<WatchlistAdapter.ViewHolder>() {
@@ -22,7 +21,7 @@ class WatchlistAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvWatchlistItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvWatchlistItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

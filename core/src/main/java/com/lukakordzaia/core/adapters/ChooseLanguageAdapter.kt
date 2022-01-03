@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lukakordzaia.core.databinding.RvChooseLanguageItemBinding
 
 class ChooseLanguageAdapter(
-    private val context: Context,
     private val onLanguageClick: (language: String) -> Unit)
     : RecyclerView.Adapter<ChooseLanguageAdapter.ViewHolder>() {
     private var list: List<String> = ArrayList()
@@ -19,7 +18,7 @@ class ChooseLanguageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvChooseLanguageItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvChooseLanguageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

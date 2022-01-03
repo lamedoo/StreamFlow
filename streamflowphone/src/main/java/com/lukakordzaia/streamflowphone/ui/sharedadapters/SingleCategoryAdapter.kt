@@ -10,7 +10,7 @@ import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.RvSingleGenreItemBinding
 
-class SingleCategoryAdapter(private val context: Context, private val onTitleClick: (id : Int) -> Unit) : RecyclerView.Adapter<SingleCategoryAdapter.ViewHolder>() {
+class SingleCategoryAdapter(private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<SingleCategoryAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
     private var startPosition = 0
 
@@ -22,7 +22,7 @@ class SingleCategoryAdapter(private val context: Context, private val onTitleCli
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvSingleGenreItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvSingleGenreItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -39,13 +39,13 @@ class SingleCategoryAdapter(private val context: Context, private val onTitleCli
     inner class ViewHolder(val view: RvSingleGenreItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: SingleTitleModel) {
             view.itemName.text = model.displayName
-            view.isTvShow.text = if (model.isTvShow) context.getString(R.string.tv_show) else context.getString(R.string.movie)
+            view.isTvShow.text = if (model.isTvShow) view.root.context.getString(R.string.tv_show) else view.root.context.getString(R.string.movie)
 
             view.itemPoster.setImage(model.poster, true)
 
             view.root.setOnClickListener {
                 onTitleClick(model.id)
-                it.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in))
+                it.startAnimation(AnimationUtils.loadAnimation(it.context, R.anim.fade_in))
             }
         }
     }

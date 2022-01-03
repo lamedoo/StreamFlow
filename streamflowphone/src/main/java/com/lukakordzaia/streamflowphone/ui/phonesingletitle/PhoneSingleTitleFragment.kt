@@ -264,7 +264,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
 
     private fun castContainer() {
         val castLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        phoneSingleTitleCastAdapter = PhoneSingleTitleCastAdapter(requireContext()) {
+        phoneSingleTitleCastAdapter = PhoneSingleTitleCastAdapter {
             viewModel.newToastMessage(it)
         }
         binding.singleTitleCastSimilar.rvSingleTitleCast.layoutManager = castLayout
@@ -273,7 +273,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
 
     private fun relatedContainer() {
         val relatedLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        phoneSingleTitleRelatedAdapter = PhoneSingleTitleRelatedAdapter(requireContext()) {
+        phoneSingleTitleRelatedAdapter = PhoneSingleTitleRelatedAdapter {
             viewModel.onRelatedTitlePressed(it)
         }
         binding.singleTitleCastSimilar.rvSingleTitleRelated.layoutManager = relatedLayout
@@ -292,7 +292,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
         chooseLanguageDialog.show()
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) { language ->
+        chooseLanguageAdapter = ChooseLanguageAdapter { language ->
             chooseLanguageDialog.hide()
             startVideoPlayer(null, language)
         }
@@ -323,14 +323,23 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     private fun startVideoPlayer(contWatching: ContinueWatchingRoom?, language: String?) {
         requireActivity().startActivity(
             VideoPlayerActivity.startFromSingleTitle(requireContext(), VideoPlayerData(
-            contWatching?.titleId ?: titleInfo.id,
-            contWatching?.isTvShow ?: titleInfo.isTvShow,
-            contWatching?.season ?: if (titleInfo.isTvShow) 1 else 0,
-            contWatching?.language ?: language!!,
-            contWatching?.episode ?: if (titleInfo.isTvShow) 1 else 0,
-             contWatching?.watchedDuration ?: 0L,
-            null
+                contWatching?.titleId ?: titleInfo.id,
+                contWatching?.isTvShow ?: titleInfo.isTvShow,
+                contWatching?.season ?: if (titleInfo.isTvShow) 1 else 0,
+                contWatching?.language ?: language!!,
+                contWatching?.episode ?: if (titleInfo.isTvShow) 1 else 0,
+                contWatching?.watchedDuration ?: 0L,
+                null
+            )
+            )
         )
-        ))
+    }
+
+    override fun onDestroyView() {
+        with(binding.singleTitleCastSimilar) {
+            rvSingleTitleCast.adapter = null
+            rvSingleTitleRelated.adapter = null
+        }
+        super.onDestroyView()
     }
 }
