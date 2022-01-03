@@ -72,7 +72,7 @@ class TopListFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, 
 
     private fun topListContainer() {
         val layoutManager = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
-        singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
+        singleCategoryAdapter = SingleCategoryAdapter {
             viewModel.onSingleTitlePressed(it)
         }
         binding.rvSingleCategory.adapter = singleCategoryAdapter
@@ -99,5 +99,10 @@ class TopListFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, 
         page++
         viewModel.fetchContent(args.type, page)
         loading = false
+    }
+
+    override fun onDestroyView() {
+        binding.rvSingleCategory.adapter = null
+        super.onDestroyView()
     }
 }

@@ -8,7 +8,7 @@ import com.lukakordzaia.core.network.models.imovies.response.categories.GetTopSt
 import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowphone.databinding.RvStudioItemBinding
 
-class StudiosAdapter(private val context: Context, private val onStudiosClick: (studioId: Int, studioName: String) -> Unit) : RecyclerView.Adapter<StudiosAdapter.ViewHolder>() {
+class StudiosAdapter(private val onStudiosClick: (studioId: Int, studioName: String) -> Unit) : RecyclerView.Adapter<StudiosAdapter.ViewHolder>() {
     private var list: List<GetTopStudiosResponse.Data> = ArrayList()
 
     fun setStudioList(list: List<GetTopStudiosResponse.Data>) {
@@ -18,7 +18,7 @@ class StudiosAdapter(private val context: Context, private val onStudiosClick: (
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvStudioItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvStudioItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

@@ -9,7 +9,6 @@ import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowphone.databinding.RvHomeItemBinding
 
 class PhoneSingleTitleRelatedAdapter(
-    private val context: Context,
     private val onTitleClick: (id: Int) -> Unit) : RecyclerView.Adapter<PhoneSingleTitleRelatedAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
 
@@ -20,7 +19,7 @@ class PhoneSingleTitleRelatedAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvHomeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvHomeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

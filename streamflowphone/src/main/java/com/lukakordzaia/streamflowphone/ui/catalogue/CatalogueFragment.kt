@@ -26,6 +26,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, CatalogueViewModel>() {
     override val viewModel by viewModel<CatalogueViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContent() }
+
     private lateinit var genresAdapter: GenresAdapter
     private lateinit var studiosAdapter: StudiosAdapter
     private lateinit var trailersAdapter: TrailersAdapter
@@ -68,7 +69,7 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
 
     private fun trailersContainer() {
         val trailerLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        trailersAdapter = TrailersAdapter(requireContext(),
+        trailersAdapter = TrailersAdapter(
             { titleId, trailerUrl ->
                 startVideoPlayer(titleId, trailerUrl)
             },
@@ -91,7 +92,7 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
 
     private fun genresContainer() {
         val genreLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        genresAdapter = GenresAdapter(requireContext()) { genreId: Int, genreName: String ->
+        genresAdapter = GenresAdapter() { genreId: Int, genreName: String ->
             viewModel.onSingleGenrePressed(genreId, genreName)
         }
         binding.rvGenres.layoutManager = genreLayout
@@ -100,7 +101,7 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
 
     private fun studiosContainer() {
         val studioLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        studiosAdapter = StudiosAdapter(requireContext()) { studioId: Int, studioName: String ->
+        studiosAdapter = StudiosAdapter() { studioId: Int, studioName: String ->
             viewModel.onSingleStudioPressed(studioId, studioName)
         }
         binding.rvStudios.layoutManager = studioLayout
@@ -114,14 +115,24 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
                 titleId,
                 false,
                 0,
-                "ENG",
-                0,
-                0L,
-                trailerUrl
+                    "ENG",
+                    0,
+                    0L,
+                    trailerUrl
+                )
+                )
             )
-            ))
         } else {
             viewModel.newToastMessage(getString(R.string.no_trailer_found))
         }
+    }
+
+    override fun onDestroyView() {
+        with(binding) {
+            rvGenres.adapter = null
+            rvStudios.adapter = null
+            rvTrailers.adapter = null
+        }
+        super.onDestroyView()
     }
 }

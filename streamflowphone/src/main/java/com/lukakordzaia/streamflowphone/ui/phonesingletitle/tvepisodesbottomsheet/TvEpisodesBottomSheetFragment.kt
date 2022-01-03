@@ -118,7 +118,6 @@ class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBotto
     private fun seasonsContainer() {
         val seasonLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
         seasonAdapter = TvEpisodesBottomSheetSeasonAdapter(
-            requireContext(),
             {
                 viewModel.getSeasonFiles(args.titleId, it)
                 seasonAdapter.setChosenSeason(it)
@@ -144,7 +143,7 @@ class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBotto
     }
 
     private fun episodesContainer() {
-        episodeAdapter = TvEpisodesBottomSheetEpisodesAdapter(requireContext(),
+        episodeAdapter = TvEpisodesBottomSheetEpisodesAdapter(
             {
                 languagePickerDialog(it)
             },
@@ -168,7 +167,7 @@ class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBotto
         chooseLanguageDialog.show()
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) { language ->
+        chooseLanguageAdapter = ChooseLanguageAdapter { language ->
             chooseLanguageDialog.hide()
             startVideoPlayer(language, episode)
         }
@@ -181,14 +180,23 @@ class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBotto
     private fun startVideoPlayer(language: String, episode: Int) {
         requireActivity().startActivity(
             VideoPlayerActivity.startFromSingleTitle(requireContext(), VideoPlayerData(
-            args.titleId,
-            true,
-            viewModel.chosenSeason.value!!,
-            language,
-            episode,
-            0L,
-            null
+                args.titleId,
+                true,
+                viewModel.chosenSeason.value!!,
+                language,
+                episode,
+                0L,
+                null
+            )
+            )
         )
-        ))
+    }
+
+    override fun onDestroyView() {
+        with(binding) {
+            rvSeasons.adapter = null
+            rvEpisodes.adapter = null
+        }
+        super.onDestroyView()
     }
 }

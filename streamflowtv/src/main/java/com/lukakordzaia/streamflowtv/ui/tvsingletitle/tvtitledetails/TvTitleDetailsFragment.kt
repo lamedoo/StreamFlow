@@ -241,7 +241,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         chooseLanguageDialog.show()
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        val chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
+        val chooseLanguageAdapter = ChooseLanguageAdapter {
             chooseLanguageDialog.hide()
             playTitleFromStart(titleId, isTvShow, it)
         }

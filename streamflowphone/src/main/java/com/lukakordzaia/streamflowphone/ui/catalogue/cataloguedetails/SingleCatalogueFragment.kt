@@ -53,7 +53,7 @@ class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryB
 
     private fun studiosContainer() {
         val studiosLayout = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
-        singleCategoryAdapter = SingleCategoryAdapter(requireContext()) {
+        singleCategoryAdapter = SingleCategoryAdapter() {
             viewModel.onSingleTitlePressed(it)
         }
         binding.rvSingleCategory.apply {
@@ -87,5 +87,10 @@ class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryB
         page++
         viewModel.fetchContent(args.catalogueType, args.catalogueId, page)
         loading = false
+    }
+
+    override fun onDestroyView() {
+        binding.rvSingleCategory.adapter = null
+        super.onDestroyView()
     }
 }

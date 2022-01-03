@@ -10,7 +10,6 @@ import com.lukakordzaia.core.utils.titlePosition
 import com.lukakordzaia.streamflowphone.databinding.RvDbTitleItemBinding
 
 class HomeContinueWatchingAdapter(
-    private val context: Context,
     private val onWatchedTitleClick: (continueWatchingModel: ContinueWatchingModel) -> Unit,
     private val onInfoClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int, titleName: String) -> Unit
@@ -24,7 +23,7 @@ class HomeContinueWatchingAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvDbTitleItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvDbTitleItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

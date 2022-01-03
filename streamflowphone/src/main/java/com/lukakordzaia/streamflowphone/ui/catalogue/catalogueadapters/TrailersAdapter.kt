@@ -8,9 +8,10 @@ import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowphone.databinding.RvTrailerItemBinding
 
-class TrailersAdapter(private val context: Context,
-                      private val onTrailerClick: (trailerId: Int, trailerUrl: String?) -> Unit,
-                      private val onTrailerInfoClick: (trailerId: Int) -> Unit) : RecyclerView.Adapter<TrailersAdapter.ViewHolder>() {
+class TrailersAdapter(
+    private val onTrailerClick: (trailerId: Int, trailerUrl: String?) -> Unit,
+    private val onTrailerInfoClick: (trailerId: Int) -> Unit
+) : RecyclerView.Adapter<TrailersAdapter.ViewHolder>() {
     private var list: List<SingleTitleModel> = ArrayList()
 
     fun setTrailerList(list: List<SingleTitleModel>) {
@@ -20,7 +21,7 @@ class TrailersAdapter(private val context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvTrailerItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvTrailerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

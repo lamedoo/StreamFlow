@@ -10,7 +10,6 @@ import com.lukakordzaia.core.utils.Enums
 import com.lukakordzaia.core.utils.setVisibleOrGone
 
 class ChooseVideoAudioAdapter(
-    private val context: Context,
     private val onLanguageClick: (languages: String) -> Unit) : RecyclerView.Adapter<ChooseVideoAudioAdapter.ViewHolder>() {
     private var list: List<String> = ArrayList()
     private var currentItem: String = ""
@@ -27,7 +26,7 @@ class ChooseVideoAudioAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvChooseAudioItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvChooseAudioItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -54,9 +53,9 @@ class ChooseVideoAudioAdapter(
 
         private fun transformLanguages(language: String): String {
             return when (true) {
-                language.equals(Enums.Languages.ENG.toString(), true) -> context.resources.getString(R.string.english)
-                language.equals(Enums.Languages.RUS.toString(), true) -> context.resources.getString(R.string.russian)
-                language.equals(Enums.Languages.GEO.toString(), true)-> context.resources.getString(R.string.georgian)
+                language.equals(Enums.Languages.ENG.toString(), true) -> view.root.context.resources.getString(R.string.english)
+                language.equals(Enums.Languages.RUS.toString(), true) -> view.root.context.resources.getString(R.string.russian)
+                language.equals(Enums.Languages.GEO.toString(), true) -> view.root.context.resources.getString(R.string.georgian)
                 else -> language.uppercase()
             }
         }

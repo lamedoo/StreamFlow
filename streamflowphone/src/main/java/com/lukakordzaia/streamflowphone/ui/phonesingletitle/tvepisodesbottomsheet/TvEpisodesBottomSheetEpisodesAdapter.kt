@@ -11,7 +11,6 @@ import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.RvChooseDetailsEpisodesItemBinding
 
 class TvEpisodesBottomSheetEpisodesAdapter(
-    private val context: Context,
     private val onEpisodeClick: (episodeId: Int) -> Unit,
     private val onChosenEpisode: (position: Int) -> Unit
 ) : RecyclerView.Adapter<TvEpisodesBottomSheetEpisodesAdapter.ViewHolder>() {
@@ -30,7 +29,7 @@ class TvEpisodesBottomSheetEpisodesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvChooseDetailsEpisodesItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvChooseDetailsEpisodesItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -52,7 +51,7 @@ class TvEpisodesBottomSheetEpisodesAdapter(
 
             view.currentIndicator.setVisibleOrGone(isChosen)
 
-            view.episodeNumber.text = context.getString(R.string.episode_number, model.episodeNum.toString())
+            view.episodeNumber.text = view.root.context.getString(R.string.episode_number, model.episodeNum.toString())
             view.episodeName.text = model.episodeName
 
             view.itemPoster.setImage(model.episodePoster, false)

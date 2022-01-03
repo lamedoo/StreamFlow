@@ -91,7 +91,7 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
 
     private fun favMoviesContainer() {
         val moviesLayout = GridLayoutManager(requireActivity(), 2, GridLayoutManager.VERTICAL, false)
-        watchlistMoviesAdapter = WatchlistAdapter(requireContext(),
+        watchlistMoviesAdapter = WatchlistAdapter(
             {
                 viewModel.onSingleTitlePressed(it)
             },
@@ -157,5 +157,10 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
                 binding.watchlistTvShows.setColor(R.color.accent_color)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        binding.rvFavoritesMovies.adapter = null
+        super.onDestroyView()
     }
 }

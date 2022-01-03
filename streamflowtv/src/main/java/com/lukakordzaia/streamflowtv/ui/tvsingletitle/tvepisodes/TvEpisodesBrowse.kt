@@ -39,8 +39,6 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     private var onTitleSelected: TvTitleSelected? = null
     private var onFirstItem: TvCheckFirstItem? = null
 
-    private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
-
     private var continueSeason = 1
     private var continueEpisode = 1
 
@@ -161,7 +159,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         chooseLanguageDialog.show()
 
         val chooseLanguageLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        chooseLanguageAdapter = ChooseLanguageAdapter(requireContext()) {
+        val chooseLanguageAdapter = ChooseLanguageAdapter {
             chooseLanguageDialog.dismiss()
             playEpisode(episode, it)
         }

@@ -10,7 +10,7 @@ import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.RvSingleTitleCastItemBinding
 
-class PhoneSingleTitleCastAdapter(private val context: Context, private val onCastClick: (name: String) -> Unit) : RecyclerView.Adapter<PhoneSingleTitleCastAdapter.ViewHolder>() {
+class PhoneSingleTitleCastAdapter(private val onCastClick: (name: String) -> Unit) : RecyclerView.Adapter<PhoneSingleTitleCastAdapter.ViewHolder>() {
     private var list: List<GetSingleTitleCastResponse.Data> = ArrayList()
 
     fun setCastList(list: List<GetSingleTitleCastResponse.Data>) {
@@ -20,7 +20,7 @@ class PhoneSingleTitleCastAdapter(private val context: Context, private val onCa
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                RvSingleTitleCastItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            RvSingleTitleCastItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -39,7 +39,7 @@ class PhoneSingleTitleCastAdapter(private val context: Context, private val onCa
             if (model.poster.isNotEmpty()) {
                 view.rvCastItemPoster.setImage(model.poster, true)
             } else {
-                Glide.with(context)
+                Glide.with(view.root.context)
                     .load(R.drawable.placeholder_profile)
                     .into(view.rvCastItemPoster)
             }

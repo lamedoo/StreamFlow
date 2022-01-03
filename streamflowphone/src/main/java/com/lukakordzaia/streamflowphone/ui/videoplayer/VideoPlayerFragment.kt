@@ -94,7 +94,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
 
     private fun setAvailableSubtitles(subtitles: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        chooseSubtitlesAdapter = ChooseVideoAudioAdapter(requireContext()) {
+        chooseSubtitlesAdapter = ChooseVideoAudioAdapter {
             hideAudioSidebar()
             switchSubtitleLanguage(it)
         }
@@ -110,7 +110,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
 
     private fun setAvailableLanguages(languages: List<String>) {
         val layout = LinearLayoutManager(requireActivity(), GridLayoutManager.VERTICAL, false)
-        chooseLanguageAdapter = ChooseVideoAudioAdapter(requireContext()) {
+        chooseLanguageAdapter = ChooseVideoAudioAdapter {
             hideAudioSidebar()
             switchAudioLanguage(it)
         }
@@ -147,13 +147,22 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
                     videoPlayerData.isTvShow,
                     videoPlayerData.chosenSeason,
                     videoPlayerData.chosenLanguage,
-                    videoPlayerData.chosenEpisode-1,
+                    videoPlayerData.chosenEpisode - 1,
                     0L,
                     null,
                     videoPlayerData.chosenSubtitle,
-                    ))
+                )
+                )
                 mediaPlayer.initPlayer(binding.titlePlayer, 0, 0L)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        with(binding.chooseAudioSidebar) {
+            rvSubtitles.adapter = null
+            rvLanguage.adapter = null
+        }
+        super.onDestroyView()
     }
 }
