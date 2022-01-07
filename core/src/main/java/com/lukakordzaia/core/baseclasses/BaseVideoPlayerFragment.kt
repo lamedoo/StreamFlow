@@ -239,9 +239,6 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     override fun onPause() {
         if (Util.SDK_INT >= 24) {
-            if (playerView?.isControllerVisible == true) {
-                playerView?.hideController()
-            }
             requireActivity().onBackPressed()
         }
         super.onPause()

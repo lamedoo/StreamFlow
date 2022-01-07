@@ -153,6 +153,11 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                 if (continueWatchingDialog.root.isVisible) {
                     continueWatchingDialog.confirmButton.requestFocus()
                 }
+
+                if (playerBinding.backButton.isFocused) {
+                    playerBinding.exoPause.requestFocus()
+                    playerBinding.exoPlay.requestFocus()
+                }
             }
 
             playerBinding.exoPause.isFocusable = state != Player.STATE_BUFFERING
@@ -161,6 +166,11 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                 exoProgress.isVisible = state != Player.STATE_BUFFERING
             }
         }
+    }
+
+    override fun onPause() {
+        (activity as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.BACK_BUTTON)
+        super.onPause()
     }
 
     fun onKeyUp(): Boolean {
