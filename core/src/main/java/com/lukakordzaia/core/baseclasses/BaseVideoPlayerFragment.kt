@@ -46,7 +46,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     protected abstract val autoBackPress: AutoBackPress
     private var tracker: ProgressTracker? = null
 
-    abstract val playerView: PlayerView
+    abstract val playerView: PlayerView?
     abstract val subtitleButton: ImageButton
     abstract val playerTitle: TextView
     abstract val nextButton: ImageButton
@@ -133,7 +133,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     private fun subtitleFunctions() {
         val style = CaptionStyleCompat(Color.WHITE, Color.TRANSPARENT, Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW, Color.BLACK, Typeface.DEFAULT_BOLD)
-        playerView.subtitleView!!.apply {
+        playerView?.subtitleView!!.apply {
             setPadding(0, 0, 0, 20)
             setApplyEmbeddedFontSizes(false)
             setApplyEmbeddedStyles(false)
@@ -151,12 +151,12 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     fun switchSubtitleLanguage(language: String) {
         if (language == getString(R.string.turn_off)) {
-            playerView.subtitleView?.setGone()
+            playerView?.subtitleView?.setGone()
             videoPlayerData = videoPlayerData.copy(chosenSubtitle = language)
             player.play()
         } else {
             episodeHasEnded = false
-            playerView.subtitleView?.setVisible()
+            playerView?.subtitleView?.setVisible()
             viewModel.setVideoPlayerData(videoPlayerData.copy(chosenSubtitle = language, watchedTime = player.currentPosition))
             player.clearMediaItems()
             mediaPlayer.initPlayer(playerView, 0, videoPlayerData.watchedTime)
@@ -239,8 +239,8 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     override fun onPause() {
         if (Util.SDK_INT >= 24) {
-            if (playerView.isControllerVisible) {
-                playerView.hideController()
+            if (playerView?.isControllerVisible == true) {
+                playerView?.hideController()
             }
             requireActivity().onBackPressed()
         }
@@ -257,7 +257,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     inner class MediaTransitionListener: Player.Listener {
         override fun onCues(cues: MutableList<Cue>) {
             super.onCues(cues)
-            playerView.subtitleView!!.setCues(cues)
+            playerView?.subtitleView!!.setCues(cues)
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -278,7 +278,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
-            playerView.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
+            playerView?.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
 
             when (state) {
                 Player.STATE_READY -> {

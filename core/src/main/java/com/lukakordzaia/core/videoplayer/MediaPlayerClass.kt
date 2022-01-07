@@ -9,8 +9,8 @@ import com.lukakordzaia.core.datamodels.PlayerDurationInfo
 
 class MediaPlayerClass(private val player: SimpleExoPlayer) {
 
-    fun initPlayer(playerView: PlayerView, currentWindow: Int, playbackPosition: Long) {
-        playerView.player = player
+    fun initPlayer(playerView: PlayerView?, currentWindow: Int, playbackPosition: Long) {
+        playerView?.player = player
         player.playWhenReady = true
         player.seekTo(currentWindow, playbackPosition)
         player.repeatMode = Player.REPEAT_MODE_OFF
