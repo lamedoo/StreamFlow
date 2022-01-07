@@ -154,6 +154,12 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     continueWatchingDialog.confirmButton.requestFocus()
                 }
             }
+
+            playerBinding.exoPause.isFocusable = state != Player.STATE_BUFFERING
+            playerBinding.apply {
+                exoProgress.isFocusable = state != Player.STATE_BUFFERING
+                exoProgress.isVisible = state != Player.STATE_BUFFERING
+            }
         }
     }
 
