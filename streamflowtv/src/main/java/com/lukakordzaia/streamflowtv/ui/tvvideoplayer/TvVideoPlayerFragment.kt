@@ -56,6 +56,8 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     override val continueWatchingDialog: ContinueWatchingDialogBinding
         get() = binding.continueWatching
 
+    private var isBuffering = true
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         playerBinding = TvExoplayerControllerLayoutBinding.bind(binding.root)
@@ -154,17 +156,15 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     continueWatchingDialog.confirmButton.requestFocus()
                 }
 
-                if (playerBinding.backButton.isFocused) {
-                    playerBinding.exoPause.requestFocus()
-                    playerBinding.exoPlay.requestFocus()
-                }
+//                if (playerBinding.backButton.isFocused) {
+//                    playerBinding.exoPause.requestFocus()
+//                    playerBinding.exoPlay.requestFocus()
+//                }
             }
 
-            playerBinding.exoPause.isFocusable = state != Player.STATE_BUFFERING
-            playerBinding.apply {
-                exoProgress.isFocusable = state != Player.STATE_BUFFERING
-                exoProgress.isVisible = state != Player.STATE_BUFFERING
-            }
+            isBuffering = state == Player.STATE_BUFFERING
+
+//            playerBinding.exoPause.isFocusable = state != Player.STATE_BUFFERING
         }
     }
 
@@ -255,7 +255,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                     playerBinding.exoPause.requestFocus()
                 }
                 playerBinding.exoPlay.isFocused || playerBinding.exoPause.isFocused -> {
-                    if (videoPlayerData.isTvShow) {
+                    if (videoPlayerData.isTvShow && !isBuffering) {
                         (activity as TvVideoPlayerActivity).setCurrentFragmentState(VIDEO_DETAILS)
                         binding.titlePlayer.player!!.pause()
                         binding.titlePlayer.hideController()
