@@ -16,7 +16,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
-            androidLogger(Level.DEBUG)
+            androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
             androidContext(this@App)
             modules(listOf(repositoryModule, tvViewModelModule, generalModule, tvGeneralModule, phoneViewModelModule, phoneGeneralModule))
         }

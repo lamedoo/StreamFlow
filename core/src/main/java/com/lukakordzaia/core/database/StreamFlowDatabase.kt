@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingDao
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 
-@Database(entities = [ContinueWatchingRoom::class], version = 2)
+@Database(entities = [ContinueWatchingRoom::class], version = 1)
 abstract class StreamFlowDatabase : RoomDatabase() {
     abstract fun continueWatchingDao(): ContinueWatchingDao
 

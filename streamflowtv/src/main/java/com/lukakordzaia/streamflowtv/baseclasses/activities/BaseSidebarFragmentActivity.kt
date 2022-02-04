@@ -175,7 +175,7 @@ abstract class BaseSidebarFragmentActivity<VB : ViewBinding> : BaseFragmentActiv
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                if (isFirstItem) {
+                if (isFirstItem && !sidebar.root.isVisible) {
                     sidebarAnimations.showSideBar(sidebar.root)
                     currentButton.requestFocus()
                 }

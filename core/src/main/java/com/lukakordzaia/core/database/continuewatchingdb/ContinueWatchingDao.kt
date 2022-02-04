@@ -18,14 +18,14 @@ interface ContinueWatchingDao {
     fun getTvSingleWatchedTitles(titleId: Int) : LiveData<ContinueWatchingRoom>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertContinueWatchingInRoom(continueWatchingRoom: ContinueWatchingRoom)
+    fun insertContinueWatchingInRoom(continueWatchingRoom: ContinueWatchingRoom)
 
     @Query("UPDATE continuewatchingroom SET watchedDuration = (:watchedTime) WHERE titleId = (:titleId)")
-    suspend fun updateTitleInDb(watchedTime: Long, titleId: Int)
+    fun updateTitleInDb(watchedTime: Long, titleId: Int)
 
     @Query("DELETE FROM continuewatchingroom WHERE titleId = (:titleId)")
-    suspend fun deleteSingleContinueWatchingFromRoom(titleId: Int)
+    fun deleteSingleContinueWatchingFromRoom(titleId: Int)
 
     @Query("DELETE FROM continuewatchingroom")
-    suspend fun deleteContinueWatchingFullFromRoom()
+    fun deleteContinueWatchingFullFromRoom()
 }
