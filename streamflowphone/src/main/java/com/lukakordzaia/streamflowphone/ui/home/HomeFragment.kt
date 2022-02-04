@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 
 
 class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel>() {
-    override val viewModel by viewModel<HomeViewModel>()
+    override val viewModel by sharedViewModel<HomeViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContent(1) }
 
     private lateinit var homeContinueWatchingAdapter: HomeContinueWatchingAdapter
@@ -134,6 +134,12 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
 
         viewModel.userSuggestionsList.observe(viewLifecycleOwner, {
             homeUserSuggestionsAdapter.setItems(it)
+        })
+
+        viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+            if (it == LoadingState.LOADED) {
+                viewModel.checkAuthDatabase()
+            }
         })
     }
 

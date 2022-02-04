@@ -16,7 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ContinueWatchingInfoFragment : BaseBottomSheetVM<FragmentPhoneContinueWatchingInfoBinding, HomeViewModel>() {
-    override val viewModel by viewModel<HomeViewModel>()
+    override val viewModel by sharedViewModel<HomeViewModel>()
     override val reload: () -> Unit = {}
 
     private val args: ContinueWatchingInfoFragmentArgs by navArgs()
