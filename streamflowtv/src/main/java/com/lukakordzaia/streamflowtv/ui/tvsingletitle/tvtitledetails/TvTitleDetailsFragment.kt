@@ -40,7 +40,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         viewModel.getSingleTitleFiles(titleId)
     }
 
-    private lateinit var languages: List<String>
+    private var languages: List<String> = emptyList()
     private var hasFocus: Boolean = false
     private var startedWatching = false
 
