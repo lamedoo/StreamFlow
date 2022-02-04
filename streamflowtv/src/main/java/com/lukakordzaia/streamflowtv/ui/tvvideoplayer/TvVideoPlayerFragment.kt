@@ -14,13 +14,12 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.core.adapters.ChooseVideoAudioAdapter
 import com.lukakordzaia.core.baseclasses.BaseVideoPlayerFragment
 import com.lukakordzaia.core.databinding.ContinueWatchingDialogBinding
+import com.lukakordzaia.core.utils.EventObserver
 import com.lukakordzaia.core.utils.setGone
 import com.lukakordzaia.core.utils.setVisible
-import com.lukakordzaia.core.utils.EventObserver
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvVideoPlayerBinding
 import com.lukakordzaia.streamflowtv.databinding.TvExoplayerControllerLayoutBinding
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesActivity
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity.Companion.VIDEO_DETAILS
 
 class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBinding>() {
@@ -155,22 +154,10 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                 if (continueWatchingDialog.root.isVisible) {
                     continueWatchingDialog.confirmButton.requestFocus()
                 }
-
-//                if (playerBinding.backButton.isFocused) {
-//                    playerBinding.exoPause.requestFocus()
-//                    playerBinding.exoPlay.requestFocus()
-//                }
             }
 
             isBuffering = state == Player.STATE_BUFFERING
-
-//            playerBinding.exoPause.isFocusable = state != Player.STATE_BUFFERING
         }
-    }
-
-    override fun onPause() {
-        (activity as TvVideoPlayerActivity).setCurrentFragmentState(TvVideoPlayerActivity.BACK_BUTTON)
-        super.onPause()
     }
 
     fun onKeyUp(): Boolean {

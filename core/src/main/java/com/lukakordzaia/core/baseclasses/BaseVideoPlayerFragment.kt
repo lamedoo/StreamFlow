@@ -70,10 +70,11 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         videoPlayerData = requireActivity().intent!!.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
+        viewModel.setVideoPlayerData(videoPlayerData)
+
         setUpPlayer()
         initObservers()
 
-        viewModel.setVideoPlayerData(videoPlayerData)
         playerHasStarted()
         mediaPlayer.setPlayerListener(MediaTransitionListener())
     }
@@ -238,7 +239,9 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     override fun onPause() {
         if (Util.SDK_INT >= 24) {
-            requireActivity().onBackPressed()
+            saveCurrentProgress()
+            player.pause()
+            viewModel.setVideoPlayerData(videoPlayerData.copy(watchedTime = player.currentPosition))
         }
         super.onPause()
     }

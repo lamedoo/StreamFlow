@@ -10,7 +10,6 @@ import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseFragmentActivity
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvVideoPlayerBinding
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesFragment
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>() {
@@ -141,6 +140,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     fun setCurrentFragmentState(state: Int) {
         currentFragmentState = state
 
+
         if (state == VIDEO_PLAYER) {
             videoPlayerFragment.getPlayer().showController()
             videoPlayerFragment.focusOnPause()
@@ -150,7 +150,8 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     private fun goBack() {
         videoPlayerFragment.releasePlayer()
 
-        if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
+        if (
+            videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
             super.onBackPressed()
         } else {
             videoPlayerViewModel.saveLoader.observe(this, {
