@@ -23,6 +23,7 @@ abstract class BaseFragmentVM<VB: ViewBinding, VM: BaseViewModel> : BaseFragment
 
     private fun initListeners() {
         requireActivity().findViewById<Button>(R.id.retry_button)?.setOnClickListener {
+            viewModel.setNoInternet(false)
             reload.invoke()
         }
     }
@@ -32,7 +33,7 @@ abstract class BaseFragmentVM<VB: ViewBinding, VM: BaseViewModel> : BaseFragment
             requireContext().createToast(it)
         })
 
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+        viewModel.noInternet.observe(viewLifecycleOwner, {
             requireActivity().findViewById<ConstraintLayout>(R.id.no_internet).setVisibleOrGone(it)
         })
     }

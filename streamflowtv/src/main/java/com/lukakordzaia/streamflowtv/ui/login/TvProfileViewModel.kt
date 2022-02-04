@@ -19,7 +19,6 @@ class TvProfileViewModel : BaseViewModel() {
     val userData: LiveData<GetUserDataResponse.Data> = _userData
 
     fun userLogin(loginBody: PostLoginBody) {
-        setNoInternet(false)
         loginLoader.value = LoadingState.LOADING
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
@@ -39,7 +38,7 @@ class TvProfileViewModel : BaseViewModel() {
                     newToastMessage("დაფიქსირდა გარკვეული შეცდომა, გთხოვთ სცადოთ თავიდან")
                 }
                 is Result.Internet -> {
-                    setNoInternet(true)
+                    setNoInternet()
                 }
             }
         }
@@ -65,7 +64,6 @@ class TvProfileViewModel : BaseViewModel() {
     }
 
     fun getUserData() {
-        setNoInternet(false)
         viewModelScope.launch {
             when (val userData = environment.userRepository.userData()) {
                 is Result.Success -> {
@@ -79,7 +77,7 @@ class TvProfileViewModel : BaseViewModel() {
                     Log.d("userData", userData.exception)
                 }
                 is Result.Internet -> {
-                    setNoInternet(true)
+                    setNoInternet()
                 }
             }
         }

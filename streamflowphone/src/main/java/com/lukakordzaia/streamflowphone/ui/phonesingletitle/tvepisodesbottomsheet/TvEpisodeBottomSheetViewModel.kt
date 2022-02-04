@@ -75,7 +75,6 @@ class TvEpisodeBottomSheetViewModel : BaseViewModel() {
     }
 
     fun getSeasonFiles(titleId: Int, season: Int) {
-        setNoInternet(false)
         _episodeInfo.value = emptyList()
         setGeneralLoader(LoadingState.LOADING)
         _chosenSeason.value = season

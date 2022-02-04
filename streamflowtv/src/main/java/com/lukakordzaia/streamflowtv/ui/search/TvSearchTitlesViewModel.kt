@@ -28,7 +28,6 @@ class TvSearchTitlesViewModel : BaseViewModel() {
     }
 
     fun getSearchTitlesTv(keywords: String, page: Int) {
-        setNoInternet(false)
         viewModelScope.launch {
             when (val searchTv = environment.searchRepository.getSearchTitles(keywords, page)) {
                 is Result.Success -> {

@@ -57,7 +57,6 @@ class SingleGenreViewModel : BaseViewModel() {
     }
 
     fun fetchContentTv() {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

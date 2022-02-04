@@ -21,7 +21,6 @@ class ProfileViewModel : BaseViewModel() {
     }
 
     fun userLogin(loginBody: PostLoginBody) {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val login = environment.userRepository.userLogin(loginBody)) {
@@ -39,7 +38,7 @@ class ProfileViewModel : BaseViewModel() {
                     newToastMessage("დაფიქსირდა გარკვეული შეცდომა, გთხოვთ სცადოთ თავიდან")
                 }
                 is Result.Internet -> {
-                    setNoInternet(true)
+                    setNoInternet()
                 }
             }
         }
@@ -65,7 +64,6 @@ class ProfileViewModel : BaseViewModel() {
     }
 
     fun getUserData() {
-        setNoInternet(false)
         viewModelScope.launch {
             when (val userData = environment.userRepository.userData()) {
                 is Result.Success -> {
@@ -79,7 +77,7 @@ class ProfileViewModel : BaseViewModel() {
                     Log.d("userData", userData.exception)
                 }
                 is Result.Internet -> {
-                    setNoInternet(true)
+                    setNoInternet()
                 }
             }
         }

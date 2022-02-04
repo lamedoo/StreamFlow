@@ -21,8 +21,8 @@ abstract class BaseViewModel : ViewModel(), KoinComponent {
     private val _toastMessage = MutableLiveData<Event<String>>()
     val toastMessage: LiveData<Event<String>> = _toastMessage
 
-    private val _noInternet = MutableLiveData(Event(false))
-    val noInternet: LiveData<Event<Boolean>> = _noInternet
+    private val _noInternet = MutableLiveData<Boolean>()
+    val noInternet: LiveData<Boolean> = _noInternet
 
     private val _generalLoader = MutableLiveData<LoadingState>()
     val generalLoader: LiveData<LoadingState> = _generalLoader
@@ -36,7 +36,7 @@ abstract class BaseViewModel : ViewModel(), KoinComponent {
     }
 
     fun setNoInternet(internet: Boolean = true) {
-        _noInternet.value = Event(internet)
+        _noInternet.value = internet
     }
 
     fun setGeneralLoader(loading: LoadingState) {

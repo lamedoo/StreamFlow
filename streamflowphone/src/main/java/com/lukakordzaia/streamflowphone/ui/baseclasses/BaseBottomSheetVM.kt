@@ -50,7 +50,7 @@ abstract class BaseBottomSheetVM<VB: ViewBinding, VM: BaseViewModel> : BottomShe
             requireContext().createToast(it)
         })
 
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+        viewModel.noInternet.observe(viewLifecycleOwner, {
             requireActivity().findViewById<ConstraintLayout>(R.id.no_internet).setVisibleOrGone(it)
         })
     }

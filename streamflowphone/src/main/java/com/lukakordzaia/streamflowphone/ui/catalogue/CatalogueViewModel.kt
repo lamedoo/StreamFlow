@@ -79,7 +79,6 @@ class CatalogueViewModel : BaseViewModel() {
     }
 
     fun fetchContent() {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

@@ -21,11 +21,12 @@ import com.lukakordzaia.streamflowphone.ui.home.homeadapters.HomeNewSeriesAdapte
 import com.lukakordzaia.streamflowphone.ui.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
 class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel>() {
-    override val viewModel by sharedViewModel<HomeViewModel>()
+    override val viewModel by viewModel<HomeViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContent(1) }
 
     private lateinit var homeContinueWatchingAdapter: HomeContinueWatchingAdapter

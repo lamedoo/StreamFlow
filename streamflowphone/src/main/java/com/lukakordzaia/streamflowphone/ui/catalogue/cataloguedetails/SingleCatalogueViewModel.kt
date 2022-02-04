@@ -64,7 +64,6 @@ class SingleCatalogueViewModel : BaseViewModel() {
     }
 
     fun fetchContent(catalogueType: Int, catalogueId: Int, page: Int) {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         when (catalogueType) {
             AppConstants.LIST_SINGLE_STUDIO -> {

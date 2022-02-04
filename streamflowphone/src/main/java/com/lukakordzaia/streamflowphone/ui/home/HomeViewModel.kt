@@ -133,7 +133,7 @@ class HomeViewModel : BaseViewModel() {
                     continueWatchingLoader.value = LoadingState.LOADED
                 }
                 is Result.Error -> {
-                    newToastMessage("დღის ფილმი - ${watching.exception}")
+                    newToastMessage("განაგრძეთ ყურება - ${watching.exception}")
                 }
                 is Result.Internet -> {
                     setNoInternet()
@@ -206,7 +206,7 @@ class HomeViewModel : BaseViewModel() {
                 newToastMessage("დღის ფილმი - ${movieDay.exception}")
             }
             is Result.Internet -> {
-                setNoInternet(true)
+                setNoInternet()
             }
         }
     }
@@ -260,7 +260,6 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun fetchContent(page: Int) {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         getUserSuggestions()
         viewModelScope.launch {

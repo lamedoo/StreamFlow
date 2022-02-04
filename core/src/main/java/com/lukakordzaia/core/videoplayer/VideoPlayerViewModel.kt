@@ -99,8 +99,6 @@ class VideoPlayerViewModel : BaseViewModel() {
     }
 
     fun getTitleFiles(videoPlayerData: VideoPlayerData) {
-        setNoInternet(false)
-
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason)) {
                 is Result.Success -> {

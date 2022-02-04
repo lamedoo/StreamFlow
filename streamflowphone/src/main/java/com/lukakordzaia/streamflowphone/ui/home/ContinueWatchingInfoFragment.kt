@@ -13,9 +13,10 @@ import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneContinueWatchingInfoBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseBottomSheetVM
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ContinueWatchingInfoFragment : BaseBottomSheetVM<FragmentPhoneContinueWatchingInfoBinding, HomeViewModel>() {
-    override val viewModel by sharedViewModel<HomeViewModel>()
+    override val viewModel by viewModel<HomeViewModel>()
     override val reload: () -> Unit = {}
 
     private val args: ContinueWatchingInfoFragmentArgs by navArgs()

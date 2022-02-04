@@ -21,7 +21,6 @@ class TvWatchlistViewModel : BaseViewModel() {
     val hasMorePage: LiveData<Boolean> = _hasMorePage
 
     fun getUserWatchlist(page: Int, type: String, isTvDevice: Boolean) {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val watchlist = environment.watchlistRepository.getUserWatchlist(page, type)) {
@@ -44,7 +43,7 @@ class TvWatchlistViewModel : BaseViewModel() {
                     setGeneralLoader(LoadingState.LOADED)
                 }
                 is Result.Internet -> {
-                    setNoInternet(true)
+                    setNoInternet()
                 }
             }
         }

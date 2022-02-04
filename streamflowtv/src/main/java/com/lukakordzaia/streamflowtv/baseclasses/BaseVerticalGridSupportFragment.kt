@@ -47,7 +47,7 @@ abstract class BaseVerticalGridSupportFragment<VM: BaseViewModel> : VerticalGrid
     }
 
     private fun initObservers() {
-        viewModel.noInternet.observe(viewLifecycleOwner, EventObserver {
+        viewModel.noInternet.observe(viewLifecycleOwner, {
             requireActivity().findViewById<ConstraintLayout>(R.id.no_internet).setVisibleOrGone(it)
         })
 

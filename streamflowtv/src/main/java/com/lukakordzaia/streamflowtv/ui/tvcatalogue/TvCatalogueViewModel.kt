@@ -16,7 +16,6 @@ class TvCatalogueViewModel : BaseViewModel() {
     val tvCatalogueList: LiveData<List<SingleTitleModel>> = _tvCatalogueList
 
     fun getNewMoviesTv(page: Int) {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val movies = environment.homeRepository.getNewMovies(page)) {
@@ -36,7 +35,6 @@ class TvCatalogueViewModel : BaseViewModel() {
     }
 
     fun getTopMoviesTv(page: Int) {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val topMovies = environment.homeRepository.getTopMovies(page)) {
@@ -56,7 +54,6 @@ class TvCatalogueViewModel : BaseViewModel() {
     }
 
     fun getTopTvShowsTv(page: Int) {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val tvShows = environment.homeRepository.getTopTvShows(page)) {

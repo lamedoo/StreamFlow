@@ -138,7 +138,7 @@ class TvMainViewModel : BaseViewModel() {
                 newToastMessage("ახალი ფილმები - ${newMovies.exception}")
             }
             is Result.Internet -> {
-                setNoInternet(true)
+                setNoInternet()
             }
         }
     }
@@ -180,7 +180,6 @@ class TvMainViewModel : BaseViewModel() {
     }
 
     fun fetchContent(page: Int) {
-        setNoInternet(false)
         setGeneralLoader(LoadingState.LOADING)
         getUserSuggestions()
         viewModelScope.launch {
