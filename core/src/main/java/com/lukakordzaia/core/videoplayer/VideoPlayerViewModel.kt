@@ -14,7 +14,9 @@ import com.lukakordzaia.core.network.Result
 import com.lukakordzaia.core.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
 import com.lukakordzaia.core.network.toEpisodeInfoModel
 import com.lukakordzaia.core.utils.Event
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
 class VideoPlayerViewModel : BaseViewModel() {
@@ -90,7 +92,9 @@ class VideoPlayerViewModel : BaseViewModel() {
                 }
             } else {
                 viewModelScope.launch {
-                    environment.databaseRepository.insertContinueWatchingInRoom(dbDetails)
+                    withContext(Dispatchers.IO) {
+                        environment.databaseRepository.insertContinueWatchingInRoom(dbDetails)
+                    }
                 }
             }
         } else {
@@ -131,7 +135,7 @@ class VideoPlayerViewModel : BaseViewModel() {
 
         data.episodeFiles?.forEach {
             if (chosenLanguage.equals(it.fileLanguage, true)) {
-                episodeLink =  it.fileUrl
+                episodeLink = it.fileUrl
             }
         }
 
