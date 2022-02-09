@@ -11,7 +11,9 @@ import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.Result
 import com.lukakordzaia.core.network.toSingleTitleModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TvTitleDetailsViewModel : BaseViewModel() {
     val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
@@ -111,7 +113,9 @@ class TvTitleDetailsViewModel : BaseViewModel() {
 
     fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
         viewModelScope.launch {
-            environment.databaseRepository.deleteSingleContinueWatchingFromRoom(titleId)
+            withContext(Dispatchers.IO) {
+                environment.databaseRepository.deleteSingleContinueWatchingFromRoom(titleId)
+            }
             newToastMessage("წაიშალა ნახვების ისტორიიდან სიიდან")
         }
     }
