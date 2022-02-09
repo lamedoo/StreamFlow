@@ -48,7 +48,8 @@ abstract class BaseSidebarFragmentActivity<VB : ViewBinding> : BaseFragmentActiv
 
     override fun onStart() {
         super.onStart()
-        profileViewModel.getUserData()
+        if (sharedPreferences.getLoginToken() != "")
+            profileViewModel.getUserData()
         updateProfileUI(sharedPreferences.getLoginToken() != "")
     }
 
