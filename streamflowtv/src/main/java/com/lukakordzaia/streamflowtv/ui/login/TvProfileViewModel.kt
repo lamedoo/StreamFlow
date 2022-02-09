@@ -10,7 +10,9 @@ import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.Result
 import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserDataResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TvProfileViewModel : BaseViewModel() {
     val loginLoader = MutableLiveData(LoadingState.LOADED)
@@ -85,7 +87,9 @@ class TvProfileViewModel : BaseViewModel() {
 
     fun deleteContinueWatchingFromRoomFull() {
         viewModelScope.launch {
-            environment.databaseRepository.deleteAllFromRoom()
+            withContext(Dispatchers.IO) {
+                environment.databaseRepository.deleteAllFromRoom()
+            }
         }
     }
 

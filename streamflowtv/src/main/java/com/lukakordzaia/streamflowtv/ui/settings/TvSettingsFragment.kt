@@ -76,9 +76,6 @@ class TvSettingsFragment : BaseFragmentVM<FragmentTvSettingsBinding, TvProfileVi
                 R.drawable.icon_remove
             ) {
                 viewModel.deleteContinueWatchingFromRoomFull()
-
-                val intent = Intent(requireContext(), TvSettingsActivity::class.java)
-                startActivity(intent)
             }
         }
 
