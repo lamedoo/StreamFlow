@@ -32,11 +32,11 @@ abstract class BaseViewModel : ViewModel(), KoinComponent {
     }
 
     fun newToastMessage(message: String) {
-        _toastMessage.value = Event(message)
+        _toastMessage.postValue(Event(message))
     }
 
     fun setNoInternet(internet: Boolean = true) {
-        _noInternet.value = internet
+        _noInternet.postValue(internet)
     }
 
     fun setGeneralLoader(loading: LoadingState) {

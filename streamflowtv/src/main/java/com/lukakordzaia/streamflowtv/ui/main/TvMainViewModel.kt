@@ -11,6 +11,7 @@ import com.lukakordzaia.core.datamodels.NewSeriesModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -184,13 +185,15 @@ class TvMainViewModel : BaseViewModel() {
         getUserSuggestions()
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val getData = viewModelScope.launch {
-                    getNewMovies(page)
-                    getTopMovies(page)
-                    getTopTvShows(page)
-                    getNewSeries(page)
-                }
-                getData.join()
+                val newMoviesDeferred = async { getNewMovies(page) }
+                val topMoviesDeferred = async { getTopMovies(page) }
+                val topTvShowsDeferred = async { getTopTvShows(page) }
+                val newSeriesDeferred = async { getNewSeries(page) }
+
+                newMoviesDeferred.await()
+                topMoviesDeferred.await()
+                topTvShowsDeferred.await()
+                newSeriesDeferred.await()
                 setGeneralLoader(LoadingState.LOADED)
             }
         }
