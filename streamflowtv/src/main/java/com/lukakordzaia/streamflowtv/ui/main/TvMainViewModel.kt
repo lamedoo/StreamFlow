@@ -10,10 +10,7 @@ import com.lukakordzaia.core.datamodels.ContinueWatchingModel
 import com.lukakordzaia.core.datamodels.NewSeriesModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class TvMainViewModel : BaseViewModel() {
     private val _newMovieList = MutableLiveData<List<SingleTitleModel>>()
@@ -96,11 +93,10 @@ class TvMainViewModel : BaseViewModel() {
             when (val watching = environment.homeRepository.getContinueWatching()) {
                 is Result.Success -> {
                     val data = watching.data.data
-
                     _continueWatchingList.value = data.toContinueWatchingModel()
                 }
                 is Result.Error -> {
-                    newToastMessage("დღის ფილმი - ${watching.exception}")
+                    newToastMessage("განაგრძე ყურება - ${watching.exception}")
                 }
                 is Result.Internet -> {
                     setNoInternet()
@@ -183,8 +179,8 @@ class TvMainViewModel : BaseViewModel() {
     fun fetchContent(page: Int) {
         setGeneralLoader(LoadingState.LOADING)
         getUserSuggestions()
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
+            coroutineScope {
                 val newMoviesDeferred = async { getNewMovies(page) }
                 val topMoviesDeferred = async { getTopMovies(page) }
                 val topTvShowsDeferred = async { getTopTvShows(page) }
@@ -194,8 +190,8 @@ class TvMainViewModel : BaseViewModel() {
                 topMoviesDeferred.await()
                 topTvShowsDeferred.await()
                 newSeriesDeferred.await()
-                setGeneralLoader(LoadingState.LOADED)
             }
+            setGeneralLoader(LoadingState.LOADED)
         }
     }
 }
