@@ -120,9 +120,7 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
 
         watchListAdapter = ListRow(HeaderItem(0, getString(R.string.continue_watching)), listRowAdapter)
 
-        if (sharedPreferences.getRefreshContinueWatching()) {
-            setRowsAdapter()
-        }
+        setRowsAdapter()
     }
 
     private fun newMoviesRowsAdapter(items: List<SingleTitleModel>) {
@@ -209,13 +207,13 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
 
         rowsAdapter.addAll(0, row)
     }
-    
+
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
         override fun onItemClicked(
-                itemViewHolder: Presenter.ViewHolder,
-                item: Any,
-                rowViewHolder: RowPresenter.ViewHolder,
-                row: Row
+            itemViewHolder: Presenter.ViewHolder,
+            item: Any,
+            rowViewHolder: RowPresenter.ViewHolder,
+            row: Row
         ) {
             when (item) {
                 is SingleTitleModel -> {
