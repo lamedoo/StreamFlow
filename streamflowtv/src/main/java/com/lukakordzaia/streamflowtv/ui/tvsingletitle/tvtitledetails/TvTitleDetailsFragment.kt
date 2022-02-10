@@ -21,10 +21,12 @@ import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvTitleDetailsBinding
+import com.lukakordzaia.streamflowtv.ui.login.TvLoginActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedFragment
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
+import com.lukakordzaia.streamflowtv.ui.tvwatchlist.TvWatchlistActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -155,7 +157,12 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
             binding.favoriteIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.icon_favorite, null))
             binding.favoriteIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.general_text_color))
             binding.favoriteContainer.setOnClickListener {
-                viewModel.addWatchlistTitle(titleId)
+                if (sharedPreferences.getLoginToken() == "") {
+                    context.createToast(getString(R.string.log_in_to_see_watchlist))
+                    startActivity(Intent(requireActivity(), TvLoginActivity::class.java))
+                } else {
+                    viewModel.addWatchlistTitle(titleId)
+                }
             }
         }
     }
@@ -272,14 +279,14 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
             val intent = Intent(context, TvVideoPlayerActivity::class.java)
             intent.putExtra(
                 AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
-                titleId,
-                isTvShow,
-                0,
-                "ENG",
-                0,
-                0L,
-                trailerUrl
-            )
+                    titleId,
+                    isTvShow,
+                    0,
+                    "ENG",
+                    0,
+                    0L,
+                    trailerUrl
+                )
             )
             activity?.startActivity(intent)
         } else {
@@ -291,14 +298,15 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra(
             AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
-            titleId,
-            isTvShow,
-            if (isTvShow) 1 else 0,
-            chosenLanguage,
-            if (isTvShow) 1 else 0,
-            0L,
-            null
-        ))
+                titleId,
+                isTvShow,
+                if (isTvShow) 1 else 0,
+                chosenLanguage,
+                if (isTvShow) 1 else 0,
+                0L,
+                null
+            )
+        )
         activity?.startActivity(intent)
     }
 
@@ -306,14 +314,15 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         val intent = Intent(context, TvVideoPlayerActivity::class.java)
         intent.putExtra(
             AppConstants.VIDEO_PLAYER_DATA, VideoPlayerData(
-            item.titleId,
-            item.isTvShow,
-            item.season,
-            item.language,
-            item.episode,
-            item.watchedDuration,
-            null
-        ))
+                item.titleId,
+                item.isTvShow,
+                item.season,
+                item.language,
+                item.episode,
+                item.watchedDuration,
+                null
+            )
+        )
         activity?.startActivity(intent)
     }
 }
