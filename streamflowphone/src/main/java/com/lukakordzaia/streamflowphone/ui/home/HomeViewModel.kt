@@ -10,12 +10,15 @@ import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.datamodels.ContinueWatchingModel
 import com.lukakordzaia.core.datamodels.NewSeriesModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.usecases.MovieDayUseCaseBase
+import com.lukakordzaia.core.domain.usecases.NewMoviesUseCase
 import com.lukakordzaia.core.network.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
-class HomeViewModel : BaseViewModel() {
+class HomeViewModel(
+    private val movieDayUseCaseBase: MovieDayUseCaseBase,
+    private val newMoviesUseCase: NewMoviesUseCase
+) : BaseViewModel() {
     val continueWatchingLoader = MutableLiveData<LoadingState>()
     val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
 
@@ -93,7 +96,7 @@ class HomeViewModel : BaseViewModel() {
         viewModelScope.launch {
             dbDetails.forEach {
                 when (val databaseTitles = environment.singleTitleRepository.getSingleTitleData(it.titleId)) {
-                    is Result.Success -> {
+                    is ResultData.Success -> {
                         val data = databaseTitles.data.data
                         dbTitles.add(
                             ContinueWatchingModel(
@@ -113,7 +116,7 @@ class HomeViewModel : BaseViewModel() {
 
                         _continueWatchingList.value = dbTitles
                     }
-                    is Result.Error -> {
+                    is ResultData.Error -> {
                         newToastMessage("ბაზის ფილმები - ${databaseTitles.exception}")
                     }
                 }
@@ -126,16 +129,16 @@ class HomeViewModel : BaseViewModel() {
         continueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (val watching = environment.homeRepository.getContinueWatching()) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = watching.data.data
 
                     _continueWatchingList.value = data.toContinueWatchingModel()
                     continueWatchingLoader.value = LoadingState.LOADED
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("განაგრძეთ ყურება - ${watching.exception}")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -161,15 +164,15 @@ class HomeViewModel : BaseViewModel() {
         hideContinueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (environment.homeRepository.hideTitleContinueWatching(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     newToastMessage("წაიშალა განაგრძეთ ყურების სიიდან")
                     checkAuthDatabase()
                     hideContinueWatchingLoader.value = LoadingState.LOADED
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -184,11 +187,11 @@ class HomeViewModel : BaseViewModel() {
         if (sharedPreferences.getLoginToken() != "") {
             viewModelScope.launch {
                 when (val suggestions = environment.homeRepository.getUserSuggestions(sharedPreferences.getUserId())) {
-                    is Result.Success -> {
+                    is ResultData.Success -> {
                         val data = suggestions.data.data
                         _userSuggestionsList.postValue(data.toTitleListModel())
                     }
-                    is Result.Error -> {
+                    is ResultData.Error -> {
                         newToastMessage("შემოთავაზებული ფილმები - ${suggestions.exception}")
                     }
                 }
@@ -197,27 +200,27 @@ class HomeViewModel : BaseViewModel() {
     }
 
     private suspend fun getMovieDay() {
-        when (val movieDay = environment.homeRepository.getMovieDay()) {
-            is Result.Success -> {
-                val data = movieDay.data.data
-                _movieDayData.postValue(listOf(data[0]).toTitleListModel())
+        when (val movieDay = movieDayUseCaseBase.invoke()) {
+            is ResultDomain.Success -> {
+                val data = movieDay.data[0]
+                _movieDayData.postValue(listOf(data))
             }
-            is Result.Error -> {
+            is ResultDomain.Error -> {
                 newToastMessage("დღის ფილმი - ${movieDay.exception}")
             }
-            is Result.Internet -> {
+            is ResultDomain.Internet -> {
                 setNoInternet()
             }
         }
     }
 
     private suspend fun getNewMovies(page: Int) {
-        when (val newMovies = environment.homeRepository.getNewMovies(page)) {
-            is Result.Success -> {
-                val data = newMovies.data.data
-                _newMovieList.postValue(data.toTitleListModel())
+        when (val newMovies = newMoviesUseCase.invoke(page)) {
+            is ResultDomain.Success -> {
+                val data = newMovies.data
+                _newMovieList.postValue(data)
             }
-            is Result.Error -> {
+            is ResultDomain.Error -> {
                 newToastMessage("ახალი ფილმები - ${newMovies.exception}")
             }
         }
@@ -225,11 +228,11 @@ class HomeViewModel : BaseViewModel() {
 
     private suspend fun getTopMovies(page: Int) {
         when (val topMovies = environment.homeRepository.getTopMovies(page)) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = topMovies.data.data
                 _topMovieList.postValue(data.toTitleListModel())
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
             }
         }
@@ -237,11 +240,11 @@ class HomeViewModel : BaseViewModel() {
 
     private suspend fun getTopTvShows(page: Int) {
         when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = topTvShows.data.data
                 _topTvShowList.postValue(data.toTitleListModel())
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ტოპ სერიალები- ${topTvShows.exception}")
             }
         }
@@ -249,11 +252,11 @@ class HomeViewModel : BaseViewModel() {
 
     private suspend fun getNewSeries(page: Int) {
         when (val newSeries = environment.homeRepository.getNewSeries(page)) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = newSeries.data.data?.get(0)?.movies?.data
                 _newSeriesList.postValue(data?.toNewSeriesModel())
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ახალი სერიები- ${newSeries.exception}")
             }
         }
@@ -262,18 +265,20 @@ class HomeViewModel : BaseViewModel() {
     fun fetchContent(page: Int) {
         setGeneralLoader(LoadingState.LOADING)
         getUserSuggestions()
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val getData = viewModelScope.launch {
-                    getMovieDay()
-                    getNewMovies(page)
-                    getTopMovies(page)
-                    getTopTvShows(page)
-                    getNewSeries(page)
-                }
-                getData.join()
-                setGeneralLoader(LoadingState.LOADED)
+        viewModelScope.launch(Dispatchers.IO) {
+            getMovieDay()
+            coroutineScope {
+                val newMoviesDeferred = async { getNewMovies(page) }
+                val topMoviesDeferred = async { getTopMovies(page) }
+                val topTvShowsDeferred = async { getTopTvShows(page) }
+                val newSeriesDeferred = async { getNewSeries(page) }
+
+                newMoviesDeferred.await()
+                topMoviesDeferred.await()
+                topTvShowsDeferred.await()
+                newSeriesDeferred.await()
             }
+            setGeneralLoader(LoadingState.LOADED)
         }
     }
 }

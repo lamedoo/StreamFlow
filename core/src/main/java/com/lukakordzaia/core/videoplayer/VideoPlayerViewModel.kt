@@ -10,7 +10,7 @@ import com.lukakordzaia.core.datamodels.EpisodeInfoModel
 import com.lukakordzaia.core.datamodels.TitleMediaItemsUri
 import com.lukakordzaia.core.datamodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
 import com.lukakordzaia.core.network.toEpisodeInfoModel
 import com.lukakordzaia.core.utils.Event
@@ -82,10 +82,10 @@ class VideoPlayerViewModel : BaseViewModel() {
                         videoPlayerData.value!!.chosenSeason,
                         videoPlayerData.value!!.chosenEpisode
                     )) {
-                        is Result.Success -> {
+                        is ResultData.Success -> {
                             saveLoader.value = LoadingState.LOADED
                         }
-                        is Result.Error -> {
+                        is ResultData.Error -> {
                             saveLoader.value = LoadingState.ERROR
                         }
                     }
@@ -105,7 +105,7 @@ class VideoPlayerViewModel : BaseViewModel() {
     fun getTitleFiles(videoPlayerData: VideoPlayerData) {
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = files.data.data
                     val info = data.toEpisodeInfoModel(if (videoPlayerData.chosenSeason == 0) 0 else videoPlayerData.chosenEpisode - 1, videoPlayerData.chosenLanguage)
 
@@ -120,10 +120,10 @@ class VideoPlayerViewModel : BaseViewModel() {
                     val mediaItems = TitleMediaItemsUri(episodeLink, subtitleLink)
                     mediaAndSubtitle.value = mediaItems
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     Log.d("errornextepisode", files.exception)
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -191,7 +191,7 @@ class VideoPlayerViewModel : BaseViewModel() {
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
             when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = titleData.data.data
 
                     if (!data.isTvShow || data.seasons == null) {
@@ -200,7 +200,7 @@ class VideoPlayerViewModel : BaseViewModel() {
                         _numOfSeasons.value = data.seasons.data.size
                     }
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     Log.d("errorsinglemovies", titleData.exception)
                 }
             }

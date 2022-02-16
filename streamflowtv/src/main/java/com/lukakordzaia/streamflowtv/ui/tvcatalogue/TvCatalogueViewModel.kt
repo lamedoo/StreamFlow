@@ -7,7 +7,7 @@ import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.launch
 
@@ -19,15 +19,15 @@ class TvCatalogueViewModel : BaseViewModel() {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val movies = environment.homeRepository.getNewMovies(page)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = movies.data.data
                     _tvCatalogueList.value = data.toTitleListModel()
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage(movies.exception)
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -38,15 +38,15 @@ class TvCatalogueViewModel : BaseViewModel() {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val topMovies = environment.homeRepository.getTopMovies(page)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = topMovies.data.data
                     _tvCatalogueList.value = data.toTitleListModel()
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage(topMovies.exception)
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -57,15 +57,15 @@ class TvCatalogueViewModel : BaseViewModel() {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val tvShows = environment.homeRepository.getTopTvShows(page)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = tvShows.data.data
                     _tvCatalogueList.value = data.toTitleListModel()
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage(tvShows.exception)
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }

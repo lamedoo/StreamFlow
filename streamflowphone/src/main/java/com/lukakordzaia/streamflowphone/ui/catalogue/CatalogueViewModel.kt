@@ -7,7 +7,7 @@ import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.response.categories.GetGenresResponse
 import com.lukakordzaia.core.network.models.imovies.response.categories.GetTopStudiosResponse
 import com.lukakordzaia.core.network.toTitleListModel
@@ -43,14 +43,14 @@ class CatalogueViewModel : BaseViewModel() {
 
     private suspend fun getTopTrailers() {
         when (val trailers = environment.catalogueRepository.getTopTrailers()) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = trailers.data.data
                 _topTrailerList.postValue(data.toTitleListModel())
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ტრეილერები - ${trailers.exception}")
             }
-            is Result.Internet -> {
+            is ResultData.Internet -> {
                 setNoInternet()
             }
         }
@@ -58,10 +58,10 @@ class CatalogueViewModel : BaseViewModel() {
 
     private suspend fun getAllGenres() {
         when (val genres = environment.catalogueRepository.getAllGenres()) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 _allGenresList.postValue(genres.data.data)
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ჟანრები - ${genres.exception}")
             }
         }
@@ -69,10 +69,10 @@ class CatalogueViewModel : BaseViewModel() {
 
     private suspend fun getTopStudios() {
         when (val studios = environment.catalogueRepository.getTopStudios()) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 _topStudioList.postValue(studios.data.data)
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("სტუდიები - ${studios.exception}")
             }
         }

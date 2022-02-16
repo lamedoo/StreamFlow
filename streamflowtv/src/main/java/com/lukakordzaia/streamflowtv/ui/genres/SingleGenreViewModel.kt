@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +36,7 @@ class SingleGenreViewModel : BaseViewModel() {
 
     private suspend fun getSingleGenreForTv(genreId: Int, page: Int = 1) {
             when (val singleGenre = environment.catalogueRepository.getSingleGenre(genreId, page)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = singleGenre.data.data
                     when (genreId) {
                         265 -> _singleGenreAnimation.value = data.toTitleListModel()
@@ -47,10 +47,10 @@ class SingleGenreViewModel : BaseViewModel() {
                         248 -> _singleGenreAction.value = data.toTitleListModel()
                     }
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("ჟანრი - ${singleGenre.exception}")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }

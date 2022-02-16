@@ -1,4 +1,4 @@
-package com.lukakordzaia.core.repository.databaserepository
+package com.lukakordzaia.core.domain.repository.databaserepository
 
 import androidx.lifecycle.LiveData
 import com.lukakordzaia.core.database.StreamFlowDatabase

@@ -1,6 +1,6 @@
-package com.lukakordzaia.core.repository.userrepository
+package com.lukakordzaia.core.domain.repository.userrepository
 
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.core.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserDataResponse
@@ -9,8 +9,8 @@ import com.lukakordzaia.core.network.models.imovies.response.user.PostUserLoginR
 import com.lukakordzaia.core.network.models.imovies.response.user.PostWatchTimeResponse
 
 interface UserRepository {
-    suspend fun userLogin(loginBody: PostLoginBody) : Result<PostUserLoginResponse>
-    suspend fun userData() : Result<GetUserDataResponse>
-    suspend fun userLogout() : Result<GetUserLogoutResponse>
-    suspend fun titleWatchTime(watchTimeRequest: PostTitleWatchTimeRequestBody, titleId: Int, season: Int, episode: Int) : Result<PostWatchTimeResponse>
+    suspend fun userLogin(loginBody: PostLoginBody): ResultData<PostUserLoginResponse>
+    suspend fun userData(): ResultData<GetUserDataResponse>
+    suspend fun userLogout(): ResultData<GetUserLogoutResponse>
+    suspend fun titleWatchTime(watchTimeRequest: PostTitleWatchTimeRequestBody, titleId: Int, season: Int, episode: Int): ResultData<PostWatchTimeResponse>
 }

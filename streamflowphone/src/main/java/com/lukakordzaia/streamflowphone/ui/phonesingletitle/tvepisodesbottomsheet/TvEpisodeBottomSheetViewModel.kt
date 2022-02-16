@@ -9,7 +9,7 @@ import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.datamodels.TitleEpisodes
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import kotlinx.coroutines.launch
 
 class TvEpisodeBottomSheetViewModel : BaseViewModel() {
@@ -47,27 +47,29 @@ class TvEpisodeBottomSheetViewModel : BaseViewModel() {
     private fun getContinueWatching(titleId: Int) {
         viewModelScope.launch {
             when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = titleData.data
 
                     if (data.data.userWatch?.data?.season != null) {
-                        _continueWatchingDetails.postValue(ContinueWatchingRoom(
-                            titleId = titleId,
-                            language = data.data.userWatch!!.data?.language!!,
-                            watchedDuration = data.data.userWatch!!.data?.progress!!,
-                            titleDuration = data.data.userWatch!!.data?.duration!!,
-                            isTvShow = data.data.isTvShow,
-                            season = data.data.userWatch!!.data?.season!!,
-                            episode = data.data.userWatch!!.data?.episode!!
-                        ))
+                        _continueWatchingDetails.postValue(
+                            ContinueWatchingRoom(
+                                titleId = titleId,
+                                language = data.data.userWatch!!.data?.language!!,
+                                watchedDuration = data.data.userWatch!!.data?.progress!!,
+                                titleDuration = data.data.userWatch!!.data?.duration!!,
+                                isTvShow = data.data.isTvShow,
+                                season = data.data.userWatch!!.data?.season!!,
+                                episode = data.data.userWatch!!.data?.episode!!
+                            )
+                        )
                     } else {
                         _continueWatchingDetails.postValue(null)
                     }
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("ინფორმაცია - ${titleData.exception}")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -80,7 +82,7 @@ class TvEpisodeBottomSheetViewModel : BaseViewModel() {
         _chosenSeason.value = season
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, season)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = files.data.data
                     if (data.isNotEmpty()) {
                         val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
@@ -109,7 +111,7 @@ class TvEpisodeBottomSheetViewModel : BaseViewModel() {
                     }
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     when (files.exception) {
                         AppConstants.UNKNOWN_ERROR -> {
                             _movieNotYetAdded.value = true
@@ -119,7 +121,7 @@ class TvEpisodeBottomSheetViewModel : BaseViewModel() {
                         }
                     }
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -129,7 +131,7 @@ class TvEpisodeBottomSheetViewModel : BaseViewModel() {
     fun getEpisodeLanguages(titleId: Int, episodeNum: Int) {
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, chosenSeason.value!!)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val episode = files.data.data[episodeNum]
 
                     val fetchLanguages: MutableList<String> = ArrayList()

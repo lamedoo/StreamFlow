@@ -8,10 +8,8 @@ import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.datamodels.TitleEpisodes
-import com.lukakordzaia.core.network.Result
-import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.toSingleTitleModel
-import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.launch
 
 class TvEpisodesViewModel : BaseViewModel() {
@@ -42,10 +40,10 @@ class TvEpisodesViewModel : BaseViewModel() {
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
             when (val data = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     _singleTitleData.value = data.data.toSingleTitleModel()
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage(data.exception)
                 }
             }
@@ -55,7 +53,7 @@ class TvEpisodesViewModel : BaseViewModel() {
     fun getContinueWatching(titleId: Int) {
         viewModelScope.launch {
             when (val info = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = info.data
 
                     if (sharedPreferences.getLoginToken() == "") {
@@ -76,10 +74,10 @@ class TvEpisodesViewModel : BaseViewModel() {
                         }
                     }
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage(info.exception)
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -89,12 +87,12 @@ class TvEpisodesViewModel : BaseViewModel() {
     fun getNumOfSeasons(titleId: Int) {
         viewModelScope.launch {
             when (val data = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     if (data.data.data.seasons != null) {
                         _numOfSeasons.value = data.data.data.seasons!!.data.size
                     }
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage(data.exception)
                 }
             }
@@ -105,7 +103,7 @@ class TvEpisodesViewModel : BaseViewModel() {
         _chosenSeason.value = season
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, season)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = files.data.data
 
                     val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
@@ -115,19 +113,21 @@ class TvEpisodesViewModel : BaseViewModel() {
                         }
                     } else {
                         data.forEach {
-                            getEpisodeNames.add(TitleEpisodes(
+                            getEpisodeNames.add(
+                                TitleEpisodes(
                                 titleId,
-                                it.episode,
-                                it.title,
-                                it.covers.x1050!!,
-                                it.userWatch.duration,
-                                it.userWatch.progress
-                            ))
+                                    it.episode,
+                                    it.title,
+                                    it.covers.x1050!!,
+                                    it.userWatch.duration,
+                                    it.userWatch.progress
+                                )
+                            )
                         }
                     }
                     _episodeNames.value = getEpisodeNames
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("ეპიზოდები - ${files.exception}")
                 }
             }
@@ -137,8 +137,8 @@ class TvEpisodesViewModel : BaseViewModel() {
     fun getEpisodeLanguages(titleId: Int, episodeNum: Int) {
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(titleId, chosenSeason.value!!)) {
-                is Result.Success -> {
-                    val episode = files.data.data[episodeNum-1]
+                is ResultData.Success -> {
+                    val episode = files.data.data[episodeNum - 1]
 
                     val fetchLanguages: MutableList<String> = ArrayList()
                     episode.files.forEach {

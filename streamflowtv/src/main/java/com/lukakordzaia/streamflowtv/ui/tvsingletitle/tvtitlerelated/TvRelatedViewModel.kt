@@ -1,16 +1,12 @@
 package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
-import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.TitleEpisodes
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
-import com.lukakordzaia.core.network.toSingleTitleModel
 import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.launch
 
@@ -24,12 +20,12 @@ class TvRelatedViewModel : BaseViewModel() {
     fun getSingleTitleCast(titleId: Int) {
         viewModelScope.launch {
             when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "cast")) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = cast.data.data
 
                     _castData.value = data
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("მსახიობები - ${cast.exception}")
                 }
             }
@@ -39,11 +35,11 @@ class TvRelatedViewModel : BaseViewModel() {
     fun getSingleTitleRelated(titleId: Int) {
         viewModelScope.launch {
             when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = related.data.data
                     _singleTitleRelated.value = data.toTitleListModel()
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("მსგავსი - ${related.exception}")
                 }
             }

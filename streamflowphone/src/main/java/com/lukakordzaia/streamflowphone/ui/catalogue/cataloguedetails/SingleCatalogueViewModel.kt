@@ -7,7 +7,7 @@ import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.launch
 
@@ -26,17 +26,17 @@ class SingleCatalogueViewModel : BaseViewModel() {
     private fun getSingleGenre(genreId: Int, page: Int) {
         viewModelScope.launch {
             when (val singleGenre = environment.catalogueRepository.getSingleGenre(genreId, page)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = singleGenre.data.data
                     fetchSingleCatalogueList.addAll(data.toTitleListModel())
                     _singleCatalogueList.value = fetchSingleCatalogueList
                     _hasMorePage.value = singleGenre.data.meta.pagination.totalPages!! > singleGenre.data.meta.pagination.currentPage!!
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("ჟანრი - ${singleGenre.exception}")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -46,17 +46,17 @@ class SingleCatalogueViewModel : BaseViewModel() {
     private fun getSingleStudio(studioId: Int, page: Int) {
         viewModelScope.launch {
             when (val singleStudio = environment.catalogueRepository.getSingleStudio(studioId, page)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = singleStudio.data.data
                     fetchSingleCatalogueList.addAll(data.toTitleListModel())
                     _singleCatalogueList.value = fetchSingleCatalogueList
                     _hasMorePage.value = singleStudio.data.meta.pagination.totalPages!! > singleStudio.data.meta.pagination.currentPage!!
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("სტუდია - ${singleStudio.exception}")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }

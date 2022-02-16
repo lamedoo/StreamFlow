@@ -9,7 +9,7 @@ import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.toSingleTitleModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,7 +46,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         viewModelScope.launch {
             setGeneralLoader(LoadingState.LOADING)
             when (val info = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = info.data
                     _singleTitleData.value = data.toSingleTitleModel()
 
@@ -59,10 +59,10 @@ class TvTitleDetailsViewModel : BaseViewModel() {
 
                     _addToFavorites.value = data.data.userWantsToWatch?.data?.status ?: false
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage(info.exception)
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -80,7 +80,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     fun getContinueWatching(titleId: Int) {
         viewModelScope.launch {
             when (val info = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = info.data
 
                     if (sharedPreferences.getLoginToken() == "") {
@@ -101,10 +101,10 @@ class TvTitleDetailsViewModel : BaseViewModel() {
                         }
                     }
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage(info.exception)
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -124,14 +124,14 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         hideContinueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (environment.homeRepository.hideTitleContinueWatching(titleId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     newToastMessage("დაიმალა განაგრძეთ ყურების სიიდან")
                     hideContinueWatchingLoader.value = LoadingState.LOADED
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     hideContinueWatchingLoader.value = LoadingState.ERROR
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -142,7 +142,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         _movieNotYetAdded.value = false
         viewModelScope.launch {
             when (val files = environment.singleTitleRepository.getSingleTitleFiles(movieId)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = files.data.data
                     if (data.isNotEmpty()) {
                         val fetchLanguages: MutableList<String> = ArrayList()
@@ -157,7 +157,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
                         _focusedButton.value = Buttons.FAVORITES
                     }
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     when (files.exception) {
                         AppConstants.UNKNOWN_ERROR -> {
                             _movieNotYetAdded.value = true
@@ -165,7 +165,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
                         }
                     }
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -176,7 +176,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (environment.watchlistRepository.addWatchlistTitle(id)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     newToastMessage("ფილმი დაემატა ფავორიტებში")
                     _addToFavorites.value = true
                     favoriteLoader.value = LoadingState.LOADED
@@ -189,7 +189,7 @@ class TvTitleDetailsViewModel : BaseViewModel() {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (environment.watchlistRepository.deleteWatchlistTitle(id)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     _addToFavorites.value = false
                     favoriteLoader.value = LoadingState.LOADED
                     newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")

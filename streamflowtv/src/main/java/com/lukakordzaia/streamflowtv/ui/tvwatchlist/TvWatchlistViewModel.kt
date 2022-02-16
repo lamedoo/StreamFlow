@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.toWatchListModel
 import kotlinx.coroutines.launch
 
@@ -24,7 +24,7 @@ class TvWatchlistViewModel : BaseViewModel() {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val watchlist = environment.watchlistRepository.getUserWatchlist(page, type)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = watchlist.data.data
 
                     _hasMorePage.value = watchlist.data.meta.pagination.totalPages > watchlist.data.meta.pagination.currentPage
@@ -42,7 +42,7 @@ class TvWatchlistViewModel : BaseViewModel() {
 
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -52,7 +52,7 @@ class TvWatchlistViewModel : BaseViewModel() {
     fun deleteWatchlistTitle(id: Int, position: Int) {
         viewModelScope.launch {
             when (environment.watchlistRepository.deleteWatchlistTitle(id)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     fetchUserWatchlist.removeAt(position)
                     _userWatchlist.value = fetchUserWatchlist
                 }

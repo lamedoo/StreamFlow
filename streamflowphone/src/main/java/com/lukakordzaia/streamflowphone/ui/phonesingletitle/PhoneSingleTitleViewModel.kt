@@ -8,7 +8,7 @@ import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.core.network.toSingleTitleModel
 import com.lukakordzaia.core.network.toTitleListModel
@@ -57,7 +57,7 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
     private suspend fun getSingleTitleData(titleId: Int) {
         val fetchTitleGenres: MutableList<String> = ArrayList()
         when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = titleData.data
                 _singleTitleData.postValue(data.toSingleTitleModel())
 
@@ -65,9 +65,10 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
                     getSingleContinueWatchingFromRoom(titleId)
                 } else {
                     if (data.data.userWatch?.data?.season != null) {
-                        _continueWatchingDetails.postValue(ContinueWatchingRoom(
-                            titleId = titleId,
-                            language = data.data.userWatch!!.data?.language!!,
+                        _continueWatchingDetails.postValue(
+                            ContinueWatchingRoom(
+                                titleId = titleId,
+                                language = data.data.userWatch!!.data?.language!!,
                             watchedDuration = data.data.userWatch!!.data?.progress!!,
                             titleDuration = data.data.userWatch!!.data?.duration!!,
                             isTvShow = data.data.isTvShow,
@@ -86,10 +87,10 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
                 }
                 _titleGenres.postValue(fetchTitleGenres)
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ინფორმაცია - ${titleData.exception}")
             }
-            is Result.Internet -> {
+            is ResultData.Internet -> {
                 setNoInternet()
             }
         }
@@ -97,14 +98,14 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
 
     private suspend fun getTitleCast(titleId: Int) {
         when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "cast")) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = cast.data.data
                 _castData.postValue(data)
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("მსახიობები - ${cast.exception}")
             }
-            is Result.Internet -> {
+            is ResultData.Internet -> {
                 setNoInternet()
             }
         }
@@ -112,17 +113,17 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
 
     private suspend fun getTitleDirector(titleId: Int) {
         when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "director")) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = cast.data.data
 
                 if (!data.isNullOrEmpty()) {
                     _titleDirector.postValue(data[0])
                 }
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("დირექტორი - ${cast.exception}")
             }
-            is Result.Internet -> {
+            is ResultData.Internet -> {
                 setNoInternet()
             }
         }
@@ -130,14 +131,14 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
 
     private suspend fun getRelatedTitles(titleId: Int) {
         when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = related.data.data
                 _singleTitleRelated.postValue(data.toTitleListModel())
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("მსგავსი - ${related.exception}")
             }
-            is Result.Internet -> {
+            is ResultData.Internet -> {
                 setNoInternet()
             }
         }
@@ -155,7 +156,7 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (environment.watchlistRepository.addWatchlistTitle(id)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     newToastMessage("ფილმი დაემატა ფავორიტებში")
                     _addToFavorites.value = true
                     favoriteLoader.value = LoadingState.LOADED
@@ -168,7 +169,7 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
             when (environment.watchlistRepository.deleteWatchlistTitle(id)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     _addToFavorites.value = false
                     favoriteLoader.value = LoadingState.LOADED
                     newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")

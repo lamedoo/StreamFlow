@@ -1,6 +1,6 @@
-package com.lukakordzaia.core.repository.userrepository
+package com.lukakordzaia.core.domain.repository.userrepository
 
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.imovies.ImoviesCall
 import com.lukakordzaia.core.network.imovies.ImoviesNetwork
 import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
@@ -11,15 +11,15 @@ import com.lukakordzaia.core.network.models.imovies.response.user.PostUserLoginR
 import com.lukakordzaia.core.network.models.imovies.response.user.PostWatchTimeResponse
 
 class DefaultUserRepository(private val service: ImoviesNetwork): ImoviesCall(), UserRepository {
-    override suspend fun userLogin(loginBody: PostLoginBody): Result<PostUserLoginResponse> {
+    override suspend fun userLogin(loginBody: PostLoginBody): ResultData<PostUserLoginResponse> {
         return imoviesCall { service.postUserLogin(loginBody) }
     }
 
-    override suspend fun userData(): Result<GetUserDataResponse> {
+    override suspend fun userData(): ResultData<GetUserDataResponse> {
         return imoviesCall { service.getUserData() }
     }
 
-    override suspend fun userLogout(): Result<GetUserLogoutResponse> {
+    override suspend fun userLogout(): ResultData<GetUserLogoutResponse> {
         return imoviesCall { service.postUserLogOut() }
     }
 
@@ -28,7 +28,7 @@ class DefaultUserRepository(private val service: ImoviesNetwork): ImoviesCall(),
         titleId: Int,
         season: Int,
         episode: Int
-    ): Result<PostWatchTimeResponse> {
+    ): ResultData<PostWatchTimeResponse> {
         return imoviesCall { service.postTitleWatchTime(watchTimeRequest, titleId, season, episode) }
     }
 }

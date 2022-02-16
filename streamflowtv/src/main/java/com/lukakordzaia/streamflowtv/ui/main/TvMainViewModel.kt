@@ -60,7 +60,7 @@ class TvMainViewModel : BaseViewModel() {
         viewModelScope.launch {
             dbDetails.forEach {
                 when (val databaseTitles = environment.singleTitleRepository.getSingleTitleData(it.titleId)) {
-                    is Result.Success -> {
+                    is ResultData.Success -> {
                         val data = databaseTitles.data.data
                         dbTitles.add(
                             ContinueWatchingModel(
@@ -80,7 +80,7 @@ class TvMainViewModel : BaseViewModel() {
 
                         _continueWatchingList.value = dbTitles
                     }
-                    is Result.Error -> {
+                    is ResultData.Error -> {
                         newToastMessage("ბაზის ფილმები - ${databaseTitles.exception}")
                     }
                 }
@@ -91,14 +91,14 @@ class TvMainViewModel : BaseViewModel() {
     private fun getContinueWatching() {
         viewModelScope.launch {
             when (val watching = environment.homeRepository.getContinueWatching()) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = watching.data.data
                     _continueWatchingList.value = data.toContinueWatchingModel()
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("განაგრძე ყურება - ${watching.exception}")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -113,11 +113,11 @@ class TvMainViewModel : BaseViewModel() {
         if (sharedPreferences.getLoginToken() != "") {
             viewModelScope.launch {
                 when (val suggestions = environment.homeRepository.getUserSuggestions(sharedPreferences.getUserId())) {
-                    is Result.Success -> {
+                    is ResultData.Success -> {
                         val data = suggestions.data.data
                         _userSuggestionsList.postValue(data.toTitleListModel())
                     }
-                    is Result.Error -> {
+                    is ResultData.Error -> {
                         newToastMessage("შემოთავაზებული ფილმები - ${suggestions.exception}")
                     }
                 }
@@ -127,14 +127,14 @@ class TvMainViewModel : BaseViewModel() {
 
     private suspend fun getNewMovies(page: Int) {
         when (val newMovies = environment.homeRepository.getNewMovies(page)) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = newMovies.data.data
                 _newMovieList.postValue(data.toTitleListModel())
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ახალი ფილმები - ${newMovies.exception}")
             }
-            is Result.Internet -> {
+            is ResultData.Internet -> {
                 setNoInternet()
             }
         }
@@ -142,11 +142,11 @@ class TvMainViewModel : BaseViewModel() {
 
     private suspend fun getTopMovies(page: Int) {
         when (val topMovies = environment.homeRepository.getTopMovies(page)) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = topMovies.data.data
                 _topMovieList.postValue(data.toTitleListModel())
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
             }
         }
@@ -154,11 +154,11 @@ class TvMainViewModel : BaseViewModel() {
 
     private suspend fun getTopTvShows(page: Int) {
         when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = topTvShows.data.data
                 _topTvShowList.postValue(data.toTitleListModel())
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ტოპ სერიალები- ${topTvShows.exception}")
             }
         }
@@ -166,11 +166,11 @@ class TvMainViewModel : BaseViewModel() {
 
     private suspend fun getNewSeries(page: Int) {
         when (val newSeries = environment.homeRepository.getNewSeries(page)) {
-            is Result.Success -> {
+            is ResultData.Success -> {
                 val data = newSeries.data.data?.get(0)?.movies?.data
                 _newSeriesList.postValue(data?.toNewSeriesModel())
             }
-            is Result.Error -> {
+            is ResultData.Error -> {
                 newToastMessage("ახალი სერიები- ${newSeries.exception}")
             }
         }

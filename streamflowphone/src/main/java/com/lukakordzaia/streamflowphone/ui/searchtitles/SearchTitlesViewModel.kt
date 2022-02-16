@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.response.categories.GetTopFranchisesResponse
 import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.launch
@@ -35,16 +35,16 @@ class SearchTitlesViewModel : BaseViewModel() {
         viewModelScope.launch {
             setGeneralLoader(LoadingState.LOADING)
             when (val search = environment.searchRepository.getSearchTitles(keywords, page)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = search.data.data
                     fetchSearchGetTitlesResponse.addAll(data.toTitleListModel())
                     _searchList.value = fetchSearchGetTitlesResponse
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("ძიება - ${search.exception}")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -55,15 +55,15 @@ class SearchTitlesViewModel : BaseViewModel() {
         viewModelScope.launch {
             franchisesLoader.value = LoadingState.LOADING
             when (val franchises = environment.searchRepository.getTopFranchises()) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = franchises.data.data
                     _franchiseList.value = data
                     franchisesLoader.value = LoadingState.LOADED
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("ძიება - ${franchises.exception}")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }

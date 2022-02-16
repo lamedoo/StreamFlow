@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserDataResponse
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class ProfileViewModel : BaseViewModel() {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val login = environment.userRepository.userLogin(loginBody)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = login.data
 
                     sharedPreferences.saveLoginToken(data.accessToken)
@@ -34,10 +34,10 @@ class ProfileViewModel : BaseViewModel() {
 
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("დაფიქსირდა გარკვეული შეცდომა, გთხოვთ სცადოთ თავიდან")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }
@@ -48,7 +48,7 @@ class ProfileViewModel : BaseViewModel() {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val logout = environment.userRepository.userLogout()) {
-                is Result.Success -> {
+                is ResultData.Success -> {
 
                     sharedPreferences.saveLoginToken("")
                     sharedPreferences.saveLoginRefreshToken("")
@@ -56,7 +56,7 @@ class ProfileViewModel : BaseViewModel() {
 
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     Log.d("userLogout", logout.exception)
                 }
             }
@@ -66,17 +66,17 @@ class ProfileViewModel : BaseViewModel() {
     fun getUserData() {
         viewModelScope.launch {
             when (val userData = environment.userRepository.userData()) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = userData.data.data
 
                     sharedPreferences.saveUserId(data.id)
 
                     _userData.value = data
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     Log.d("userData", userData.exception)
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }

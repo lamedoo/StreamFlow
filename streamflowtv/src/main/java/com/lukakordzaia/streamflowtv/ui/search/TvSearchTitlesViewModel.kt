@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
+import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.response.categories.GetTopFranchisesResponse
 import com.lukakordzaia.core.network.toTitleListModel
 import kotlinx.coroutines.launch
@@ -30,14 +30,14 @@ class TvSearchTitlesViewModel : BaseViewModel() {
     fun getSearchTitlesTv(keywords: String, page: Int) {
         viewModelScope.launch {
             when (val searchTv = environment.searchRepository.getSearchTitles(keywords, page)) {
-                is Result.Success -> {
+                is ResultData.Success -> {
                     val data = searchTv.data.data
                     _searchList.value = data.toTitleListModel()
                 }
-                is Result.Error -> {
+                is ResultData.Error -> {
                     newToastMessage("ძიება - ${searchTv.exception}")
                 }
-                is Result.Internet -> {
+                is ResultData.Internet -> {
                     setNoInternet()
                 }
             }

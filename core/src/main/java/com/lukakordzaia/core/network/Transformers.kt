@@ -11,11 +11,40 @@ import com.lukakordzaia.core.network.models.imovies.response.titles.GetTitlesRes
 import com.lukakordzaia.core.network.models.imovies.response.user.GetContinueWatchingResponse
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserWatchlistResponse
 
+fun GetTitlesResponse.toTitleListModel(): List<SingleTitleModel> {
+    return this.data.map {
+        SingleTitleModel(
+            id = it.id,
+            isTvShow = it.isTvShow ?: false,
+            displayName = if (it.primaryName.isNotEmpty()) it.primaryName else it.secondaryName,
+            nameGeo = it.primaryName,
+            nameEng = it.secondaryName,
+            poster = it.posters?.data?.x240,
+            cover = it.covers?.data?.x1050,
+            description = null,
+            imdbId = null,
+            imdbScore = null,
+            releaseYear = it.year.toString(),
+            duration = null,
+            seasonNum = null,
+            country = null,
+            trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
+            watchlist = it.userWantsToWatch?.data?.status,
+            titleDuration = it.userWatch?.data?.duration,
+            watchedDuration = it.userWatch?.data?.progress,
+            currentSeason = it.userWatch?.data?.season,
+            currentEpisode = it.userWatch?.data?.episode,
+            currentLanguage = it.userWatch?.data?.language,
+            visibility = it.userWatch?.data?.visible
+        )
+    }
+}
+
 fun List<GetTitlesResponse.Data>.toTitleListModel(): List<SingleTitleModel> {
     return map {
         SingleTitleModel(
             id = it.id,
-            isTvShow = it.isTvShow?: false,
+            isTvShow = it.isTvShow ?: false,
             displayName = if (it.primaryName.isNotEmpty()) it.primaryName else it.secondaryName,
             nameGeo = it.primaryName,
             nameEng = it.secondaryName,
