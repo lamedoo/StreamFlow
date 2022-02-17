@@ -1,9 +1,9 @@
 package com.lukakordzaia.core.network
 
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.EpisodeInfoModel
-import com.lukakordzaia.core.datamodels.NewSeriesModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.EpisodeInfoModel
+import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.models.imovies.response.newseries.GetNewSeriesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleResponse

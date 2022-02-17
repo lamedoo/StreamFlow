@@ -1,10 +1,9 @@
 package com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.core.datamodels.TitleEpisodes
+import com.lukakordzaia.core.domain.domainmodels.TitleEpisodes
 import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflowphone.R

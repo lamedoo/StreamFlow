@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.leanback.widget.Presenter
-import com.lukakordzaia.core.datamodels.TitleEpisodes
+import com.lukakordzaia.core.domain.domainmodels.TitleEpisodes
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.customviews.TvEpisodesCardView
 

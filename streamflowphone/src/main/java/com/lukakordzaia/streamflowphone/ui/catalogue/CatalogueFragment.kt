@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.setGone
 import com.lukakordzaia.core.utils.setVisibleOrGone

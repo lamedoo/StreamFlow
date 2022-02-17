@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.NewSeriesModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.usecases.MovieDayUseCaseBase
 import com.lukakordzaia.core.domain.usecases.NewMoviesUseCase
 import com.lukakordzaia.core.network.*
@@ -200,28 +200,32 @@ class HomeViewModel(
     }
 
     private suspend fun getMovieDay() {
-        when (val movieDay = movieDayUseCaseBase.invoke()) {
+        when (val result = movieDayUseCaseBase.invoke()) {
             is ResultDomain.Success -> {
-                val data = movieDay.data[0]
+                val data = result.data[0]
                 _movieDayData.postValue(listOf(data))
             }
             is ResultDomain.Error -> {
-                newToastMessage("დღის ფილმი - ${movieDay.exception}")
-            }
-            is ResultDomain.Internet -> {
-                setNoInternet()
+                when (result.exception) {
+                    AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                    else -> newToastMessage("დღის ფილმი - ${result.exception}")
+                }
             }
         }
     }
 
     private suspend fun getNewMovies(page: Int) {
-        when (val newMovies = newMoviesUseCase.invoke(page)) {
+        when (val result = newMoviesUseCase.invoke(page)) {
             is ResultDomain.Success -> {
-                val data = newMovies.data
+                val data = result.data
                 _newMovieList.postValue(data)
             }
             is ResultDomain.Error -> {
-                newToastMessage("ახალი ფილმები - ${newMovies.exception}")
+                when (result.exception) {
+                    AppConstants.NO_INTERNET_ERROR -> {}
+                    else -> newToastMessage("ახალი ფილმები - ${result.exception}")
+
+                }
             }
         }
     }

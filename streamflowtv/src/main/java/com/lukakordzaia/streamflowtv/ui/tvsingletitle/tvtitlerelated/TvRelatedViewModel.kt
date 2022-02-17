@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.core.network.toTitleListModel

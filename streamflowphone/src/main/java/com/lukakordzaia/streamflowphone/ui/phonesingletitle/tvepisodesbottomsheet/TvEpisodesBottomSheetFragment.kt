@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.setGone
 import com.lukakordzaia.core.utils.setVisible

@@ -15,8 +15,8 @@ import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.baseclasses.BaseFragmentVM
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
-import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
@@ -26,7 +26,6 @@ import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedFragment
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
-import com.lukakordzaia.streamflowtv.ui.tvwatchlist.TvWatchlistActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 

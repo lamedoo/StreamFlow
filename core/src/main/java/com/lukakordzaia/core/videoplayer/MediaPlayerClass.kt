@@ -4,7 +4,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
-import com.lukakordzaia.core.datamodels.PlayerDurationInfo
+import com.lukakordzaia.core.domain.domainmodels.PlayerDurationInfo
 
 
 class MediaPlayerClass(private val player: SimpleExoPlayer) {

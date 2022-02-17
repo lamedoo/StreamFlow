@@ -3,13 +3,14 @@ package com.lukakordzaia.core.network.interceptors
 import android.content.Context
 import android.net.ConnectivityManager
 import com.lukakordzaia.core.network.InternetConnection
+import com.lukakordzaia.core.utils.AppConstants
 import okhttp3.Interceptor
 import okhttp3.Response
 
 class NetworkConnectionInterceptor(private val context: Context): Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isConnected()) {
-            throw InternetConnection("შეამოწმეთ ინტერნეტთან კავშირი")
+            throw InternetConnection()
         } else {
             return chain.proceed(chain.request())
         }

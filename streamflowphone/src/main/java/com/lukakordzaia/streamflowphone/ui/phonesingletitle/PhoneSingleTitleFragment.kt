@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowphone.R

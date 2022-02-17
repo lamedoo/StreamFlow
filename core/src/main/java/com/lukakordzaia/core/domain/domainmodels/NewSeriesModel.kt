@@ -1,4 +1,4 @@
-package com.lukakordzaia.core.datamodels
+package com.lukakordzaia.core.domain.domainmodels
 
 data class NewSeriesModel(
     val id: Int,

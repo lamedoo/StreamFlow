@@ -20,6 +20,9 @@ open class ImoviesCall {
                     response.code() == 500 -> {
                         AppConstants.SERVER_ERROR
                     }
+                    response.code() == 502 -> {
+                        AppConstants.TIME_OUT_ERROR
+                    }
                     else -> {
                         AppConstants.UNKNOWN_ERROR
                     }
@@ -29,7 +32,7 @@ open class ImoviesCall {
         } catch (e: Exception) {
             when (e) {
                 is InternetConnection -> {
-                    ResultData.Internet(e.toString())
+                    ResultData.Internet
                 }
                 else -> {
                     ResultData.Error(e.toString())

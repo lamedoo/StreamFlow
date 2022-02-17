@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.NewSeriesModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflowtv.R

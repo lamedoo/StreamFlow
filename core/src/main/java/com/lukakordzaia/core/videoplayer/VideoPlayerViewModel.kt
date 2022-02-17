@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.core.datamodels.EpisodeInfoModel
-import com.lukakordzaia.core.datamodels.TitleMediaItemsUri
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.EpisodeInfoModel
+import com.lukakordzaia.core.domain.domainmodels.TitleMediaItemsUri
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.request.user.PostTitleWatchTimeRequestBody

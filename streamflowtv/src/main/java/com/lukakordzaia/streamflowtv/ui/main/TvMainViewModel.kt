@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.NewSeriesModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.*
 import kotlinx.coroutines.*
 

@@ -20,8 +20,8 @@ import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.R
 import com.lukakordzaia.core.databinding.ContinueWatchingDialogBinding
-import com.lukakordzaia.core.datamodels.TitleMediaItemsUri
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.TitleMediaItemsUri
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.core.videoplayer.BuildMediaSource
 import com.lukakordzaia.core.videoplayer.MediaPlayerClass

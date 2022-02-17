@@ -8,7 +8,7 @@ import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.core.utils.applyBundle
 import com.lukakordzaia.core.utils.setDrawableBackground
 import com.lukakordzaia.core.utils.setImage

@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflowtv.baseclasses.activities
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvBaseBinding

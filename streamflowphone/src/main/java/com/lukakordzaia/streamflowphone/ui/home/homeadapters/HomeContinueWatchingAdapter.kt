@@ -1,10 +1,9 @@
 package com.lukakordzaia.streamflowphone.ui.home.homeadapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.core.utils.titlePosition
 import com.lukakordzaia.streamflowphone.databinding.RvDbTitleItemBinding

@@ -4,23 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.VideoPlayerData
-import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.streamflowtv.R
-import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
-import com.lukakordzaia.streamflowtv.ui.tvcatalogue.TvCataloguePresenter
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvSeasonsPresenter
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.component.getScopeId
 
 
 class TvSeasonBrowse : VerticalGridSupportFragment() {

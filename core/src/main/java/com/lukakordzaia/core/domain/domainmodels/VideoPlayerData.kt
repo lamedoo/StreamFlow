@@ -1,4 +1,4 @@
-package com.lukakordzaia.core.datamodels
+package com.lukakordzaia.core.domain.domainmodels
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

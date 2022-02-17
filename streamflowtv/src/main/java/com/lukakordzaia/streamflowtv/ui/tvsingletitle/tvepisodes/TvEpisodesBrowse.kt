@@ -14,19 +14,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.TitleEpisodes
-import com.lukakordzaia.core.datamodels.VideoPlayerData
-import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.TitleEpisodes
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
-import com.lukakordzaia.streamflowtv.ui.tvcatalogue.TvCataloguePresenter
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvEpisodesPresenter
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvSeasonsPresenter
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 

@@ -1,18 +1,16 @@
 package com.lukakordzaia.core.network
 
 import java.io.IOException
-import java.lang.Error
 
 sealed class ResultData<out T : Any> {
     data class Success<out T : Any>(val data: T) : ResultData<T>()
-    data class Internet(val exception: String) : ResultData<Nothing>()
+    object Internet : ResultData<Nothing>()
     data class Error(val exception: String) : ResultData<Nothing>()
 }
 
-sealed class ResultDomain<out Success : Any, out Error : String> {
+sealed class ResultDomain<out Success : Any, out Error : Any> {
     data class Success<out Success : Any>(val data: Success) : ResultDomain<Success, Nothing>()
-    data class Internet<out Error : String>(val exception: Error) : ResultDomain<Nothing, Error>()
-    data class Error<out Error : String>(val exception: Error) : ResultDomain<Nothing, Error>()
+    data class Error<out Error : Any>(val exception: Error) : ResultDomain<Nothing, Error>()
 }
 
 data class LoadingState(val status: Status) {
@@ -29,4 +27,4 @@ data class LoadingState(val status: Status) {
     }
 }
 
-class InternetConnection(message: String): IOException(message)
+class InternetConnection : IOException()

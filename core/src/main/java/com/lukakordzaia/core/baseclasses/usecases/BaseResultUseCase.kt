@@ -2,6 +2,7 @@ package com.lukakordzaia.core.baseclasses.usecases
 
 import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.ResultDomain
+import com.lukakordzaia.core.utils.AppConstants
 import java.lang.Exception
 
 abstract class BaseResultUseCase<ARG_TYPE, DATA_TYPE : Any, DOMAIN_TYPE : Any, RETURN_TYPE : Any> : BaseUseCase<ARG_TYPE, RETURN_TYPE> {
@@ -14,7 +15,7 @@ abstract class BaseResultUseCase<ARG_TYPE, DATA_TYPE : Any, DOMAIN_TYPE : Any, R
                 ResultData.Error(apiCall.exception)
             }
             is ResultData.Internet -> {
-                ResultData.Internet(apiCall.exception)
+                ResultData.Internet
             }
         }
     }
@@ -35,7 +36,7 @@ abstract class BaseResultUseCase<ARG_TYPE, DATA_TYPE : Any, DOMAIN_TYPE : Any, R
                 ResultDomain.Error(result.exception)
             }
             is ResultData.Internet -> {
-                ResultDomain.Internet(result.exception)
+                ResultDomain.Error(AppConstants.NO_INTERNET_ERROR)
             }
         }
     }

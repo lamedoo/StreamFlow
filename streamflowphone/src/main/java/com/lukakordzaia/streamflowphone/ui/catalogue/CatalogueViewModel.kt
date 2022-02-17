@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.models.imovies.response.categories.GetGenresResponse

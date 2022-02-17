@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lukakordzaia.core.baseclasses.BaseFragmentVM
-import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.utils.applyBundle
 import com.lukakordzaia.streamflowtv.R

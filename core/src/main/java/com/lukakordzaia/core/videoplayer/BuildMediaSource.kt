@@ -4,7 +4,7 @@ import android.net.Uri
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.util.MimeTypes
-import com.lukakordzaia.core.datamodels.TitleMediaItemsUri
+import com.lukakordzaia.core.domain.domainmodels.TitleMediaItemsUri
 
 class BuildMediaSource {
     fun mediaSource(titleMediaItemsUri: TitleMediaItemsUri): MediaItem {

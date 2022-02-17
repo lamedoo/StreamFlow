@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.core.utils.setVisibleOrGone
@@ -21,7 +21,6 @@ import com.lukakordzaia.streamflowphone.ui.home.homeadapters.HomeNewSeriesAdapte
 import com.lukakordzaia.streamflowphone.ui.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 

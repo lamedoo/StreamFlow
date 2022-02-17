@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.TitleEpisodes
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.TitleEpisodes
 import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.toSingleTitleModel
 import kotlinx.coroutines.launch

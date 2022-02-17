@@ -5,7 +5,7 @@ import android.text.TextUtils
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.core.utils.hideKeyboard
 import com.lukakordzaia.core.utils.setGone
 import com.lukakordzaia.core.utils.showKeyboard

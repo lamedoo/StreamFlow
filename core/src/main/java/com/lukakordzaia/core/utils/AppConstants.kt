@@ -11,9 +11,11 @@ class AppConstants {
         const val LIST_SINGLE_STUDIO = 3
         const val LIST_SINGLE_GENRE = 4
 
-        const val NOT_FOUND_ERROR = "404 ვერ მოიძებნა"
-        const val SERVER_ERROR = "500 სერვერთან დაკავშირება ვერ მოხერხდა"
-        const val UNKNOWN_ERROR = "410 გაურკვეველი პრობლემა"
+        const val NO_INTERNET_ERROR = "0"
+        const val UNKNOWN_ERROR = "1"
+        const val NOT_FOUND_ERROR = "404"
+        const val SERVER_ERROR = "500"
+        const val TIME_OUT_ERROR = "502"
 
         const val VIDEO_PLAYER_DATA = "video player data"
 
