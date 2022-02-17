@@ -15,7 +15,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val phoneViewModelModule = module {
-    viewModel { HomeViewModel(get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { PhoneSingleTitleViewModel() }
     viewModel { CatalogueViewModel() }
     viewModel { SingleCatalogueViewModel() }

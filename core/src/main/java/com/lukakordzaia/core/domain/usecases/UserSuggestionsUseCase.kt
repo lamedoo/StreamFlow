@@ -7,10 +7,10 @@ import com.lukakordzaia.core.network.ResultDomain
 import com.lukakordzaia.core.network.models.imovies.response.titles.GetTitlesResponse
 import com.lukakordzaia.core.network.toTitleListModel
 
-class NewMoviesUseCase(
+class UserSuggestionsUseCase(
     private val repository: HomeRepository
 ) : BaseResultUseCase<Int, GetTitlesResponse, List<SingleTitleModel>, ResultDomain<List<SingleTitleModel>, String>>() {
     override suspend fun invoke(args: Int?): ResultDomain<List<SingleTitleModel>, String> {
-        return transformToDomain(repository.getNewMovies(args ?: 1)) { it.data.toTitleListModel() }
+        return transformToDomain(repository.getUserSuggestions(args ?: 1)) { it.data.toTitleListModel() }
     }
 }

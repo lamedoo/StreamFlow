@@ -20,8 +20,7 @@ import com.lukakordzaia.core.domain.repository.userrepository.DefaultUserReposit
 import com.lukakordzaia.core.domain.repository.userrepository.UserRepository
 import com.lukakordzaia.core.domain.repository.watchlistrepository.DefaultWatchlistRepository
 import com.lukakordzaia.core.domain.repository.watchlistrepository.WatchlistRepository
-import com.lukakordzaia.core.domain.usecases.MovieDayUseCaseBase
-import com.lukakordzaia.core.domain.usecases.NewMoviesUseCase
+import com.lukakordzaia.core.domain.usecases.*
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.core.videoplayer.BuildMediaSource
 import org.koin.dsl.module
@@ -50,4 +49,10 @@ val generalModule = module {
 val useCaseModule = module {
     single { MovieDayUseCaseBase(get()) }
     single { NewMoviesUseCase(get()) }
+    single { TopMoviesUseCase(get()) }
+    single { TopTvShowsUseCase(get()) }
+    single { NewSeriesUseCase(get()) }
+    single { UserSuggestionsUseCase(get()) }
+    single { ContinueWatchingUseCase(get()) }
+    single { SingleTitleUseCase(get()) }
 }

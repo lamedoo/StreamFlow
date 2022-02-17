@@ -10,7 +10,7 @@ interface HomeRepository {
     suspend fun getMovieDay(): ResultData<GetTitlesResponse>
     suspend fun getContinueWatching(): ResultData<GetContinueWatchingResponse>
     suspend fun hideTitleContinueWatching(id: Int): ResultData<UserWatchListStatusResponse>
-    suspend fun getNewMovies(page: Int?): ResultData<GetTitlesResponse>
+    suspend fun getNewMovies(page: Int): ResultData<GetTitlesResponse>
     suspend fun getTopMovies(page: Int): ResultData<GetTitlesResponse>
     suspend fun getTopTvShows(page: Int): ResultData<GetTitlesResponse>
     suspend fun getNewSeries(page: Int): ResultData<GetNewSeriesResponse>

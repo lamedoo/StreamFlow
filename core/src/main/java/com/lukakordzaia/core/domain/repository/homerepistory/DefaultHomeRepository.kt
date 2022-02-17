@@ -21,8 +21,8 @@ class DefaultHomeRepository(private val service: ImoviesNetwork): ImoviesCall(),
         return imoviesCall { service.hideTitleContinueWatching(id) }
     }
 
-    override suspend fun getNewMovies(page: Int?): ResultData<GetTitlesResponse> {
-        return imoviesCall { service.getNewMovies(page ?: 1) }
+    override suspend fun getNewMovies(page: Int): ResultData<GetTitlesResponse> {
+        return imoviesCall { service.getNewMovies(page) }
     }
 
     override suspend fun getTopMovies(page: Int): ResultData<GetTitlesResponse> {

@@ -10,14 +10,19 @@ import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
-import com.lukakordzaia.core.domain.usecases.MovieDayUseCaseBase
-import com.lukakordzaia.core.domain.usecases.NewMoviesUseCase
+import com.lukakordzaia.core.domain.usecases.*
 import com.lukakordzaia.core.network.*
 import kotlinx.coroutines.*
 
 class HomeViewModel(
     private val movieDayUseCaseBase: MovieDayUseCaseBase,
-    private val newMoviesUseCase: NewMoviesUseCase
+    private val newMoviesUseCase: NewMoviesUseCase,
+    private val topMoviesUseCase: TopMoviesUseCase,
+    private val topTvShowsUseCase: TopTvShowsUseCase,
+    private val newSeriesUseCase: NewSeriesUseCase,
+    private val userSuggestionsUseCase: UserSuggestionsUseCase,
+    private val continueWatchingUseCase: ContinueWatchingUseCase,
+    private val singleTitleUseCase: SingleTitleUseCase
 ) : BaseViewModel() {
     val continueWatchingLoader = MutableLiveData<LoadingState>()
     val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
@@ -95,17 +100,17 @@ class HomeViewModel(
         val dbTitles: MutableList<ContinueWatchingModel> = mutableListOf()
         viewModelScope.launch {
             dbDetails.forEach {
-                when (val databaseTitles = environment.singleTitleRepository.getSingleTitleData(it.titleId)) {
-                    is ResultData.Success -> {
-                        val data = databaseTitles.data.data
+                when (val result = singleTitleUseCase.invoke(it.titleId)) {
+                    is ResultDomain.Success -> {
+                        val data = result.data
                         dbTitles.add(
                             ContinueWatchingModel(
-                                data.posters.data!!.x240,
-                                data.duration,
+                                data.poster,
+                                it.titleDuration.toInt(),
                                 it.titleId,
                                 it.isTvShow,
-                                data.primaryName,
-                                data.originalName,
+                                data.nameGeo,
+                                data.nameEng,
                                 it.watchedDuration,
                                 it.titleDuration,
                                 it.season,
@@ -116,8 +121,11 @@ class HomeViewModel(
 
                         _continueWatchingList.value = dbTitles
                     }
-                    is ResultData.Error -> {
-                        newToastMessage("ბაზის ფილმები - ${databaseTitles.exception}")
+                    is ResultDomain.Error -> {
+                        when (result.exception) {
+                            AppConstants.NO_INTERNET_ERROR -> {}
+                            else -> newToastMessage("ბაზის ფილმები - ${result.exception}")
+                        }
                     }
                 }
             }
@@ -128,18 +136,16 @@ class HomeViewModel(
     private fun getContinueWatching() {
         continueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (val watching = environment.homeRepository.getContinueWatching()) {
-                is ResultData.Success -> {
-                    val data = watching.data.data
-
-                    _continueWatchingList.value = data.toContinueWatchingModel()
+            when (val result = continueWatchingUseCase.invoke()) {
+                is ResultDomain.Success -> {
+                    _continueWatchingList.postValue(result.data)
                     continueWatchingLoader.value = LoadingState.LOADED
                 }
-                is ResultData.Error -> {
-                    newToastMessage("განაგრძეთ ყურება - ${watching.exception}")
-                }
-                is ResultData.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("განაგრძეთ ყურება - ${result.exception}")
+                    }
                 }
             }
         }
@@ -183,16 +189,16 @@ class HomeViewModel(
         _continueWatchingList.value = mutableListOf()
     }
 
-    private fun getUserSuggestions() {
+    private suspend fun getUserSuggestions() {
         if (sharedPreferences.getLoginToken() != "") {
-            viewModelScope.launch {
-                when (val suggestions = environment.homeRepository.getUserSuggestions(sharedPreferences.getUserId())) {
-                    is ResultData.Success -> {
-                        val data = suggestions.data.data
-                        _userSuggestionsList.postValue(data.toTitleListModel())
-                    }
-                    is ResultData.Error -> {
-                        newToastMessage("შემოთავაზებული ფილმები - ${suggestions.exception}")
+            when (val result = userSuggestionsUseCase.invoke(sharedPreferences.getUserId())) {
+                is ResultDomain.Success -> {
+                    _userSuggestionsList.postValue(result.data)
+                }
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> {}
+                        else -> newToastMessage("შემოთავაზებული ფილმები - ${result.exception}")
                     }
                 }
             }
@@ -202,8 +208,7 @@ class HomeViewModel(
     private suspend fun getMovieDay() {
         when (val result = movieDayUseCaseBase.invoke()) {
             is ResultDomain.Success -> {
-                val data = result.data[0]
-                _movieDayData.postValue(listOf(data))
+                _movieDayData.postValue(listOf(result.data[0]))
             }
             is ResultDomain.Error -> {
                 when (result.exception) {
@@ -217,58 +222,61 @@ class HomeViewModel(
     private suspend fun getNewMovies(page: Int) {
         when (val result = newMoviesUseCase.invoke(page)) {
             is ResultDomain.Success -> {
-                val data = result.data
-                _newMovieList.postValue(data)
+                _newMovieList.postValue(result.data)
             }
             is ResultDomain.Error -> {
                 when (result.exception) {
                     AppConstants.NO_INTERNET_ERROR -> {}
                     else -> newToastMessage("ახალი ფილმები - ${result.exception}")
-
                 }
             }
         }
     }
 
     private suspend fun getTopMovies(page: Int) {
-        when (val topMovies = environment.homeRepository.getTopMovies(page)) {
-            is ResultData.Success -> {
-                val data = topMovies.data.data
-                _topMovieList.postValue(data.toTitleListModel())
+        when (val result = topMoviesUseCase.invoke(page)) {
+            is ResultDomain.Success -> {
+                _topMovieList.postValue(result.data)
             }
-            is ResultData.Error -> {
-                newToastMessage("ტოპ ფილმები - ${topMovies.exception}")
+            is ResultDomain.Error -> {
+                when (result.exception) {
+                    AppConstants.NO_INTERNET_ERROR -> {}
+                    else -> newToastMessage("ტოპ ფილმები - ${result.exception}")
+                }
             }
         }
     }
 
     private suspend fun getTopTvShows(page: Int) {
-        when (val topTvShows = environment.homeRepository.getTopTvShows(page)) {
-            is ResultData.Success -> {
-                val data = topTvShows.data.data
-                _topTvShowList.postValue(data.toTitleListModel())
+        when (val result = topTvShowsUseCase.invoke(page)) {
+            is ResultDomain.Success -> {
+                _topTvShowList.postValue(result.data)
             }
-            is ResultData.Error -> {
-                newToastMessage("ტოპ სერიალები- ${topTvShows.exception}")
+            is ResultDomain.Error -> {
+                when (result.exception) {
+                    AppConstants.NO_INTERNET_ERROR -> {}
+                    else -> newToastMessage("ტოპ სერიალები - ${result.exception}")
+                }
             }
         }
     }
 
     private suspend fun getNewSeries(page: Int) {
-        when (val newSeries = environment.homeRepository.getNewSeries(page)) {
-            is ResultData.Success -> {
-                val data = newSeries.data.data?.get(0)?.movies?.data
-                _newSeriesList.postValue(data?.toNewSeriesModel())
+        when (val result = newSeriesUseCase.invoke(page)) {
+            is ResultDomain.Success -> {
+                _newSeriesList.postValue(result.data)
             }
-            is ResultData.Error -> {
-                newToastMessage("ახალი სერიები- ${newSeries.exception}")
+            is ResultDomain.Error -> {
+                when (result.exception) {
+                    AppConstants.NO_INTERNET_ERROR -> {}
+                    else -> newToastMessage("ახალი სერიალები - ${result.exception}")
+                }
             }
         }
     }
 
     fun fetchContent(page: Int) {
         setGeneralLoader(LoadingState.LOADING)
-        getUserSuggestions()
         viewModelScope.launch(Dispatchers.IO) {
             getMovieDay()
             coroutineScope {
@@ -276,11 +284,13 @@ class HomeViewModel(
                 val topMoviesDeferred = async { getTopMovies(page) }
                 val topTvShowsDeferred = async { getTopTvShows(page) }
                 val newSeriesDeferred = async { getNewSeries(page) }
+                val userSuggestionsDeferred = async { getUserSuggestions() }
 
                 newMoviesDeferred.await()
                 topMoviesDeferred.await()
                 topTvShowsDeferred.await()
                 newSeriesDeferred.await()
+                userSuggestionsDeferred.await()
             }
             setGeneralLoader(LoadingState.LOADED)
         }

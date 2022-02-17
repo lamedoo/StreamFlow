@@ -11,35 +11,6 @@ import com.lukakordzaia.core.network.models.imovies.response.titles.GetTitlesRes
 import com.lukakordzaia.core.network.models.imovies.response.user.GetContinueWatchingResponse
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserWatchlistResponse
 
-fun GetTitlesResponse.toTitleListModel(): List<SingleTitleModel> {
-    return this.data.map {
-        SingleTitleModel(
-            id = it.id,
-            isTvShow = it.isTvShow ?: false,
-            displayName = if (it.primaryName.isNotEmpty()) it.primaryName else it.secondaryName,
-            nameGeo = it.primaryName,
-            nameEng = it.secondaryName,
-            poster = it.posters?.data?.x240,
-            cover = it.covers?.data?.x1050,
-            description = null,
-            imdbId = null,
-            imdbScore = null,
-            releaseYear = it.year.toString(),
-            duration = null,
-            seasonNum = null,
-            country = null,
-            trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
-            watchlist = it.userWantsToWatch?.data?.status,
-            titleDuration = it.userWatch?.data?.duration,
-            watchedDuration = it.userWatch?.data?.progress,
-            currentSeason = it.userWatch?.data?.season,
-            currentEpisode = it.userWatch?.data?.episode,
-            currentLanguage = it.userWatch?.data?.language,
-            visibility = it.userWatch?.data?.visible
-        )
-    }
-}
-
 fun List<GetTitlesResponse.Data>.toTitleListModel(): List<SingleTitleModel> {
     return map {
         SingleTitleModel(
@@ -155,6 +126,29 @@ fun List<GetContinueWatchingResponse.Data>.toContinueWatchingModel(): List<Conti
 
 fun List<GetNewSeriesResponse.Data.Movies.Data>.toNewSeriesModel(): List<NewSeriesModel> {
     return map {
+        val title = it
+
+        NewSeriesModel(
+            id = title.id!!,
+            isTvShow = title.isTvShow!!,
+            displayName = if (!title.primaryName.isNullOrEmpty()) title.primaryName else title.secondaryName,
+            nameGeo = if (!title.primaryName.isNullOrEmpty()) title.primaryName else "N/A",
+            nameEng = if (!title.secondaryName.isNullOrEmpty()) title.secondaryName else "N/A",
+            poster = title.posters?.data?.x240,
+            cover = title.covers?.data?.x1050,
+            description = if (!title.plot?.data?.description.isNullOrEmpty()) title.plot?.data?.description else "აღწერა არ მოიძებნა",
+            imdbId = title.imdbUrl?.substring(27, title.imdbUrl.length),
+            imdbScore = if (title.rating?.imdb != null) title.rating.imdb.score.toString() else "N/A",
+            releaseYear = title.year.toString(),
+            duration = "${title.duration} წ.",
+            currentSeason = title.lastUpdatedSeries?.data?.season,
+            currentEpisode = title.lastUpdatedSeries?.data?.episode
+        )
+    }
+}
+
+fun GetNewSeriesResponse.toNewSeriesModel(): List<NewSeriesModel> {
+    return this.data?.get(0)?.movies?.data!!.map {
         val title = it
 
         NewSeriesModel(

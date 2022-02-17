@@ -27,7 +27,7 @@
             app:enterAnim="@anim/slide_in_right">
             <argument
                 android:name="videoPlayerData"
-                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
+                app:argType="com.lukakordzaia.core.domain.domainmodels.VideoPlayerData" />
         </action>
         <action
             android:id="@+id/action_homeFragment_to_continueWatchingInfoFragment"
