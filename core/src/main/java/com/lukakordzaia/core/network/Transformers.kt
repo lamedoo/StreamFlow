@@ -1,9 +1,6 @@
 package com.lukakordzaia.core.network
 
-import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
-import com.lukakordzaia.core.domain.domainmodels.EpisodeInfoModel
-import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
-import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.*
 import com.lukakordzaia.core.network.models.imovies.response.newseries.GetNewSeriesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleResponse
@@ -12,30 +9,34 @@ import com.lukakordzaia.core.network.models.imovies.response.user.GetContinueWat
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserWatchlistResponse
 
 fun List<GetTitlesResponse.Data>.toTitleListModel(): List<SingleTitleModel> {
-    return map {
+    return map { data ->
+        val genres: MutableList<String> = ArrayList()
+        data.genres?.data?.forEach { it.primaryName?.let { name -> genres.add(name) } }
+
         SingleTitleModel(
-            id = it.id,
-            isTvShow = it.isTvShow ?: false,
-            displayName = if (it.primaryName.isNotEmpty()) it.primaryName else it.secondaryName,
-            nameGeo = it.primaryName,
-            nameEng = it.secondaryName,
-            poster = it.posters?.data?.x240,
-            cover = it.covers?.data?.x1050,
+            id = data.id,
+            isTvShow = data.isTvShow ?: false,
+            displayName = data.primaryName.ifEmpty { data.secondaryName },
+            nameGeo = data.primaryName,
+            nameEng = data.secondaryName,
+            poster = data.posters?.data?.x240,
+            cover = data.covers?.data?.x1050,
             description = null,
             imdbId = null,
-            imdbScore = null,
-            releaseYear = it.year.toString(),
-            duration = null,
-            seasonNum = null,
+            imdbScore = data.rating.imdb?.let { it.score.toString() } ?: run { "N/A" },
+            releaseYear = data.year.toString(),
+            genres = genres,
+            duration = "${data.duration} წ.",
+            seasonNum = data.lastSeries?.data?.season,
             country = null,
-            trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
-            watchlist = it.userWantsToWatch?.data?.status,
-            titleDuration = it.userWatch?.data?.duration,
-            watchedDuration = it.userWatch?.data?.progress,
-            currentSeason = it.userWatch?.data?.season,
-            currentEpisode = it.userWatch?.data?.episode,
-            currentLanguage = it.userWatch?.data?.language,
-            visibility = it.userWatch?.data?.visible
+            trailer = if (data.trailers?.data?.isNotEmpty() == true) data.trailers.data[0]?.fileUrl else null,
+            watchlist = data.userWantsToWatch?.data?.status,
+            titleDuration = data.userWatch?.data?.duration,
+            watchedDuration = data.userWatch?.data?.progress,
+            currentSeason = data.userWatch?.data?.season,
+            currentEpisode = data.userWatch?.data?.episode,
+            currentLanguage = data.userWatch?.data?.language,
+            visibility = data.userWatch?.data?.visible
         )
     }
 }
@@ -43,24 +44,24 @@ fun List<GetTitlesResponse.Data>.toTitleListModel(): List<SingleTitleModel> {
 fun GetSingleTitleResponse.toSingleTitleModel(): SingleTitleModel {
     val title = this.data
 
+    val genres: MutableList<String> = ArrayList()
+    data.genres.data.forEach { it.primaryName?.let { name -> genres.add(name) } }
+
     return SingleTitleModel(
         id = title.id,
         isTvShow = title.isTvShow,
-        displayName = if (title.primaryName.isNotEmpty()) title.primaryName else title.secondaryName,
-        nameGeo = if (title.primaryName.isNotEmpty()) title.primaryName else "N/A",
-        nameEng = if (title.secondaryName.isNotEmpty()) title.secondaryName else "N/A",
+        displayName = title.primaryName.ifEmpty { title.secondaryName },
+        nameGeo = title.primaryName.ifEmpty { "N/A" },
+        nameEng = title.secondaryName.ifEmpty { "N/A" },
         poster = title.posters.data?.x240,
         cover = title.covers?.data?.x1050,
-        description = if (title.plot.data.description.isNotEmpty()) title.plot.data.description else "აღწერა არ მოიძებნა",
+        description = title.plot.data.description.ifEmpty { "აღწერა არ მოიძებნა" },
         imdbId = title.imdbUrl.substring(27, title.imdbUrl.length),
-        imdbScore = if (title.rating.imdb != null) title.rating.imdb.score.toString() else "N/A",
+        imdbScore = title.rating.imdb?.let { it.score.toString() } ?: run { "N/A" },
         releaseYear = title.year.toString(),
+        genres = genres,
         duration = "${title.duration} წ.",
-        seasonNum = if (title.seasons != null) {
-            if (title.seasons.data.isNotEmpty()) title.seasons.data.size else 0
-        } else {
-            0
-        },
+        seasonNum = title.seasons?.let { if (title.seasons.data.isNotEmpty()) title.seasons.data.size else 0 } ?: run { 0 },
         country = if (title.countries.data.isNotEmpty()) title.countries.data[0].secondaryName else "N/A",
         trailer = if (title.trailers.data.isNotEmpty()) title.trailers.data[0].fileUrl else null,
         watchlist = title.userWantsToWatch?.data?.status,
@@ -79,18 +80,19 @@ fun List<GetUserWatchlistResponse.Data>.toWatchListModel(): List<SingleTitleMode
 
         SingleTitleModel(
             id = it.id,
-            isTvShow = it.isTvShow?: false,
-            displayName = if (it.primaryName.isNotEmpty()) it.primaryName else it.secondaryName,
+            isTvShow = it.isTvShow ?: false,
+            displayName = it.primaryName.ifEmpty { it.secondaryName },
             nameGeo = it.primaryName,
             nameEng = it.secondaryName,
             poster = it.posters?.data?.x240,
             cover = it.covers?.data?.x1050,
             description = null,
             imdbId = null,
-            imdbScore = null,
+            imdbScore = it.rating.imdb?.score?.toString() ?: run { "N/A" },
             releaseYear = it.year.toString(),
-            duration = null,
-            seasonNum = null,
+            genres = null,
+            duration = "${it.duration} წ.",
+            seasonNum = it.lastSeries?.data?.season,
             country = null,
             trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
             watchlist = it.userWantsToWatch?.data?.status,
@@ -105,44 +107,55 @@ fun List<GetUserWatchlistResponse.Data>.toWatchListModel(): List<SingleTitleMode
 }
 
 fun List<GetContinueWatchingResponse.Data>.toContinueWatchingModel(): List<ContinueWatchingModel> {
-    return map {
-        val movie = it.movie.data
+    return map { data ->
+        val title = data.movie.data
+
+        val genres: MutableList<String> = ArrayList()
+        title.genres.data.forEach { it.primaryName?.let { name -> genres.add(name) } }
 
         ContinueWatchingModel(
-            cover = movie.posters?.data?.x240,
-            duration = movie.duration,
-            id = movie.id,
-            isTvShow = movie.isTvShow,
-            primaryName = if (movie.primaryName.isNotEmpty()) movie.primaryName else movie.secondaryName,
-            originalName = if (movie.primaryName.isNotEmpty()) movie.primaryName else movie.secondaryName,
-            watchedDuration = it.progress,
-            titleDuration = it.duration,
-            season = it.season,
-            episode = it.episode,
-            language = it.language
+            poster = title.posters?.data?.x240,
+            cover = title.covers.data.x1050,
+            duration = title.duration,
+            id = title.id,
+            isTvShow = title.isTvShow,
+            primaryName = title.primaryName.ifEmpty { title.secondaryName },
+            originalName = title.secondaryName.ifEmpty { title.primaryName },
+            imdbScore = title.rating?.imdb?.score?.toString() ?: run { "N/A" },
+            releaseYear = title.year.toString(),
+            genres = genres,
+            seasonNum = data.season,
+            watchedDuration = data.progress,
+            titleDuration = data.duration,
+            season = data.season,
+            episode = data.episode,
+            language = data.language
         )
     }
 }
 
 fun List<GetNewSeriesResponse.Data.Movies.Data>.toNewSeriesModel(): List<NewSeriesModel> {
-    return map {
-        val title = it
+    return map { data ->
+
+        val genres: MutableList<String> = ArrayList()
+        data.genres?.data?.forEach { it?.primaryName?.let { name -> genres.add(name) } }
 
         NewSeriesModel(
-            id = title.id!!,
-            isTvShow = title.isTvShow!!,
-            displayName = if (!title.primaryName.isNullOrEmpty()) title.primaryName else title.secondaryName,
-            nameGeo = if (!title.primaryName.isNullOrEmpty()) title.primaryName else "N/A",
-            nameEng = if (!title.secondaryName.isNullOrEmpty()) title.secondaryName else "N/A",
-            poster = title.posters?.data?.x240,
-            cover = title.covers?.data?.x1050,
-            description = if (!title.plot?.data?.description.isNullOrEmpty()) title.plot?.data?.description else "აღწერა არ მოიძებნა",
-            imdbId = title.imdbUrl?.substring(27, title.imdbUrl.length),
-            imdbScore = if (title.rating?.imdb != null) title.rating.imdb.score.toString() else "N/A",
-            releaseYear = title.year.toString(),
-            duration = "${title.duration} წ.",
-            currentSeason = title.lastUpdatedSeries?.data?.season,
-            currentEpisode = title.lastUpdatedSeries?.data?.episode
+            id = data.id!!,
+            isTvShow = data.isTvShow!!,
+            displayName = if (!data.primaryName.isNullOrEmpty()) data.primaryName else data.secondaryName,
+            nameGeo = if (!data.primaryName.isNullOrEmpty()) data.primaryName else "N/A",
+            nameEng = if (!data.secondaryName.isNullOrEmpty()) data.secondaryName else "N/A",
+            poster = data.posters?.data?.x240,
+            cover = data.covers?.data?.x1050,
+            description = if (!data.plot?.data?.description.isNullOrEmpty()) data.plot?.data?.description else "აღწერა არ მოიძებნა",
+            imdbId = data.imdbUrl?.substring(27, data.imdbUrl.length),
+            imdbScore = data.rating?.imdb?.let { it.score.toString() } ?: run { "N/A" },
+            releaseYear = data.year.toString(),
+            genres = genres,
+            duration = "${data.duration} წ.",
+            currentSeason = data.lastUpdatedSeries?.data?.season,
+            currentEpisode = data.lastUpdatedSeries?.data?.episode
         )
     }
 }
@@ -168,6 +181,54 @@ fun GetNewSeriesResponse.toNewSeriesModel(): List<NewSeriesModel> {
             currentEpisode = title.lastUpdatedSeries?.data?.episode
         )
     }
+}
+
+fun SingleTitleModel.toTvInfoModel(): TvInfoModel {
+    return TvInfoModel(
+        id = this.id,
+        isTvShow = this.isTvShow,
+        displayName = this.displayName,
+        nameGeo = this.nameGeo,
+        nameEng = this.nameEng,
+        cover = this.cover,
+        imdbScore = this.imdbScore,
+        releaseYear = this.releaseYear,
+        duration = this.duration,
+        seasonNum = this.seasonNum,
+        genres = this.genres
+    )
+}
+
+fun NewSeriesModel.toTvInfoModel(): TvInfoModel {
+    return TvInfoModel(
+        id = this.id,
+        isTvShow = this.isTvShow,
+        displayName = this.displayName,
+        nameGeo = this.nameGeo,
+        nameEng = this.nameEng,
+        cover = this.cover,
+        imdbScore = this.imdbScore,
+        releaseYear = this.releaseYear,
+        duration = this.duration,
+        seasonNum = this.currentSeason,
+        genres = this.genres
+    )
+}
+
+fun ContinueWatchingModel.toTvInfoModel(): TvInfoModel {
+    return TvInfoModel(
+        id = this.id,
+        isTvShow = this.isTvShow,
+        displayName = this.primaryName,
+        nameGeo = this.primaryName,
+        nameEng = this.originalName,
+        cover = this.cover,
+        imdbScore = this.imdbScore,
+        releaseYear = this.releaseYear,
+        duration = "${this.duration} წ.",
+        seasonNum = this.seasonNum,
+        genres = this.genres
+    )
 }
 
 fun List<GetSingleTitleFilesResponse.Data>.toEpisodeInfoModel(season: Int, chosenLanguage: String): EpisodeInfoModel {

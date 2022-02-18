@@ -89,7 +89,9 @@ data class GetUserWatchlistResponse(
                 @SerializedName("watchCount")
                 val watchCount: Int,
                 @SerializedName("year")
-                val year: Int
+                val year: Int,
+                @SerializedName("lastSeries")
+                val lastSeries: LastSeries?
             ) : Parcelable {
                 @Parcelize
                 data class Cover(
@@ -192,7 +194,7 @@ data class GetUserWatchlistResponse(
                 @Parcelize
                 data class Rating(
                     @SerializedName("imdb")
-                    val imdb: Imdb,
+                    val imdb: Imdb?,
                     @SerializedName("imovies")
                     val imovies: Imovies,
                     @SerializedName("metacritic")
@@ -312,6 +314,18 @@ data class GetUserWatchlistResponse(
                         val visible: Boolean,
                         @SerializedName("watched")
                         val watched: Boolean
+                    ) : Parcelable
+                }
+
+                @Parcelize
+                data class LastSeries(
+                    @SerializedName("data")
+                    val `data`: Data?
+                ) : Parcelable {
+                    @Parcelize
+                    data class Data(
+                        val season: Int?,
+                        val episode: Int?
                     ) : Parcelable
                 }
             }

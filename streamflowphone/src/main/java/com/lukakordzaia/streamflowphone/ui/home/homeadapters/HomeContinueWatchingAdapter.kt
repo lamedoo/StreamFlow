@@ -38,7 +38,7 @@ class HomeContinueWatchingAdapter(
 
     inner class ViewHolder(val view: RvDbTitleItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: ContinueWatchingModel) {
-            view.itemPoster.setImage(model.cover, true)
+            view.itemPoster.setImage(model.poster, true)
 
             view.continueWatchingInfo.text = if (model.isTvShow) {
                 model.watchedDuration.titlePosition(model.season, model.episode)

@@ -10,6 +10,7 @@ import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.toTvInfoModel
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.BaseBrowseSupportFragment
@@ -247,9 +248,9 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)
 
             when (item) {
-                is SingleTitleModel -> onTitleSelected?.getTitleId(item.id, null)
-                is NewSeriesModel -> onTitleSelected?.getTitleId(item.id, null)
-                is ContinueWatchingModel -> onTitleSelected?.getTitleId(item.id, item)
+                is SingleTitleModel -> onTitleSelected?.getTitleId(item.toTvInfoModel())
+                is NewSeriesModel -> onTitleSelected?.getTitleId(item.toTvInfoModel())
+                is ContinueWatchingModel -> onTitleSelected?.getTitleId(item.toTvInfoModel(), item)
             }
 
             if (indexOfItem == 0) {

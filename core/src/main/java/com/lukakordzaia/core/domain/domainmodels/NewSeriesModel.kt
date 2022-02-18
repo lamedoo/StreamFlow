@@ -12,6 +12,7 @@ data class NewSeriesModel(
     val imdbId: String?,
     val imdbScore: String?,
     val releaseYear: String?,
+    val genres: List<String>?,
     val duration: String?,
     val currentSeason: Int?,
     val currentEpisode: Int?

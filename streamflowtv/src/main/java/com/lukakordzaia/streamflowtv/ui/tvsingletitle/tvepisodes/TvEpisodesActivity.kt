@@ -5,16 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.utils.applyBundle
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseFragmentActivity
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvSingleTitleBinding
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesFragment
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesViewModel
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsFragment
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvEpisodesActivity : BaseFragmentActivity<ActivityTvSingleTitleBinding>() {
     override fun getViewBinding() = ActivityTvSingleTitleBinding.inflate(layoutInflater)

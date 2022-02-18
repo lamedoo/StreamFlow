@@ -7,6 +7,7 @@ import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.toTvInfoModel
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -64,7 +65,7 @@ class TvCatalogueFragment : BaseVerticalGridSupportFragment<TvCatalogueViewModel
             val indexOfItem = gridAdapter.indexOf(item)
 
             if (item is SingleTitleModel) {
-                onTitleSelected?.getTitleId(item.id, null)
+                onTitleSelected?.getTitleId(item.toTvInfoModel())
             }
 
             val gridSize = Array(gridAdapter.size()) { i -> (i * 1) + 1 }.toList()

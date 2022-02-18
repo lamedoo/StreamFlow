@@ -85,7 +85,7 @@ data class GetContinueWatchingResponse(
                 @SerializedName("primaryName")
                 val primaryName: String,
                 @SerializedName("rating")
-                val rating: Rating,
+                val rating: Rating?,
                 @SerializedName("regionAllowed")
                 val regionAllowed: Boolean,
                 @SerializedName("releaseDate")
@@ -155,7 +155,7 @@ data class GetContinueWatchingResponse(
                         @SerializedName("id")
                         val id: Int,
                         @SerializedName("primaryName")
-                        val primaryName: String,
+                        val primaryName: String?,
                         @SerializedName("secondaryName")
                         val secondaryName: String,
                         @SerializedName("tertiaryName")
@@ -228,7 +228,7 @@ data class GetContinueWatchingResponse(
                 @Parcelize
                 data class Rating(
                     @SerializedName("imdb")
-                    val imdb: Imdb,
+                    val imdb: Imdb?,
                     @SerializedName("imovies")
                     val imovies: Imovies,
                     @SerializedName("metacritic")

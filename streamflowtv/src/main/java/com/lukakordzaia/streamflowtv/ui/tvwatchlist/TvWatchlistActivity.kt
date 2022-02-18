@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.datamodels.TvInfoModel
 import com.lukakordzaia.core.utils.applyBundle
 import com.lukakordzaia.core.utils.setDrawableBackground
 import com.lukakordzaia.core.utils.setImage
@@ -23,7 +24,6 @@ import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDeta
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBinding>(), TvTitleSelected, TvHasFavoritesListener, TvIsVerticalFirstRow {
-    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
     private var hasFavorites = true
     private var isTop = true
     private var type = AppConstants.WATCHLIST_MOVIES
@@ -91,27 +91,21 @@ class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBindin
         }
     }
 
-    override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {
-        tvTitleDetailsViewModel.getSingleTitleData(titleId)
+    override fun getTitleId(info: TvInfoModel, continueWatchingDetails: ContinueWatchingModel?) {
+        binding.titleInfo.name.text = info.displayName
 
-        tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
-            binding.titleInfo.name.text = it.nameEng
+        binding.titleInfo.poster.setImage(info.cover, false)
 
-            binding.titleInfo.poster.setImage(it.cover, false)
+        binding.titleInfo.year.text = "${info.releaseYear}"
+        binding.titleInfo.duration.text = if (info.isTvShow) {
+            "${info.seasonNum} სეზონი"
+        } else {
+            "${info.duration}"
+        }
 
-            binding.titleInfo.year.text = "${it.releaseYear}"
-            binding.titleInfo.duration.text = if (it.isTvShow) {
-                getString(R.string.season_number, it.seasonNum.toString())
-            } else {
-                it.duration
-            }
+        binding.titleInfo.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
 
-            binding.titleInfo.imdbScore.text = getString(R.string.imdb_score, it.imdbScore)
-        })
-
-        tvTitleDetailsViewModel.titleGenres.observe(this, {
-            binding.titleInfo.genres.text = TextUtils.join(", ", it)
-        })
+        binding.titleInfo.genres.text = info.genres?.let { TextUtils.join(", ", it) }
     }
 
     override fun hasFavorites(has: Boolean) {

@@ -2,6 +2,7 @@ package com.lukakordzaia.core.network.models.imovies.response.titles
 
 
 import com.google.gson.annotations.SerializedName
+import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleResponse
 
 data class GetTitlesResponse(
     @SerializedName("data")
@@ -49,7 +50,9 @@ data class GetTitlesResponse(
         @SerializedName("primaryName")
         val primaryName: String,
         @SerializedName("rating")
-        val rating: Rating?,
+        val rating: Rating,
+        @SerializedName("genres")
+        val genres: Genres?,
         @SerializedName("regionAllowed")
         val regionAllowed: Boolean?,
         @SerializedName("releaseDate")
@@ -71,7 +74,9 @@ data class GetTitlesResponse(
         @SerializedName("watchCount")
         val watchCount: Int?,
         @SerializedName("year")
-        val year: Int?
+        val year: Int?,
+        @SerializedName("lastSeries")
+        val lastSeries: LastSeries?
     ) {
         data class Cover(
             @SerializedName("large")
@@ -234,6 +239,34 @@ data class GetTitlesResponse(
                 val visible: Boolean?,
                 @SerializedName("watched")
                 val watched: Boolean?
+            )
+        }
+
+        data class LastSeries(
+            @SerializedName("data")
+            val `data`: UserWatch.Data?
+        ) {
+            data class Data(
+                val season: Int?,
+                val episode: Int?
+            )
+        }
+
+        data class Genres(
+            @SerializedName("data")
+            val `data`: List<DataGenres>?
+        ) {
+            data class DataGenres(
+                @SerializedName("backgroundImage")
+                val backgroundImage: String?,
+                @SerializedName("id")
+                val id: Int?,
+                @SerializedName("primaryName")
+                val primaryName: String?,
+                @SerializedName("secondaryName")
+                val secondaryName: String?,
+                @SerializedName("tertiaryName")
+                val tertiaryName: String?
             )
         }
     }
