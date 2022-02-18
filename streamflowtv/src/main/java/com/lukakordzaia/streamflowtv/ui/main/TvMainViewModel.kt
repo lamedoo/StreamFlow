@@ -65,6 +65,7 @@ class TvMainViewModel : BaseViewModel() {
                         dbTitles.add(
                             ContinueWatchingModel(
                                 data.posters.data!!.x240,
+                                data.covers?.data?.x1050,
                                 data.duration,
                                 it.titleId,
                                 it.isTvShow,

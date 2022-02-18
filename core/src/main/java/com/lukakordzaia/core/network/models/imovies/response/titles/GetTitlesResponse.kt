@@ -49,7 +49,7 @@ data class GetTitlesResponse(
         @SerializedName("primaryName")
         val primaryName: String,
         @SerializedName("rating")
-        val rating: Rating?,
+        val rating: Rating,
         @SerializedName("regionAllowed")
         val regionAllowed: Boolean?,
         @SerializedName("releaseDate")
@@ -71,7 +71,9 @@ data class GetTitlesResponse(
         @SerializedName("watchCount")
         val watchCount: Int?,
         @SerializedName("year")
-        val year: Int?
+        val year: Int?,
+        @SerializedName("lastSeries")
+        val lastSeries: LastSeries?
     ) {
         data class Cover(
             @SerializedName("large")
@@ -234,6 +236,16 @@ data class GetTitlesResponse(
                 val visible: Boolean?,
                 @SerializedName("watched")
                 val watched: Boolean?
+            )
+        }
+
+        data class LastSeries(
+            @SerializedName("data")
+            val `data`: UserWatch.Data?
+        ) {
+            data class Data(
+                val season: Int?,
+                val episode: Int?
             )
         }
     }

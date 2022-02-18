@@ -1,9 +1,6 @@
 package com.lukakordzaia.core.network
 
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.EpisodeInfoModel
-import com.lukakordzaia.core.datamodels.NewSeriesModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.datamodels.*
 import com.lukakordzaia.core.network.models.imovies.response.newseries.GetNewSeriesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleResponse
@@ -23,10 +20,10 @@ fun List<GetTitlesResponse.Data>.toTitleListModel(): List<SingleTitleModel> {
             cover = it.covers?.data?.x1050,
             description = null,
             imdbId = null,
-            imdbScore = null,
+            imdbScore = if (it.rating.imdb != null) it.rating.imdb.score.toString() else "N/A",
             releaseYear = it.year.toString(),
             duration = null,
-            seasonNum = null,
+            seasonNum = it.lastSeries?.data?.season,
             country = null,
             trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
             watchlist = it.userWantsToWatch?.data?.status,
@@ -109,7 +106,8 @@ fun List<GetContinueWatchingResponse.Data>.toContinueWatchingModel(): List<Conti
         val movie = it.movie.data
 
         ContinueWatchingModel(
-            cover = movie.posters?.data?.x240,
+            poster = movie.posters?.data?.x240,
+            cover = movie.covers.data.x1050,
             duration = movie.duration,
             id = movie.id,
             isTvShow = movie.isTvShow,
@@ -145,6 +143,38 @@ fun List<GetNewSeriesResponse.Data.Movies.Data>.toNewSeriesModel(): List<NewSeri
             currentEpisode = title.lastUpdatedSeries?.data?.episode
         )
     }
+}
+
+fun SingleTitleModel.toTvInfoModel(): TvInfoModel {
+    return TvInfoModel(
+        id = this.id,
+        isTvShow = this.isTvShow,
+        displayName = this.displayName,
+        nameGeo = this.nameGeo,
+        nameEng = this.nameEng,
+        cover = this.cover,
+        description = this.description,
+        imdbScore = this.imdbScore,
+        releaseYear = this.releaseYear,
+        duration = this.duration,
+        seasonNum = this.seasonNum
+    )
+}
+
+fun NewSeriesModel.toTvInfoModel(): TvInfoModel {
+    return TvInfoModel(
+        id = this.id,
+        isTvShow = this.isTvShow,
+        displayName = this.displayName,
+        nameGeo = this.nameGeo,
+        nameEng = this.nameEng,
+        cover = this.cover,
+        description = this.description,
+        imdbScore = this.imdbScore,
+        releaseYear = this.releaseYear,
+        duration = this.duration,
+        seasonNum = this.currentSeason
+    )
 }
 
 fun List<GetSingleTitleFilesResponse.Data>.toEpisodeInfoModel(season: Int, chosenLanguage: String): EpisodeInfoModel {

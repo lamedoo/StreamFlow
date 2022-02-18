@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ContinueWatchingModel(
+    val poster: String?,
     val cover: String?,
     val duration: Int?,
     val id: Int,

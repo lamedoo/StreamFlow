@@ -3,6 +3,7 @@ package com.lukakordzaia.core.network.models.imovies.response.newseries
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.lukakordzaia.core.network.models.imovies.response.titles.GetTitlesResponse
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
