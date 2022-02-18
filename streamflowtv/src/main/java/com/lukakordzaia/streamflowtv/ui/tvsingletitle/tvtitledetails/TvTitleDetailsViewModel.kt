@@ -25,9 +25,6 @@ class TvTitleDetailsViewModel : BaseViewModel() {
     private val _movieNotYetAdded = MutableLiveData<Boolean>()
     val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
 
-    private val _focusedButton = MutableLiveData<Buttons>()
-    val focusedButton: LiveData<Buttons> = _focusedButton
-
     private val _availableLanguages = MutableLiveData<MutableList<String>>()
     val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
 
@@ -154,14 +151,12 @@ class TvTitleDetailsViewModel : BaseViewModel() {
                         _movieNotYetAdded.value = false
                     } else {
                         _movieNotYetAdded.value = true
-                        _focusedButton.value = Buttons.FAVORITES
                     }
                 }
                 is Result.Error -> {
                     when (files.exception) {
                         AppConstants.UNKNOWN_ERROR -> {
                             _movieNotYetAdded.value = true
-                            _focusedButton.value = Buttons.FAVORITES
                         }
                     }
                 }
@@ -200,14 +195,5 @@ class TvTitleDetailsViewModel : BaseViewModel() {
                 }
             }
         }
-    }
-
-    fun setFocusedButton(button: Buttons) {
-        _focusedButton.value = button
-    }
-
-    enum class Buttons {
-        CONTINUE_WATCHING,
-        FAVORITES
     }
 }

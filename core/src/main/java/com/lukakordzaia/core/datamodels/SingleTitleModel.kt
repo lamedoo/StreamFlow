@@ -12,6 +12,7 @@ data class SingleTitleModel(
     val imdbId: String?,
     val imdbScore: String?,
     val releaseYear: String?,
+    val genres: List<String>?,
     val duration: String?,
     val seasonNum: Int?,
     val country: String?,

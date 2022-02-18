@@ -7,6 +7,7 @@ import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.network.toTvInfoModel
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvHasFavoritesListener
@@ -98,9 +99,7 @@ class TvWatchlistFragment : BaseVerticalGridSupportFragment<TvWatchlistViewModel
 
             selectedItem = indexOfItem
 
-            if (item is SingleTitleModel) {
-                onTitleSelected?.getTitleId(item.id, null)
-            }
+            onTitleSelected?.getTitleId((item as SingleTitleModel).toTvInfoModel())
 
             val gridSize = Array(gridAdapter.size()) { i -> (i * 1) + 1 }.toList()
 

@@ -7,9 +7,9 @@ data class TvInfoModel(
     val nameGeo: String?,
     val nameEng: String?,
     val cover: String?,
-    val description: String?,
     val imdbScore: String?,
     val releaseYear: String?,
     val duration: String?,
     val seasonNum: Int?,
+    val genres: List<String>?
 )

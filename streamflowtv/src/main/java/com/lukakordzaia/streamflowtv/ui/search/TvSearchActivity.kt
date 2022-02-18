@@ -6,8 +6,10 @@ import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.lukakordzaia.core.datamodels.ContinueWatchingModel
+import com.lukakordzaia.core.datamodels.TvInfoModel
 import com.lukakordzaia.core.utils.hideKeyboard
 import com.lukakordzaia.core.utils.setGone
+import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.core.utils.showKeyboard
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseSidebarFragmentActivity
@@ -19,8 +21,6 @@ import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDeta
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSearchActivity : BaseSidebarFragmentActivity<ActivityTvSearchBinding>(), TvSearchInputSelected, TvTitleSelected {
-    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
-
     private lateinit var fragment: TvSearchFragment
     private var firstLoad = true
     private var searchInputSelected = true
@@ -87,24 +87,20 @@ class TvSearchActivity : BaseSidebarFragmentActivity<ActivityTvSearchBinding>(),
         searchInputSelected = selected
     }
 
-    override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {
-        tvTitleDetailsViewModel.getSingleTitleData(titleId)
+    override fun getTitleId(info: TvInfoModel, continueWatchingDetails: ContinueWatchingModel?) {
+        binding.titleInfo.name.text = info.displayName
 
-        tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
-            binding.titleInfo.name.text = it.nameEng
+        binding.titleInfo.poster.setImage(info.cover, false)
 
-            binding.titleInfo.year.text = "${it.releaseYear}"
-            binding.titleInfo.duration.text = if (it.isTvShow) {
-                "${it.seasonNum} სეზონი"
-            } else {
-                "${it.duration}"
-            }
+        binding.titleInfo.year.text = "${info.releaseYear}"
+        binding.titleInfo.duration.text = if (info.isTvShow) {
+            "${info.seasonNum} სეზონი"
+        } else {
+            "${info.duration}"
+        }
 
-            binding.titleInfo.imdbScore.text = getString(R.string.imdb_score, it.imdbScore)
-        })
+        binding.titleInfo.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
 
-        tvTitleDetailsViewModel.titleGenres.observe(this, {
-            binding.titleInfo.genres.text = TextUtils.join(", ", it)
-        })
+        binding.titleInfo.genres.text = info.genres?.let { TextUtils.join(", ", it) }
     }
 }

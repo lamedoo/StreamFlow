@@ -74,7 +74,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     }
 
     private fun fragmentObservers() {
-        viewModel.episodeNames.observe(viewLifecycleOwner, {
+        viewModel.episodeNames.observe(viewLifecycleOwner) {
             gridAdapter.clear()
             gridAdapter.addAll(0, it)
 
@@ -84,7 +84,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
                 (parentFragment as TvEpisodesFragment).setFragmentFocus("episode")
                 (parentFragment as TvEpisodesFragment).setEpisodeFirstSelection(false)
             }
-        })
+        }
     }
 
     private fun initGridPresenter() {
@@ -128,10 +128,6 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
                 continueEpisode = 1
             }
 
-            if (item is SingleTitleModel) {
-                onTitleSelected?.getTitleId(item.id, null)
-            }
-
             val gridSize = Array(gridAdapter.size()) { i -> (i * 1) + 1 }.toList()
 
             onFirstItem?.isFirstItem(false, null, null)
@@ -166,11 +162,11 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
         binding.rvChooseLanguage.adapter = chooseLanguageAdapter
 
-        viewModel.availableLanguages.observe(viewLifecycleOwner, {
+        viewModel.availableLanguages.observe(viewLifecycleOwner) {
             val languages = it.reversed()
             chooseLanguageAdapter.setLanguageList(languages)
             binding.rvChooseLanguage.requestFocus()
-        })
+        }
     }
 
     private fun playEpisode(episode: Int, chosenLanguage: String) {

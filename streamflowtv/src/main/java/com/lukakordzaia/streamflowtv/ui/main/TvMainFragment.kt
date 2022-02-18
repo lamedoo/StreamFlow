@@ -250,7 +250,7 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
             when (item) {
                 is SingleTitleModel -> onTitleSelected?.getTitleId(item.toTvInfoModel())
                 is NewSeriesModel -> onTitleSelected?.getTitleId(item.toTvInfoModel())
-                is ContinueWatchingModel -> onTitleSelected?.getTitleId(item.id, item)
+                is ContinueWatchingModel -> onTitleSelected?.getTitleId(item.toTvInfoModel(), item)
             }
 
             if (indexOfItem == 0) {
