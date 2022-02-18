@@ -1,6 +1,5 @@
-package com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet
+package com.lukakordzaia.streamflowphone.ui.phonesingletitle.episodesbottomsheet
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,10 +7,10 @@ import com.lukakordzaia.core.utils.setDrawableBackground
 import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.RvChooseDetailsSeasonItemBinding
 
-class TvEpisodesBottomSheetSeasonAdapter(
+class EpisodesBottomSheetSeasonAdapter(
     private val onSeasonClick: (seasonId: Int) -> Unit,
     private val onChosenSeason: (position: Int) -> Unit
-) : RecyclerView.Adapter<TvEpisodesBottomSheetSeasonAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<EpisodesBottomSheetSeasonAdapter.ViewHolder>() {
     private var list: List<Int> = ArrayList()
     private var chosenSeason: Int = 1
 

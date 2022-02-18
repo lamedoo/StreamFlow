@@ -29,7 +29,7 @@
     </fragment>
     <dialog
         android:id="@+id/chooseTitleDetailsFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet.TvEpisodesBottomSheetFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.phonesingletitle.episodesbottomsheet.EpisodesBottomSheetFragment"
         android:label="fragment_choose_title_details"
         tools:layout="@layout/fragment_phone_tv_show_bottom_sheet" >
         <argument

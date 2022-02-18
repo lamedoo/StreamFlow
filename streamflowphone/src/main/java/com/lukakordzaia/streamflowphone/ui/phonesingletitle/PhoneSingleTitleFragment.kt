@@ -23,7 +23,7 @@ import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneSingleTitleBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseFragmentPhoneVM
-import com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet.TvEpisodeBottomSheetViewModel
+import com.lukakordzaia.streamflowphone.ui.phonesingletitle.episodesbottomsheet.EpisodeBottomSheetViewModel
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -35,7 +35,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     override val viewModel by viewModel<PhoneSingleTitleViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContent(args.titleId) }
 
-    private val tvEpisodeBottomSheetViewModel: TvEpisodeBottomSheetViewModel by viewModel()
+    private val episodeBottomSheetViewModel: EpisodeBottomSheetViewModel by viewModel()
     private lateinit var titleInfo: SingleTitleModel
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var phoneSingleTitleCastAdapter: PhoneSingleTitleCastAdapter
@@ -141,49 +141,49 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.progressBar.setVisibleOrGone(it == LoadingState.LOADING)
             binding.singleTitleMainContainer.setVisibleOrGone(it == LoadingState.LOADED)
-        })
+        }
 
-        viewModel.favoriteLoader.observe(viewLifecycleOwner, {
+        viewModel.favoriteLoader.observe(viewLifecycleOwner) {
             binding.singleTitleFavoriteProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
             binding.singleTitleFavoriteIcon.setVisibleOrGone(it != LoadingState.LOADING)
-        })
+        }
 
-        viewModel.addToFavorites.observe(viewLifecycleOwner, {
+        viewModel.addToFavorites.observe(viewLifecycleOwner) {
             checkFavorites(it)
-        })
+        }
 
-        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
+        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner) {
             titleDetailsContainer(it)
             titleInfo = it
-        })
+        }
 
-        viewModel.titleGenres.observe(viewLifecycleOwner, {
+        viewModel.titleGenres.observe(viewLifecycleOwner) {
             binding.titleGenre.text = TextUtils.join(", ", it)
-        })
+        }
 
-        viewModel.titleDirector.observe(viewLifecycleOwner, {
+        viewModel.titleDirector.observe(viewLifecycleOwner) {
             binding.titleDirector.text = it.originalName
-        })
+        }
 
-        viewModel.castResponseDataGetSingle.observe(viewLifecycleOwner, {
+        viewModel.castResponseDataGetSingle.observe(viewLifecycleOwner) {
             phoneSingleTitleCastAdapter.setCastList(it)
-        })
+        }
 
-        viewModel.singleTitleRelated.observe(viewLifecycleOwner, {
+        viewModel.singleTitleRelated.observe(viewLifecycleOwner) {
             phoneSingleTitleRelatedAdapter.setRelatedList(it)
-        })
+        }
 
-        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+        viewModel.continueWatchingDetails.observe(viewLifecycleOwner) {
             checkContinueWatching(it)
-        })
+        }
 
-        tvEpisodeBottomSheetViewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
+        episodeBottomSheetViewModel.availableLanguages.observe(viewLifecycleOwner) { languageList ->
             val languages = languageList.reversed()
             chooseLanguageAdapter.setLanguageList(languages)
-        })
+        }
     }
 
     private fun checkFavorites(isFavorite: Boolean) {
@@ -281,8 +281,8 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     }
 
     private fun languagePickerDialog() {
-        tvEpisodeBottomSheetViewModel.getSeasonFiles(args.titleId, 1)
-        tvEpisodeBottomSheetViewModel.getEpisodeLanguages(args.titleId, 0)
+        episodeBottomSheetViewModel.getSeasonFiles(args.titleId, 1)
+        episodeBottomSheetViewModel.getEpisodeLanguages(args.titleId, 0)
 
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())

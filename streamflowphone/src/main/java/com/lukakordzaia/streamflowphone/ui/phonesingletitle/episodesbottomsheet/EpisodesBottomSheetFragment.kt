@@ -1,4 +1,4 @@
-package com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet
+package com.lukakordzaia.streamflowphone.ui.phonesingletitle.episodesbottomsheet
 
 import android.app.Dialog
 import android.graphics.Color
@@ -27,13 +27,13 @@ import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomSheetBinding, TvEpisodeBottomSheetViewModel>() {
-    private val args: TvEpisodesBottomSheetFragmentArgs by navArgs()
-    override val viewModel by viewModel<TvEpisodeBottomSheetViewModel>()
+class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomSheetBinding, EpisodeBottomSheetViewModel>() {
+    private val args: EpisodesBottomSheetFragmentArgs by navArgs()
+    override val viewModel by viewModel<EpisodeBottomSheetViewModel>()
     override val reload: () -> Unit = { viewModel.getSeasonFiles(args.titleId, 1) }
 
-    private lateinit var episodeAdapter: TvEpisodesBottomSheetEpisodesAdapter
-    private lateinit var seasonAdapter: TvEpisodesBottomSheetSeasonAdapter
+    private lateinit var episodeAdapter: EpisodesBottomSheetEpisodesAdapter
+    private lateinit var seasonAdapter: EpisodesBottomSheetSeasonAdapter
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
 
     private var scrolledOnce = false
@@ -78,30 +78,30 @@ class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBotto
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.detailsProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
-        })
+        }
 
-        viewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
+        viewModel.movieNotYetAdded.observe(viewLifecycleOwner) {
             if (it) {
                 binding.noFilesContainer.setVisible()
                 binding.detailsProgressBar.setGone()
                 binding.filesContainer.setGone()
             }
-        })
+        }
 
-        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+        viewModel.continueWatchingDetails.observe(viewLifecycleOwner) {
             checkContinueWatching(it)
-        })
+        }
 
-        viewModel.episodeInfo.observe(viewLifecycleOwner, {
+        viewModel.episodeInfo.observe(viewLifecycleOwner) {
             episodeAdapter.setEpisodeList(it)
-        })
+        }
 
-        viewModel.availableLanguages.observe(viewLifecycleOwner, { languageList ->
+        viewModel.availableLanguages.observe(viewLifecycleOwner) { languageList ->
             val languages = languageList.reversed()
             chooseLanguageAdapter.setLanguageList(languages)
-        })
+        }
     }
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
@@ -117,7 +117,7 @@ class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBotto
 
     private fun seasonsContainer() {
         val seasonLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        seasonAdapter = TvEpisodesBottomSheetSeasonAdapter(
+        seasonAdapter = EpisodesBottomSheetSeasonAdapter(
             {
                 viewModel.getSeasonFiles(args.titleId, it)
                 seasonAdapter.setChosenSeason(it)
@@ -143,7 +143,7 @@ class TvEpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBotto
     }
 
     private fun episodesContainer() {
-        episodeAdapter = TvEpisodesBottomSheetEpisodesAdapter(
+        episodeAdapter = EpisodesBottomSheetEpisodesAdapter(
             {
                 languagePickerDialog(it)
             },

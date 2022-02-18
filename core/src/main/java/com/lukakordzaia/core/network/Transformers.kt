@@ -300,6 +300,22 @@ fun ContinueWatchingModel.toTvInfoModel(): TvInfoModel {
     )
 }
 
+fun GetSingleTitleFilesResponse.toTitleFilesModel(): List<TitleFilesModel> {
+    return this.data.map { data ->
+        val languages: MutableList<String> = ArrayList()
+        data.files.forEach { languages.add(it.lang) }
+
+        TitleFilesModel(
+            episode = data.episode,
+            title = data.title,
+            cover = data.covers.x1050!!,
+            languages = languages,
+            titleDuration = data.userWatch.duration,
+            watchedDuration = data.userWatch.progress
+        )
+    }
+}
+
 fun List<GetSingleTitleFilesResponse.Data>.toEpisodeInfoModel(season: Int, chosenLanguage: String): EpisodeInfoModel {
     val data = this[season]
     val files = data.files

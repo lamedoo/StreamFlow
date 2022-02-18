@@ -36,14 +36,14 @@ class VideoPlayerActivity : BaseActivity<ActivityPhoneVideoPlayerBinding>() {
                 if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
                     super.onBackPressed()
                 } else {
-                    videoPlayerViewModel.saveLoader.observe(this, {
+                    videoPlayerViewModel.saveLoader.observe(this) {
                         when (it) {
                             LoadingState.LOADING -> {}
                             LoadingState.LOADED, LoadingState.ERROR -> {
                                 super.onBackPressed()
                             }
                         }
-                    })
+                    }
                 }
             }
             AUDIO_SIDEBAR -> parentFragment.hideAudioSidebar()

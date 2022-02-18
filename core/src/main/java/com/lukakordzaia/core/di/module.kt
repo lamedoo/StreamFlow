@@ -62,9 +62,14 @@ val useCaseModule = module {
     single { SingleStudioUseCase(get()) }
     single { WatchlistUseCase(get()) }
     single { DeleteWatchlistUseCase(get()) }
+    single { AddWatchlistUseCase(get()) }
     single { UserLoginUseCase(get()) }
     single { UserLogOutUseCase(get()) }
     single { UserDataUseCase(get()) }
     single { SearchTitleUseCase(get()) }
     single { TopFranchisesUseCase(get()) }
+    single { SingleTitleCastUseCase(get()) }
+    single { SingleTitleRelatedUseCase(get()) }
+    single { DbSingleContinueWatchingUseCase(get()) }
+    single { SingleTitleFilesUseCase(get()) }
 }

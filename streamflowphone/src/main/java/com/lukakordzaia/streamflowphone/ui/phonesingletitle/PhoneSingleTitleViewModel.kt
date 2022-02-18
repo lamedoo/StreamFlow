@@ -7,16 +7,20 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
-import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.ResultData
+import com.lukakordzaia.core.domain.usecases.*
+import com.lukakordzaia.core.network.*
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
-import com.lukakordzaia.core.network.toSingleTitleModel
-import com.lukakordzaia.core.network.toTitleListModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.lukakordzaia.core.utils.AppConstants
+import kotlinx.coroutines.*
 
-class PhoneSingleTitleViewModel : BaseViewModel() {
+class PhoneSingleTitleViewModel(
+    private val singleTitleUseCase: SingleTitleUseCase,
+    private val singleTitleCastUseCase: SingleTitleCastUseCase,
+    private val singleTitleRelatedUseCase: SingleTitleRelatedUseCase,
+    private val addWatchlistUseCase: AddWatchlistUseCase,
+    private val deleteWatchlistUseCase: DeleteWatchlistUseCase,
+    private val dbSingleContinueWatchingUseCase: DbSingleContinueWatchingUseCase
+) : BaseViewModel() {
     val favoriteLoader = MutableLiveData<LoadingState>()
 
     private val _singleTitleData = MutableLiveData<SingleTitleModel>()
@@ -56,98 +60,94 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
 
     private suspend fun getSingleTitleData(titleId: Int) {
         val fetchTitleGenres: MutableList<String> = ArrayList()
-        when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-            is ResultData.Success -> {
-                val data = titleData.data
-                _singleTitleData.postValue(data.toSingleTitleModel())
+        when (val result = singleTitleUseCase.invoke(titleId)) {
+            is ResultDomain.Success -> {
+                val data = result.data
+                _singleTitleData.postValue(data)
 
                 if (sharedPreferences.getLoginToken() == "") {
                     getSingleContinueWatchingFromRoom(titleId)
                 } else {
-                    if (data.data.userWatch?.data?.season != null) {
+                    if (data.currentSeason != null) {
                         _continueWatchingDetails.postValue(
                             ContinueWatchingRoom(
                                 titleId = titleId,
-                                language = data.data.userWatch!!.data?.language!!,
-                            watchedDuration = data.data.userWatch!!.data?.progress!!,
-                            titleDuration = data.data.userWatch!!.data?.duration!!,
-                            isTvShow = data.data.isTvShow,
-                            season = data.data.userWatch!!.data?.season!!,
-                            episode = data.data.userWatch!!.data?.episode!!
-                        ))
+                                language = data.currentLanguage!!,
+                                watchedDuration = data.watchedDuration!!,
+                                titleDuration = data.titleDuration!!,
+                                isTvShow = data.isTvShow,
+                                season = data.currentSeason!!,
+                                episode = data.currentEpisode!!
+                            )
+                        )
                     } else {
                         _continueWatchingDetails.postValue(null)
                     }
                 }
 
-                _addToFavorites.postValue(data.data.userWantsToWatch?.data?.status ?: false)
+                _addToFavorites.postValue(data.watchlist ?: false)
 
-                data.data.genres.data.forEach {
-                    fetchTitleGenres.add(it.primaryName!!)
-                }
+                data.genres?.let { fetchTitleGenres.addAll(it) }
                 _titleGenres.postValue(fetchTitleGenres)
             }
-            is ResultData.Error -> {
-                newToastMessage("ინფორმაცია - ${titleData.exception}")
-            }
-            is ResultData.Internet -> {
-                setNoInternet()
+            is ResultDomain.Error -> {
+                when (result.exception) {
+                    AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                    else -> newToastMessage("ინფორმაცია - ${result.exception}")
+                }
             }
         }
     }
 
     private suspend fun getTitleCast(titleId: Int) {
-        when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "cast")) {
-            is ResultData.Success -> {
-                val data = cast.data.data
+        when (val result = singleTitleCastUseCase.invoke(Pair(titleId, "cast"))) {
+            is ResultDomain.Success -> {
+                val data = result.data.data
                 _castData.postValue(data)
             }
-            is ResultData.Error -> {
-                newToastMessage("მსახიობები - ${cast.exception}")
-            }
-            is ResultData.Internet -> {
-                setNoInternet()
+            is ResultDomain.Error -> {
+                when (result.exception) {
+                    AppConstants.NO_INTERNET_ERROR -> {}
+                    else -> newToastMessage("მსახიობები - ${result.exception}")
+                }
             }
         }
     }
 
     private suspend fun getTitleDirector(titleId: Int) {
-        when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "director")) {
-            is ResultData.Success -> {
-                val data = cast.data.data
+        when (val result = singleTitleCastUseCase.invoke(Pair(titleId, "director"))) {
+            is ResultDomain.Success -> {
+                val data = result.data.data
 
                 if (!data.isNullOrEmpty()) {
                     _titleDirector.postValue(data[0])
                 }
             }
-            is ResultData.Error -> {
-                newToastMessage("დირექტორი - ${cast.exception}")
-            }
-            is ResultData.Internet -> {
-                setNoInternet()
+            is ResultDomain.Error -> {
+                when (result.exception) {
+                    AppConstants.NO_INTERNET_ERROR -> {}
+                    else -> newToastMessage("რეჟისორი - ${result.exception}")
+                }
             }
         }
     }
 
     private suspend fun getRelatedTitles(titleId: Int) {
-        when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
-            is ResultData.Success -> {
-                val data = related.data.data
-                _singleTitleRelated.postValue(data.toTitleListModel())
+        when (val result = singleTitleRelatedUseCase.invoke(titleId)) {
+            is ResultDomain.Success -> {
+                _singleTitleRelated.postValue(result.data)
             }
-            is ResultData.Error -> {
-                newToastMessage("მსგავსი - ${related.exception}")
-            }
-            is ResultData.Internet -> {
-                setNoInternet()
+            is ResultDomain.Error -> {
+                when (result.exception) {
+                    AppConstants.NO_INTERNET_ERROR -> {}
+                    else -> newToastMessage("მსგავსი - ${result.exception}")
+                }
             }
         }
     }
 
-    private fun getSingleContinueWatchingFromRoom(titleId: Int) {
-        val data = environment.databaseRepository.getSingleContinueWatchingFromRoom(titleId)
-
-        _continueWatchingDetails.addSource(data) {
+    private suspend fun getSingleContinueWatchingFromRoom(titleId: Int) {
+        _continueWatchingDetails.addSource(dbSingleContinueWatchingUseCase.invoke(titleId)) {
             _continueWatchingDetails.value = it
         }
     }
@@ -155,11 +155,17 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
     fun addWatchlistTitle(id: Int) {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (environment.watchlistRepository.addWatchlistTitle(id)) {
-                is ResultData.Success -> {
+            when (val result = addWatchlistUseCase.invoke(id)) {
+                is ResultDomain.Success -> {
                     newToastMessage("ფილმი დაემატა ფავორიტებში")
                     _addToFavorites.value = true
                     favoriteLoader.value = LoadingState.LOADED
+                }
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("ვერ მოხერხდა დამატება - ${result.exception}")
+                    }
                 }
             }
         }
@@ -168,11 +174,17 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
     fun deleteWatchlistTitle(id: Int) {
         favoriteLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (environment.watchlistRepository.deleteWatchlistTitle(id)) {
-                is ResultData.Success -> {
+            when (val result = deleteWatchlistUseCase.invoke(id)) {
+                is ResultDomain.Success -> {
                     _addToFavorites.value = false
                     favoriteLoader.value = LoadingState.LOADED
                     newToastMessage("წარმატებით წაიშალა ფავორიტებიდან")
+                }
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("ვერ მოხერხდა წაშლა - ${result.exception}")
+                    }
                 }
             }
         }
@@ -180,17 +192,19 @@ class PhoneSingleTitleViewModel : BaseViewModel() {
 
     fun fetchContent(titleId: Int) {
         setGeneralLoader(LoadingState.LOADING)
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val getData = viewModelScope.launch {
-                    getSingleTitleData(titleId)
-                    getTitleCast(titleId)
-                    getTitleDirector(titleId)
-                    getRelatedTitles(titleId)
-                }
-                getData.join()
-                setGeneralLoader(LoadingState.LOADED)
+        viewModelScope.launch(Dispatchers.IO) {
+            coroutineScope {
+                val dataDeferred = async { getSingleTitleData(titleId) }
+                val castDeferred = async { getTitleCast(titleId) }
+                val directorDeferred = async { getTitleDirector(titleId) }
+                val relatedDeferred = async { getRelatedTitles(titleId) }
+
+                dataDeferred.await()
+                castDeferred.await()
+                directorDeferred.await()
+                relatedDeferred.await()
             }
+            setGeneralLoader(LoadingState.LOADED)
         }
     }
 }
