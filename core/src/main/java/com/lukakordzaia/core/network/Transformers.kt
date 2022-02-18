@@ -8,6 +8,40 @@ import com.lukakordzaia.core.network.models.imovies.response.titles.GetTitlesRes
 import com.lukakordzaia.core.network.models.imovies.response.user.GetContinueWatchingResponse
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserWatchlistResponse
 
+fun GetTitlesResponse.toTitleListModel(): List<SingleTitleModel> {
+    return this.data.map { data ->
+        val genres: MutableList<String> = ArrayList()
+        data.genres?.data?.forEach { it.primaryName?.let { name -> genres.add(name) } }
+
+        SingleTitleModel(
+            id = data.id,
+            isTvShow = data.isTvShow ?: false,
+            displayName = data.primaryName.ifEmpty { data.secondaryName },
+            nameGeo = data.primaryName,
+            nameEng = data.secondaryName,
+            poster = data.posters?.data?.x240,
+            cover = data.covers?.data?.x1050,
+            description = null,
+            imdbId = null,
+            imdbScore = data.rating.imdb?.let { it.score.toString() } ?: run { "N/A" },
+            releaseYear = data.year.toString(),
+            genres = genres,
+            duration = "${data.duration} წ.",
+            seasonNum = data.lastSeries?.data?.season,
+            country = null,
+            trailer = if (data.trailers?.data?.isNotEmpty() == true) data.trailers.data[0]?.fileUrl else null,
+            watchlist = data.userWantsToWatch?.data?.status,
+            titleDuration = data.userWatch?.data?.duration,
+            watchedDuration = data.userWatch?.data?.progress,
+            currentSeason = data.userWatch?.data?.season,
+            currentEpisode = data.userWatch?.data?.episode,
+            currentLanguage = data.userWatch?.data?.language,
+            visibility = data.userWatch?.data?.visible,
+            hasMorePage = this.meta.pagination.totalPages!! > this.meta.pagination.currentPage!!
+        )
+    }
+}
+
 fun List<GetTitlesResponse.Data>.toTitleListModel(): List<SingleTitleModel> {
     return map { data ->
         val genres: MutableList<String> = ArrayList()

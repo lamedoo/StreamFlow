@@ -23,5 +23,6 @@ data class SingleTitleModel(
     val currentSeason: Int?,
     val currentEpisode: Int?,
     val currentLanguage: String?,
-    val visibility: Boolean?
+    val visibility: Boolean?,
+    val hasMorePage: Boolean? = false
 )

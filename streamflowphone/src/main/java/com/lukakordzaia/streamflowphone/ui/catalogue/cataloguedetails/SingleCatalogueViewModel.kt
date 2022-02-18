@@ -6,12 +6,17 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.usecases.SingleGenreUseCase
+import com.lukakordzaia.core.domain.usecases.SingleStudioUseCase
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.ResultData
-import com.lukakordzaia.core.network.toTitleListModel
+import com.lukakordzaia.core.network.ResultDomain
 import kotlinx.coroutines.launch
 
-class SingleCatalogueViewModel : BaseViewModel() {
+class SingleCatalogueViewModel(
+    private val singleGenreUseCase: SingleGenreUseCase,
+    private val singleStudioUseCase: SingleStudioUseCase
+) : BaseViewModel() {
     private val fetchSingleCatalogueList: MutableList<SingleTitleModel> = ArrayList()
     private val _singleCatalogueList = MutableLiveData<List<SingleTitleModel>>()
     val singleCatalogueList: LiveData<List<SingleTitleModel>> = _singleCatalogueList
@@ -25,19 +30,19 @@ class SingleCatalogueViewModel : BaseViewModel() {
 
     private fun getSingleGenre(genreId: Int, page: Int) {
         viewModelScope.launch {
-            when (val singleGenre = environment.catalogueRepository.getSingleGenre(genreId, page)) {
-                is ResultData.Success -> {
-                    val data = singleGenre.data.data
-                    fetchSingleCatalogueList.addAll(data.toTitleListModel())
+            when (val result = singleGenreUseCase.invoke(Pair(genreId, page))) {
+                is ResultDomain.Success -> {
+                    val data = result.data
+                    fetchSingleCatalogueList.addAll(data)
                     _singleCatalogueList.value = fetchSingleCatalogueList
-                    _hasMorePage.value = singleGenre.data.meta.pagination.totalPages!! > singleGenre.data.meta.pagination.currentPage!!
+                    _hasMorePage.value = data[0].hasMorePage
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is ResultData.Error -> {
-                    newToastMessage("ჟანრი - ${singleGenre.exception}")
-                }
-                is ResultData.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("ჟანრი - ${result.exception}")
+                    }
                 }
             }
         }
@@ -45,19 +50,19 @@ class SingleCatalogueViewModel : BaseViewModel() {
 
     private fun getSingleStudio(studioId: Int, page: Int) {
         viewModelScope.launch {
-            when (val singleStudio = environment.catalogueRepository.getSingleStudio(studioId, page)) {
-                is ResultData.Success -> {
-                    val data = singleStudio.data.data
-                    fetchSingleCatalogueList.addAll(data.toTitleListModel())
+            when (val result = singleStudioUseCase.invoke(Pair(studioId, page))) {
+                is ResultDomain.Success -> {
+                    val data = result.data
+                    fetchSingleCatalogueList.addAll(data)
                     _singleCatalogueList.value = fetchSingleCatalogueList
-                    _hasMorePage.value = singleStudio.data.meta.pagination.totalPages!! > singleStudio.data.meta.pagination.currentPage!!
+                    _hasMorePage.value = data[0].hasMorePage
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is ResultData.Error -> {
-                    newToastMessage("სტუდია - ${singleStudio.exception}")
-                }
-                is ResultData.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("ჟანრი - ${result.exception}")
+                    }
                 }
             }
         }

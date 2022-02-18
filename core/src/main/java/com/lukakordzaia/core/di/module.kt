@@ -58,4 +58,6 @@ val useCaseModule = module {
     single { AllGenresUseCase(get()) }
     single { TopStudiosUseCase(get()) }
     single { TopTrailersUseCase(get()) }
+    single { SingleGenreUseCase(get()) }
+    single { SingleStudioUseCase(get()) }
 }
