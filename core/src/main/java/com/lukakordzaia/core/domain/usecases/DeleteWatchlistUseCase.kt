@@ -7,7 +7,7 @@ import com.lukakordzaia.core.network.models.imovies.response.user.UserWatchListS
 
 class DeleteWatchlistUseCase(
     private val repository: WatchlistRepository
-) : BaseResultUseCase<Int, UserWatchListStatusResponse, UserWatchListStatusResponse, ResultDomain<UserWatchListStatusResponse, String>>() {
+) : BaseResultUseCase<Int, UserWatchListStatusResponse, UserWatchListStatusResponse>() {
     override suspend fun invoke(args: Int?): ResultDomain<UserWatchListStatusResponse, String> {
         return returnData(repository.deleteWatchlistTitle(args!!)) { it }
     }

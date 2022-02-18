@@ -9,7 +9,7 @@ import com.lukakordzaia.core.network.toTitleListModel
 
 class MovieDayUseCaseBase(
     private val repository: HomeRepository
-) : BaseResultUseCase<Unit, GetTitlesResponse, List<SingleTitleModel>, ResultDomain<List<SingleTitleModel>, String>>() {
+) : BaseResultUseCase<Unit, GetTitlesResponse, List<SingleTitleModel>>() {
     override suspend fun invoke(args: Unit?): ResultDomain<List<SingleTitleModel>, String> {
         return returnData(repository.getMovieDay()) { it.data.toTitleListModel() }
     }

@@ -9,7 +9,7 @@ import com.lukakordzaia.core.network.toNewSeriesModel
 
 class NewSeriesUseCase(
     private val repository: HomeRepository
-) : BaseResultUseCase<Int, GetNewSeriesResponse, List<NewSeriesModel>, ResultDomain<List<NewSeriesModel>, String>>() {
+) : BaseResultUseCase<Int, GetNewSeriesResponse, List<NewSeriesModel>>() {
     override suspend fun invoke(args: Int?): ResultDomain<List<NewSeriesModel>, String> {
         return returnData(repository.getNewSeries(args ?: 1)) { it.toNewSeriesModel() }
     }

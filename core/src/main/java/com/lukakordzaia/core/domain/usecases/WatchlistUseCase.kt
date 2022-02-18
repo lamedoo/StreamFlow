@@ -9,7 +9,7 @@ import com.lukakordzaia.core.network.toWatchListModel
 
 class WatchlistUseCase(
     private val repository: WatchlistRepository
-) : BaseResultUseCase<Pair<Int, String>, GetUserWatchlistResponse, List<SingleTitleModel>, ResultDomain<List<SingleTitleModel>, String>>() {
+) : BaseResultUseCase<Pair<Int, String>, GetUserWatchlistResponse, List<SingleTitleModel>>() {
     override suspend fun invoke(args: Pair<Int, String>?): ResultDomain<List<SingleTitleModel>, String> {
         return returnData(repository.getUserWatchlist(args!!.first, args.second)) { it.toWatchListModel() }
     }

@@ -9,7 +9,7 @@ import com.lukakordzaia.core.network.toContinueWatchingModel
 
 class ContinueWatchingUseCase(
     private val repository: HomeRepository
-) : BaseResultUseCase<Unit, GetContinueWatchingResponse, List<ContinueWatchingModel>, ResultDomain<List<ContinueWatchingModel>, String>>() {
+) : BaseResultUseCase<Unit, GetContinueWatchingResponse, List<ContinueWatchingModel>>() {
     override suspend fun invoke(args: Unit?): ResultDomain<List<ContinueWatchingModel>, String> {
         return returnData(repository.getContinueWatching()) { it.data.toContinueWatchingModel() }
     }

@@ -8,7 +8,7 @@ import com.lukakordzaia.core.network.models.imovies.response.user.PostUserLoginR
 
 class UserLoginUseCase(
     private val repository: UserRepository
-) : BaseResultUseCase<PostLoginBody, PostUserLoginResponse, PostUserLoginResponse, ResultDomain<PostUserLoginResponse, String>>() {
+) : BaseResultUseCase<PostLoginBody, PostUserLoginResponse, PostUserLoginResponse>() {
     override suspend fun invoke(args: PostLoginBody?): ResultDomain<PostUserLoginResponse, String> {
         return returnData(repository.userLogin(args!!)) { it }
     }

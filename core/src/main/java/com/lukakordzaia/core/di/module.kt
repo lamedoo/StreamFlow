@@ -65,4 +65,6 @@ val useCaseModule = module {
     single { UserLoginUseCase(get()) }
     single { UserLogOutUseCase(get()) }
     single { UserDataUseCase(get()) }
+    single { SearchTitleUseCase(get()) }
+    single { TopFranchisesUseCase(get()) }
 }

@@ -9,7 +9,7 @@ import com.lukakordzaia.core.network.toTitleListModel
 
 class SingleStudioUseCase(
     private val repository: CatalogueRepository
-) : BaseResultUseCase<Pair<Int, Int>, GetTitlesResponse, List<SingleTitleModel>, ResultDomain<List<SingleTitleModel>, String>>() {
+) : BaseResultUseCase<Pair<Int, Int>, GetTitlesResponse, List<SingleTitleModel>>() {
     override suspend fun invoke(args: Pair<Int, Int>?): ResultDomain<List<SingleTitleModel>, String> {
         return returnData(repository.getSingleStudio(args!!.first, args.second)) { it.toTitleListModel() }
     }

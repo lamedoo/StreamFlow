@@ -9,9 +9,8 @@ import java.lang.Exception
  * [ARG_TYPE] - What argument does network call need
  * [DATA_TYPE] - What model does it receive from network
  * [DOMAIN_TYPE] - What model must the data type be transformed
- * [RETURN_TYPE] - What must be returned in ViewModel from UseCase
  */
-abstract class BaseResultUseCase<ARG_TYPE : Any, DATA_TYPE : Any, DOMAIN_TYPE : Any, RETURN_TYPE : Any> : BaseUseCase<ARG_TYPE, RETURN_TYPE> {
+abstract class BaseResultUseCase<ARG_TYPE : Any, DATA_TYPE : Any, DOMAIN_TYPE : Any> : BaseUseCase<ARG_TYPE, ResultDomain<DOMAIN_TYPE, String>> {
     fun returnData(apiCall: ResultData<DATA_TYPE>, transform: (data: DATA_TYPE) -> DOMAIN_TYPE): ResultDomain<DOMAIN_TYPE, String> {
         return when (val result = getData(apiCall)) {
             is ResultData.Success -> {

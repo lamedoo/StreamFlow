@@ -9,7 +9,7 @@ import com.lukakordzaia.core.network.toSingleTitleModel
 
 class SingleTitleUseCase(
     private val repository: SingleTitleRepository
-) : BaseResultUseCase<Int, GetSingleTitleResponse, SingleTitleModel, ResultDomain<SingleTitleModel, String>>() {
+) : BaseResultUseCase<Int, GetSingleTitleResponse, SingleTitleModel>() {
     override suspend fun invoke(args: Int?): ResultDomain<SingleTitleModel, String> {
         return returnData(repository.getSingleTitleData(args ?: 1)) { it.toSingleTitleModel() }
     }

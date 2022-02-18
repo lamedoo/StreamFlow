@@ -7,7 +7,7 @@ import com.lukakordzaia.core.network.models.imovies.response.categories.GetTopSt
 
 class TopStudiosUseCase(
     private val repository: CatalogueRepository
-) : BaseResultUseCase<Unit, GetTopStudiosResponse, List<GetTopStudiosResponse.Data>, ResultDomain<List<GetTopStudiosResponse.Data>, String>>() {
+) : BaseResultUseCase<Unit, GetTopStudiosResponse, List<GetTopStudiosResponse.Data>>() {
     override suspend fun invoke(args: Unit?): ResultDomain<List<GetTopStudiosResponse.Data>, String> {
         return returnData(repository.getTopStudios()) { it.data }
     }

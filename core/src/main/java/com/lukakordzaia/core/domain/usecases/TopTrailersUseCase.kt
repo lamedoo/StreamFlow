@@ -9,7 +9,7 @@ import com.lukakordzaia.core.network.toTitleListModel
 
 class TopTrailersUseCase(
     private val repository: CatalogueRepository
-) : BaseResultUseCase<Unit, GetTitlesResponse, List<SingleTitleModel>, ResultDomain<List<SingleTitleModel>, String>>() {
+) : BaseResultUseCase<Unit, GetTitlesResponse, List<SingleTitleModel>>() {
     override suspend fun invoke(args: Unit?): ResultDomain<List<SingleTitleModel>, String> {
         return returnData(repository.getTopTrailers()) { it.data.toTitleListModel() }
     }

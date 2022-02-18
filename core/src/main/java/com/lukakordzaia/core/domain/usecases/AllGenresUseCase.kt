@@ -7,7 +7,7 @@ import com.lukakordzaia.core.network.models.imovies.response.categories.GetGenre
 
 class AllGenresUseCase(
     private val repository: CatalogueRepository
-) : BaseResultUseCase<Unit, GetGenresResponse, List<GetGenresResponse.Data>, ResultDomain<List<GetGenresResponse.Data>, String>>() {
+) : BaseResultUseCase<Unit, GetGenresResponse, List<GetGenresResponse.Data>>() {
     override suspend fun invoke(args: Unit?): ResultDomain<List<GetGenresResponse.Data>, String> {
         return returnData(repository.getAllGenres()) { it.data }
     }
