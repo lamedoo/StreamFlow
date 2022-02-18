@@ -21,7 +21,7 @@ val phoneViewModelModule = module {
     viewModel { SingleCatalogueViewModel(get(), get()) }
     viewModel { SearchTitlesViewModel() }
     viewModel { TvEpisodeBottomSheetViewModel() }
-    viewModel { ProfileViewModel() }
+    viewModel { ProfileViewModel(get(), get(), get()) }
     viewModel { WatchlistViewModel(get(), get()) }
     viewModel { TopListViewModel(get(), get(), get()) }
     viewModel { VideoPlayerViewModel() }

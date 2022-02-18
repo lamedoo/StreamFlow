@@ -24,7 +24,9 @@ class ProfileFragment : BaseFragmentPhoneVM<FragmentPhoneProfileBinding, Profile
     override fun onStart() {
         super.onStart()
 
-        viewModel.getUserData()
+        if (sharedPreferences.getLoginToken() != "") {
+            viewModel.getUserData()
+        }
         updateProfileUI(sharedPreferences.getLoginToken() != "")
     }
 
