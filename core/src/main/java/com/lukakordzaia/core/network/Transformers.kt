@@ -1,5 +1,6 @@
 package com.lukakordzaia.core.network
 
+import com.lukakordzaia.core.datamodels.TvInfoModel
 import com.lukakordzaia.core.domain.domainmodels.*
 import com.lukakordzaia.core.network.models.imovies.response.newseries.GetNewSeriesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
@@ -161,24 +162,26 @@ fun List<GetNewSeriesResponse.Data.Movies.Data>.toNewSeriesModel(): List<NewSeri
 }
 
 fun GetNewSeriesResponse.toNewSeriesModel(): List<NewSeriesModel> {
-    return this.data?.get(0)?.movies?.data!!.map {
-        val title = it
+    return this.data?.get(0)?.movies?.data!!.map { data ->
+        val genres: MutableList<String> = ArrayList()
+        data.genres?.data?.forEach { it?.primaryName?.let { name -> genres.add(name) } }
 
         NewSeriesModel(
-            id = title.id!!,
-            isTvShow = title.isTvShow!!,
-            displayName = if (!title.primaryName.isNullOrEmpty()) title.primaryName else title.secondaryName,
-            nameGeo = if (!title.primaryName.isNullOrEmpty()) title.primaryName else "N/A",
-            nameEng = if (!title.secondaryName.isNullOrEmpty()) title.secondaryName else "N/A",
-            poster = title.posters?.data?.x240,
-            cover = title.covers?.data?.x1050,
-            description = if (!title.plot?.data?.description.isNullOrEmpty()) title.plot?.data?.description else "აღწერა არ მოიძებნა",
-            imdbId = title.imdbUrl?.substring(27, title.imdbUrl.length),
-            imdbScore = if (title.rating?.imdb != null) title.rating.imdb.score.toString() else "N/A",
-            releaseYear = title.year.toString(),
-            duration = "${title.duration} წ.",
-            currentSeason = title.lastUpdatedSeries?.data?.season,
-            currentEpisode = title.lastUpdatedSeries?.data?.episode
+            id = data.id!!,
+            isTvShow = data.isTvShow!!,
+            displayName = if (!data.primaryName.isNullOrEmpty()) data.primaryName else data.secondaryName,
+            nameGeo = if (!data.primaryName.isNullOrEmpty()) data.primaryName else "N/A",
+            nameEng = if (!data.secondaryName.isNullOrEmpty()) data.secondaryName else "N/A",
+            poster = data.posters?.data?.x240,
+            cover = data.covers?.data?.x1050,
+            description = if (!data.plot?.data?.description.isNullOrEmpty()) data.plot?.data?.description else "აღწერა არ მოიძებნა",
+            imdbId = data.imdbUrl?.substring(27, data.imdbUrl.length),
+            imdbScore = if (data.rating?.imdb != null) data.rating.imdb.score.toString() else "N/A",
+            releaseYear = data.year.toString(),
+            genres = genres,
+            duration = "${data.duration} წ.",
+            currentSeason = data.lastUpdatedSeries?.data?.season,
+            currentEpisode = data.lastUpdatedSeries?.data?.episode
         )
     }
 }
