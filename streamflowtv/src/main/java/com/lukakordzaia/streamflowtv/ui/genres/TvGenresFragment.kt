@@ -46,33 +46,33 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
     }
 
     private fun fragmentObservers() {
-        viewModel.singleGenreAnimation.observe(viewLifecycleOwner, {
+        viewModel.singleGenreAnimation.observe(viewLifecycleOwner) {
             firstCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreComedy.observe(viewLifecycleOwner, {
+        viewModel.singleGenreComedy.observe(viewLifecycleOwner) {
             secondCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreMelodrama.observe(viewLifecycleOwner, {
+        viewModel.singleGenreMelodrama.observe(viewLifecycleOwner) {
             thirdCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreHorror.observe(viewLifecycleOwner, {
+        viewModel.singleGenreHorror.observe(viewLifecycleOwner) {
             fourthCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreAdventure.observe(viewLifecycleOwner, {
+        viewModel.singleGenreAdventure.observe(viewLifecycleOwner) {
             fifthCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreAction.observe(viewLifecycleOwner, {
+        viewModel.singleGenreAction.observe(viewLifecycleOwner) {
             sixthCategoryAdapter(it)
-        })
+        }
 
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             (activity as TvGenresActivity).setProgressBar(it == LoadingState.LOADING)
-        })
+        }
     }
 
     private fun firstCategoryAdapter(category: List<SingleTitleModel>) {
