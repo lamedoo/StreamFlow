@@ -9,6 +9,6 @@ class AllGenresUseCase(
     private val repository: CatalogueRepository
 ) : BaseResultUseCase<Unit, GetGenresResponse, List<GetGenresResponse.Data>, ResultDomain<List<GetGenresResponse.Data>, String>>() {
     override suspend fun invoke(args: Unit?): ResultDomain<List<GetGenresResponse.Data>, String> {
-        return transformToDomain(repository.getAllGenres()) { it.data }
+        return returnData(repository.getAllGenres()) { it.data }
     }
 }

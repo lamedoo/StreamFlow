@@ -11,6 +11,6 @@ class SingleGenreUseCase(
     private val repository: CatalogueRepository
 ) : BaseResultUseCase<Pair<Int, Int>, GetTitlesResponse, List<SingleTitleModel>, ResultDomain<List<SingleTitleModel>, String>>() {
     override suspend fun invoke(args: Pair<Int, Int>?): ResultDomain<List<SingleTitleModel>, String> {
-        return transformToDomain(repository.getSingleGenre(args!!.first, args.second)) { it.toTitleListModel() }
+        return returnData(repository.getSingleGenre(args!!.first, args.second)) { it.toTitleListModel() }
     }
 }

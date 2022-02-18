@@ -11,6 +11,6 @@ class TopTrailersUseCase(
     private val repository: CatalogueRepository
 ) : BaseResultUseCase<Unit, GetTitlesResponse, List<SingleTitleModel>, ResultDomain<List<SingleTitleModel>, String>>() {
     override suspend fun invoke(args: Unit?): ResultDomain<List<SingleTitleModel>, String> {
-        return transformToDomain(repository.getTopTrailers()) { it.data.toTitleListModel() }
+        return returnData(repository.getTopTrailers()) { it.data.toTitleListModel() }
     }
 }

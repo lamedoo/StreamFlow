@@ -60,4 +60,6 @@ val useCaseModule = module {
     single { TopTrailersUseCase(get()) }
     single { SingleGenreUseCase(get()) }
     single { SingleStudioUseCase(get()) }
+    single { WatchlistUseCase(get()) }
+    single { DeleteWatchlistUseCase(get()) }
 }

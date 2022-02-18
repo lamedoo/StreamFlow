@@ -22,7 +22,7 @@ val phoneViewModelModule = module {
     viewModel { SearchTitlesViewModel() }
     viewModel { TvEpisodeBottomSheetViewModel() }
     viewModel { ProfileViewModel() }
-    viewModel { WatchlistViewModel() }
+    viewModel { WatchlistViewModel(get(), get()) }
     viewModel { TopListViewModel(get(), get(), get()) }
     viewModel { VideoPlayerViewModel() }
 }

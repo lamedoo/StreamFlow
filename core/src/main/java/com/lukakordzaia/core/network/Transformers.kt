@@ -108,6 +108,39 @@ fun GetSingleTitleResponse.toSingleTitleModel(): SingleTitleModel {
     )
 }
 
+fun GetUserWatchlistResponse.toWatchListModel(): List<SingleTitleModel> {
+    return this.data.map { data ->
+        val it = data.movie.data
+
+        SingleTitleModel(
+            id = it.id,
+            isTvShow = it.isTvShow ?: false,
+            displayName = it.primaryName.ifEmpty { it.secondaryName },
+            nameGeo = it.primaryName,
+            nameEng = it.secondaryName,
+            poster = it.posters?.data?.x240,
+            cover = it.covers?.data?.x1050,
+            description = null,
+            imdbId = null,
+            imdbScore = it.rating.imdb?.score?.toString() ?: run { "N/A" },
+            releaseYear = it.year.toString(),
+            genres = null,
+            duration = "${it.duration} წ.",
+            seasonNum = it.lastSeries?.data?.season,
+            country = null,
+            trailer = if (it.trailers?.data?.isNotEmpty() == true) it.trailers.data[0]?.fileUrl else null,
+            watchlist = it.userWantsToWatch?.data?.status,
+            titleDuration = it.userWatch?.data?.duration,
+            watchedDuration = it.userWatch?.data?.progress,
+            currentSeason = it.userWatch?.data?.season,
+            currentEpisode = it.userWatch?.data?.episode,
+            currentLanguage = it.userWatch?.data?.language,
+            visibility = it.userWatch?.data?.visible,
+            hasMorePage = this.meta.pagination.totalPages > this.meta.pagination.currentPage
+        )
+    }
+}
+
 fun List<GetUserWatchlistResponse.Data>.toWatchListModel(): List<SingleTitleModel> {
     return map { data ->
         val it = data.movie.data

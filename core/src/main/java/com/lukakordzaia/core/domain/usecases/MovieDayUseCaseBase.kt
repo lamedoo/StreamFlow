@@ -11,6 +11,6 @@ class MovieDayUseCaseBase(
     private val repository: HomeRepository
 ) : BaseResultUseCase<Unit, GetTitlesResponse, List<SingleTitleModel>, ResultDomain<List<SingleTitleModel>, String>>() {
     override suspend fun invoke(args: Unit?): ResultDomain<List<SingleTitleModel>, String> {
-        return transformToDomain(repository.getMovieDay()) { it.data.toTitleListModel() }
+        return returnData(repository.getMovieDay()) { it.data.toTitleListModel() }
     }
 }

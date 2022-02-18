@@ -11,6 +11,6 @@ class ContinueWatchingUseCase(
     private val repository: HomeRepository
 ) : BaseResultUseCase<Unit, GetContinueWatchingResponse, List<ContinueWatchingModel>, ResultDomain<List<ContinueWatchingModel>, String>>() {
     override suspend fun invoke(args: Unit?): ResultDomain<List<ContinueWatchingModel>, String> {
-        return transformToDomain(repository.getContinueWatching()) { it.data.toContinueWatchingModel() }
+        return returnData(repository.getContinueWatching()) { it.data.toContinueWatchingModel() }
     }
 }

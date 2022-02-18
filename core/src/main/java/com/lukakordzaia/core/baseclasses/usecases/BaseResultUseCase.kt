@@ -12,8 +12,7 @@ import java.lang.Exception
  * [RETURN_TYPE] - What must be returned in ViewModel from UseCase
  */
 abstract class BaseResultUseCase<ARG_TYPE : Any, DATA_TYPE : Any, DOMAIN_TYPE : Any, RETURN_TYPE : Any> : BaseUseCase<ARG_TYPE, RETURN_TYPE> {
-
-    fun transformToDomain(apiCall: ResultData<DATA_TYPE>, transform: (data: DATA_TYPE) -> DOMAIN_TYPE): ResultDomain<DOMAIN_TYPE, String> {
+    fun returnData(apiCall: ResultData<DATA_TYPE>, transform: (data: DATA_TYPE) -> DOMAIN_TYPE): ResultDomain<DOMAIN_TYPE, String> {
         return when (val result = getData(apiCall)) {
             is ResultData.Success -> {
                 try {
