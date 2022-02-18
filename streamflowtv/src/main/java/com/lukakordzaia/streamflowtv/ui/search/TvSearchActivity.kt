@@ -90,11 +90,9 @@ class TvSearchActivity : BaseSidebarFragmentActivity<ActivityTvSearchBinding>(),
     override fun getTitleId(info: TvInfoModel, continueWatchingDetails: ContinueWatchingModel?) {
         binding.titleInfo.name.text = info.displayName
 
-        binding.titleInfo.poster.setImage(info.cover, false)
-
         binding.titleInfo.year.text = "${info.releaseYear}"
         binding.titleInfo.duration.text = if (info.isTvShow) {
-            "${info.seasonNum} სეზონი"
+            "${info.seasonNum} ${getString(R.string.season_number)}"
         } else {
             "${info.duration}"
         }
