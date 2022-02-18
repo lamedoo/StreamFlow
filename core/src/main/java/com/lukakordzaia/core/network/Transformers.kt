@@ -1,6 +1,5 @@
 package com.lukakordzaia.core.network
 
-import com.lukakordzaia.core.datamodels.TvInfoModel
 import com.lukakordzaia.core.domain.domainmodels.*
 import com.lukakordzaia.core.network.models.imovies.response.newseries.GetNewSeriesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse

@@ -100,30 +100,23 @@ class HomeViewModel(
         val dbTitles: MutableList<ContinueWatchingModel> = mutableListOf()
         viewModelScope.launch {
             dbDetails.forEach { savedTitle ->
-                when (val result = environment.singleTitleRepository.getSingleTitleData(savedTitle.titleId)) {
+                when (val result = singleTitleUseCase.invoke(savedTitle.titleId)) {
                     is ResultDomain.Success -> {
                         val data = result.data
 
-                        val genres: MutableList<String> = ArrayList()
-                        data.genres.data.forEach { it.primaryName?.let { name -> genres.add(name) } }
-
                         dbTitles.add(
                             ContinueWatchingModel(
-                                poster = data.posters.data!!.x240,
-                                cover = data.covers?.data?.x1050,
-                                duration = data.duration,
+                                poster = data.poster,
+                                cover = data.cover,
+                                duration = data.duration?.toInt(),
                                 id = savedTitle.titleId,
                                 isTvShow = savedTitle.isTvShow,
-                                primaryName = data.primaryName,
-                                originalName = data.originalName,
-                                imdbScore = data.rating.imdb?.let { it.score.toString() } ?: run { "N/A" },
-                                releaseYear = data.year.toString(),
-                                genres = genres,
-                                seasonNum = if (data.seasons != null) {
-                                    if (data.seasons!!.data.isNotEmpty()) data.seasons!!.data.size else 0
-                                } else {
-                                    0
-                                },
+                                primaryName = data.displayName,
+                                originalName = data.nameEng,
+                                imdbScore = data.imdbScore,
+                                releaseYear = data.releaseYear,
+                                genres = data.genres,
+                                seasonNum = data.seasonNum,
                                 watchedDuration = savedTitle.watchedDuration,
                                 titleDuration = savedTitle.titleDuration,
                                 season = savedTitle.season,

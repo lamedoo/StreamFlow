@@ -12,8 +12,6 @@ import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.ui.genres.TvGenresActivity
 import com.lukakordzaia.streamflowtv.ui.main.TvActivity
 import com.lukakordzaia.streamflowtv.ui.tvcatalogue.TvCatalogueActivity
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTvBaseBinding>(), TvTitleSelected {
     override fun getViewBinding() = ActivityTvBaseBinding.inflate(layoutInflater)

@@ -17,13 +17,13 @@ import org.koin.dsl.module
 val phoneViewModelModule = module {
     viewModel { HomeViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { PhoneSingleTitleViewModel() }
-    viewModel { CatalogueViewModel() }
+    viewModel { CatalogueViewModel(get(), get(), get()) }
     viewModel { SingleCatalogueViewModel() }
     viewModel { SearchTitlesViewModel() }
     viewModel { TvEpisodeBottomSheetViewModel() }
     viewModel { ProfileViewModel() }
     viewModel { WatchlistViewModel() }
-    viewModel { TopListViewModel() }
+    viewModel { TopListViewModel(get(), get(), get()) }
     viewModel { VideoPlayerViewModel() }
 }
 
