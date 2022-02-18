@@ -7,6 +7,7 @@ import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.network.toTvInfoModel
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvSearchInputSelected
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
@@ -77,7 +78,7 @@ class TvSearchFragment : BaseVerticalGridSupportFragment<TvSearchTitlesViewModel
             val indexOfItem = gridAdapter.indexOf(item)
 
             if (item is SingleTitleModel) {
-                onTitleSelected?.getTitleId(item.id, null)
+                onTitleSelected?.getTitleId(item.toTvInfoModel())
             }
 
             if (indexOfItem in 0 until 6) {

@@ -91,23 +91,36 @@ class HomeViewModel : BaseViewModel() {
         continueWatchingLoader.value = LoadingState.LOADING
         val dbTitles: MutableList<ContinueWatchingModel> = mutableListOf()
         viewModelScope.launch {
-            dbDetails.forEach {
-                when (val databaseTitles = environment.singleTitleRepository.getSingleTitleData(it.titleId)) {
+            dbDetails.forEach { savedTitle ->
+                when (val databaseTitles = environment.singleTitleRepository.getSingleTitleData(savedTitle.titleId)) {
                     is Result.Success -> {
                         val data = databaseTitles.data.data
+
+                        val genres: MutableList<String> = ArrayList()
+                        data.genres.data.forEach { it.primaryName?.let { name -> genres.add(name) } }
+
                         dbTitles.add(
                             ContinueWatchingModel(
-                                data.posters.data!!.x240,
-                                data.duration,
-                                it.titleId,
-                                it.isTvShow,
-                                data.primaryName,
-                                data.originalName,
-                                it.watchedDuration,
-                                it.titleDuration,
-                                it.season,
-                                it.episode,
-                                it.language
+                                poster = data.posters.data!!.x240,
+                                cover = data.covers?.data?.x1050,
+                                duration = data.duration,
+                                id = savedTitle.titleId,
+                                isTvShow = savedTitle.isTvShow,
+                                primaryName = data.primaryName,
+                                originalName = data.originalName,
+                                imdbScore = data.rating.imdb?.let { it.score.toString() } ?: run { "N/A" },
+                                releaseYear = data.year.toString(),
+                                genres = genres,
+                                seasonNum = if (data.seasons != null) {
+                                    if (data.seasons!!.data.isNotEmpty()) data.seasons!!.data.size else 0
+                                } else {
+                                    0
+                                },
+                                watchedDuration = savedTitle.watchedDuration,
+                                titleDuration = savedTitle.titleDuration,
+                                season = savedTitle.season,
+                                episode = savedTitle.episode,
+                                language = savedTitle.language
                             )
                         )
 

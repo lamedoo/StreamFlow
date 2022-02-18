@@ -26,7 +26,6 @@ import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.TvRelatedFragment
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
-import com.lukakordzaia.streamflowtv.ui.tvwatchlist.TvWatchlistActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -100,36 +99,33 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.tvDetailsProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
-        })
+        }
 
-        viewModel.movieNotYetAdded.observe(viewLifecycleOwner, {
+        viewModel.movieNotYetAdded.observe(viewLifecycleOwner) {
             binding.noFilesContainer.setVisibleOrGone(it)
             binding.buttonsRow.setVisibleOrInvisible(!it)
-        })
+        }
 
-        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
+        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner) {
             setTitleInfo(it)
-        })
+        }
 
-        viewModel.favoriteLoader.observe(viewLifecycleOwner, {
+        viewModel.favoriteLoader.observe(viewLifecycleOwner) {
             binding.favoriteProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
             binding.favoriteIcon.setVisibleOrGone(it != LoadingState.LOADING)
-        })
+        }
 
-        viewModel.addToFavorites.observe(viewLifecycleOwner, {
+        viewModel.addToFavorites.observe(viewLifecycleOwner) {
             favoriteContainer(it)
-        })
+        }
 
-        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+        viewModel.continueWatchingDetails.observe(viewLifecycleOwner) {
             checkContinueWatching(it)
-            if (it != null) {
-                viewModel.setFocusedButton(TvTitleDetailsViewModel.Buttons.CONTINUE_WATCHING)
-            }
-        })
+        }
 
-        viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+        viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner) {
             when (it) {
                 LoadingState.LOADING -> {}
                 LoadingState.LOADED -> {
@@ -139,11 +135,11 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
                     viewModel.newToastMessage(getString(R.string.unable_to_hide_from_list))
                 }
             }
-        })
+        }
 
-        viewModel.availableLanguages.observe(viewLifecycleOwner, {
+        viewModel.availableLanguages.observe(viewLifecycleOwner) {
             languages = it.reversed()
-        })
+        }
     }
 
     private fun favoriteContainer(isSaved: Boolean) {

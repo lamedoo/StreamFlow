@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflowphone.ui.home.homeadapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -39,7 +38,7 @@ class HomeContinueWatchingAdapter(
 
     inner class ViewHolder(val view: RvDbTitleItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: ContinueWatchingModel) {
-            view.itemPoster.setImage(model.cover, true)
+            view.itemPoster.setImage(model.poster, true)
 
             view.continueWatchingInfo.text = if (model.isTvShow) {
                 model.watchedDuration.titlePosition(model.season, model.episode)

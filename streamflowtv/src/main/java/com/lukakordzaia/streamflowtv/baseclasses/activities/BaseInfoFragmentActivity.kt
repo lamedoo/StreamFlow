@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import com.lukakordzaia.core.datamodels.ContinueWatchingModel
+import com.lukakordzaia.core.datamodels.TvInfoModel
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvBaseBinding
@@ -15,8 +16,6 @@ import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDeta
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTvBaseBinding>(), TvTitleSelected {
-    private val tvTitleDetailsViewModel: TvTitleDetailsViewModel by viewModel()
-
     override fun getViewBinding() = ActivityTvBaseBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +43,8 @@ abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTv
         binding.progressBar.setVisibleOrGone(isLoading)
     }
 
-    override fun getTitleId(titleId: Int, continueWatchingDetails: ContinueWatchingModel?) {
-        observeTitleDetails(titleId)
+    override fun getTitleId(info: TvInfoModel, continueWatchingDetails: ContinueWatchingModel?) {
+        observeTitleDetails(info)
 
         if (continueWatchingDetails != null) {
             binding.titleInfo.continueWatchingSeekBar.setVisible()
@@ -65,25 +64,19 @@ abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTv
         }
     }
 
-    private fun observeTitleDetails(titleId: Int) {
-        tvTitleDetailsViewModel.getSingleTitleData(titleId)
+    private fun observeTitleDetails(info: TvInfoModel) {
+        binding.titleInfo.name.text = info.nameEng
 
-        tvTitleDetailsViewModel.getSingleTitleResponse.observe(this, {
-            binding.titleInfo.name.text = it.nameEng
+        binding.titleInfo.poster.setImage(info.cover, false)
 
-            binding.titleInfo.poster.setImage(it.cover, false)
+        binding.titleInfo.year.text = "${info.releaseYear}"
+        binding.titleInfo.duration.text = if (info.isTvShow) {
+            getString(R.string.season_number, info.seasonNum.toString())
+        } else {
+            info.duration
+        }
+        binding.titleInfo.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
 
-            binding.titleInfo.year.text = "${it.releaseYear}"
-            binding.titleInfo.duration.text = if (it.isTvShow) {
-                getString(R.string.season_number, it.seasonNum.toString())
-            } else {
-                it.duration
-            }
-            binding.titleInfo.imdbScore.text = getString(R.string.imdb_score, it.imdbScore)
-        })
-
-        tvTitleDetailsViewModel.titleGenres.observe(this, {
-            binding.titleInfo.genres.text = TextUtils.join(", ", it)
-        })
+        binding.titleInfo.genres.text = info.genres?.let { TextUtils.join(", ", it) }
     }
 }

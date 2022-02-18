@@ -8,9 +8,7 @@ import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.Result
 import com.lukakordzaia.core.network.toTitleListModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class SingleGenreViewModel : BaseViewModel() {
     private val _singleGenreAnimation = MutableLiveData<List<SingleTitleModel>>()
@@ -39,12 +37,12 @@ class SingleGenreViewModel : BaseViewModel() {
                 is Result.Success -> {
                     val data = singleGenre.data.data
                     when (genreId) {
-                        265 -> _singleGenreAnimation.value = data.toTitleListModel()
-                        258 -> _singleGenreComedy.value = data.toTitleListModel()
-                        260 -> _singleGenreMelodrama.value = data.toTitleListModel()
-                        255 -> _singleGenreHorror.value = data.toTitleListModel()
-                        266 -> _singleGenreAdventure.value = data.toTitleListModel()
-                        248 -> _singleGenreAction.value = data.toTitleListModel()
+                        265 -> _singleGenreAnimation.postValue(data.toTitleListModel())
+                        258 -> _singleGenreComedy.postValue(data.toTitleListModel())
+                        260 -> _singleGenreMelodrama.postValue(data.toTitleListModel())
+                        255 -> _singleGenreHorror.postValue(data.toTitleListModel())
+                        266 -> _singleGenreAdventure.postValue(data.toTitleListModel())
+                        248 -> _singleGenreAction.postValue(data.toTitleListModel())
                     }
                 }
                 is Result.Error -> {
@@ -58,19 +56,23 @@ class SingleGenreViewModel : BaseViewModel() {
 
     fun fetchContentTv() {
         setGeneralLoader(LoadingState.LOADING)
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val getData = viewModelScope.launch {
-                    getSingleGenreForTv(265)
-                    getSingleGenreForTv(258)
-                    getSingleGenreForTv(260)
-                    getSingleGenreForTv(255)
-                    getSingleGenreForTv(266)
-                    getSingleGenreForTv(248)
-                }
-                getData.join()
-                setGeneralLoader(LoadingState.LOADED)
+        viewModelScope.launch(Dispatchers.IO) {
+            coroutineScope {
+                val animationDeferred = async { getSingleGenreForTv(265) }
+                val comedyDeferred = async { getSingleGenreForTv(258) }
+                val melodramaDeferred = async { getSingleGenreForTv(260) }
+                val horrorDeferred = async { getSingleGenreForTv(255) }
+                val adventureDeferred = async { getSingleGenreForTv(266) }
+                val actionsDeferred = async { getSingleGenreForTv(248) }
+
+                animationDeferred.await()
+                comedyDeferred.await()
+                melodramaDeferred.await()
+                horrorDeferred.await()
+                adventureDeferred.await()
+                actionsDeferred.await()
             }
+            setGeneralLoader(LoadingState.LOADED)
         }
     }
 }

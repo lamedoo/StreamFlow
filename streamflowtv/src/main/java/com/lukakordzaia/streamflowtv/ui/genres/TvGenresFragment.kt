@@ -8,6 +8,7 @@ import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.toTvInfoModel
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.BaseBrowseSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
@@ -45,33 +46,33 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
     }
 
     private fun fragmentObservers() {
-        viewModel.singleGenreAnimation.observe(viewLifecycleOwner, {
+        viewModel.singleGenreAnimation.observe(viewLifecycleOwner) {
             firstCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreComedy.observe(viewLifecycleOwner, {
+        viewModel.singleGenreComedy.observe(viewLifecycleOwner) {
             secondCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreMelodrama.observe(viewLifecycleOwner, {
+        viewModel.singleGenreMelodrama.observe(viewLifecycleOwner) {
             thirdCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreHorror.observe(viewLifecycleOwner, {
+        viewModel.singleGenreHorror.observe(viewLifecycleOwner) {
             fourthCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreAdventure.observe(viewLifecycleOwner, {
+        viewModel.singleGenreAdventure.observe(viewLifecycleOwner) {
             fifthCategoryAdapter(it)
-        })
+        }
 
-        viewModel.singleGenreAction.observe(viewLifecycleOwner, {
+        viewModel.singleGenreAction.observe(viewLifecycleOwner) {
             sixthCategoryAdapter(it)
-        })
+        }
 
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             (activity as TvGenresActivity).setProgressBar(it == LoadingState.LOADING)
-        })
+        }
     }
 
     private fun firstCategoryAdapter(category: List<SingleTitleModel>) {
@@ -166,7 +167,7 @@ class TvGenresFragment : BaseBrowseSupportFragment<SingleGenreViewModel>() {
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             if (item is SingleTitleModel) {
-                onTitleSelected?.getTitleId(item.id, null)
+                onTitleSelected?.getTitleId(item.toTvInfoModel())
             }
 
             val indexOfItem = ((row as ListRow).adapter as ArrayObjectAdapter).indexOf(item)

@@ -6,7 +6,7 @@ import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseInfoFragmentActivity
 import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 
-class TvActivity : BaseInfoFragmentActivity(), TvTitleSelected {
+class TvActivity : BaseInfoFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
