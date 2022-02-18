@@ -31,15 +31,15 @@ class TvCatalogueFragment : BaseVerticalGridSupportFragment<TvCatalogueViewModel
     }
 
     private fun fragmentObservers() {
-        viewModel.tvCatalogueList.observe(viewLifecycleOwner, {
+        viewModel.tvCatalogueList.observe(viewLifecycleOwner) {
             it.forEach { title ->
                 gridAdapter.add(title)
             }
-        })
+        }
 
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             (activity as TvCatalogueActivity).setProgressBar(it == LoadingState.LOADING)
-        })
+        }
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {
@@ -88,13 +88,13 @@ class TvCatalogueFragment : BaseVerticalGridSupportFragment<TvCatalogueViewModel
                 page++
                 when (activity?.intent?.getSerializableExtra(AppConstants.CATALOGUE_TYPE) as Int) {
                     AppConstants.LIST_NEW_MOVIES -> {
-                        viewModel.getNewMoviesTv(page)
+                        viewModel.getNewMovies(page)
                     }
                     AppConstants.LIST_TOP_MOVIES -> {
-                        viewModel.getTopMoviesTv(page)
+                        viewModel.getTopMovies(page)
                     }
                     AppConstants.LIST_TOP_TV_SHOWS -> {
-                        viewModel.getTopTvShowsTv(page)
+                        viewModel.getTopTvShows(page)
                     }
                 }
             }

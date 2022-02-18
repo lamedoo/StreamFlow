@@ -5,12 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
-import com.lukakordzaia.core.network.ResultData
+import com.lukakordzaia.core.domain.usecases.SingleTitleCastUseCase
+import com.lukakordzaia.core.domain.usecases.SingleTitleRelatedUseCase
+import com.lukakordzaia.core.network.ResultDomain
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
-import com.lukakordzaia.core.network.toTitleListModel
+import com.lukakordzaia.core.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class TvRelatedViewModel : BaseViewModel() {
+class TvRelatedViewModel(
+    private val singleTitleCastUseCase: SingleTitleCastUseCase,
+    private val singleTitleRelatedUseCase: SingleTitleRelatedUseCase,
+) : BaseViewModel() {
     private val _castData = MutableLiveData<List<GetSingleTitleCastResponse.Data>>()
     val castResponseDataGetSingle: LiveData<List<GetSingleTitleCastResponse.Data>> = _castData
 
@@ -19,14 +24,16 @@ class TvRelatedViewModel : BaseViewModel() {
 
     fun getSingleTitleCast(titleId: Int) {
         viewModelScope.launch {
-            when (val cast = environment.singleTitleRepository.getSingleTitleCast(titleId, "cast")) {
-                is ResultData.Success -> {
-                    val data = cast.data.data
-
-                    _castData.value = data
+            when (val result = singleTitleCastUseCase.invoke(Pair(titleId, "cast"))) {
+                is ResultDomain.Success -> {
+                    val data = result.data.data
+                    _castData.postValue(data)
                 }
-                is ResultData.Error -> {
-                    newToastMessage("მსახიობები - ${cast.exception}")
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("მსახიობები - ${result.exception}")
+                    }
                 }
             }
         }
@@ -34,13 +41,15 @@ class TvRelatedViewModel : BaseViewModel() {
 
     fun getSingleTitleRelated(titleId: Int) {
         viewModelScope.launch {
-            when (val related = environment.singleTitleRepository.getSingleTitleRelated(titleId)) {
-                is ResultData.Success -> {
-                    val data = related.data.data
-                    _singleTitleRelated.value = data.toTitleListModel()
+            when (val result = singleTitleRelatedUseCase.invoke(titleId)) {
+                is ResultDomain.Success -> {
+                    _singleTitleRelated.postValue(result.data)
                 }
-                is ResultData.Error -> {
-                    newToastMessage("მსგავსი - ${related.exception}")
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> {}
+                        else -> newToastMessage("მსგავსი - ${result.exception}")
+                    }
                 }
             }
         }
