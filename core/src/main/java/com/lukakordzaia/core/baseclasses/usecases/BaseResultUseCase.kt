@@ -12,33 +12,19 @@ import java.lang.Exception
  */
 abstract class BaseResultUseCase<ARG_TYPE : Any, DATA_TYPE : Any, DOMAIN_TYPE : Any> : BaseUseCase<ARG_TYPE, ResultDomain<DOMAIN_TYPE, String>> {
     fun returnData(apiCall: ResultData<DATA_TYPE>, transform: (data: DATA_TYPE) -> DOMAIN_TYPE): ResultDomain<DOMAIN_TYPE, String> {
-        return when (val result = getData(apiCall)) {
+        return when (apiCall) {
             is ResultData.Success -> {
                 try {
-                    ResultDomain.Success(transform(result.data))
+                    ResultDomain.Success(transform(apiCall.data))
                 } catch (ex: Exception) {
                     ResultDomain.Error(ex.toString())
                 }
             }
             is ResultData.Error -> {
-                ResultDomain.Error(result.exception)
+                ResultDomain.Error(apiCall.exception)
             }
             is ResultData.Internet -> {
                 ResultDomain.Error(AppConstants.NO_INTERNET_ERROR)
-            }
-        }
-    }
-
-    private fun getData(apiCall: ResultData<DATA_TYPE>): ResultData<DATA_TYPE> {
-        return when (apiCall) {
-            is ResultData.Success -> {
-                ResultData.Success(apiCall.data)
-            }
-            is ResultData.Error -> {
-                ResultData.Error(apiCall.exception)
-            }
-            is ResultData.Internet -> {
-                ResultData.Internet
             }
         }
     }
