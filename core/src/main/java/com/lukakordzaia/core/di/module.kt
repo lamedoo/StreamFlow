@@ -74,4 +74,7 @@ val useCaseModule = module {
     single { SingleTitleFilesUseCase(get()) }
     single { DbDeleteSingleContinueWatchingUseCase(get()) }
     single { HideContinueWatchingUseCase(get()) }
+    single { SingleTitleFilesVideoUseCase(get()) }
+    single { DbInsertContinueWatchingUseCase(get()) }
+    single { TitleWatchTimeUseCase(get()) }
 }

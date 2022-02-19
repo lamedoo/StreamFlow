@@ -5,6 +5,7 @@ import com.lukakordzaia.core.network.imovies.ImoviesCall
 import com.lukakordzaia.core.network.imovies.ImoviesNetwork
 import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.core.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
+import com.lukakordzaia.core.network.models.imovies.request.user.PostTitleWatchTimeRequestFull
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserDataResponse
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserLogoutResponse
 import com.lukakordzaia.core.network.models.imovies.response.user.PostUserLoginResponse
@@ -23,12 +24,7 @@ class DefaultUserRepository(private val service: ImoviesNetwork): ImoviesCall(),
         return imoviesCall { service.postUserLogOut() }
     }
 
-    override suspend fun titleWatchTime(
-        watchTimeRequest: PostTitleWatchTimeRequestBody,
-        titleId: Int,
-        season: Int,
-        episode: Int
-    ): ResultData<PostWatchTimeResponse> {
-        return imoviesCall { service.postTitleWatchTime(watchTimeRequest, titleId, season, episode) }
+    override suspend fun titleWatchTime(watchTimeRequest: PostTitleWatchTimeRequestFull): ResultData<PostWatchTimeResponse> {
+        return imoviesCall { service.postTitleWatchTime(watchTimeRequest.titleWatchTime, watchTimeRequest.id, watchTimeRequest.season, watchTimeRequest.episode) }
     }
 }

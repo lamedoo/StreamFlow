@@ -24,7 +24,7 @@ val phoneViewModelModule = module {
     viewModel { ProfileViewModel(get(), get(), get()) }
     viewModel { WatchlistViewModel(get(), get()) }
     viewModel { TopListViewModel(get(), get(), get()) }
-    viewModel { VideoPlayerViewModel() }
+    viewModel { VideoPlayerViewModel(get(), get(), get(), get()) }
 }
 
 val phoneGeneralModule = module {

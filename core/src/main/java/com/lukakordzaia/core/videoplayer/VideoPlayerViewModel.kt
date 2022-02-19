@@ -1,6 +1,5 @@
 package com.lukakordzaia.core.videoplayer
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,17 +8,24 @@ import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.EpisodeInfoModel
 import com.lukakordzaia.core.domain.domainmodels.TitleMediaItemsUri
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
+import com.lukakordzaia.core.domain.usecases.*
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.ResultData
+import com.lukakordzaia.core.network.ResultDomain
 import com.lukakordzaia.core.network.models.imovies.request.user.PostTitleWatchTimeRequestBody
+import com.lukakordzaia.core.network.models.imovies.request.user.PostTitleWatchTimeRequestFull
 import com.lukakordzaia.core.network.toEpisodeInfoModel
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.utils.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class VideoPlayerViewModel : BaseViewModel() {
+class VideoPlayerViewModel(
+    private val titleWatchTimeUseCase: TitleWatchTimeUseCase,
+    private val dbInsertContinueWatchingUseCase: DbInsertContinueWatchingUseCase,
+    private val singleTitleFilesVideoUseCase: SingleTitleFilesVideoUseCase,
+    private val singleTitleUseCase: SingleTitleUseCase
+) : BaseViewModel() {
     private val _numOfSeasons = MutableLiveData<Int>()
     val numOfSeasons: LiveData<Int> = _numOfSeasons
 
@@ -71,30 +77,30 @@ class VideoPlayerViewModel : BaseViewModel() {
             if (sharedPreferences.getLoginToken() != "") {
                 saveLoader.value = LoadingState.LOADING
                 viewModelScope.launch {
-                    when (environment.userRepository.titleWatchTime(
-                        PostTitleWatchTimeRequestBody(
-                            duration = TimeUnit.MILLISECONDS.toSeconds(titleDuration).toInt(),
-                            progress = TimeUnit.MILLISECONDS.toSeconds(playBackDuration).toInt(),
-                            language = videoPlayerData.value!!.chosenLanguage,
-                            quality = qualityForDb.value!!
-                        ),
-                        videoPlayerData.value!!.titleId,
-                        videoPlayerData.value!!.chosenSeason,
-                        videoPlayerData.value!!.chosenEpisode
+                    when (titleWatchTimeUseCase.invoke(
+                        PostTitleWatchTimeRequestFull(
+                            dbDetails.titleId,
+                            dbDetails.season,
+                            dbDetails.episode,
+                            PostTitleWatchTimeRequestBody(
+                                duration = dbDetails.titleDuration.toInt(),
+                                progress = dbDetails.watchedDuration.toInt(),
+                                language = dbDetails.language,
+                                quality = qualityForDb.value!!
+                            )
+                        )
                     )) {
-                        is ResultData.Success -> {
+                        is ResultDomain.Success -> {
                             saveLoader.value = LoadingState.LOADED
                         }
-                        is ResultData.Error -> {
+                        is ResultDomain.Error -> {
                             saveLoader.value = LoadingState.ERROR
                         }
                     }
                 }
             } else {
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        environment.databaseRepository.insertContinueWatchingInRoom(dbDetails)
-                    }
+                viewModelScope.launch(Dispatchers.IO) {
+                    dbInsertContinueWatchingUseCase.invoke(dbDetails)
                 }
             }
         } else {
@@ -104,27 +110,27 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     fun getTitleFiles(videoPlayerData: VideoPlayerData) {
         viewModelScope.launch {
-            when (val files = environment.singleTitleRepository.getSingleTitleFiles(videoPlayerData.titleId, videoPlayerData.chosenSeason)) {
-                is ResultData.Success -> {
-                    val data = files.data.data
+            when (val result = singleTitleFilesVideoUseCase.invoke(Pair(videoPlayerData.titleId, videoPlayerData.chosenSeason))) {
+                is ResultDomain.Success -> {
+                    val data = result.data
                     val info = data.toEpisodeInfoModel(if (videoPlayerData.chosenSeason == 0) 0 else videoPlayerData.chosenEpisode - 1, videoPlayerData.chosenLanguage)
 
                     _setTitleName.value = info.episodeName
                     _availableLanguages.value = info.availableLanguages
                     _availableSubtitles.value = info.availableSubs
 
-                    totalEpisodesInSeason.value = files.data.data.size
+                    totalEpisodesInSeason.value = result.data.size
 
                     checkAudio(info, videoPlayerData.chosenLanguage, videoPlayerData.chosenSubtitle)
 
                     val mediaItems = TitleMediaItemsUri(episodeLink, subtitleLink)
                     mediaAndSubtitle.value = mediaItems
                 }
-                is ResultData.Error -> {
-                    Log.d("errornextepisode", files.exception)
-                }
-                is ResultData.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("ინფორმაცია - ${result.exception}")
+                    }
                 }
             }
         }
@@ -190,18 +196,21 @@ class VideoPlayerViewModel : BaseViewModel() {
 
     fun getSingleTitleData(titleId: Int) {
         viewModelScope.launch {
-            when (val titleData = environment.singleTitleRepository.getSingleTitleData(titleId)) {
-                is ResultData.Success -> {
-                    val data = titleData.data.data
+            when (val result = singleTitleUseCase.invoke(titleId)) {
+                is ResultDomain.Success -> {
+                    val data = result.data
 
-                    if (!data.isTvShow || data.seasons == null) {
+                    if (!data.isTvShow) {
                         _numOfSeasons.value = 0
                     } else {
-                        _numOfSeasons.value = data.seasons.data.size
+                        _numOfSeasons.value = data.seasonNum!!
                     }
                 }
-                is ResultData.Error -> {
-                    Log.d("errorsinglemovies", titleData.exception)
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("ინფორმაცია - ${result.exception}")
+                    }
                 }
             }
         }
