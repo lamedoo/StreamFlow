@@ -1,46 +1,51 @@
 package com.lukakordzaia.streamflowtv.ui.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.domain.usecases.UserDataUseCase
+import com.lukakordzaia.core.domain.usecases.UserLogOutUseCase
+import com.lukakordzaia.core.domain.usecases.UserLoginUseCase
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.ResultData
+import com.lukakordzaia.core.network.ResultDomain
 import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserDataResponse
+import com.lukakordzaia.core.utils.AppConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TvProfileViewModel : BaseViewModel() {
+class TvProfileViewModel(
+    private val userLoginUseCase: UserLoginUseCase,
+    private val userLogOutUseCase: UserLogOutUseCase,
+    private val userDataUseCase: UserDataUseCase
+) : BaseViewModel() {
     val loginLoader = MutableLiveData(LoadingState.LOADED)
 
     private val _userData = MutableLiveData<GetUserDataResponse.Data>()
     val userData: LiveData<GetUserDataResponse.Data> = _userData
 
     fun userLogin(loginBody: PostLoginBody) {
-        loginLoader.value = LoadingState.LOADING
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
-            when (val login = environment.userRepository.userLogin(loginBody)) {
-                is ResultData.Success -> {
-                    val data = login.data
+            when (val result = userLoginUseCase.invoke(loginBody)) {
+                is ResultDomain.Success -> {
+                    val data = result.data
 
                     sharedPreferences.saveLoginToken(data.accessToken)
                     sharedPreferences.saveLoginRefreshToken(data.refreshToken)
                     sharedPreferences.saveUsername(loginBody.username)
                     sharedPreferences.savePassword(loginBody.password)
 
-                    loginLoader.value = LoadingState.LOADED
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is ResultData.Error -> {
-                    newToastMessage("დაფიქსირდა გარკვეული შეცდომა, გთხოვთ სცადოთ თავიდან")
-                }
-                is ResultData.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("დაფიქსირდა გარკვეული შეცდომა, გთხოვთ სცადოთ თავიდან")
+                    }
                 }
             }
         }
@@ -49,17 +54,19 @@ class TvProfileViewModel : BaseViewModel() {
     fun userLogout() {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
-            when (val logout = environment.userRepository.userLogout()) {
-                is ResultData.Success -> {
-
+            when (val result = userLogOutUseCase.invoke()) {
+                is ResultDomain.Success -> {
                     sharedPreferences.saveLoginToken("")
                     sharedPreferences.saveLoginRefreshToken("")
                     sharedPreferences.saveUserId(-1)
 
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is ResultData.Error -> {
-                    Log.d("userLogout", logout.exception)
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("ანგარიშიდან გასვლა - ${result.exception}")
+                    }
                 }
             }
         }
@@ -67,19 +74,19 @@ class TvProfileViewModel : BaseViewModel() {
 
     fun getUserData() {
         viewModelScope.launch {
-            when (val userData = environment.userRepository.userData()) {
-                is ResultData.Success -> {
-                    val data = userData.data.data
+            when (val result = userDataUseCase.invoke()) {
+                is ResultDomain.Success -> {
+                    val data = result.data.data
 
                     sharedPreferences.saveUserId(data.id)
 
                     _userData.value = data
                 }
-                is ResultData.Error -> {
-                    Log.d("userData", userData.exception)
-                }
-                is ResultData.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("მომხმარებლის მონაცემები - ${result.exception}")
+                    }
                 }
             }
         }

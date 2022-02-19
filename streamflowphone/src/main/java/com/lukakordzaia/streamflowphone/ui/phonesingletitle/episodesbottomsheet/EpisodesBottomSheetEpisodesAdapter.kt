@@ -10,7 +10,7 @@ import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.RvChooseDetailsEpisodesItemBinding
 
 class EpisodesBottomSheetEpisodesAdapter(
-    private val onEpisodeClick: (episodeId: Int) -> Unit,
+    private val onEpisodeClick: (episodeId: Int, languages: List<String>) -> Unit,
     private val onChosenEpisode: (position: Int) -> Unit
 ) : RecyclerView.Adapter<EpisodesBottomSheetEpisodesAdapter.ViewHolder>() {
     private var list: List<TitleEpisodes> = ArrayList()
@@ -62,7 +62,7 @@ class EpisodesBottomSheetEpisodesAdapter(
             }
 
             view.rvEpisodesContainer.setOnClickListener {
-                onEpisodeClick(model.episodeNum)
+                onEpisodeClick(model.episodeNum, model.languages)
             }
         }
     }

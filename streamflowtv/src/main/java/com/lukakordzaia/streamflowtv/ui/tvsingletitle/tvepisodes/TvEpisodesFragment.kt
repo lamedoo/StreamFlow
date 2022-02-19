@@ -20,7 +20,7 @@ class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesV
 
     override val viewModel by viewModel<TvEpisodesViewModel>()
     override val reload: () -> Unit = {
-        viewModel.getSingleTitleData(titleId)
+        viewModel.getContinueWatching(titleId)
     }
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvEpisodesBinding
@@ -39,23 +39,21 @@ class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesV
 
         this.titleId = titleId ?: videoPlayerData!!.titleId
 
-        viewModel.getSingleTitleData(this.titleId)
-
         fragmentObservers()
     }
 
     private fun fragmentObservers() {
-        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner, {
+        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner) {
             setTitleInfo(it)
-        })
+        }
 
-        viewModel.continueWatchingDetails.observe(viewLifecycleOwner, {
+        viewModel.continueWatchingDetails.observe(viewLifecycleOwner) {
             if (it != null) {
                 setSeasonsFragment(it.season, it.episode)
             } else {
                 setSeasonsFragment()
             }
-        })
+        }
     }
 
     private fun setSeasonsFragment(season: Int? = null, episode: Int? = null) {

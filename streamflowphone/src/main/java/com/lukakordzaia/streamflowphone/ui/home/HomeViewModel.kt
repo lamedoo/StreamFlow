@@ -22,7 +22,9 @@ class HomeViewModel(
     private val newSeriesUseCase: NewSeriesUseCase,
     private val userSuggestionsUseCase: UserSuggestionsUseCase,
     private val continueWatchingUseCase: ContinueWatchingUseCase,
-    private val singleTitleUseCase: SingleTitleUseCase
+    private val singleTitleUseCase: SingleTitleUseCase,
+    private val dbDeleteSingleContinueWatchingUseCase: DbDeleteSingleContinueWatchingUseCase,
+    private val hideContinueWatchingUseCase: HideContinueWatchingUseCase
 ) : BaseViewModel() {
     val continueWatchingLoader = MutableLiveData<LoadingState>()
     val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
@@ -65,7 +67,7 @@ class HomeViewModel(
                     HomeFragmentDirections.actionHomeFragmentToSingleTitleFragmentNav(titleId)
             )
             AppConstants.NAV_CONTINUE_WATCHING_TO_SINGLE -> navigateToNewFragment(
-                    ContinueWatchingInfoFragmentDirections.actionContinueWatchingInfoFragmentToSingleTitleFragmentNav(titleId)
+                ContinueWatchingInfoBottomSheetDirections.actionContinueWatchingInfoFragmentToSingleTitleFragmentNav(titleId)
             )
         }
     }
@@ -166,8 +168,8 @@ class HomeViewModel(
     }
 
     private fun deleteSingleContinueWatchingFromRoom(titleId: Int) {
-        viewModelScope.launch {
-            environment.databaseRepository.deleteSingleContinueWatchingFromRoom(titleId)
+        viewModelScope.launch(Dispatchers.IO) {
+            dbDeleteSingleContinueWatchingUseCase.invoke(titleId)
             hideContinueWatchingLoader.value = LoadingState.LOADED
         }
     }
@@ -175,17 +177,17 @@ class HomeViewModel(
     private fun hideSingleContinueWatching(titleId: Int) {
         hideContinueWatchingLoader.value = LoadingState.LOADING
         viewModelScope.launch {
-            when (environment.homeRepository.hideTitleContinueWatching(titleId)) {
-                is ResultData.Success -> {
+            when (val result = hideContinueWatchingUseCase.invoke(titleId)) {
+                is ResultDomain.Success -> {
                     newToastMessage("წაიშალა განაგრძეთ ყურების სიიდან")
                     checkAuthDatabase()
                     hideContinueWatchingLoader.value = LoadingState.LOADED
                 }
-                is ResultData.Error -> {
-                    newToastMessage("საწმუხაროდ, ვერ მოხერხდა წაშლა")
-                }
-                is ResultData.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("სამწუხაროდ ვერ მოხერხდა წაშლა")
+                    }
                 }
             }
         }

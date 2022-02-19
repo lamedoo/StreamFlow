@@ -15,11 +15,11 @@ import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseBottomSheetVM
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ContinueWatchingInfoFragment : BaseBottomSheetVM<FragmentPhoneContinueWatchingInfoBinding, HomeViewModel>() {
+class ContinueWatchingInfoBottomSheet : BaseBottomSheetVM<FragmentPhoneContinueWatchingInfoBinding, HomeViewModel>() {
     override val viewModel by sharedViewModel<HomeViewModel>()
     override val reload: () -> Unit = {}
 
-    private val args: ContinueWatchingInfoFragmentArgs by navArgs()
+    private val args: ContinueWatchingInfoBottomSheetArgs by navArgs()
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneContinueWatchingInfoBinding
         get() = FragmentPhoneContinueWatchingInfoBinding::inflate
@@ -53,11 +53,11 @@ class ContinueWatchingInfoFragment : BaseBottomSheetVM<FragmentPhoneContinueWatc
     }
 
     private fun fragmentObservers() {
-        viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+        viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner) {
             if (it == LoadingState.LOADED) {
                 dismiss()
             }
-        })
+        }
     }
 
     private fun removeTitleDialog() {

@@ -97,11 +97,6 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
         viewModel.episodeInfo.observe(viewLifecycleOwner) {
             episodeAdapter.setEpisodeList(it)
         }
-
-        viewModel.availableLanguages.observe(viewLifecycleOwner) { languageList ->
-            val languages = languageList.reversed()
-            chooseLanguageAdapter.setLanguageList(languages)
-        }
     }
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
@@ -144,8 +139,8 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
 
     private fun episodesContainer() {
         episodeAdapter = EpisodesBottomSheetEpisodesAdapter(
-            {
-                languagePickerDialog(it)
+            { episodeNum: Int, languages: List<String> ->
+                languagePickerDialog(episodeNum, languages)
             },
             {
                 if (!scrolledOnce) {
@@ -156,7 +151,7 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
         binding.rvEpisodes.adapter = episodeAdapter
     }
 
-    private fun languagePickerDialog(episode: Int) {
+    private fun languagePickerDialog(episode: Int, languages: List<String>) {
         viewModel.getEpisodeLanguages(args.titleId, episode)
 
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
@@ -175,6 +170,8 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
             adapter = chooseLanguageAdapter
             layoutManager = chooseLanguageLayout
         }
+
+        chooseLanguageAdapter.setLanguageList(languages)
     }
 
     private fun startVideoPlayer(language: String, episode: Int) {

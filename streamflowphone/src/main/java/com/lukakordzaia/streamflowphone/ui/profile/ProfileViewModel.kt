@@ -13,6 +13,7 @@ import com.lukakordzaia.core.network.ResultDomain
 import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.core.network.models.imovies.response.user.GetUserDataResponse
 import com.lukakordzaia.core.utils.AppConstants
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
@@ -97,7 +98,7 @@ class ProfileViewModel(
     }
 
     fun deleteContinueWatchingFromRoomFull() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             environment.databaseRepository.deleteAllFromRoom()
         }
     }

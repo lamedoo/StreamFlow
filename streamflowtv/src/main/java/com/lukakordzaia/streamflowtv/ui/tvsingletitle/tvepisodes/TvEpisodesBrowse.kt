@@ -107,8 +107,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
             row: Row?
         ) {
             if (item is TitleEpisodes) {
-                viewModel.getEpisodeLanguages(item.titleId, item.episodeNum)
-                languagePickerDialog(item.episodeNum)
+                languagePickerDialog(item.episodeNum, item.languages)
             }
         }
     }
@@ -140,7 +139,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         }
     }
 
-    private fun languagePickerDialog(episode: Int) {
+    private fun languagePickerDialog(episode: Int, languages: List<String>) {
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -156,11 +155,8 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
         binding.rvChooseLanguage.adapter = chooseLanguageAdapter
 
-        viewModel.availableLanguages.observe(viewLifecycleOwner) {
-            val languages = it.reversed()
-            chooseLanguageAdapter.setLanguageList(languages)
-            binding.rvChooseLanguage.requestFocus()
-        }
+        chooseLanguageAdapter.setLanguageList(languages)
+        binding.rvChooseLanguage.requestFocus()
     }
 
     private fun playEpisode(episode: Int, chosenLanguage: String) {

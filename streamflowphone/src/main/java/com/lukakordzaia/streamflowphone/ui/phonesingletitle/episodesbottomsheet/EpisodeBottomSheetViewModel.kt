@@ -97,7 +97,7 @@ class EpisodeBottomSheetViewModel(
 
                         if (sharedPreferences.getLoginToken() == "") {
                             data.forEach {
-                                getEpisodeNames.add(TitleEpisodes(titleId, it.episode, it.title, it.cover!!))
+                                getEpisodeNames.add(TitleEpisodes(titleId, it.episode, it.title, it.cover!!, it.languages))
                             }
                         } else {
                             data.forEach {
@@ -107,9 +107,11 @@ class EpisodeBottomSheetViewModel(
                                         it.episode,
                                         it.title,
                                         it.cover!!,
+                                        it.languages,
                                         it.titleDuration,
                                         it.watchedDuration
-                                    ))
+                                    )
+                                )
                             }
                         }
                         _episodeInfo.value = getEpisodeNames
@@ -123,7 +125,7 @@ class EpisodeBottomSheetViewModel(
                 is ResultDomain.Error -> {
                     when (result.exception) {
                         AppConstants.NO_INTERNET_ERROR -> setNoInternet()
-                        else -> newToastMessage("ფაილები - ${result.exception}")
+                        else -> newToastMessage("ეპიზოდები - ${result.exception}")
                     }
                 }
             }

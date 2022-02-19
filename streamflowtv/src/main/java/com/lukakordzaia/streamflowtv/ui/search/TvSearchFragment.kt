@@ -17,7 +17,7 @@ class TvSearchFragment : BaseVerticalGridSupportFragment<TvSearchTitlesViewModel
     private var searchQuery = ""
 
     override val viewModel by viewModel<TvSearchTitlesViewModel>()
-    override val reload: () -> Unit = { viewModel.getSearchTitlesTv(searchQuery, page) }
+    override val reload: () -> Unit = { viewModel.getSearchTitles(searchQuery, page) }
 
 
     var searchInputIsSelected: TvSearchInputSelected? = null
@@ -46,7 +46,7 @@ class TvSearchFragment : BaseVerticalGridSupportFragment<TvSearchTitlesViewModel
 
     fun setSearchQuery(query: String) {
         searchQuery = query
-        viewModel.getSearchTitlesTv(query, page)
+        viewModel.getSearchTitles(query, page)
     }
 
     fun clearRowsAdapter() {
@@ -105,7 +105,7 @@ class TvSearchFragment : BaseVerticalGridSupportFragment<TvSearchTitlesViewModel
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
-                viewModel.getSearchTitlesTv(searchQuery, page)
+                viewModel.getSearchTitles(searchQuery, page)
             }
         }
     }

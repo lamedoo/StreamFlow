@@ -43,7 +43,7 @@
     <include app:graph="@navigation/video_player_fragment_nav" />
     <dialog
         android:id="@+id/continueWatchingInfoFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.home.ContinueWatchingInfoFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.home.ContinueWatchingInfoBottomSheet"
         android:label="ContinueWatchingInfoFragment">
         <argument
             android:name="titleId"

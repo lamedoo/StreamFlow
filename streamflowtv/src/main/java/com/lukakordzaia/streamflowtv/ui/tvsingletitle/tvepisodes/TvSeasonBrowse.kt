@@ -61,7 +61,7 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
     }
 
     private fun fragmentObservers() {
-        viewModel.numOfSeasons.observe(viewLifecycleOwner, {
+        viewModel.numOfSeasons.observe(viewLifecycleOwner) {
             val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
 
             gridAdapter.clear()
@@ -73,7 +73,7 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
                 (parentFragment as TvEpisodesFragment).setFragmentFocus("season")
                 firstSelection = false
             }
-        })
+        }
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {

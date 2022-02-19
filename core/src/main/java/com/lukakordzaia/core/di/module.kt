@@ -72,4 +72,6 @@ val useCaseModule = module {
     single { SingleTitleRelatedUseCase(get()) }
     single { DbSingleContinueWatchingUseCase(get()) }
     single { SingleTitleFilesUseCase(get()) }
+    single { DbDeleteSingleContinueWatchingUseCase(get()) }
+    single { HideContinueWatchingUseCase(get()) }
 }
