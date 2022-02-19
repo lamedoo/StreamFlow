@@ -1,18 +1,17 @@
 package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.leanback.widget.Presenter
-import com.lukakordzaia.core.domain.domainmodels.TitleEpisodes
+import com.lukakordzaia.core.domain.domainmodels.SeasonEpisodesModel
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.customviews.TvEpisodesCardView
 
-class TvEpisodesPresenter(private val context: Context) : Presenter() {
+class TvEpisodesPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = TvEpisodesCardView(parent.context, null)
 
-        cardView.background = ResourcesCompat.getDrawable(context.resources, R.drawable.background_episodes_card_tv, null)
+        cardView.background = ResourcesCompat.getDrawable(parent.context.resources, R.drawable.background_episodes_card_tv, null)
 
         val height = ViewGroup.LayoutParams.WRAP_CONTENT
         val width = ViewGroup.LayoutParams.MATCH_PARENT
@@ -22,21 +21,21 @@ class TvEpisodesPresenter(private val context: Context) : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val episode = item as TitleEpisodes
+        val episode = item as SeasonEpisodesModel
         val cardView = viewHolder.view as TvEpisodesCardView
 
 //        if (isSeason) {
 //            cardView.currentIndicatorVisibility(episode.episodeNum == currentEpisode)
 //        }
 
-        cardView.setNumber("ეპიზოდი ${episode.episodeNum}")
-        cardView.setName(episode.episodeName)
-        cardView.setPoster(episode.episodePoster)
+        cardView.setNumber("ეპიზოდი ${episode.episode}")
+        cardView.setName(episode.title)
+        cardView.setPoster(episode.cover)
 
         cardView.setSeekbarVisibility(episode.titleDuration?.toInt() != 0)
         if (episode.titleDuration?.toInt() != 0) {
             cardView.binding.itemSeekBar.max = episode.titleDuration!!.toInt()
-            cardView.binding.itemSeekBar.progress = episode.watchDuration!!.toInt()
+            cardView.binding.itemSeekBar.progress = episode.watchedDuration!!.toInt()
         }
 
         cardView.setOnFocusChangeListener { _, hasFocus ->

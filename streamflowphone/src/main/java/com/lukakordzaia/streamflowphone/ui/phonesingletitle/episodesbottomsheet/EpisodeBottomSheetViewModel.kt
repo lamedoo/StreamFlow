@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
-import com.lukakordzaia.core.domain.domainmodels.TitleEpisodes
+import com.lukakordzaia.core.domain.domainmodels.SeasonEpisodesModel
 import com.lukakordzaia.core.domain.usecases.DbSingleContinueWatchingUseCase
 import com.lukakordzaia.core.domain.usecases.SingleTitleFilesUseCase
 import com.lukakordzaia.core.domain.usecases.SingleTitleUseCase
@@ -24,8 +24,8 @@ class EpisodeBottomSheetViewModel(
     private val _chosenSeason = MutableLiveData<Int>()
     val chosenSeason: LiveData<Int> = _chosenSeason
 
-    private val _episodeInfo = MutableLiveData<List<TitleEpisodes>>()
-    val episodeInfo: LiveData<List<TitleEpisodes>> = _episodeInfo
+    private val _seasonEpisodes = MutableLiveData<List<SeasonEpisodesModel>>()
+    val seasonEpisodes: LiveData<List<SeasonEpisodesModel>> = _seasonEpisodes
 
     private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom?>()
     val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
@@ -79,7 +79,7 @@ class EpisodeBottomSheetViewModel(
     }
 
     fun getSeasonFiles(titleId: Int, season: Int) {
-        _episodeInfo.value = emptyList()
+        _seasonEpisodes.value = emptyList()
         setGeneralLoader(LoadingState.LOADING)
         _chosenSeason.value = season
         viewModelScope.launch {
@@ -87,17 +87,16 @@ class EpisodeBottomSheetViewModel(
                 is ResultDomain.Success -> {
                     val data = result.data
                     if (data.isNotEmpty()) {
-                        val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
+                        val getEpisodeNames: MutableList<SeasonEpisodesModel> = ArrayList()
 
                         if (sharedPreferences.getLoginToken() == "") {
                             data.forEach {
-                                getEpisodeNames.add(TitleEpisodes(titleId, it.episode, it.title, it.cover!!, it.languages))
+                                getEpisodeNames.add(SeasonEpisodesModel(it.episode, it.title, it.cover!!, it.languages))
                             }
                         } else {
                             data.forEach {
                                 getEpisodeNames.add(
-                                    TitleEpisodes(
-                                        titleId,
+                                    SeasonEpisodesModel(
                                         it.episode,
                                         it.title,
                                         it.cover!!,
@@ -108,7 +107,7 @@ class EpisodeBottomSheetViewModel(
                                 )
                             }
                         }
-                        _episodeInfo.value = getEpisodeNames
+                        _seasonEpisodes.value = getEpisodeNames
                     }
                     setGeneralLoader(LoadingState.LOADED)
                 }

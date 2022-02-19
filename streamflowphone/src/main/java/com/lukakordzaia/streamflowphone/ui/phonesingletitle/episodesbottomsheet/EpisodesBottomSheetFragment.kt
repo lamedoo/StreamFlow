@@ -84,7 +84,7 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
             checkContinueWatching(it)
         }
 
-        viewModel.episodeInfo.observe(viewLifecycleOwner) {
+        viewModel.seasonEpisodes.observe(viewLifecycleOwner) {
             episodeAdapter.setEpisodeList(it)
         }
     }

@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
-import com.lukakordzaia.core.domain.domainmodels.TitleEpisodes
+import com.lukakordzaia.core.domain.domainmodels.SeasonEpisodesModel
 import com.lukakordzaia.core.domain.usecases.DbSingleContinueWatchingUseCase
 import com.lukakordzaia.core.domain.usecases.SingleTitleFilesUseCase
 import com.lukakordzaia.core.domain.usecases.SingleTitleUseCase
@@ -27,8 +27,8 @@ class TvEpisodesViewModel(
     private val _chosenSeason = MutableLiveData<Int>()
     val chosenSeason: LiveData<Int> = _chosenSeason
 
-    private val _episodeNames = MutableLiveData<List<TitleEpisodes>>()
-    val episodeNames: LiveData<List<TitleEpisodes>> = _episodeNames
+    private val _seasonEpisodes = MutableLiveData<List<SeasonEpisodesModel>>()
+    val seasonEpisodes: LiveData<List<SeasonEpisodesModel>> = _seasonEpisodes
 
     private val _numOfSeasons = MutableLiveData<Int>()
     val numOfSeasons: LiveData<Int> = _numOfSeasons
@@ -95,16 +95,15 @@ class TvEpisodesViewModel(
                 is ResultDomain.Success -> {
                     val data = result.data
 
-                    val getEpisodeNames: MutableList<TitleEpisodes> = ArrayList()
+                    val getEpisodeNames: MutableList<SeasonEpisodesModel> = ArrayList()
                     if (sharedPreferences.getLoginToken() == "") {
                         data.forEach {
-                            getEpisodeNames.add(TitleEpisodes(titleId, it.episode, it.title, it.cover!!, it.languages))
+                            getEpisodeNames.add(SeasonEpisodesModel(it.episode, it.title, it.cover!!, it.languages))
                         }
                     } else {
                         data.forEach {
                             getEpisodeNames.add(
-                                TitleEpisodes(
-                                    titleId,
+                                SeasonEpisodesModel(
                                     it.episode,
                                     it.title,
                                     it.cover!!,
@@ -115,7 +114,7 @@ class TvEpisodesViewModel(
                             )
                         }
                     }
-                    _episodeNames.value = getEpisodeNames
+                    _seasonEpisodes.value = getEpisodeNames
                 }
                 is ResultDomain.Error -> {
                     when (result.exception) {

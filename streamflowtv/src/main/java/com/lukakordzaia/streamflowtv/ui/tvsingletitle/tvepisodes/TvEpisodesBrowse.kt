@@ -14,15 +14,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
-import com.lukakordzaia.core.domain.domainmodels.TitleEpisodes
+import com.lukakordzaia.core.domain.domainmodels.SeasonEpisodesModel
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvEpisodesPresenter
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class TvEpisodesBrowse : VerticalGridSupportFragment() {
     var titleId: Int = 0
@@ -68,7 +66,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     }
 
     private fun fragmentObservers() {
-        viewModel.episodeNames.observe(viewLifecycleOwner) {
+        viewModel.seasonEpisodes.observe(viewLifecycleOwner) {
             gridAdapter.clear()
             gridAdapter.addAll(0, it)
 
@@ -90,7 +88,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     }
 
     private fun initGridAdapter() {
-        gridAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext()))
+        gridAdapter = ArrayObjectAdapter(TvEpisodesPresenter())
         adapter = gridAdapter
     }
 
@@ -106,18 +104,17 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
             rowViewHolder: RowPresenter.ViewHolder?,
             row: Row?
         ) {
-            if (item is TitleEpisodes) {
-                languagePickerDialog(item.episodeNum, item.languages)
+            if (item is SeasonEpisodesModel) {
+                languagePickerDialog(item.episode, item.languages)
             }
         }
     }
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
 
-            if (item is TitleEpisodes) {
+            if (item is SeasonEpisodesModel) {
                 continueEpisode = 1
             }
 
