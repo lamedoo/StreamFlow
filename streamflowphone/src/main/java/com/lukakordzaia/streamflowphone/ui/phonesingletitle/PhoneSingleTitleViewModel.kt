@@ -25,10 +25,10 @@ class PhoneSingleTitleViewModel(
     val favoriteLoader = MutableLiveData<LoadingState>()
 
     private val _singleTitleData = MutableLiveData<SingleTitleModel>()
-    val getSingleTitleResponse: LiveData<SingleTitleModel> = _singleTitleData
+    val singleTitleData: LiveData<SingleTitleModel> = _singleTitleData
 
     private val _castData = MutableLiveData<List<GetSingleTitleCastResponse.Data>>()
-    val castResponseDataGetSingle: LiveData<List<GetSingleTitleCastResponse.Data>> = _castData
+    val castData: LiveData<List<GetSingleTitleCastResponse.Data>> = _castData
 
     private val _titleGenres = MutableLiveData<List<String>>()
     val titleGenres: LiveData<List<String>> = _titleGenres

@@ -115,8 +115,10 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
                 binding.continueWatchingSeekBar.alpha = 0F
                 binding.playButtonBottomContainer.alpha = 1F
                 binding.episodesButton.apply {
-                    alpha = 0F
-                    isClickable = false
+                    if (titleInfo.isTvShow) {
+                        alpha = 0F
+                        isClickable = false
+                    }
                 }
             } else {
                 binding.playButton.alpha = playButtonAlpha
@@ -125,8 +127,10 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
                 binding.continueWatchingSeekBar.alpha = playButtonAlpha
                 binding.playButtonBottomContainer.alpha = playButtonBottomAlpha
                 binding.episodesButton.apply {
-                    alpha = playButtonAlpha
-                    isClickable = true
+                    if (titleInfo.isTvShow) {
+                        alpha = playButtonAlpha
+                        isClickable = true
+                    }
                 }
             }
         })
@@ -155,7 +159,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
             checkFavorites(it)
         }
 
-        viewModel.getSingleTitleResponse.observe(viewLifecycleOwner) {
+        viewModel.singleTitleData.observe(viewLifecycleOwner) {
             titleDetailsContainer(it)
             titleInfo = it
         }
@@ -168,7 +172,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
             binding.titleDirector.text = it.originalName
         }
 
-        viewModel.castResponseDataGetSingle.observe(viewLifecycleOwner) {
+        viewModel.castData.observe(viewLifecycleOwner) {
             phoneSingleTitleCastAdapter.setCastList(it)
         }
 
@@ -182,6 +186,14 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
 
         viewModel.availableLanguages.observe(viewLifecycleOwner) { languageList ->
             languages = languageList.reversed()
+        }
+
+        viewModel.movieNotYetAdded.observe(viewLifecycleOwner) {
+            binding.episodesButton.setVisibleOrGone(!it)
+            binding.episodesButtonBottom.setVisibleOrGone(!it)
+            binding.playButton.setVisibleOrGone(!it)
+            binding.playButtonBottom.setVisibleOrGone(!it)
+            binding.noFilesContainer.setVisibleOrGone(it)
         }
     }
 

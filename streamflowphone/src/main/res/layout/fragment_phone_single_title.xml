@@ -112,7 +112,27 @@
                             app:layout_constraintStart_toStartOf="parent"
                             tools:ignore="UseAppTint"
                             android:visibility="gone"
-                            tools:visibility="visible"/>
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/no_files_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="@string/title_will_be_added_soon"
+                            android:background="@color/secondary_color"
+                            android:textSize="25sp"
+                            android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
+                            android:textStyle="bold"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:tint="@color/white"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/title_trailer"
+                            tools:visibility="gone" />
+
 
                         <ImageView
                             android:id="@+id/play_button"
