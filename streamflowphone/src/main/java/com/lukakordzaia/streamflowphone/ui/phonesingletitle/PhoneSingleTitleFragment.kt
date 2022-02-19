@@ -237,7 +237,8 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     }
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
-
+        binding.continueWatchingSeekBar.setVisibleOrGone(info != null)
+        binding.continueWatchingSeekBarBottom.setVisibleOrGone(info != null)
 
         if (info != null) {
             binding.continueWatchingSeekBar.max = info.titleDuration.toInt()
