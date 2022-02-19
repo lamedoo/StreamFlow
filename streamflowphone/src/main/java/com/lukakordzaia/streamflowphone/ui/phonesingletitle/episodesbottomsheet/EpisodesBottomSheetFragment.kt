@@ -17,8 +17,6 @@ import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.utils.setGone
-import com.lukakordzaia.core.utils.setVisible
 import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneTvShowBottomSheetBinding
@@ -80,14 +78,6 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
     private fun fragmentObservers() {
         viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.detailsProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
-        }
-
-        viewModel.movieNotYetAdded.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.noFilesContainer.setVisible()
-                binding.detailsProgressBar.setGone()
-                binding.filesContainer.setGone()
-            }
         }
 
         viewModel.continueWatchingDetails.observe(viewLifecycleOwner) {

@@ -19,7 +19,8 @@ class PhoneSingleTitleViewModel(
     private val singleTitleRelatedUseCase: SingleTitleRelatedUseCase,
     private val addWatchlistUseCase: AddWatchlistUseCase,
     private val deleteWatchlistUseCase: DeleteWatchlistUseCase,
-    private val dbSingleContinueWatchingUseCase: DbSingleContinueWatchingUseCase
+    private val dbSingleContinueWatchingUseCase: DbSingleContinueWatchingUseCase,
+    private val singleTitleFilesUseCase: SingleTitleFilesUseCase
 ) : BaseViewModel() {
     val favoriteLoader = MutableLiveData<LoadingState>()
 
@@ -44,13 +45,19 @@ class PhoneSingleTitleViewModel(
     private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom?>()
     val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
 
+    private val _movieNotYetAdded = MutableLiveData<Boolean>()
+    val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
+
+    private val _availableLanguages = MutableLiveData<MutableList<String>>()
+    val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
+
     fun onEpisodesPressed(titleId: Int, titleName: String, seasonNum: Int) {
         navigateToNewFragment(
-                PhoneSingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
-                    titleId,
-                    titleName,
-                    seasonNum
-                )
+            PhoneSingleTitleFragmentDirections.actionSingleTitleFragmentToChooseTitleDetailsFragment(
+                titleId,
+                titleName,
+                seasonNum
+            )
         )
     }
 
@@ -190,6 +197,32 @@ class PhoneSingleTitleViewModel(
         }
     }
 
+    private suspend fun getAvailableLanguages(titleId: Int) {
+        _movieNotYetAdded.postValue(false)
+        viewModelScope.launch {
+            when (val result = singleTitleFilesUseCase.invoke(Pair(titleId, 1))) {
+                is ResultDomain.Success -> {
+                    if (result.data.isNotEmpty()) {
+                        val fetchLanguages: MutableList<String> = ArrayList()
+                        fetchLanguages.addAll(result.data[0].languages)
+                        _availableLanguages.postValue(fetchLanguages)
+
+                        _movieNotYetAdded.postValue(false)
+                    } else {
+                        _movieNotYetAdded.postValue(true)
+                    }
+                }
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> {}
+                        AppConstants.UNKNOWN_ERROR -> _movieNotYetAdded.postValue(true)
+                        else -> newToastMessage("ენები - ${result.exception}")
+                    }
+                }
+            }
+        }
+    }
+
     fun fetchContent(titleId: Int) {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch(Dispatchers.IO) {
@@ -198,11 +231,13 @@ class PhoneSingleTitleViewModel(
                 val castDeferred = async { getTitleCast(titleId) }
                 val directorDeferred = async { getTitleDirector(titleId) }
                 val relatedDeferred = async { getRelatedTitles(titleId) }
+                val languagesDeferred = async { getAvailableLanguages(titleId) }
 
                 dataDeferred.await()
                 castDeferred.await()
                 directorDeferred.await()
                 relatedDeferred.await()
+                languagesDeferred.await()
             }
             setGeneralLoader(LoadingState.LOADED)
         }

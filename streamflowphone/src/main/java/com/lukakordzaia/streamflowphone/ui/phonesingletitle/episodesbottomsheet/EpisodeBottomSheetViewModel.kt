@@ -21,12 +21,6 @@ class EpisodeBottomSheetViewModel(
     private val singleTitleUseCase: SingleTitleUseCase,
     private val singleTitleFilesUseCase: SingleTitleFilesUseCase
 ) : BaseViewModel() {
-    private val _movieNotYetAdded = MutableLiveData<Boolean>()
-    val movieNotYetAdded: LiveData<Boolean> = _movieNotYetAdded
-
-    private val _availableLanguages = MutableLiveData<MutableList<String>>()
-    val availableLanguages: LiveData<MutableList<String>> = _availableLanguages
-
     private val _chosenSeason = MutableLiveData<Int>()
     val chosenSeason: LiveData<Int> = _chosenSeason
 
@@ -115,10 +109,6 @@ class EpisodeBottomSheetViewModel(
                             }
                         }
                         _episodeInfo.value = getEpisodeNames
-
-                        _movieNotYetAdded.value = false
-                    } else {
-                        _movieNotYetAdded.value = true
                     }
                     setGeneralLoader(LoadingState.LOADED)
                 }
@@ -126,26 +116,6 @@ class EpisodeBottomSheetViewModel(
                     when (result.exception) {
                         AppConstants.NO_INTERNET_ERROR -> setNoInternet()
                         else -> newToastMessage("ეპიზოდები - ${result.exception}")
-                    }
-                }
-            }
-        }
-    }
-
-    fun getEpisodeLanguages(titleId: Int, episodeNum: Int) {
-        viewModelScope.launch {
-            when (val result = singleTitleFilesUseCase.invoke(Pair(titleId, chosenSeason.value!!))) {
-                is ResultDomain.Success -> {
-                    val episode = result.data[episodeNum - 1]
-
-                    val fetchLanguages: MutableList<String> = ArrayList()
-                    fetchLanguages.addAll(episode.languages)
-                    _availableLanguages.value = fetchLanguages
-                }
-                is ResultDomain.Error -> {
-                    when (result.exception) {
-                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
-                        else -> newToastMessage("ენები - ${result.exception}")
                     }
                 }
             }

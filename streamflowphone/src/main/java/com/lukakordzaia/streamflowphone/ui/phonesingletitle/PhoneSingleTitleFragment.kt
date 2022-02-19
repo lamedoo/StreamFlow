@@ -23,7 +23,6 @@ import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneSingleTitleBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseFragmentPhoneVM
-import com.lukakordzaia.streamflowphone.ui.phonesingletitle.episodesbottomsheet.EpisodeBottomSheetViewModel
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -35,7 +34,6 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     override val viewModel by viewModel<PhoneSingleTitleViewModel>()
     override val reload: () -> Unit = { viewModel.fetchContent(args.titleId) }
 
-    private val episodeBottomSheetViewModel: EpisodeBottomSheetViewModel by viewModel()
     private lateinit var titleInfo: SingleTitleModel
     private lateinit var chooseLanguageAdapter: ChooseLanguageAdapter
     private lateinit var phoneSingleTitleCastAdapter: PhoneSingleTitleCastAdapter
@@ -43,6 +41,8 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleBinding
         get() = FragmentPhoneSingleTitleBinding::inflate
+
+    private var languages: List<String> = emptyList()
 
     override fun onStart() {
         super.onStart()
@@ -180,9 +180,8 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
             checkContinueWatching(it)
         }
 
-        episodeBottomSheetViewModel.availableLanguages.observe(viewLifecycleOwner) { languageList ->
-            val languages = languageList.reversed()
-            chooseLanguageAdapter.setLanguageList(languages)
+        viewModel.availableLanguages.observe(viewLifecycleOwner) { languageList ->
+            languages = languageList.reversed()
         }
     }
 
@@ -281,9 +280,6 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     }
 
     private fun languagePickerDialog() {
-        episodeBottomSheetViewModel.getSeasonFiles(args.titleId, 1)
-        episodeBottomSheetViewModel.getEpisodeLanguages(args.titleId, 0)
-
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -300,6 +296,8 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
             adapter = chooseLanguageAdapter
             layoutManager = chooseLanguageLayout
         }
+
+        chooseLanguageAdapter.setLanguageList(languages)
     }
 
     private fun startTrailer(data: SingleTitleModel) {

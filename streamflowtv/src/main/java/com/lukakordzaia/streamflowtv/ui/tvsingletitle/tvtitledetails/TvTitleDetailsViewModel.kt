@@ -140,7 +140,7 @@ class TvTitleDetailsViewModel(
         }
     }
 
-    fun getSingleTitleFiles(titleId: Int) {
+    fun getAvailableLanguages(titleId: Int) {
         _movieNotYetAdded.value = false
         viewModelScope.launch {
             when (val result = singleTitleFilesUseCase.invoke(Pair(titleId, 1))) {

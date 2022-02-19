@@ -38,7 +38,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     override val viewModel by viewModel<TvTitleDetailsViewModel>()
     override val reload: () -> Unit = {
         viewModel.getSingleTitleData(titleId)
-        viewModel.getSingleTitleFiles(titleId)
+        viewModel.getAvailableLanguages(titleId)
     }
 
     private var languages: List<String> = emptyList()
@@ -70,7 +70,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     private fun callData() {
         viewModel.getSingleTitleData(titleId)
-        viewModel.getSingleTitleFiles(titleId)
+        viewModel.getAvailableLanguages(titleId)
     }
 
     private fun fragmentListeners() {
