@@ -5,8 +5,8 @@ import com.lukakordzaia.core.domain.repository.databaserepository.DatabaseReposi
 
 class DbDeleteSingleContinueWatchingUseCase(
     private val repository: DatabaseRepository
-) : BaseUseCase<Int, Long> {
-    override suspend fun invoke(args: Int?): Long {
+) : BaseUseCase<Int, Int> {
+    override suspend fun invoke(args: Int?): Int {
         return repository.deleteSingleContinueWatchingFromRoom(args!!)
     }
 }

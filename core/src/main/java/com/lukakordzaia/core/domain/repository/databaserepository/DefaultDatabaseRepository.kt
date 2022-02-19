@@ -9,7 +9,7 @@ class DefaultDatabaseRepository(private val database: StreamFlowDatabase): Datab
         return database.continueWatchingDao().getContinueWatchingFromRoom()
     }
 
-    override suspend fun deleteSingleContinueWatchingFromRoom(titleId: Int): Long {
+    override suspend fun deleteSingleContinueWatchingFromRoom(titleId: Int): Int {
         return database.continueWatchingDao().deleteSingleContinueWatchingFromRoom(titleId)
     }
 

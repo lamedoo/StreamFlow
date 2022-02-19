@@ -10,11 +10,9 @@ import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.usecases.*
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.ResultDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class TvTitleDetailsViewModel(
     private val singleTitleUseCase: SingleTitleUseCase,

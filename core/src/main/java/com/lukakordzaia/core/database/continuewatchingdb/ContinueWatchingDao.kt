@@ -24,7 +24,7 @@ interface ContinueWatchingDao {
     fun updateTitleInDb(watchedTime: Long, titleId: Int)
 
     @Query("DELETE FROM continuewatchingroom WHERE titleId = (:titleId)")
-    fun deleteSingleContinueWatchingFromRoom(titleId: Int): Long
+    fun deleteSingleContinueWatchingFromRoom(titleId: Int): Int
 
     @Query("DELETE FROM continuewatchingroom")
     fun deleteContinueWatchingFullFromRoom()

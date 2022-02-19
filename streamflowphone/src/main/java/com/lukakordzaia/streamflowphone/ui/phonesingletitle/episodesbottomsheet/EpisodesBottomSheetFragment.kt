@@ -104,7 +104,7 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
                 seasonAdapter.setChosenSeason(info.season)
                 viewModel.getSeasonFiles(args.titleId, info.season)
 
-                episodeAdapter.setChosenEpisode(info.episode+1)
+                episodeAdapter.setChosenEpisode(info.episode)
             } else {
                 viewModel.getSeasonFiles(args.titleId, 1)
             }
@@ -119,7 +119,7 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
                 scrolledOnce = false
 
                 if (it == viewModel.continueWatchingDetails.value?.season) {
-                    episodeAdapter.setChosenEpisode(viewModel.continueWatchingDetails.value!!.episode + 1)
+                    episodeAdapter.setChosenEpisode(viewModel.continueWatchingDetails.value!!.episode)
                 } else {
                     episodeAdapter.setChosenEpisode(-1)
                 }
@@ -144,7 +144,7 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
             },
             {
                 if (!scrolledOnce) {
-                    binding.rvEpisodes.smoothScrollToPosition(it + 1)
+                    binding.rvEpisodes.smoothScrollToPosition(it)
                     scrolledOnce = true
                 }
             })
@@ -152,8 +152,6 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
     }
 
     private fun languagePickerDialog(episode: Int, languages: List<String>) {
-        viewModel.getEpisodeLanguages(args.titleId, episode)
-
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

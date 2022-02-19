@@ -136,7 +136,7 @@ class EpisodeBottomSheetViewModel(
         viewModelScope.launch {
             when (val result = singleTitleFilesUseCase.invoke(Pair(titleId, chosenSeason.value!!))) {
                 is ResultDomain.Success -> {
-                    val episode = result.data[episodeNum]
+                    val episode = result.data[episodeNum - 1]
 
                     val fetchLanguages: MutableList<String> = ArrayList()
                     fetchLanguages.addAll(episode.languages)
