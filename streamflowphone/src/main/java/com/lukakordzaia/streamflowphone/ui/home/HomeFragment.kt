@@ -92,54 +92,49 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.generalProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
             binding.fragmentScroll.setVisibleOrGone(it != LoadingState.LOADING)
-        })
+        }
 
-        viewModel.continueWatchingLoader.observe(viewLifecycleOwner, {
+        viewModel.continueWatchingLoader.observe(viewLifecycleOwner) {
             binding.continueWatchingProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
-        })
+        }
 
-        viewModel.movieDayData.observe(viewLifecycleOwner, {
+        viewModel.movieDayData.observe(viewLifecycleOwner) {
             movieDayContainer(it.first())
-        })
+        }
 
-        //is needed if user is not signed in and titles are saved in room
-        viewModel.contWatchingData.observe(viewLifecycleOwner, {
-            viewModel.getContinueWatchingTitlesFromApi(it)
-        })
-
-        viewModel.continueWatchingList.observe(viewLifecycleOwner, {
+        viewModel.continueWatchingList.observe(viewLifecycleOwner) {
             binding.continueWatchingContainer.setVisibleOrGone(!it.isNullOrEmpty())
             homeContinueWatchingAdapter.setWatchedTitlesList(it)
-        })
+        }
 
-        viewModel.newMovieList.observe(viewLifecycleOwner, {
+        viewModel.newMovieList.observe(viewLifecycleOwner) {
             homeNewMovieAdapter.setItems(it)
-        })
+        }
 
-        viewModel.topMovieList.observe(viewLifecycleOwner, {
+        viewModel.topMovieList.observe(viewLifecycleOwner) {
             homeTopMovieAdapter.setItems(it)
-        })
+        }
 
-        viewModel.topTvShowList.observe(viewLifecycleOwner, {
+        viewModel.topTvShowList.observe(viewLifecycleOwner) {
             homeTvShowAdapter.setItems(it)
-        })
+        }
 
-        viewModel.newSeriesList.observe(viewLifecycleOwner, {
+        viewModel.newSeriesList.observe(viewLifecycleOwner) {
             homeNewSeriesAdapter.setItems(it)
-        })
+        }
 
-        viewModel.userSuggestionsList.observe(viewLifecycleOwner, {
+        viewModel.userSuggestionsList.observe(viewLifecycleOwner) {
             homeUserSuggestionsAdapter.setItems(it)
-        })
+        }
 
-        viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner, {
+        viewModel.hideContinueWatchingLoader.observe(viewLifecycleOwner) {
             if (it == LoadingState.LOADED) {
                 viewModel.checkAuthDatabase()
             }
-        })
+        }
     }
 
     private fun movieDayContainer(movie: SingleTitleModel) {

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.domain.usecases.DbDeleteAllContinueWatchingUseCase
 import com.lukakordzaia.core.domain.usecases.UserDataUseCase
 import com.lukakordzaia.core.domain.usecases.UserLogOutUseCase
 import com.lukakordzaia.core.domain.usecases.UserLoginUseCase
@@ -15,12 +16,12 @@ import com.lukakordzaia.core.network.models.imovies.response.user.GetUserDataRes
 import com.lukakordzaia.core.utils.AppConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class TvProfileViewModel(
     private val userLoginUseCase: UserLoginUseCase,
     private val userLogOutUseCase: UserLogOutUseCase,
-    private val userDataUseCase: UserDataUseCase
+    private val userDataUseCase: UserDataUseCase,
+    private val dbDeleteAllContinueWatchingUseCase: DbDeleteAllContinueWatchingUseCase
 ) : BaseViewModel() {
     val loginLoader = MutableLiveData(LoadingState.LOADED)
 
@@ -93,16 +94,15 @@ class TvProfileViewModel(
     }
 
     fun deleteContinueWatchingFromRoomFull() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                environment.databaseRepository.deleteAllFromRoom()
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            dbDeleteAllContinueWatchingUseCase.invoke()
+            newToastMessage("წარმატებით წაიშალა ბაზა")
         }
     }
 
-    fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>> {
-        return environment.databaseRepository.getContinueWatchingFromRoom()
-    }
+//    fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>> {
+//        return environment.databaseRepository.getContinueWatchingFromRoom()
+//    }
 
     fun addContinueWatchingToApi(continueWatchingRoomList: List<ContinueWatchingRoom>) {
         viewModelScope.launch {

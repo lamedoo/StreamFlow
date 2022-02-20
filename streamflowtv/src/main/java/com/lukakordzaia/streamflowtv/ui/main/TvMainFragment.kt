@@ -71,11 +71,6 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
     }
 
     private fun fragmentObservers() {
-        //is needed if user is not signed in and titles are saved in room
-        viewModel.contWatchingData.observe(viewLifecycleOwner) {
-            viewModel.getContinueWatchingTitlesFromApi(it)
-        }
-
         viewModel.continueWatchingList.observe(viewLifecycleOwner) {
             watchedListRowsAdapter(it)
 

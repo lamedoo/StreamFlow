@@ -72,7 +72,7 @@ class TvTitleDetailsViewModel(
     }
 
     private suspend fun getSingleContinueWatchingFromRoom(titleId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             _continueWatchingDetails.addSource(dbSingleContinueWatchingUseCase.invoke(titleId)) {
                 _continueWatchingDetails.value = it
             }

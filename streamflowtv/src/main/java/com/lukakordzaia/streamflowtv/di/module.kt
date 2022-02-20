@@ -19,7 +19,7 @@ val tvViewModelModule = module {
     viewModel { TvCatalogueViewModel(get(), get(), get()) }
     viewModel { TvRelatedViewModel(get(), get()) }
     viewModel { SingleGenreViewModel(get()) }
-    viewModel { TvProfileViewModel(get(), get(), get()) }
+    viewModel { TvProfileViewModel(get(), get(), get(), get()) }
     viewModel { TvSearchTitlesViewModel(get()) }
     viewModel { TvWatchlistViewModel(get()) }
     viewModel { TvEpisodesViewModel(get(), get(), get()) }

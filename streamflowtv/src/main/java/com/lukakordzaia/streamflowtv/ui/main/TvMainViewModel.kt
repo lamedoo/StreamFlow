@@ -1,11 +1,9 @@
 package com.lukakordzaia.streamflowtv.ui.main
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
-import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
@@ -21,7 +19,7 @@ class TvMainViewModel(
     private val newSeriesUseCase: NewSeriesUseCase,
     private val userSuggestionsUseCase: UserSuggestionsUseCase,
     private val continueWatchingUseCase: ContinueWatchingUseCase,
-    private val singleTitleUseCase: SingleTitleUseCase
+    private val dbAllContinueWatchingUseCase: DbAllContinueWatchingUseCase
 ) : BaseViewModel() {
     private val _newMovieList = MutableLiveData<List<SingleTitleModel>>()
     val newMovieList: LiveData<List<SingleTitleModel>> = _newMovieList
@@ -41,9 +39,6 @@ class TvMainViewModel(
     private val _continueWatchingList = MutableLiveData<List<ContinueWatchingModel>>()
     val continueWatchingList: LiveData<List<ContinueWatchingModel>> = _continueWatchingList
 
-    private val _contWatchingData = MediatorLiveData<List<ContinueWatchingRoom>>()
-    val contWatchingData: LiveData<List<ContinueWatchingRoom>> = _contWatchingData
-
     init {
         fetchContent(1)
     }
@@ -58,49 +53,15 @@ class TvMainViewModel(
     }
 
     private fun getContinueWatchingFromRoom() {
-        val data = environment.databaseRepository.getContinueWatchingFromRoom()
-
-        _contWatchingData.addSource(data) {
-            _contWatchingData.value = it
-        }
-    }
-
-    fun getContinueWatchingTitlesFromApi(dbDetails: List<ContinueWatchingRoom>) {
-        val dbTitles: MutableList<ContinueWatchingModel> = mutableListOf()
-        viewModelScope.launch {
-            dbDetails.forEach { savedTitle ->
-                when (val result = singleTitleUseCase.invoke(savedTitle.titleId)) {
-                    is ResultDomain.Success -> {
-                        val data = result.data
-
-                        dbTitles.add(
-                            ContinueWatchingModel(
-                                poster = data.poster,
-                                cover = data.cover,
-                                duration = data.duration?.toInt(),
-                                id = savedTitle.titleId,
-                                isTvShow = savedTitle.isTvShow,
-                                primaryName = data.displayName,
-                                originalName = data.nameEng,
-                                imdbScore = data.imdbScore,
-                                releaseYear = data.releaseYear,
-                                genres = data.genres,
-                                seasonNum = data.seasonNum,
-                                watchedDuration = savedTitle.watchedDuration,
-                                titleDuration = savedTitle.titleDuration,
-                                season = savedTitle.season,
-                                episode = savedTitle.episode,
-                                language = savedTitle.language
-                            )
-                        )
-
-                        _continueWatchingList.value = dbTitles
-                    }
-                    is ResultDomain.Error -> {
-                        when (result.exception) {
-                            AppConstants.NO_INTERNET_ERROR -> {}
-                            else -> newToastMessage("ბაზის ფილმები - ${result.exception}")
-                        }
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = dbAllContinueWatchingUseCase.invoke()) {
+                is ResultDomain.Success -> {
+                    _continueWatchingList.postValue(result.data)
+                }
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> {}
+                        else -> newToastMessage("ბაზის ფილმები - ${result.exception}")
                     }
                 }
             }

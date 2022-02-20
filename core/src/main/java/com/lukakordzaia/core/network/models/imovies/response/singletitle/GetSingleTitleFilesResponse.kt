@@ -23,7 +23,7 @@ data class GetSingleTitleFilesResponse(
         @SerializedName("title")
         val title: String,
         @SerializedName("userWatch")
-        val userWatch: UserWatch
+        val userWatch: UserWatch?
     ) {
         data class Covers(
             @SerializedName("blurhash")

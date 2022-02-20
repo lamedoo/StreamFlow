@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.domain.usecases.DbDeleteAllContinueWatchingUseCase
 import com.lukakordzaia.core.domain.usecases.UserDataUseCase
 import com.lukakordzaia.core.domain.usecases.UserLogOutUseCase
 import com.lukakordzaia.core.domain.usecases.UserLoginUseCase
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val userLoginUseCase: UserLoginUseCase,
     private val userLogOutUseCase: UserLogOutUseCase,
-    private val userDataUseCase: UserDataUseCase
+    private val userDataUseCase: UserDataUseCase,
+    private val dbDeleteAllContinueWatchingUseCase: DbDeleteAllContinueWatchingUseCase
 ) : BaseViewModel() {
     private val _userData = MutableLiveData<GetUserDataResponse.Data>()
     val userData: LiveData<GetUserDataResponse.Data> = _userData
@@ -99,13 +101,14 @@ class ProfileViewModel(
 
     fun deleteContinueWatchingFromRoomFull() {
         viewModelScope.launch(Dispatchers.IO) {
-            environment.databaseRepository.deleteAllFromRoom()
+            dbDeleteAllContinueWatchingUseCase.invoke()
+            newToastMessage("წარმატებით წაიშალა ბაზა")
         }
     }
 
-    fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>> {
-        return environment.databaseRepository.getContinueWatchingFromRoom()
-    }
+//    fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>> {
+//        return environment.databaseRepository.getContinueWatchingFromRoom()
+//    }
 
     fun addContinueWatchingToApi(continueWatchingRoomList: List<ContinueWatchingRoom>) {
         viewModelScope.launch {

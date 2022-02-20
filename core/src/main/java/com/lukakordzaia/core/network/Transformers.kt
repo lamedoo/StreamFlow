@@ -183,7 +183,7 @@ fun List<GetContinueWatchingResponse.Data>.toContinueWatchingModel(): List<Conti
         ContinueWatchingModel(
             poster = title.posters?.data?.x240,
             cover = title.covers.data.x1050,
-            duration = title.duration,
+            duration = "${title.duration} წ.",
             id = title.id,
             isTvShow = title.isTvShow,
             primaryName = title.primaryName.ifEmpty { title.secondaryName },
@@ -310,8 +310,8 @@ fun GetSingleTitleFilesResponse.toSeasonEpisodesModel(): List<SeasonEpisodesMode
             title = data.title,
             cover = data.covers.x1050!!,
             languages = languages,
-            titleDuration = data.userWatch.duration,
-            watchedDuration = data.userWatch.progress
+            titleDuration = data.userWatch?.duration,
+            watchedDuration = data.userWatch?.progress
         )
     }
 }

@@ -1,7 +1,6 @@
 package com.lukakordzaia.core.di
 
 import com.lukakordzaia.core.database.StreamFlowDatabase
-import com.lukakordzaia.core.network.Environment
 import com.lukakordzaia.core.network.RetrofitBuilder
 import com.lukakordzaia.core.network.imovies.ImoviesNetwork
 import com.lukakordzaia.core.network.interceptors.DefaultHeaderInterceptor
@@ -43,7 +42,6 @@ val generalModule = module {
     single { BuildMediaSource() }
     single { SharedPreferences(get()) }
     single { StreamFlowDatabase.getDatabase(get()) }
-    single { Environment(get(), get(), get(), get(), get(), get(), get()) }
 }
 
 val useCaseModule = module {
@@ -77,4 +75,6 @@ val useCaseModule = module {
     single { SingleTitleFilesVideoUseCase(get()) }
     single { DbInsertContinueWatchingUseCase(get()) }
     single { TitleWatchTimeUseCase(get()) }
+    single { DbAllContinueWatchingUseCase(get(), get()) }
+    single { DbDeleteAllContinueWatchingUseCase(get()) }
 }

@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class ContinueWatchingModel(
     val poster: String?,
     val cover: String?,
-    val duration: Int?,
+    val duration: String?,
     val id: Int,
     val isTvShow: Boolean,
     val primaryName: String?,

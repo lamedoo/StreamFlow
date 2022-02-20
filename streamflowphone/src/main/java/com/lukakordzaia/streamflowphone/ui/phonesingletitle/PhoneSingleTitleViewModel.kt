@@ -154,8 +154,10 @@ class PhoneSingleTitleViewModel(
     }
 
     private suspend fun getSingleContinueWatchingFromRoom(titleId: Int) {
-        _continueWatchingDetails.addSource(dbSingleContinueWatchingUseCase.invoke(titleId)) {
-            _continueWatchingDetails.value = it
+        viewModelScope.launch(Dispatchers.Main) {
+            _continueWatchingDetails.addSource(dbSingleContinueWatchingUseCase.invoke(titleId)) {
+                _continueWatchingDetails.postValue(it)
+            }
         }
     }
 
