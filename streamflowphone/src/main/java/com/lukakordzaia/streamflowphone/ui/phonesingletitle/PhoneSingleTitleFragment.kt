@@ -189,8 +189,6 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
         }
 
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner) {
-            binding.episodesButton.setVisibleOrGone(!it)
-            binding.episodesButtonBottom.setVisibleOrGone(!it)
             binding.playButton.setVisibleOrGone(!it)
             binding.playButtonBottom.setVisibleOrGone(!it)
             binding.noFilesContainer.setVisibleOrGone(it)
