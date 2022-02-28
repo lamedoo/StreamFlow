@@ -46,7 +46,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
         get() = playerBinding.nextEpisode
 
     override val exoDuration: TextView
-        get() = playerBinding.exoDuration
+        get() = playerBinding.duration
 
     override val continueWatchingDialog: ContinueWatchingDialogBinding
         get() = binding.continueWatching

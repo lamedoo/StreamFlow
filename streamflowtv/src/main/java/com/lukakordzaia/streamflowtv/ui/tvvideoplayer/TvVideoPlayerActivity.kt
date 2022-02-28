@@ -154,7 +154,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
             videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
             super.onBackPressed()
         } else {
-            videoPlayerViewModel.saveLoader.observe(this, {
+            videoPlayerViewModel.saveLoader.observe(this) {
                 when (it) {
                     LoadingState.LOADING -> {
                     }
@@ -162,7 +162,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
                         super.onBackPressed()
                     }
                 }
-            })
+            }
         }
     }
 
