@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.videoplayer.VideoPlayerViewModel
@@ -36,14 +36,14 @@ class VideoPlayerActivity : BaseActivity<ActivityPhoneVideoPlayerBinding>() {
                 if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
                     super.onBackPressed()
                 } else {
-                    videoPlayerViewModel.saveLoader.observe(this, {
+                    videoPlayerViewModel.saveLoader.observe(this) {
                         when (it) {
                             LoadingState.LOADING -> {}
                             LoadingState.LOADED, LoadingState.ERROR -> {
                                 super.onBackPressed()
                             }
                         }
-                    })
+                    }
                 }
             }
             AUDIO_SIDEBAR -> parentFragment.hideAudioSidebar()

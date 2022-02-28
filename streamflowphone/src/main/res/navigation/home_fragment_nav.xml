@@ -27,7 +27,7 @@
             app:enterAnim="@anim/slide_in_right">
             <argument
                 android:name="videoPlayerData"
-                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
+                app:argType="com.lukakordzaia.core.domain.domainmodels.VideoPlayerData" />
         </action>
         <action
             android:id="@+id/action_homeFragment_to_continueWatchingInfoFragment"
@@ -43,7 +43,7 @@
     <include app:graph="@navigation/video_player_fragment_nav" />
     <dialog
         android:id="@+id/continueWatchingInfoFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.home.ContinueWatchingInfoFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.home.ContinueWatchingInfoBottomSheet"
         android:label="ContinueWatchingInfoFragment">
         <argument
             android:name="titleId"

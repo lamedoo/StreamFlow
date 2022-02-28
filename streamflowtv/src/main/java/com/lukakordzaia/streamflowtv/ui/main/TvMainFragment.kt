@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.NewSeriesModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.toTvInfoModel
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
@@ -71,45 +71,40 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
     }
 
     private fun fragmentObservers() {
-        //is needed if user is not signed in and titles are saved in room
-        viewModel.contWatchingData.observe(viewLifecycleOwner, {
-            viewModel.getContinueWatchingTitlesFromApi(it)
-        })
-
-        viewModel.continueWatchingList.observe(viewLifecycleOwner, {
+        viewModel.continueWatchingList.observe(viewLifecycleOwner) {
             watchedListRowsAdapter(it)
 
             if (!it.isNullOrEmpty() && sharedPreferences.getRefreshContinueWatching()) {
                 sharedPreferences.saveRefreshContinueWatching(false)
             }
-        })
+        }
 
-        viewModel.newMovieList.observe(viewLifecycleOwner, {
+        viewModel.newMovieList.observe(viewLifecycleOwner) {
             newMoviesRowsAdapter(it)
-        })
+        }
 
-        viewModel.topMovieList.observe(viewLifecycleOwner, {
+        viewModel.topMovieList.observe(viewLifecycleOwner) {
             topMoviesRowsAdapter(it)
-        })
+        }
 
-        viewModel.userSuggestionsList.observe(viewLifecycleOwner, {
+        viewModel.userSuggestionsList.observe(viewLifecycleOwner) {
             userSuggestionsRowsAdapter(it)
-        })
+        }
 
-        viewModel.topTvShowList.observe(viewLifecycleOwner, {
+        viewModel.topTvShowList.observe(viewLifecycleOwner) {
             topTvShowsRowsAdapter(it)
-        })
+        }
 
-        viewModel.newSeriesList.observe(viewLifecycleOwner, {
+        viewModel.newSeriesList.observe(viewLifecycleOwner) {
             newSeriesRowsAdapter(it)
-        })
+        }
 
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             (activity as TvActivity).setProgressBar(it == LoadingState.LOADING)
             if (it == LoadingState.LOADED) {
                 setRowsAdapter()
             }
-        })
+        }
     }
 
     private fun watchedListRowsAdapter(items: List<ContinueWatchingModel>) {

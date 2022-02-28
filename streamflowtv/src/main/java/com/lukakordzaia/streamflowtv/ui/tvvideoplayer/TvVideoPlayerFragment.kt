@@ -50,7 +50,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
         get() = playerBinding.nextEpisode
 
     override val exoDuration: TextView
-        get() = playerBinding.exoDuration
+        get() = playerBinding.duration
 
     override val continueWatchingDialog: ContinueWatchingDialogBinding
         get() = binding.continueWatching
@@ -99,13 +99,13 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     }
 
     private fun audioObservers() {
-        viewModel.availableSubtitles.observe(viewLifecycleOwner, {
+        viewModel.availableSubtitles.observe(viewLifecycleOwner) {
             setAvailableSubtitles(it)
-        })
+        }
 
-        viewModel.availableLanguages.observe(viewLifecycleOwner, {
+        viewModel.availableLanguages.observe(viewLifecycleOwner) {
             setAvailableLanguages(it)
-        })
+        }
     }
 
     private fun setAvailableSubtitles(subtitles: List<String>) {

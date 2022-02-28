@@ -17,7 +17,7 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
     private var page = 1
 
     override val viewModel by viewModel<WatchlistViewModel>()
-    override val reload: () -> Unit = { viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false) }
+    override val reload: () -> Unit = { viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES) }
 
     private lateinit var watchlistMoviesAdapter: WatchlistAdapter
     private var type = AppConstants.WATCHLIST_MOVIES
@@ -43,7 +43,7 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
 
     private fun authCheck() {
         if (sharedPreferences.getLoginToken() != "") {
-            viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES, false)
+            viewModel.getUserWatchlist(page, AppConstants.WATCHLIST_MOVIES)
             binding.favoriteMoviesContainer.setVisible()
             binding.favoriteNoAuth.setGone()
         } else {
@@ -71,22 +71,22 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.favoriteMoviesProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
             loading = it != LoadingState.LOADED
-        })
+        }
 
-        viewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
+        viewModel.userWatchlist.observe(viewLifecycleOwner) { watchlist ->
             watchlistMoviesAdapter.setItems(watchlist)
-        })
+        }
 
-        viewModel.hasMorePage.observe(viewLifecycleOwner, {
+        viewModel.hasMorePage.observe(viewLifecycleOwner) {
             hasMore = it
-        })
+        }
 
-        viewModel.noFavorites.observe(viewLifecycleOwner, {
+        viewModel.noFavorites.observe(viewLifecycleOwner) {
             binding.favoriteNoMovies.setVisibleOrGone(it)
-        })
+        }
     }
 
     private fun favMoviesContainer() {
@@ -122,7 +122,7 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
         viewModel.clearWatchlist()
 
         page = 1
-        viewModel.getUserWatchlist(page, type, false)
+        viewModel.getUserWatchlist(page, type)
         setButtons(type)
 
         this.type = type
@@ -142,7 +142,7 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
         if (hasMore) {
             binding.favoriteMoviesProgressBar.setVisible()
             page++
-            viewModel.getUserWatchlist(page, type, false)
+            viewModel.getUserWatchlist(page, type)
         }
     }
 

@@ -174,7 +174,7 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         app:buffered_color="@color/white"
-        app:layout_constraintEnd_toStartOf="@id/exo_duration"
+        app:layout_constraintEnd_toStartOf="@id/duration"
         app:layout_constraintStart_toEndOf="@id/exo_position"
         app:layout_constraintTop_toBottomOf="@id/barrier_top"
         app:layout_constraintBottom_toTopOf="@id/barrier_bottom"
@@ -184,7 +184,7 @@
         app:unplayed_color="@color/lb_grey" />
 
     <TextView
-        android:id="@+id/exo_duration"
+        android:id="@+id/duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"

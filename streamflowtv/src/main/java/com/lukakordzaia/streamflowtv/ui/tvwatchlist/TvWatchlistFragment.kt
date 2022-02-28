@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.SingleTitleModel
 import com.lukakordzaia.core.network.toTvInfoModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvHasFavoritesListener
@@ -22,7 +22,7 @@ class TvWatchlistFragment : BaseVerticalGridSupportFragment<TvWatchlistViewModel
     private lateinit var type: String
 
     override val reload: () -> Unit = {
-        viewModel.getUserWatchlist(page, type, true)
+        viewModel.getUserWatchlist(page, type)
     }
 
     private var selectedItem = 0
@@ -57,19 +57,19 @@ class TvWatchlistFragment : BaseVerticalGridSupportFragment<TvWatchlistViewModel
         val bundledType = args?.getString("type")
         type = bundledType!!
 
-        viewModel.getUserWatchlist(page, type, true)
+        viewModel.getUserWatchlist(page, type)
 
-        viewModel.noFavorites.observe(viewLifecycleOwner, {
+        viewModel.noFavorites.observe(viewLifecycleOwner) {
             if (it) {
                 hasFavorites?.hasFavorites(false)
             }
-        })
+        }
 
-        viewModel.userWatchlist.observe(viewLifecycleOwner, { watchlist ->
+        viewModel.userWatchlist.observe(viewLifecycleOwner) { watchlist ->
             watchlist.forEach {
                 gridAdapter.add(it)
             }
-        })
+        }
 
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }
@@ -125,7 +125,7 @@ class TvWatchlistFragment : BaseVerticalGridSupportFragment<TvWatchlistViewModel
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
-                viewModel.getUserWatchlist(page, type, true)
+                viewModel.getUserWatchlist(page, type)
             }
         }
     }

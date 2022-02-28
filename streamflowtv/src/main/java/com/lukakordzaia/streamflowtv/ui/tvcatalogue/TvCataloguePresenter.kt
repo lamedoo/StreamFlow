@@ -2,7 +2,7 @@ package com.lukakordzaia.streamflowtv.ui.tvcatalogue
 
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.streamflowtv.customviews.TvDefaultCardView
 
 class TvCataloguePresenter : Presenter() {

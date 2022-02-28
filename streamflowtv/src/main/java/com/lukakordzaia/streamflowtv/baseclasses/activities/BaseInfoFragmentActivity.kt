@@ -3,8 +3,8 @@ package com.lukakordzaia.streamflowtv.baseclasses.activities
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.TvInfoModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.TvInfoModel
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvBaseBinding
@@ -12,8 +12,6 @@ import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.ui.genres.TvGenresActivity
 import com.lukakordzaia.streamflowtv.ui.main.TvActivity
 import com.lukakordzaia.streamflowtv.ui.tvcatalogue.TvCatalogueActivity
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTvBaseBinding>(), TvTitleSelected {
     override fun getViewBinding() = ActivityTvBaseBinding.inflate(layoutInflater)

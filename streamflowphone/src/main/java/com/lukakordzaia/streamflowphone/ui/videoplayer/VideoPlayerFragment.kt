@@ -12,7 +12,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.core.adapters.ChooseVideoAudioAdapter
 import com.lukakordzaia.core.baseclasses.BaseVideoPlayerFragment
 import com.lukakordzaia.core.databinding.ContinueWatchingDialogBinding
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.utils.setGone
 import com.lukakordzaia.core.utils.setVisible
 import com.lukakordzaia.core.utils.setVisibleOrGone
@@ -46,7 +46,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
         get() = playerBinding.nextEpisode
 
     override val exoDuration: TextView
-        get() = playerBinding.exoDuration
+        get() = playerBinding.duration
 
     override val continueWatchingDialog: ContinueWatchingDialogBinding
         get() = binding.continueWatching

@@ -58,16 +58,16 @@ class TopListFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryBinding, 
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.progressBar.setVisibleOrGone(it == LoadingState.LOADING)
             if (it == LoadingState.LOADED) {
                 loading = false
             }
-        })
+        }
 
-        viewModel.list.observe(viewLifecycleOwner, {
+        viewModel.list.observe(viewLifecycleOwner) {
             singleCategoryAdapter.setItems(it)
-        })
+        }
     }
 
     private fun topListContainer() {

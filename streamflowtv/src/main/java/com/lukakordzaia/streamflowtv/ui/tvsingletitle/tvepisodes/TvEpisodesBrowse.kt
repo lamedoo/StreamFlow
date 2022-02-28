@@ -14,21 +14,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.TitleEpisodes
-import com.lukakordzaia.core.datamodels.VideoPlayerData
-import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
+import com.lukakordzaia.core.domain.domainmodels.SeasonEpisodesModel
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
-import com.lukakordzaia.streamflowtv.ui.tvcatalogue.TvCataloguePresenter
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvEpisodesPresenter
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters.TvSeasonsPresenter
 import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class TvEpisodesBrowse : VerticalGridSupportFragment() {
     var titleId: Int = 0
@@ -74,7 +66,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     }
 
     private fun fragmentObservers() {
-        viewModel.episodeNames.observe(viewLifecycleOwner) {
+        viewModel.seasonEpisodes.observe(viewLifecycleOwner) {
             gridAdapter.clear()
             gridAdapter.addAll(0, it)
 
@@ -96,7 +88,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     }
 
     private fun initGridAdapter() {
-        gridAdapter = ArrayObjectAdapter(TvEpisodesPresenter(requireContext()))
+        gridAdapter = ArrayObjectAdapter(TvEpisodesPresenter())
         adapter = gridAdapter
     }
 
@@ -112,19 +104,17 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
             rowViewHolder: RowPresenter.ViewHolder?,
             row: Row?
         ) {
-            if (item is TitleEpisodes) {
-                viewModel.getEpisodeLanguages(item.titleId, item.episodeNum)
-                languagePickerDialog(item.episodeNum)
+            if (item is SeasonEpisodesModel) {
+                languagePickerDialog(item.episode, item.languages)
             }
         }
     }
 
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(itemViewHolder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
-            val indexOfRow = gridAdapter.size()
             val indexOfItem = gridAdapter.indexOf(item)
 
-            if (item is TitleEpisodes) {
+            if (item is SeasonEpisodesModel) {
                 continueEpisode = 1
             }
 
@@ -146,7 +136,7 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         }
     }
 
-    private fun languagePickerDialog(episode: Int) {
+    private fun languagePickerDialog(episode: Int, languages: List<String>) {
         val binding = DialogChooseLanguageBinding.inflate(LayoutInflater.from(requireContext()))
         val chooseLanguageDialog = Dialog(requireContext())
         chooseLanguageDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -162,11 +152,8 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
         binding.rvChooseLanguage.layoutManager = chooseLanguageLayout
         binding.rvChooseLanguage.adapter = chooseLanguageAdapter
 
-        viewModel.availableLanguages.observe(viewLifecycleOwner) {
-            val languages = it.reversed()
-            chooseLanguageAdapter.setLanguageList(languages)
-            binding.rvChooseLanguage.requestFocus()
-        }
+        chooseLanguageAdapter.setLanguageList(languages)
+        binding.rvChooseLanguage.requestFocus()
     }
 
     private fun playEpisode(episode: Int, chosenLanguage: String) {

@@ -24,7 +24,9 @@ class ProfileFragment : BaseFragmentPhoneVM<FragmentPhoneProfileBinding, Profile
     override fun onStart() {
         super.onStart()
 
-        viewModel.getUserData()
+        if (sharedPreferences.getLoginToken() != "") {
+            viewModel.getUserData()
+        }
         updateProfileUI(sharedPreferences.getLoginToken() != "")
     }
 
@@ -61,11 +63,11 @@ class ProfileFragment : BaseFragmentPhoneVM<FragmentPhoneProfileBinding, Profile
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             if (it == LoadingState.LOADED) {
                 viewModel.refreshProfileOnLogin()
             }
-        })
+        }
     }
 
     private fun updateProfileUI(isLoggedIn: Boolean) {
@@ -78,10 +80,10 @@ class ProfileFragment : BaseFragmentPhoneVM<FragmentPhoneProfileBinding, Profile
         binding.historyLine.setVisibleOrGone(!isLoggedIn)
 
         if (isLoggedIn) {
-            viewModel.userData.observe(viewLifecycleOwner, {
+            viewModel.userData.observe(viewLifecycleOwner) {
                 binding.profileUsername.text = it.displayName
                 Glide.with(this).load(it.avatar.large).into(binding.profilePhoto)
-            })
+            }
         }
     }
 }

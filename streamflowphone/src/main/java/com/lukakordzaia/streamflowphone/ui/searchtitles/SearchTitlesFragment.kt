@@ -58,21 +58,21 @@ class SearchTitlesFragment : BaseFragmentPhoneVM<FragmentPhoneSearchTitlesBindin
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.searchProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
-        })
+        }
 
-        viewModel.franchisesLoader.observe(viewLifecycleOwner, {
+        viewModel.franchisesLoader.observe(viewLifecycleOwner) {
             binding.franchisesProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
-        })
+        }
 
-        viewModel.getTopFranchisesResponse.observe(viewLifecycleOwner, {
+        viewModel.getTopFranchisesResponse.observe(viewLifecycleOwner) {
             topFranchisesAdapter.setFranchisesList(it)
-        })
+        }
 
-        viewModel.searchList.observe(viewLifecycleOwner, {
+        viewModel.searchList.observe(viewLifecycleOwner) {
             searchTitlesAdapter.setSearchTitleList(it)
-        })
+        }
     }
 
     private fun searchInput() {

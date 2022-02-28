@@ -226,11 +226,11 @@
             app:unplayed_color="@color/grey" />
 
         <TextView
-            android:id="@id/exo_duration"
+            android:id="@id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="right"
+            android:gravity="end"
             android:minWidth="50dp"
             android:textColor="@color/white"
             android:textSize="14sp"

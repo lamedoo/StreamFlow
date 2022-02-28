@@ -5,68 +5,70 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.usecases.NewMoviesUseCase
+import com.lukakordzaia.core.domain.usecases.TopTvShowsUseCase
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
-import com.lukakordzaia.core.network.toTitleListModel
+import com.lukakordzaia.core.network.ResultDomain
 import kotlinx.coroutines.launch
 
-class TvCatalogueViewModel : BaseViewModel() {
+class TvCatalogueViewModel(
+    private val newMoviesUseCase: NewMoviesUseCase,
+    private val topMoviesUseCase: NewMoviesUseCase,
+    private val topTvShowsUseCase: TopTvShowsUseCase
+) : BaseViewModel() {
     private val _tvCatalogueList = MutableLiveData<List<SingleTitleModel>>()
     val tvCatalogueList: LiveData<List<SingleTitleModel>> = _tvCatalogueList
 
-    fun getNewMoviesTv(page: Int) {
-        setGeneralLoader(LoadingState.LOADING)
+    fun getNewMovies(page: Int) {
         viewModelScope.launch {
-            when (val movies = environment.homeRepository.getNewMovies(page)) {
-                is Result.Success -> {
-                    val data = movies.data.data
-                    _tvCatalogueList.value = data.toTitleListModel()
+            setGeneralLoader(LoadingState.LOADING)
+            when (val result = newMoviesUseCase.invoke(page)) {
+                is ResultDomain.Success -> {
+                    _tvCatalogueList.value = result.data
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
-                    newToastMessage(movies.exception)
-                }
-                is Result.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage(result.exception)
+                    }
                 }
             }
         }
     }
 
-    fun getTopMoviesTv(page: Int) {
-        setGeneralLoader(LoadingState.LOADING)
+    fun getTopMovies(page: Int) {
         viewModelScope.launch {
-            when (val topMovies = environment.homeRepository.getTopMovies(page)) {
-                is Result.Success -> {
-                    val data = topMovies.data.data
-                    _tvCatalogueList.value = data.toTitleListModel()
+            setGeneralLoader(LoadingState.LOADING)
+            when (val result = topMoviesUseCase.invoke(page)) {
+                is ResultDomain.Success -> {
+                    _tvCatalogueList.value = result.data
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
-                    newToastMessage(topMovies.exception)
-                }
-                is Result.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage(result.exception)
+                    }
                 }
             }
         }
     }
 
-    fun getTopTvShowsTv(page: Int) {
-        setGeneralLoader(LoadingState.LOADING)
+    fun getTopTvShows(page: Int) {
         viewModelScope.launch {
-            when (val tvShows = environment.homeRepository.getTopTvShows(page)) {
-                is Result.Success -> {
-                    val data = tvShows.data.data
-                    _tvCatalogueList.value = data.toTitleListModel()
+            setGeneralLoader(LoadingState.LOADING)
+            when (val result = topTvShowsUseCase.invoke(page)) {
+                is ResultDomain.Success -> {
+                    _tvCatalogueList.value = result.data
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Error -> {
-                    newToastMessage(tvShows.exception)
-                }
-                is Result.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage(result.exception)
+                    }
                 }
             }
         }
@@ -75,13 +77,13 @@ class TvCatalogueViewModel : BaseViewModel() {
     fun fetchContent(type: Int, page: Int) {
         when (type) {
             AppConstants.LIST_NEW_MOVIES -> {
-                getNewMoviesTv(page)
+                getNewMovies(page)
             }
             AppConstants.LIST_TOP_MOVIES -> {
-                getTopMoviesTv(page)
+                getTopMovies(page)
             }
             AppConstants.LIST_TOP_TV_SHOWS -> {
-                getTopTvShowsTv(page)
+                getTopTvShows(page)
             }
         }
     }

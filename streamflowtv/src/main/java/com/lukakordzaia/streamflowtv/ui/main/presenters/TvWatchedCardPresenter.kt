@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflowtv.ui.main.presenters
 import android.view.ViewGroup
 import androidx.leanback.widget.HorizontalGridView
 import androidx.leanback.widget.Presenter
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.customviews.TvWatchedCardView
 

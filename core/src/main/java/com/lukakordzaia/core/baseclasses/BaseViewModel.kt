@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavDirections
-import com.lukakordzaia.core.network.Environment
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.core.utils.Event
@@ -13,7 +12,6 @@ import org.koin.core.component.inject
 
 abstract class BaseViewModel : ViewModel(), KoinComponent {
     protected val sharedPreferences: SharedPreferences by inject()
-    protected val environment: Environment by inject()
 
     private val _navigateScreen = MutableLiveData<Event<NavDirections>>()
     val navigateScreen: LiveData<Event<NavDirections>> = _navigateScreen

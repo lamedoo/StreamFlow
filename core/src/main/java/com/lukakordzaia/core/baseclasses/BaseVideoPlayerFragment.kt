@@ -20,8 +20,8 @@ import com.google.android.exoplayer2.util.Util
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.R
 import com.lukakordzaia.core.databinding.ContinueWatchingDialogBinding
-import com.lukakordzaia.core.datamodels.TitleMediaItemsUri
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.TitleMediaItemsUri
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.core.videoplayer.BuildMediaSource
 import com.lukakordzaia.core.videoplayer.MediaPlayerClass
@@ -44,7 +44,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     private var numOfSeasons: Int = 0
 
     protected abstract val autoBackPress: AutoBackPress
-    private var tracker: ProgressTracker? = null
+    private lateinit var tracker: ProgressTracker
 
     abstract val playerView: PlayerView?
     abstract val subtitleButton: ImageButton
@@ -89,17 +89,17 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     private fun initObservers() {
-        viewModel.videoPlayerData.observe(viewLifecycleOwner, {
+        viewModel.videoPlayerData.observe(viewLifecycleOwner) {
             videoPlayerData = it
-        })
+        }
 
-        viewModel.totalEpisodesInSeason.observe(viewLifecycleOwner, {
+        viewModel.totalEpisodesInSeason.observe(viewLifecycleOwner) {
             updateNextButton(it)
-        })
+        }
 
-        viewModel.setTitleName.observe(viewLifecycleOwner, {
+        viewModel.setTitleName.observe(viewLifecycleOwner) {
             setTitleName(it)
-        })
+        }
     }
 
     private fun setTitleName(name: String) {
@@ -122,9 +122,9 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             ))
             subtitleButton.setGone()
         } else {
-            viewModel.mediaAndSubtitle.observe(viewLifecycleOwner, {
+            viewModel.mediaAndSubtitle.observe(viewLifecycleOwner) {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(it))
-            })
+            }
         }
 
         subtitleFunctions()
@@ -165,7 +165,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     private fun updateNextButton(lastEpisode: Int) {
         //quick fix before viewState is introduced
-        viewModel.numOfSeasons.observe(viewLifecycleOwner, { numOfSeasons ->
+        viewModel.numOfSeasons.observe(viewLifecycleOwner) { numOfSeasons ->
             nextButton.setVisibleOrGone(
                 !(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode) &&
                         videoPlayerData.isTvShow && videoPlayerData.trailerUrl == null
@@ -174,7 +174,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             nextButton.setOnClickListener {
                 nextButtonFunction(videoPlayerData.chosenEpisode == lastEpisode, numOfSeasons)
             }
-        })
+        }
     }
 
     private fun nextButtonFunction(isLastEpisode: Boolean, numOfSeasons: Int) {
@@ -246,11 +246,11 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         super.onPause()
     }
 
-    override fun onDetach() {
-        tracker?.purgeHandler()
+    override fun onDestroy() {
         autoBackPress.cancel()
+        tracker.cancel()
 
-        super.onDetach()
+        super.onDestroy()
     }
 
     inner class MediaTransitionListener: Player.Listener {
@@ -263,6 +263,8 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             super.onIsPlayingChanged(isPlaying)
 
             if (isPlaying) autoBackPress.cancel() else autoBackPress.start()
+
+            if (isPlaying) tracker.start() else tracker.cancel()
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
@@ -279,9 +281,12 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             super.onPlaybackStateChanged(state)
             playerView?.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
 
+            val position = if (player.duration <= 0) 0 else player.duration - player.currentPosition
+            exoDuration.text = position.videoPlayerPosition()
+
             when (state) {
                 Player.STATE_READY -> {
-                    tracker = ProgressTracker(player, exoDuration)
+                    tracker = ProgressTracker()
 
                     episodeHasEnded = true
                     showContinueWatchingDialog()
@@ -293,11 +298,13 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
                         nextButton.callOnClick()
                     }
                 }
+                else -> {
+                }
             }
         }
     }
 
-    inner class AutoBackPress(private val backPress: () -> Unit): CountDownTimer(AUTO_BACK_COUNTER_TIME.toLong(), AUTO_BACK_COUNTER_INTERVAL.toLong()) {
+    inner class AutoBackPress(private val backPress: () -> Unit) : CountDownTimer(AUTO_BACK_COUNTER_TIME.toLong(), AUTO_BACK_COUNTER_INTERVAL.toLong()) {
         override fun onTick(millisUntilFinished: Long) {}
 
         override fun onFinish() {
@@ -305,21 +312,13 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         }
     }
 
-    inner class ProgressTracker(private val player: Player, private val duration: TextView) : Runnable {
-        private val handler: Handler = Handler(Looper.myLooper()!!)
-        override fun run() {
+    inner class ProgressTracker : CountDownTimer(player.duration, PLAYER_TIME_INTERVAL.toLong()) {
+        override fun onTick(millisUntilFinished: Long) {
             val position = if (player.duration <= 0) 0 else player.duration - player.currentPosition
-            duration.text = position.videoPlayerPosition()
-            handler.postDelayed(this, PLAYER_TIME_INTERVAL.toLong())
+            exoDuration.text = position.videoPlayerPosition()
         }
 
-        fun purgeHandler() {
-            handler.removeCallbacks(this)
-        }
-
-        init {
-            handler.post(this)
-        }
+        override fun onFinish() {}
     }
 
     companion object {

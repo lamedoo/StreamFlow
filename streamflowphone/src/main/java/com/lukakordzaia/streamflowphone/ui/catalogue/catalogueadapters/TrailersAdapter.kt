@@ -1,10 +1,9 @@
 package com.lukakordzaia.streamflowphone.ui.catalogue.catalogueadapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.streamflowphone.databinding.RvTrailerItemBinding
 

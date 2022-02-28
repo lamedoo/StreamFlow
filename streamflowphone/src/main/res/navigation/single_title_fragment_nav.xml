@@ -21,7 +21,7 @@
             app:destination="@id/video_player_fragment_nav">
             <argument
                 android:name="videoPlayerData"
-                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
+                app:argType="com.lukakordzaia.core.domain.domainmodels.VideoPlayerData" />
         </action>
         <action
             android:id="@+id/action_singleTitleFragment_self"
@@ -29,7 +29,7 @@
     </fragment>
     <dialog
         android:id="@+id/chooseTitleDetailsFragment"
-        android:name="com.lukakordzaia.streamflowphone.ui.phonesingletitle.tvepisodesbottomsheet.TvEpisodesBottomSheetFragment"
+        android:name="com.lukakordzaia.streamflowphone.ui.phonesingletitle.episodesbottomsheet.EpisodesBottomSheetFragment"
         android:label="fragment_choose_title_details"
         tools:layout="@layout/fragment_phone_tv_show_bottom_sheet" >
         <argument
@@ -46,7 +46,7 @@
             app:destination="@id/video_player_fragment_nav">
             <argument
                 android:name="videoPlayerData"
-                app:argType="com.lukakordzaia.core.datamodels.VideoPlayerData" />
+                app:argType="com.lukakordzaia.core.domain.domainmodels.VideoPlayerData" />
         </action>
     </dialog>
     <include app:graph="@navigation/video_player_fragment_nav" />

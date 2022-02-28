@@ -42,13 +42,13 @@ class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryB
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.progressBar.setVisibleOrGone(it == LoadingState.LOADING)
-        })
+        }
 
-        viewModel.singleCatalogueList.observe(viewLifecycleOwner, {
+        viewModel.singleCatalogueList.observe(viewLifecycleOwner) {
             singleCategoryAdapter.setItems(it)
-        })
+        }
     }
 
     private fun studiosContainer() {
@@ -61,7 +61,7 @@ class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryB
             layoutManager = studiosLayout
         }
 
-        viewModel.hasMorePage.observe(viewLifecycleOwner, {
+        viewModel.hasMorePage.observe(viewLifecycleOwner) {
             if (it) {
                 binding.rvSingleCategory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -78,7 +78,7 @@ class SingleCatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneSingleCategoryB
                     }
                 })
             }
-        })
+        }
     }
 
 

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.toTvInfoModel
 import com.lukakordzaia.streamflowtv.baseclasses.BaseVerticalGridSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvSearchInputSelected
@@ -17,7 +17,7 @@ class TvSearchFragment : BaseVerticalGridSupportFragment<TvSearchTitlesViewModel
     private var searchQuery = ""
 
     override val viewModel by viewModel<TvSearchTitlesViewModel>()
-    override val reload: () -> Unit = { viewModel.getSearchTitlesTv(searchQuery, page) }
+    override val reload: () -> Unit = { viewModel.getSearchTitles(searchQuery, page) }
 
 
     var searchInputIsSelected: TvSearchInputSelected? = null
@@ -46,7 +46,7 @@ class TvSearchFragment : BaseVerticalGridSupportFragment<TvSearchTitlesViewModel
 
     fun setSearchQuery(query: String) {
         searchQuery = query
-        viewModel.getSearchTitlesTv(query, page)
+        viewModel.getSearchTitles(query, page)
     }
 
     fun clearRowsAdapter() {
@@ -105,7 +105,7 @@ class TvSearchFragment : BaseVerticalGridSupportFragment<TvSearchTitlesViewModel
 
             if (indexOfItem != - 10 && indexOfRow - 10 <= indexOfItem) {
                 page++
-                viewModel.getSearchTitlesTv(searchQuery, page)
+                viewModel.getSearchTitles(searchQuery, page)
             }
         }
     }

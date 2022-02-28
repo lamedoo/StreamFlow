@@ -5,11 +5,10 @@ import android.text.TextUtils
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.TvInfoModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.TvInfoModel
 import com.lukakordzaia.core.utils.hideKeyboard
 import com.lukakordzaia.core.utils.setGone
-import com.lukakordzaia.core.utils.setImage
 import com.lukakordzaia.core.utils.showKeyboard
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseSidebarFragmentActivity
@@ -17,8 +16,6 @@ import com.lukakordzaia.streamflowtv.customviews.TvCustomSearchInput
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvSearchBinding
 import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.interfaces.TvSearchInputSelected
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvSearchActivity : BaseSidebarFragmentActivity<ActivityTvSearchBinding>(), TvSearchInputSelected, TvTitleSelected {
     private lateinit var fragment: TvSearchFragment

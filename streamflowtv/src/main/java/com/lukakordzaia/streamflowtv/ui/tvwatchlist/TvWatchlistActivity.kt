@@ -8,8 +8,8 @@ import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.ContinueWatchingModel
-import com.lukakordzaia.core.datamodels.TvInfoModel
+import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.TvInfoModel
 import com.lukakordzaia.core.utils.applyBundle
 import com.lukakordzaia.core.utils.setDrawableBackground
 import com.lukakordzaia.core.utils.setImage
@@ -20,8 +20,6 @@ import com.lukakordzaia.streamflowtv.databinding.ActivityTvWatchlistBinding
 import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflowtv.interfaces.TvIsVerticalFirstRow
-import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitledetails.TvTitleDetailsViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBinding>(), TvTitleSelected, TvHasFavoritesListener, TvIsVerticalFirstRow {
     private var hasFavorites = true

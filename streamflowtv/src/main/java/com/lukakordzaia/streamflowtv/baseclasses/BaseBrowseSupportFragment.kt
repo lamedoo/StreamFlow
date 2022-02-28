@@ -81,16 +81,16 @@ abstract class BaseBrowseSupportFragment<VM: BaseViewModel>: BrowseSupportFragme
     }
 
     private fun initObservers() {
-        viewModel.noInternet.observe(viewLifecycleOwner, {
+        viewModel.noInternet.observe(viewLifecycleOwner) {
             requireActivity().findViewById<ConstraintLayout>(R.id.no_internet).setVisibleOrGone(it)
-        })
+        }
 
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             when (it) {
                 LoadingState.LOADING -> prepareEntranceTransition()
                 LoadingState.LOADED -> startEntranceTransition()
             }
-        })
+        }
 
         viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver {
             requireContext().createToast(it)

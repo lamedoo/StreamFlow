@@ -134,31 +134,31 @@ abstract class BaseSidebarFragmentActivity<VB : ViewBinding> : BaseFragmentActiv
         }
     }
 
-    private fun showSyncDialog() {
-        profileViewModel.getContinueWatchingFromRoom().observe(this, {
-            if (!it.isNullOrEmpty()) {
-                val binding = DialogSyncDatabaseBinding.inflate(LayoutInflater.from(this))
-                val syncDialog = Dialog(this)
-                syncDialog.setContentView(binding.root)
-
-                binding.confirmButton.setOnClickListener { _ ->
-                    profileViewModel.addContinueWatchingToApi(it)
-                    val intent = Intent(this, TvActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    this.startActivity(intent)
-
-                }
-                binding.cancelButton.setOnClickListener {
-                    syncDialog.dismiss()
-                }
-                syncDialog.show()
-            } else {
-                val intent = Intent(this, TvActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                this.startActivity(intent)
-            }
-        })
-    }
+//    private fun showSyncDialog() {
+//        profileViewModel.getContinueWatchingFromRoom().observe(this) {
+//            if (!it.isNullOrEmpty()) {
+//                val binding = DialogSyncDatabaseBinding.inflate(LayoutInflater.from(this))
+//                val syncDialog = Dialog(this)
+//                syncDialog.setContentView(binding.root)
+//
+//                binding.confirmButton.setOnClickListener { _ ->
+//                    profileViewModel.addContinueWatchingToApi(it)
+//                    val intent = Intent(this, TvActivity::class.java)
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    this.startActivity(intent)
+//
+//                }
+//                binding.cancelButton.setOnClickListener {
+//                    syncDialog.dismiss()
+//                }
+//                syncDialog.show()
+//            } else {
+//                val intent = Intent(this, TvActivity::class.java)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+//                this.startActivity(intent)
+//            }
+//        }
+//    }
 
     private fun updateProfileUI(isLoggedIn: Boolean) {
         sidebar.profilePhoto.setVisibleOrGone(isLoggedIn)

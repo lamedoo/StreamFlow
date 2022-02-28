@@ -11,6 +11,9 @@ interface ContinueWatchingDao {
     @Query("SELECT * FROM continuewatchingroom")
     fun getContinueWatchingFromRoom(): LiveData<List<ContinueWatchingRoom>>
 
+    @Query("SELECT * FROM continuewatchingroom")
+    fun getContinueWatchingFromRoomA(): List<ContinueWatchingRoom>
+
     @Query("SELECT * FROM continuewatchingroom WHERE titleId = :titleId")
     fun getSingleContinueWatchingFromRoom(titleId: Int) : LiveData<ContinueWatchingRoom>
 
@@ -24,7 +27,7 @@ interface ContinueWatchingDao {
     fun updateTitleInDb(watchedTime: Long, titleId: Int)
 
     @Query("DELETE FROM continuewatchingroom WHERE titleId = (:titleId)")
-    fun deleteSingleContinueWatchingFromRoom(titleId: Int)
+    fun deleteSingleContinueWatchingFromRoom(titleId: Int): Int
 
     @Query("DELETE FROM continuewatchingroom")
     fun deleteContinueWatchingFullFromRoom()

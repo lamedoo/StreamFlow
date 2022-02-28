@@ -7,7 +7,7 @@
     android:minHeight="100dp"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".ui.phonesingletitle.tvepisodesbottomsheet.TvEpisodesBottomSheetFragment">
+    tools:context=".ui.phonesingletitle.episodesbottomsheet.EpisodesBottomSheetFragment">
 
     <TextView
         android:id="@+id/no_files_container"

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.toTvInfoModel
 import com.lukakordzaia.streamflowtv.R

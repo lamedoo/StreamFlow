@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.setGone
 import com.lukakordzaia.core.utils.setVisibleOrGone
@@ -49,22 +49,22 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             binding.generalProgressBar.setVisibleOrGone(it == LoadingState.LOADING)
             binding.fragmentScroll.setVisibleOrGone(it != LoadingState.LOADING)
-        })
+        }
 
-        viewModel.topTrailerList.observe(viewLifecycleOwner, {
+        viewModel.topTrailerList.observe(viewLifecycleOwner) {
             trailersAdapter.setTrailerList(it)
-        })
+        }
 
-        viewModel.allGenresList.observe(viewLifecycleOwner, {
+        viewModel.allGenresList.observe(viewLifecycleOwner) {
             genresAdapter.setGenreList(it)
-        })
+        }
 
-        viewModel.topGetTopStudiosResponse.observe(viewLifecycleOwner, {
+        viewModel.topGetTopStudiosResponse.observe(viewLifecycleOwner) {
             studiosAdapter.setStudioList(it)
-        })
+        }
     }
 
     private fun trailersContainer() {

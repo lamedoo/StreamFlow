@@ -3,7 +3,7 @@ package com.lukakordzaia.streamflowtv.ui.tvvideoplayer
 import android.os.Bundle
 import android.view.KeyEvent
 import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.videoplayer.VideoPlayerViewModel
 import com.lukakordzaia.streamflowtv.R
@@ -154,7 +154,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
             videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
             super.onBackPressed()
         } else {
-            videoPlayerViewModel.saveLoader.observe(this, {
+            videoPlayerViewModel.saveLoader.observe(this) {
                 when (it) {
                     LoadingState.LOADING -> {
                     }
@@ -162,7 +162,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
                         super.onBackPressed()
                     }
                 }
-            })
+            }
         }
     }
 

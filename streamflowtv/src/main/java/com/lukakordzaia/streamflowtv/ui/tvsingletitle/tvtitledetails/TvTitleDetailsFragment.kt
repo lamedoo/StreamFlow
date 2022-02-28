@@ -15,8 +15,8 @@ import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.baseclasses.BaseFragmentVM
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
-import com.lukakordzaia.core.datamodels.SingleTitleModel
-import com.lukakordzaia.core.datamodels.VideoPlayerData
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
@@ -38,7 +38,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     override val viewModel by viewModel<TvTitleDetailsViewModel>()
     override val reload: () -> Unit = {
         viewModel.getSingleTitleData(titleId)
-        viewModel.getSingleTitleFiles(titleId)
+        viewModel.getAvailableLanguages(titleId)
     }
 
     private var languages: List<String> = emptyList()
@@ -70,7 +70,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     private fun callData() {
         viewModel.getSingleTitleData(titleId)
-        viewModel.getSingleTitleFiles(titleId)
+        viewModel.getAvailableLanguages(titleId)
     }
 
     private fun fragmentListeners() {

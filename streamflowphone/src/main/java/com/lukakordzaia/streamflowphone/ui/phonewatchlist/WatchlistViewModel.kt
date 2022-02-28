@@ -4,13 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
-import com.lukakordzaia.core.datamodels.SingleTitleModel
+import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
+import com.lukakordzaia.core.domain.usecases.DeleteWatchlistUseCase
+import com.lukakordzaia.core.domain.usecases.WatchlistUseCase
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.Result
-import com.lukakordzaia.core.network.toWatchListModel
+import com.lukakordzaia.core.network.ResultDomain
+import com.lukakordzaia.core.utils.AppConstants
 import kotlinx.coroutines.launch
 
-class WatchlistViewModel : BaseViewModel() {
+class WatchlistViewModel(
+    private val watchlistUseCase: WatchlistUseCase,
+    private val deleteWatchlistUseCase: DeleteWatchlistUseCase
+) : BaseViewModel() {
     val noFavorites = MutableLiveData<Boolean>()
 
     private val fetchUserWatchlist: MutableList<SingleTitleModel> = ArrayList()
@@ -28,30 +33,27 @@ class WatchlistViewModel : BaseViewModel() {
         navigateToNewFragment(PhoneWatchlistFragmentDirections.actionPhoneFavoritesFragmentToProfileFragmentNav())
     }
 
-    fun getUserWatchlist(page: Int, type: String, isTvDevice: Boolean) {
+    fun getUserWatchlist(page: Int, type: String) {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
-            when (val watchlist = environment.watchlistRepository.getUserWatchlist(page, type)) {
-                is Result.Success -> {
-                    val data = watchlist.data.data
+            when (val result = watchlistUseCase.invoke(Pair(page, type))) {
+                is ResultDomain.Success -> {
+                    val data = result.data
 
-                    _hasMorePage.value = watchlist.data.meta.pagination.totalPages > watchlist.data.meta.pagination.currentPage
+                    _hasMorePage.value = data[0].hasMorePage
 
                     noFavorites.value = data.isNullOrEmpty()
 
-                    if (!data.isNullOrEmpty()) {
-                        if (!isTvDevice) {
-                            fetchUserWatchlist.addAll(data.toWatchListModel())
-                            _userWatchlist.value = fetchUserWatchlist
-                        } else {
-                            _userWatchlist.value = data.toWatchListModel()
-                        }
-                    }
+                    fetchUserWatchlist.addAll(data)
+                    _userWatchlist.value = fetchUserWatchlist
 
                     setGeneralLoader(LoadingState.LOADED)
                 }
-                is Result.Internet -> {
-                    setNoInternet()
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("შენახული სია - ${result.exception}")
+                    }
                 }
             }
         }
@@ -59,10 +61,16 @@ class WatchlistViewModel : BaseViewModel() {
 
     fun deleteWatchlistTitle(id: Int, position: Int) {
         viewModelScope.launch {
-            when (environment.watchlistRepository.deleteWatchlistTitle(id)) {
-                is Result.Success -> {
+            when (val result = deleteWatchlistUseCase.invoke(id)) {
+                is ResultDomain.Success -> {
                     fetchUserWatchlist.removeAt(position)
                     _userWatchlist.value = fetchUserWatchlist
+                }
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                        else -> newToastMessage("ვერ მოხერხდა წაშლა - ${result.exception}")
+                    }
                 }
             }
         }
