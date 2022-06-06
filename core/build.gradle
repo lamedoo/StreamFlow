@@ -62,7 +62,7 @@ dependencies {
 
     api "de.hdodenhof:circleimageview:$circleimageview_version"
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
