@@ -246,7 +246,7 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
                         (activity as TvVideoPlayerActivity).setCurrentFragmentState(VIDEO_DETAILS)
                         binding.titlePlayer.player!!.pause()
                         binding.titlePlayer.hideController()
-                        saveCurrentProgress()
+                        saveCurrentProgress(false)
 
                         if (videoPlayerData.trailerUrl == null) {
                             (activity as TvVideoPlayerActivity).showDetails()

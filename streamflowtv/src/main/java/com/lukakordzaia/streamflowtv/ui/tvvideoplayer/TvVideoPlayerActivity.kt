@@ -26,10 +26,27 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        initViews()
+        initObservers()
+    }
+
+    private fun initViews() {
         videoPlayerData = intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.tv_video_player_nav_host, TvVideoPlayerFragment())
             .commit()
+    }
+
+    private fun initObservers() {
+        videoPlayerViewModel.saveLoader.observe(this) {
+            when (it) {
+                LoadingState.LOADING -> {}
+                LoadingState.LOADED, LoadingState.ERROR -> {
+                    finish()
+                }
+            }
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -121,9 +138,7 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
                     goBack()
                 }
             }
-            AUDIO_SIDEBAR -> {
-                videoPlayerFragment.hideAudioSidebar()
-            }
+            AUDIO_SIDEBAR -> videoPlayerFragment.hideAudioSidebar()
             BACK_BUTTON -> goBack()
             NEW_EPISODE -> {}
         }
@@ -147,19 +162,10 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     }
 
     private fun goBack() {
-        videoPlayerFragment.releasePlayer()
-
         if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
             finish()
         } else {
-            videoPlayerViewModel.saveLoader.observe(this) {
-                when (it) {
-                    LoadingState.LOADING -> {}
-                    LoadingState.LOADED, LoadingState.ERROR -> {
-                        finish()
-                    }
-                }
-            }
+            videoPlayerFragment.saveCurrentProgress(true)
         }
     }
 

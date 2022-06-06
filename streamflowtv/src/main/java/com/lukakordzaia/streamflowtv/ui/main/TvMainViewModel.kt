@@ -60,7 +60,7 @@ class TvMainViewModel(
                 }
                 is ResultDomain.Error -> {
                     when (result.exception) {
-                        AppConstants.NO_INTERNET_ERROR -> {}
+                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
                         else -> newToastMessage("ბაზის ფილმები - ${result.exception}")
                     }
                 }
