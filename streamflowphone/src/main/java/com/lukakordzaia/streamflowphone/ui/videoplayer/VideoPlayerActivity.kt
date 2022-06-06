@@ -18,36 +18,39 @@ class VideoPlayerActivity : BaseActivity<ActivityPhoneVideoPlayerBinding>() {
     private val videoPlayerViewModel: VideoPlayerViewModel by viewModel()
 
     private var currentFragment = VIDEO_PLAYER
+    private lateinit var parentFragment: VideoPlayerFragment
+
+    private lateinit var videoPlayerData: VideoPlayerData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        initViews()
+        initObservers()
+    }
+
+    private fun initViews() {
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+
+        videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
+    }
+
+    private fun initObservers() {
+        videoPlayerViewModel.saveLoader.observe(this) {
+            when (it) {
+                LoadingState.LOADING -> {}
+                LoadingState.LOADED, LoadingState.ERROR -> {
+                    finish()
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {
-        val parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_fragment) as VideoPlayerFragment
-
         when (currentFragment) {
-            VIDEO_PLAYER -> {
-                val videoPlayerData = this.intent.getParcelableExtra<VideoPlayerData>(AppConstants.VIDEO_PLAYER_DATA) as VideoPlayerData
-
-                parentFragment.releasePlayer()
-
-                if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
-                    finish()
-                } else {
-                    videoPlayerViewModel.saveLoader.observe(this) {
-                        when (it) {
-                            LoadingState.LOADING -> {}
-                            LoadingState.LOADED, LoadingState.ERROR -> {
-                                finish()
-                            }
-                        }
-                    }
-                }
-            }
+            VIDEO_PLAYER -> goBack()
             AUDIO_SIDEBAR -> parentFragment.hideAudioSidebar()
-            VIDEO_PLAYER_PAUSE -> {}
+            BACK_BUTTON -> goBack()
         }
     }
 
@@ -55,10 +58,22 @@ class VideoPlayerActivity : BaseActivity<ActivityPhoneVideoPlayerBinding>() {
         currentFragment = fragment
     }
 
+    fun setParentFragment() {
+        parentFragment = supportFragmentManager.findFragmentById(R.id.tv_video_player_fragment) as VideoPlayerFragment
+    }
+
+    private fun goBack() {
+        if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
+            finish()
+        } else {
+            parentFragment.saveCurrentProgress(true)
+        }
+    }
+
     companion object {
         const val VIDEO_PLAYER = 0
         const val AUDIO_SIDEBAR = 1
-        const val VIDEO_PLAYER_PAUSE = 2
+        const val BACK_BUTTON = 2
 
         fun startFromHomeScreen(context: Context, videoPlayerData: VideoPlayerData): Intent {
             return Intent(context, VideoPlayerActivity::class.java).apply {

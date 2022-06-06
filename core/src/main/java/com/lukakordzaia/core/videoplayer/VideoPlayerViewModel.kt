@@ -63,7 +63,7 @@ class VideoPlayerViewModel(
         }
     }
 
-    fun addContinueWatching(playBackDuration: Long, titleDuration: Long) {
+    fun addContinueWatching(playBackDuration: Long, titleDuration: Long, needsLoader: Boolean = true) {
         val dbDetails = ContinueWatchingRoom(
             videoPlayerData.value!!.titleId,
             videoPlayerData.value!!.chosenLanguage,
@@ -75,7 +75,6 @@ class VideoPlayerViewModel(
         )
         if (playBackDuration > 0 && titleDuration > 0) {
             if (sharedPreferences.getLoginToken() != "") {
-                saveLoader.value = LoadingState.LOADING
                 viewModelScope.launch {
                     when (titleWatchTimeUseCase.invoke(
                         PostTitleWatchTimeRequestFull(
@@ -91,10 +90,10 @@ class VideoPlayerViewModel(
                         )
                     )) {
                         is ResultDomain.Success -> {
-                            saveLoader.value = LoadingState.LOADED
+                            if (needsLoader) saveLoader.value = LoadingState.LOADED
                         }
                         is ResultDomain.Error -> {
-                            saveLoader.value = LoadingState.ERROR
+                            if (needsLoader) saveLoader.value = LoadingState.ERROR
                         }
                     }
                 }
@@ -104,7 +103,7 @@ class VideoPlayerViewModel(
                 }
             }
         } else {
-            saveLoader.value = LoadingState.ERROR
+            if (needsLoader) saveLoader.value = LoadingState.ERROR
         }
     }
 

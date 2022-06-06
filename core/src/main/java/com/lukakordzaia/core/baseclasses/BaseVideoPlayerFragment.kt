@@ -178,7 +178,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     private fun nextButtonFunction(isLastEpisode: Boolean, numOfSeasons: Int) {
-        saveCurrentProgress()
+        saveCurrentProgress(false)
 
         if (videoPlayerData.isTvShow) {
             if (!(videoPlayerData.chosenSeason == numOfSeasons && isLastEpisode)) {
@@ -204,17 +204,9 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         }
     }
 
-    fun saveCurrentProgress() {
+    fun saveCurrentProgress(needsLoader: Boolean) {
         if (videoPlayerData.trailerUrl == null) {
-            viewModel.addContinueWatching(player.currentPosition, player.duration)
-        }
-    }
-
-    fun releasePlayer() {
-        mediaPlayer.releasePlayer {
-            if (videoPlayerData.trailerUrl == null) {
-                viewModel.addContinueWatching(it.playbackPosition, it.titleDuration)
-            }
+            viewModel.addContinueWatching(player.currentPosition, player.duration, needsLoader)
         }
     }
 
@@ -239,7 +231,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     override fun onPause() {
         if (Util.SDK_INT >= 24) {
-            saveCurrentProgress()
+            saveCurrentProgress(false)
             player.pause()
             viewModel.setVideoPlayerData(videoPlayerData.copy(watchedTime = player.currentPosition))
         }
@@ -271,7 +263,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             Handler(Looper.getMainLooper()).postDelayed({
                 if (mediaItem != null) {
                     if (videoPlayerData.trailerUrl == null) {
-                        viewModel.addContinueWatching(player.currentPosition, player.duration)
+                        viewModel.addContinueWatching(player.currentPosition, player.duration, false)
                     }
                 }
             }, 2000)

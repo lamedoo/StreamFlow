@@ -20,8 +20,8 @@ import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneVideoPlayerBinding
 import com.lukakordzaia.streamflowphone.databinding.PhoneExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity.Companion.AUDIO_SIDEBAR
+import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity.Companion.BACK_BUTTON
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity.Companion.VIDEO_PLAYER
-import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity.Companion.VIDEO_PLAYER_PAUSE
 
 class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBinding>() {
     private lateinit var playerBinding: PhoneExoplayerControllerLayoutBinding
@@ -30,7 +30,10 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
         viewModel.getSingleTitleData(videoPlayerData.titleId)
     }
 
-    override val autoBackPress = AutoBackPress { requireActivity().onBackPressed() }
+    override val autoBackPress = AutoBackPress {
+        (activity as VideoPlayerActivity).setCurrentFragment(BACK_BUTTON)
+        requireActivity().onBackPressed()
+    }
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneVideoPlayerBinding
         get() = FragmentPhoneVideoPlayerBinding::inflate
@@ -62,6 +65,8 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
 
         fragmentListeners()
         initDoubleTapRewind()
+
+        (activity as VideoPlayerActivity).setParentFragment()
     }
 
     private fun fragmentListeners() {
@@ -173,16 +178,6 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
                 mediaPlayer.initPlayer(binding.titlePlayer, 0, 0L)
             }
         }
-    }
-
-    override fun onResume() {
-        (requireActivity() as VideoPlayerActivity).setCurrentFragment(VIDEO_PLAYER)
-        super.onResume()
-    }
-
-    override fun onPause() {
-        (requireActivity() as VideoPlayerActivity).setCurrentFragment(VIDEO_PLAYER_PAUSE)
-        super.onPause()
     }
 
     override fun onDestroyView() {
