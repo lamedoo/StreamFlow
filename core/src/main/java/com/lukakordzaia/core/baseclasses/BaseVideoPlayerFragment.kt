@@ -323,7 +323,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     companion object {
         const val MAX_MEDIA_PLAYED = 3
-        const val AUTO_BACK_COUNTER_TIME = 500000
+        const val AUTO_BACK_COUNTER_TIME = 5000
         const val AUTO_BACK_COUNTER_INTERVAL = 1000
         const val PLAYER_TIME_INTERVAL = 1000
     }

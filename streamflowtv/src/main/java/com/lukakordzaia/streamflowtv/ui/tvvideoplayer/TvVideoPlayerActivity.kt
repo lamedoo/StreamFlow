@@ -140,7 +140,6 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     fun setCurrentFragmentState(state: Int) {
         currentFragmentState = state
 
-
         if (state == VIDEO_PLAYER) {
             videoPlayerFragment.getPlayer().showController()
             videoPlayerFragment.focusOnPause()
@@ -150,16 +149,14 @@ class TvVideoPlayerActivity : BaseFragmentActivity<ActivityTvVideoPlayerBinding>
     private fun goBack() {
         videoPlayerFragment.releasePlayer()
 
-        if (
-            videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
-            super.onBackPressed()
+        if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
+            finish()
         } else {
             videoPlayerViewModel.saveLoader.observe(this) {
                 when (it) {
-                    LoadingState.LOADING -> {
-                    }
+                    LoadingState.LOADING -> {}
                     LoadingState.LOADED, LoadingState.ERROR -> {
-                        super.onBackPressed()
+                        finish()
                     }
                 }
             }
