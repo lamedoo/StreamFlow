@@ -39,6 +39,8 @@ dependencies {
 
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 
+    implementation 'com.github.vkay94:DoubleTapPlayerView:1.0.4'
+
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "com.github.simonebortolin:FlowLayoutManager:$flowlayout_version"
 }
