@@ -35,11 +35,11 @@ class TvSearchFragment : BaseVerticalGridSupportFragment<TvSearchTitlesViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.searchList.observe(viewLifecycleOwner, { list ->
+        viewModel.searchList.observe(viewLifecycleOwner) { list ->
             list.forEach {
                 gridAdapter.add(it)
             }
-        })
+        }
 
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
     }

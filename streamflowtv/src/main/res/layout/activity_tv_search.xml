@@ -53,11 +53,11 @@
     <include
         android:id="@+id/title_info"
         layout="@layout/tv_top_title_header"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toEndOf="@id/tv_sidebar_collapsed"
-        app:layout_constraintWidth_default="percent"
         app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintStart_toEndOf="@id/tv_sidebar_collapsed"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_input"
         app:layout_constraintBottom_toTopOf="@id/tv_search_fragment"/>
 

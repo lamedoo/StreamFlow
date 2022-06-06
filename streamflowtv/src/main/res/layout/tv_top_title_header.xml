@@ -28,12 +28,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="@id/poster"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <include
             android:id="@+id/back_button_info"
@@ -41,9 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:layout_marginStart="5dp"
-            app:layout_constraintBottom_toTopOf="@id/title_name"
-            app:layout_constraintStart_toStartOf="@id/title_name"/>
+            android:layout_marginStart="5dp" />
 
         <TextView
             android:id="@+id/name"
@@ -58,10 +57,7 @@
             android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
             android:textSize="35sp"
             android:textStyle="bold"
-            android:textColor="@color/secondary_text_color"
-            app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintTop_toTopOf="@id/poster"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textColor="@color/secondary_text_color" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -121,11 +117,7 @@
             android:shadowColor="@color/trueBlack"
             android:shadowRadius="3"
             android:textColor="@color/secondary_text_color"
-            android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
-            app:layout_constraintTop_toBottomOf="@id/year"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.7"/>
+            android:fontFamily="@font/helvetica_neue_lt_geo_65_medium" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -177,9 +169,7 @@
             android:text="@string/tv_show"
             android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
             android:padding="5dp"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="5dp"
-            app:layout_constraintTop_toBottomOf="@id/genres"
             android:visibility="gone"
             tools:visibility="visible" />
 
