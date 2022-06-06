@@ -20,9 +20,6 @@ class TvWatchlistViewModel(
     private val _userWatchlist = MutableLiveData<List<SingleTitleModel>>()
     val userWatchlist: LiveData<List<SingleTitleModel>> = _userWatchlist
 
-    private val _hasMorePage = MutableLiveData(true)
-    val hasMorePage: LiveData<Boolean> = _hasMorePage
-
     fun getUserWatchlist(page: Int, type: String) {
         setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
@@ -30,7 +27,6 @@ class TvWatchlistViewModel(
                 is ResultDomain.Success -> {
                     val data = result.data
 
-                    _hasMorePage.value = data[0].hasMorePage
                     _userWatchlist.value = data
                     noFavorites.value = data.isNullOrEmpty()
 
