@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.vkay94.dtpv.youtube.YouTubeOverlay
 import com.google.android.exoplayer2.ui.PlayerView
 import com.lukakordzaia.core.adapters.ChooseVideoAudioAdapter
 import com.lukakordzaia.core.baseclasses.BaseVideoPlayerFragment
@@ -59,6 +60,7 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
         playerBinding = PhoneExoplayerControllerLayoutBinding.bind(binding.root)
 
         fragmentListeners()
+        initDoubleTapRewind()
     }
 
     private fun fragmentListeners() {
@@ -82,14 +84,28 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
         }
     }
 
-    private fun audioObservers() {
-        viewModel.availableSubtitles.observe(viewLifecycleOwner, {
-            setAvailableSubtitles(it)
+    private fun initDoubleTapRewind() {
+        binding.youtubeOverlay.performListener(object : YouTubeOverlay.PerformListener {
+            override fun onAnimationEnd() {
+                binding.youtubeOverlay.setGone()
+            }
+
+            override fun onAnimationStart() {
+                binding.youtubeOverlay.setVisible()
+            }
         })
 
-        viewModel.availableLanguages.observe(viewLifecycleOwner, {
+        binding.youtubeOverlay.player(player)
+    }
+
+    private fun audioObservers() {
+        viewModel.availableSubtitles.observe(viewLifecycleOwner) {
+            setAvailableSubtitles(it)
+        }
+
+        viewModel.availableLanguages.observe(viewLifecycleOwner) {
             setAvailableLanguages(it)
-        })
+        }
     }
 
     private fun setAvailableSubtitles(subtitles: List<String>) {
