@@ -256,7 +256,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     inner class MediaTransitionListener: Player.Listener {
         override fun onCues(cues: MutableList<Cue>) {
             super.onCues(cues)
-            playerView?.subtitleView!!.setCues(cues)
+            playerView?.subtitleView?.setCues(cues)
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
