@@ -34,19 +34,20 @@ class VideoPlayerActivity : BaseActivity<ActivityPhoneVideoPlayerBinding>() {
                 parentFragment.releasePlayer()
 
                 if (videoPlayerData.trailerUrl != null || sharedPreferences.getLoginToken().isNullOrEmpty()) {
-                    super.onBackPressed()
+                    finish()
                 } else {
                     videoPlayerViewModel.saveLoader.observe(this) {
                         when (it) {
                             LoadingState.LOADING -> {}
                             LoadingState.LOADED, LoadingState.ERROR -> {
-                                super.onBackPressed()
+                                finish()
                             }
                         }
                     }
                 }
             }
             AUDIO_SIDEBAR -> parentFragment.hideAudioSidebar()
+            VIDEO_PLAYER_PAUSE -> {}
         }
     }
 
@@ -57,6 +58,7 @@ class VideoPlayerActivity : BaseActivity<ActivityPhoneVideoPlayerBinding>() {
     companion object {
         const val VIDEO_PLAYER = 0
         const val AUDIO_SIDEBAR = 1
+        const val VIDEO_PLAYER_PAUSE = 2
 
         fun startFromHomeScreen(context: Context, videoPlayerData: VideoPlayerData): Intent {
             return Intent(context, VideoPlayerActivity::class.java).apply {

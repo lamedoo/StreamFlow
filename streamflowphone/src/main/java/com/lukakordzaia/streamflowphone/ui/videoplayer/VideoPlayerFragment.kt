@@ -21,6 +21,7 @@ import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneVideoPlayerBind
 import com.lukakordzaia.streamflowphone.databinding.PhoneExoplayerControllerLayoutBinding
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity.Companion.AUDIO_SIDEBAR
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity.Companion.VIDEO_PLAYER
+import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity.Companion.VIDEO_PLAYER_PAUSE
 
 class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBinding>() {
     private lateinit var playerBinding: PhoneExoplayerControllerLayoutBinding
@@ -172,6 +173,16 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
                 mediaPlayer.initPlayer(binding.titlePlayer, 0, 0L)
             }
         }
+    }
+
+    override fun onResume() {
+        (requireActivity() as VideoPlayerActivity).setCurrentFragment(VIDEO_PLAYER)
+        super.onResume()
+    }
+
+    override fun onPause() {
+        (requireActivity() as VideoPlayerActivity).setCurrentFragment(VIDEO_PLAYER_PAUSE)
+        super.onPause()
     }
 
     override fun onDestroyView() {
