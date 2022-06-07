@@ -46,12 +46,12 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     protected abstract val autoBackPress: AutoBackPress
     private lateinit var tracker: ProgressTracker
 
-    abstract val playerView: PlayerView?
-    abstract val subtitleButton: ImageButton
-    abstract val playerTitle: TextView
-    abstract val nextButton: ImageButton
-    abstract val exoDuration: TextView
-    abstract val continueWatchingDialog: ContinueWatchingDialogBinding
+    protected var playerView: PlayerView? = null
+    protected var subtitleButton: ImageButton? = null
+    protected var playerTitle: TextView? = null
+    protected var nextButton: ImageButton? = null
+    protected var exoDuration: TextView? = null
+    protected var continueWatchingDialog: ContinueWatchingDialogBinding? = null
 
     override fun onStart() {
         super.onStart()
@@ -79,6 +79,22 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
         mediaPlayer.setPlayerListener(MediaTransitionListener())
     }
 
+    fun initPlayerView(
+        playerView: PlayerView,
+        subtitleButton: ImageButton,
+        playerTitle: TextView,
+        nextButton: ImageButton,
+        exoDuration: TextView,
+        continueWatchingDialog: ContinueWatchingDialogBinding
+    ) {
+        this.playerView = playerView
+        this.subtitleButton = subtitleButton
+        this.playerTitle = playerTitle
+        this.nextButton = nextButton
+        this.exoDuration = exoDuration
+        this.continueWatchingDialog = continueWatchingDialog
+    }
+
     private fun setUpPlayer() {
         player = SimpleExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
@@ -103,14 +119,14 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     private fun setTitleName(name: String) {
-        playerTitle.setVisible()
+        playerTitle?.setVisible()
         if (videoPlayerData.trailerUrl != null) {
-            playerTitle.text = getString(R.string.trailer)
+            playerTitle?.text = getString(R.string.trailer)
         } else {
             if (videoPlayerData.isTvShow) {
-                playerTitle.text = getString(R.string.episode_title, videoPlayerData.chosenSeason.toString(), videoPlayerData.chosenEpisode.toString(), name)
+                playerTitle?.text = getString(R.string.episode_title, videoPlayerData.chosenSeason.toString(), videoPlayerData.chosenEpisode.toString(), name)
             } else {
-                playerTitle.text = name
+                playerTitle?.text = name
             }
         }
     }
@@ -120,7 +136,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(
                 TitleMediaItemsUri(videoPlayerData.trailerUrl, null)
             ))
-            subtitleButton.setGone()
+            subtitleButton?.setGone()
         } else {
             viewModel.mediaAndSubtitle.observe(viewLifecycleOwner) {
                 mediaPlayer.setPlayerMediaSource(buildMediaSource.mediaSource(it))
@@ -166,12 +182,12 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     private fun updateNextButton(lastEpisode: Int) {
         //quick fix before viewState is introduced
         viewModel.numOfSeasons.observe(viewLifecycleOwner) { numOfSeasons ->
-            nextButton.setVisibleOrGone(
+            nextButton?.setVisibleOrGone(
                 !(videoPlayerData.chosenSeason == numOfSeasons && videoPlayerData.chosenEpisode == lastEpisode) &&
                         videoPlayerData.isTvShow && videoPlayerData.trailerUrl == null
             )
 
-            nextButton.setOnClickListener {
+            nextButton?.setOnClickListener {
                 nextButtonFunction(videoPlayerData.chosenEpisode == lastEpisode, numOfSeasons)
             }
         }
@@ -215,13 +231,13 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             viewModel.addContinueWatching(player.currentPosition, player.duration)
             player.pause()
 
-            continueWatchingDialog.root.setVisible()
-            continueWatchingDialog.confirmButton.setOnClickListener {
-                continueWatchingDialog.root.setGone()
+            continueWatchingDialog?.root?.setVisible()
+            continueWatchingDialog?.confirmButton?.setOnClickListener {
+                continueWatchingDialog?.root?.setGone()
                 player.play()
             }
 
-            continueWatchingDialog.goBackButton.setOnClickListener {
+            continueWatchingDialog?.goBackButton?.setOnClickListener {
                 requireActivity().onBackPressed()
             }
 
@@ -274,7 +290,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
             playerView?.keepScreenOn = !(state == Player.STATE_IDLE || state == Player.STATE_ENDED)
 
             val position = if (player.duration <= 0) 0 else player.duration - player.currentPosition
-            exoDuration.text = position.videoPlayerPosition()
+            exoDuration?.text = position.videoPlayerPosition()
 
             when (state) {
                 Player.STATE_READY -> {
@@ -284,10 +300,10 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
                     showContinueWatchingDialog()
                 }
                 Player.STATE_ENDED -> {
-                    nextButton.setInvisible()
+                    nextButton?.setInvisible()
                     if (episodeHasEnded) {
                         mediaItemsPlayed++
-                        nextButton.callOnClick()
+                        nextButton?.callOnClick()
                     }
                 }
                 else -> {
@@ -307,7 +323,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     inner class ProgressTracker : CountDownTimer(player.duration, PLAYER_TIME_INTERVAL.toLong()) {
         override fun onTick(millisUntilFinished: Long) {
             val position = if (player.duration <= 0) 0 else player.duration - player.currentPosition
-            exoDuration.text = position.videoPlayerPosition()
+            exoDuration?.text = position.videoPlayerPosition()
         }
 
         override fun onFinish() {}
@@ -315,7 +331,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     companion object {
         const val MAX_MEDIA_PLAYED = 3
-        const val AUTO_BACK_COUNTER_TIME = 5000
+        const val AUTO_BACK_COUNTER_TIME = 50000
         const val AUTO_BACK_COUNTER_INTERVAL = 1000
         const val PLAYER_TIME_INTERVAL = 1000
     }
