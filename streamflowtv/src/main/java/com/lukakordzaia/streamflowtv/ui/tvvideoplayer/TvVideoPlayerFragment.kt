@@ -37,29 +37,19 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvVideoPlayerBinding
         get() = FragmentTvVideoPlayerBinding::inflate
 
-    override val playerView: PlayerView
-        get() = binding.titlePlayer
-
-    override val subtitleButton: ImageButton
-        get() = playerBinding.subtitleToggle
-
-    override val playerTitle: TextView
-        get() = playerBinding.playerTitle
-
-    override val nextButton: ImageButton
-        get() = playerBinding.nextEpisode
-
-    override val exoDuration: TextView
-        get() = playerBinding.duration
-
-    override val continueWatchingDialog: ContinueWatchingDialogBinding
-        get() = binding.continueWatching
-
     private var isBuffering = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         playerBinding = TvExoplayerControllerLayoutBinding.bind(binding.root)
+        initPlayerView(
+            playerView = binding.titlePlayer,
+            subtitleButton = playerBinding.subtitleToggle,
+            playerTitle = playerBinding.playerTitle,
+            nextButton = playerBinding.nextEpisode,
+            exoDuration = playerBinding.duration,
+            continueWatchingDialog = binding.continueWatching
+        )
 
         if (!videoPlayerData.isTvShow) {
             playerBinding.nextDetailsTitle.setGone()
@@ -151,8 +141,8 @@ class TvVideoPlayerFragment : BaseVideoPlayerFragment<FragmentTvVideoPlayerBindi
             super.onPlaybackStateChanged(state)
 
             if (state == Player.STATE_READY) {
-                if (continueWatchingDialog.root.isVisible) {
-                    continueWatchingDialog.confirmButton.requestFocus()
+                if (continueWatchingDialog?.root?.isVisible == true) {
+                    continueWatchingDialog?.confirmButton?.requestFocus()
                 }
             }
 

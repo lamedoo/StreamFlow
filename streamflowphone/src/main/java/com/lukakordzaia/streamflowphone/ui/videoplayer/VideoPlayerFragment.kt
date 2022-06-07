@@ -38,30 +38,20 @@ class VideoPlayerFragment : BaseVideoPlayerFragment<FragmentPhoneVideoPlayerBind
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneVideoPlayerBinding
         get() = FragmentPhoneVideoPlayerBinding::inflate
 
-    override val playerView: PlayerView
-        get() = binding.titlePlayer
-
-    override val subtitleButton: ImageButton
-        get() = playerBinding.subtitleToggle
-
-    override val playerTitle: TextView
-        get() = playerBinding.playerTitle
-
-    override val nextButton: ImageButton
-        get() = playerBinding.nextEpisode
-
-    override val exoDuration: TextView
-        get() = playerBinding.duration
-
-    override val continueWatchingDialog: ContinueWatchingDialogBinding
-        get() = binding.continueWatching
-
     private lateinit var chooseSubtitlesAdapter: ChooseVideoAudioAdapter
     private lateinit var chooseLanguageAdapter: ChooseVideoAudioAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         playerBinding = PhoneExoplayerControllerLayoutBinding.bind(binding.root)
+        initPlayerView(
+            playerView = binding.titlePlayer,
+            subtitleButton = playerBinding.subtitleToggle,
+            playerTitle = playerBinding.playerTitle,
+            nextButton = playerBinding.nextEpisode,
+            exoDuration = playerBinding.duration,
+            continueWatchingDialog = binding.continueWatching
+        )
 
         fragmentListeners()
         initDoubleTapRewind()
