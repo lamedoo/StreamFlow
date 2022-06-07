@@ -7,7 +7,7 @@ buildscript {
         version_code = 64
         version_name = "2.7.0"
 
-        gradle_version = "7.0.3"
+        gradle_version = '7.2.1'
         kotlin_version = "1.6.21"
         google_servicies_version = "4.3.10"
         firebase_gradle_version = "2.8.0"
@@ -22,12 +22,12 @@ buildscript {
         retrofit_version = "2.9.0"
         okhttp_version = "4.9.2"
         coroutines_version = "1.6.1"
-        nav_version = "2.4.0-beta02"
+        nav_version = '2.4.1'
         room_version = "2.4.2"
         leanback_version = "1.0.0"
         koin = "3.1.5"
         firebase_bom_version = "29.0.0"
-        exo_player = "2.15.1"
+        exo_player = "2.17.1"
         glide_version = "4.13.0"
         recyclerview_version = "1.2.1"
         circleimageview_version = "3.1.0"
