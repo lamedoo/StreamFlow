@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import com.lukakordzaia.core.baseclasses.BaseFragmentVM
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
+import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.utils.applyBundle
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.databinding.FragmentTvEpisodesBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -99,6 +101,10 @@ class TvEpisodesFragment : BaseFragmentVM<FragmentTvEpisodesBinding, TvEpisodesV
         binding.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
         binding.country.text = info.country
         binding.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
+    }
+
+    fun changeLoadingState(state: LoadingState) {
+        binding.generalLoader.setVisibleOrGone(state == LoadingState.LOADING)
     }
 
     fun isEpisodeFirstSelection(): Boolean = firstSelection
