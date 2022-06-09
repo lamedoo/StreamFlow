@@ -25,5 +25,4 @@ class TvSeasonsPresenter : Presenter() {
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {}
-
 }
