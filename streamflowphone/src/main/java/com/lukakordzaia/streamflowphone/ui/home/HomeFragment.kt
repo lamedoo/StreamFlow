@@ -1,18 +1,24 @@
 package com.lukakordzaia.streamflowphone.ui.home
 
+import android.app.Dialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
+import androidx.core.app.ShareCompat
+import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.GithubReleaseModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.utils.setImage
-import com.lukakordzaia.core.utils.setVisibleOrGone
+import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneHomeBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseFragmentPhoneVM
@@ -21,6 +27,7 @@ import com.lukakordzaia.streamflowphone.ui.home.homeadapters.HomeNewSeriesAdapte
 import com.lukakordzaia.streamflowphone.ui.home.homeadapters.HomeTitlesAdapter
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import java.io.*
 import java.util.concurrent.TimeUnit
 
 
@@ -34,6 +41,8 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
     private lateinit var homeTvShowAdapter: HomeTitlesAdapter
     private lateinit var homeNewSeriesAdapter: HomeNewSeriesAdapter
     private lateinit var homeUserSuggestionsAdapter: HomeTitlesAdapter
+
+    private lateinit var downloadReleaseDialog: Dialog
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneHomeBinding
         get() = FragmentPhoneHomeBinding::inflate
@@ -49,6 +58,8 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.checkAuthDatabase()
+
+        viewModel.checkGithubReleases(getString(R.string.version_number, requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName))
 
         fragmentSetUi()
         fragmentListeners()
@@ -135,6 +146,10 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
                 viewModel.checkAuthDatabase()
             }
         }
+
+        viewModel.releaseUrl.observe(viewLifecycleOwner, EventObserver {
+            downloadReleaseDialog(it)
+        })
     }
 
     private fun movieDayContainer(movie: SingleTitleModel) {
@@ -234,6 +249,19 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
             )
             )
         )
+    }
+
+    private fun downloadReleaseDialog(release: GithubReleaseModel) {
+        downloadReleaseDialog = DialogUtils.downloadReleaseAlertDialog(requireContext()) {
+            viewModel.downloadNewRelease(release.downloadUrl!!, "streamflow-${release.tag}.apk", requireContext()) { uri ->
+                uri?.let {
+                    downloadReleaseDialog.dismiss()
+                    startPackageActivity(this, File(it)) {
+                        viewModel.newToastMessage(getString(R.string.no_activity_found))
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

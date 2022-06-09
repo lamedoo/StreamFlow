@@ -1,6 +1,7 @@
 package com.lukakordzaia.core.network
 
 import com.lukakordzaia.core.domain.domainmodels.*
+import com.lukakordzaia.core.network.models.github.response.GetGithubReleasesResponse
 import com.lukakordzaia.core.network.models.imovies.response.newseries.GetNewSeriesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleFilesResponse
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleResponse
@@ -358,4 +359,15 @@ fun List<GetSingleTitleFilesResponse.Data>.toEpisodeInfoModel(season: Int, chose
         episodeFiles = episodeUrls,
         episodeSubs = subtitleUrls
     )
+}
+
+fun List<GetGithubReleasesResponse>.transformToModel(): List<GithubReleaseModel> {
+    return this.map {
+        GithubReleaseModel(
+            id = it.id,
+            tag = it.tagName,
+            createdAt = it.createdAt,
+            downloadUrl = it.assets?.get(0)?.browserDownloadUrl
+        )
+    }
 }
