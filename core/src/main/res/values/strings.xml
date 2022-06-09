@@ -59,6 +59,10 @@
     <string name="email">ელ-ფოსტა</string>
     <string name="password">პაროლი</string>
     <string name="remove_from_list_title">ნამდვილად გსურთ სიიდან წაშლა?</string>
+    <string name="new_release_available">გამოვიდა აპლიკაციის ახალი ვერსია</string>
+    <string name="download_new_release">გსურთ გადმოწერა?</string>
+    <string name="please_wait">გთხოვთ დაელოდოთ…</string>
+    <string name="no_activity_found">ვერ მოიძებნა აპლიკაცია ფაილის გასახსნელად</string>
     <string name="profile_panel">ანგარიშის პანელი</string>
     <string name="watchlist">ვგეგმავ ყურებას</string>
     <string name="saved_movies">შენახული ფილმები</string>
@@ -69,7 +73,7 @@
     <string name="check_internet_connection">შეამოწმეთ ინტერნეტთან კავშირი</string>
     <string name="try_again">სცადეთ თავიდან</string>
     <string name="no_trailer_found">ტრეილერი ვერ მოიძებნა</string>
-    <string name="version_number">ვერსია v%1$s</string>
+    <string name="version_number">ვერსია v.%1$s</string>
     <string name="imdb_score">IMDB %1$s</string>
     <string name="episode_number">ეპიზოდი %1$s</string>
     <string name="categories">კატეგორიები</string>

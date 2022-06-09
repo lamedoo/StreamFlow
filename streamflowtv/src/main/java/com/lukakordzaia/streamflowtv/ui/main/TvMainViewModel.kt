@@ -1,18 +1,23 @@
 package com.lukakordzaia.streamflowtv.ui.main
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.GithubReleaseModel
 import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.usecases.*
 import com.lukakordzaia.core.network.*
 import com.lukakordzaia.core.utils.AppConstants
+import com.lukakordzaia.core.utils.DownloadHelper
+import com.lukakordzaia.core.utils.Event
 import kotlinx.coroutines.*
 
 class TvMainViewModel(
+    private val githubReleasesUseCase: GithubReleasesUseCase,
     private val newMoviesUseCase: NewMoviesUseCase,
     private val topMoviesUseCase: TopMoviesUseCase,
     private val topTvShowsUseCase: TopTvShowsUseCase,
@@ -39,6 +44,9 @@ class TvMainViewModel(
     private val _continueWatchingList = MutableLiveData<List<ContinueWatchingModel>>()
     val continueWatchingList: LiveData<List<ContinueWatchingModel>> = _continueWatchingList
 
+    private val _releaseUrl = MutableLiveData<Event<GithubReleaseModel>>()
+    val releaseUrl: LiveData<Event<GithubReleaseModel>> = _releaseUrl
+
     init {
         fetchContent(1)
     }
@@ -50,6 +58,41 @@ class TvMainViewModel(
         } else {
             getContinueWatchingFromRoom()
         }
+    }
+
+    fun checkGithubReleases(currentVersion: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = githubReleasesUseCase.invoke()) {
+                is ResultDomain.Success -> {
+                    if (currentVersion != result.data.tag) {
+                        result.data.downloadUrl?.let {
+                            _releaseUrl.postValue(Event(result.data))
+                        }
+                    }
+                }
+                is ResultDomain.Error -> {
+
+                }
+            }
+        }
+    }
+
+    fun downloadNewRelease(
+        url: String,
+        fileName: String,
+        context: Context,
+        description: String? = null,
+        callback: ((String?) -> Unit)? = null
+    ) {
+        DownloadHelper.downloadFromUrl(
+            context = context,
+            url = url,
+            fileName = fileName,
+            title = null,
+            description = description,
+            usePublic = true,
+            callback = callback
+        )
     }
 
     private fun getContinueWatchingFromRoom() {
