@@ -11,6 +11,7 @@ import com.lukakordzaia.core.domain.domainmodels.SeasonEpisodesModel
 import com.lukakordzaia.core.domain.usecases.DbSingleContinueWatchingUseCase
 import com.lukakordzaia.core.domain.usecases.SingleTitleFilesUseCase
 import com.lukakordzaia.core.domain.usecases.SingleTitleUseCase
+import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.ResultDomain
 import com.lukakordzaia.core.utils.AppConstants
 import kotlinx.coroutines.Dispatchers
@@ -73,22 +74,26 @@ class TvEpisodesViewModel(
     }
 
     fun getNumOfSeasons(titleId: Int) {
+        setGeneralLoader(LoadingState.LOADING)
         viewModelScope.launch {
             when (val result = singleTitleUseCase.invoke(titleId)) {
                 is ResultDomain.Success -> {
                     _numOfSeasons.value = result.data.seasonNum ?: 1
+                    setGeneralLoader(LoadingState.LOADED)
                 }
                 is ResultDomain.Error -> {
                     when (result.exception) {
                         AppConstants.NO_INTERNET_ERROR -> {}
                         else -> newToastMessage("სეზონების რაოდენობა - ${result.exception}")
                     }
+                    setGeneralLoader(LoadingState.ERROR)
                 }
             }
         }
     }
 
     fun getSeasonFiles(titleId: Int, season: Int) {
+        setGeneralLoader(LoadingState.LOADING)
         _chosenSeason.value = season
         viewModelScope.launch {
             when (val result = singleTitleFilesUseCase.invoke(Pair(titleId, season))) {
@@ -115,12 +120,14 @@ class TvEpisodesViewModel(
                         }
                     }
                     _seasonEpisodes.value = getEpisodeNames
+                    setGeneralLoader(LoadingState.LOADED)
                 }
                 is ResultDomain.Error -> {
                     when (result.exception) {
                         AppConstants.NO_INTERNET_ERROR -> setNoInternet()
                         else -> newToastMessage("ეპიზოდები - ${result.exception}")
                     }
+                    setGeneralLoader(LoadingState.ERROR)
                 }
             }
         }

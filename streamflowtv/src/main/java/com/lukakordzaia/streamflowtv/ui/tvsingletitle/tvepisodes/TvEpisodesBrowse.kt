@@ -66,6 +66,10 @@ class TvEpisodesBrowse : VerticalGridSupportFragment() {
     }
 
     private fun fragmentObservers() {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
+            (parentFragment as TvEpisodesFragment).changeLoadingState(it)
+        }
+
         viewModel.seasonEpisodes.observe(viewLifecycleOwner) {
             gridAdapter.clear()
             gridAdapter.addAll(0, it)
