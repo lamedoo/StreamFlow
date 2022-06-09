@@ -14,7 +14,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val tvViewModelModule = module {
-    viewModel { TvMainViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { TvMainViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TvTitleDetailsViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TvCatalogueViewModel(get(), get(), get()) }
     viewModel { TvRelatedViewModel(get(), get()) }

@@ -59,8 +59,8 @@ object DialogUtils {
             binding.downloadLoader.setVisible()
             binding.pleaseWait.setVisible()
             binding.icon.setInvisible()
-            binding.cancelButton.setGone()
-            binding.continueButton.setGone()
+            binding.cancelButton.setInvisible()
+            binding.continueButton.setInvisible()
         }
         binding.cancelButton.setOnClickListener {
             dialog.dismiss()
