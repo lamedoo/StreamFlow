@@ -1,14 +1,15 @@
-package com.lukakordzaia.core.network
+package com.lukakordzaia.core.network.github
 
 import com.lukakordzaia.core.BuildConfig
-import com.lukakordzaia.core.network.interceptors.DefaultHeaderInterceptor
+import com.lukakordzaia.core.network.EndPoints
+import com.lukakordzaia.core.network.interceptors.DefaultGithubHeaderInterceptor
 import com.lukakordzaia.core.network.interceptors.NetworkConnectionInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitBuilder(private val networkConnectionInterceptor: NetworkConnectionInterceptor, private val defaultHeaderInterceptor: DefaultHeaderInterceptor) {
+class RetrofitGithubBuilder(private val networkConnectionInterceptor: NetworkConnectionInterceptor, private val defaultHeaderInterceptor: DefaultGithubHeaderInterceptor) {
     private var retrofitInstance: Retrofit? = null
 
     fun getRetrofitInstance(): Retrofit {
@@ -28,7 +29,7 @@ class RetrofitBuilder(private val networkConnectionInterceptor: NetworkConnectio
 
         if (retrofitInstance == null) {
             retrofitInstance = Retrofit.Builder()
-                .baseUrl(EndPoints.BASE_URL)
+                .baseUrl(EndPoints.GITHUB_BASE_URL)
                 .client(okHttpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

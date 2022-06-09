@@ -4,7 +4,8 @@ class EndPoints {
     companion object {
 
         // IMOVIES
-        const val BASE_URL = "https://api.imovies.cc/api/v1/"
+        const val IMOVIES_BASE_URL = "https://api.imovies.cc/api/v1/"
+        const val GITHUB_BASE_URL = "https://api.github.com/"
 
         const val MOVIE_OF_THE_DAY = "movies/movie-day?page=1&per_page=1"
         const val NEW_MOVIES = "movies?filters%5Bwith_files%5D=yes&filters%5Btype%5D=movie&sort=-upload_date&per_page=55"

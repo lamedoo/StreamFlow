@@ -1,5 +1,6 @@
 package com.lukakordzaia.streamflowtv.ui.main
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,11 +8,15 @@ import android.view.View
 import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
+import com.lukakordzaia.core.domain.domainmodels.GithubReleaseModel
 import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.toTvInfoModel
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
+import com.lukakordzaia.core.utils.DialogUtils
+import com.lukakordzaia.core.utils.EventObserver
+import com.lukakordzaia.core.utils.startPackageActivity
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.BaseBrowseSupportFragment
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
@@ -22,6 +27,7 @@ import com.lukakordzaia.streamflowtv.ui.main.presenters.TvWatchedCardPresenter
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 
 class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
     private val sharedPreferences: SharedPreferences by inject()
@@ -41,6 +47,7 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
     private var topTvShowsAdapter: ListRow? = null
     private var newSeriesAdapter: ListRow? = null
 
+    private lateinit var downloadReleaseDialog: Dialog
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,6 +72,7 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.checkAuthDatabase()
 
+        viewModel.checkGithubReleases(getString(R.string.version_number, requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName))
         fragmentObservers()
 
         setupEventListeners(ItemViewClickedListener(), ItemViewSelectedListener())
@@ -105,10 +113,14 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
                 setRowsAdapter()
             }
         }
+
+        viewModel.releaseUrl.observe(viewLifecycleOwner, EventObserver {
+            downloadReleaseDialog(it)
+        })
     }
 
     private fun watchedListRowsAdapter(items: List<ContinueWatchingModel>) {
-        hasContinueWatching = !items.isNullOrEmpty()
+        hasContinueWatching = items.isNotEmpty()
 
         val listRowAdapter = ArrayObjectAdapter(TvWatchedCardPresenter()).apply {
             addAll(0, items)
@@ -202,6 +214,19 @@ class TvMainFragment : BaseBrowseSupportFragment<TvMainViewModel>() {
         }
 
         rowsAdapter.addAll(0, row)
+    }
+
+    private fun downloadReleaseDialog(release: GithubReleaseModel) {
+        downloadReleaseDialog = DialogUtils.downloadReleaseAlertDialog(requireContext()) {
+            viewModel.downloadNewRelease(release.downloadUrl!!, "streamflow-${release.tag}.apk", requireContext()) { uri ->
+                uri?.let {
+                    downloadReleaseDialog.dismiss()
+                    startPackageActivity(this, File(it)) {
+                        viewModel.newToastMessage(getString(R.string.no_activity_found))
+                    }
+                }
+            }
+        }
     }
 
     private inner class ItemViewClickedListener : OnItemViewClickedListener {

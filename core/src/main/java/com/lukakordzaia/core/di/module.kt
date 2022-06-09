@@ -1,9 +1,9 @@
 package com.lukakordzaia.core.di
 
 import com.lukakordzaia.core.database.StreamFlowDatabase
-import com.lukakordzaia.core.network.RetrofitBuilder
+import com.lukakordzaia.core.network.imovies.RetrofitImoviesBuilder
 import com.lukakordzaia.core.network.imovies.ImoviesNetwork
-import com.lukakordzaia.core.network.interceptors.DefaultHeaderInterceptor
+import com.lukakordzaia.core.network.interceptors.DefaultImoviesHeaderInterceptor
 import com.lukakordzaia.core.network.interceptors.NetworkConnectionInterceptor
 import com.lukakordzaia.core.domain.repository.cataloguerepository.CatalogueRepository
 import com.lukakordzaia.core.domain.repository.cataloguerepository.DefaultCatalogueRepository
@@ -11,6 +11,8 @@ import com.lukakordzaia.core.domain.repository.databaserepository.DatabaseReposi
 import com.lukakordzaia.core.domain.repository.databaserepository.DefaultDatabaseRepository
 import com.lukakordzaia.core.domain.repository.homerepistory.DefaultHomeRepository
 import com.lukakordzaia.core.domain.repository.homerepistory.HomeRepository
+import com.lukakordzaia.core.domain.repository.releaserepository.DefaultReleaseRepository
+import com.lukakordzaia.core.domain.repository.releaserepository.ReleaseRepository
 import com.lukakordzaia.core.domain.repository.searchrepository.DefaultSearchRepository
 import com.lukakordzaia.core.domain.repository.searchrepository.SearchRepository
 import com.lukakordzaia.core.domain.repository.singletitlerepository.DefaultSingleTitleRepository
@@ -20,6 +22,9 @@ import com.lukakordzaia.core.domain.repository.userrepository.UserRepository
 import com.lukakordzaia.core.domain.repository.watchlistrepository.DefaultWatchlistRepository
 import com.lukakordzaia.core.domain.repository.watchlistrepository.WatchlistRepository
 import com.lukakordzaia.core.domain.usecases.*
+import com.lukakordzaia.core.network.github.GithubNetwork
+import com.lukakordzaia.core.network.github.RetrofitGithubBuilder
+import com.lukakordzaia.core.network.interceptors.DefaultGithubHeaderInterceptor
 import com.lukakordzaia.core.sharedpreferences.SharedPreferences
 import com.lukakordzaia.core.videoplayer.BuildMediaSource
 import org.koin.dsl.module
@@ -32,13 +37,17 @@ val repositoryModule = module {
     single<WatchlistRepository> { DefaultWatchlistRepository(get()) }
     single<DatabaseRepository> { DefaultDatabaseRepository(get()) }
     single<UserRepository> { DefaultUserRepository(get()) }
+    single<ReleaseRepository> { DefaultReleaseRepository(get()) }
 }
 
 val generalModule = module {
     single { NetworkConnectionInterceptor(get()) }
-    single { DefaultHeaderInterceptor(get()) }
-    single { RetrofitBuilder(get(), get()) }
-    single { get<RetrofitBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
+    single { DefaultImoviesHeaderInterceptor(get()) }
+    single { DefaultGithubHeaderInterceptor() }
+    single { RetrofitImoviesBuilder(get(), get()) }
+    single { RetrofitGithubBuilder(get(), get()) }
+    single { get<RetrofitImoviesBuilder>().getRetrofitInstance().create(ImoviesNetwork::class.java) }
+    single { get<RetrofitGithubBuilder>().getRetrofitInstance().create(GithubNetwork::class.java) }
     single { BuildMediaSource() }
     single { SharedPreferences(get()) }
     single { StreamFlowDatabase.getDatabase(get()) }
@@ -77,4 +86,5 @@ val useCaseModule = module {
     single { TitleWatchTimeUseCase(get()) }
     single { DbAllContinueWatchingUseCase(get(), get()) }
     single { DbDeleteAllContinueWatchingUseCase(get()) }
+    single { GithubReleasesUseCase(get()) }
 }
