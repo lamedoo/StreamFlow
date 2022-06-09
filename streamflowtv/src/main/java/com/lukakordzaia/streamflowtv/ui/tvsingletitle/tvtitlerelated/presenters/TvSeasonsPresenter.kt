@@ -1,9 +1,7 @@
 package com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvtitlerelated.presenters
 
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.leanback.widget.Presenter
-import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.customviews.TvSeasonsCardView
 
 class TvSeasonsPresenter : Presenter() {
@@ -18,12 +16,11 @@ class TvSeasonsPresenter : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val movie = item as Int
+        val season = item as Int
         val cardView = viewHolder.view as TvSeasonsCardView
 
-        cardView.setSeason("სეზონი $movie")
+        cardView.setSeason("სეზონი $season")
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {}
-
 }

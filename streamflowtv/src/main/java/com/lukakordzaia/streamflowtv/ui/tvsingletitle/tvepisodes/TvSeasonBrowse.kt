@@ -9,6 +9,8 @@ import androidx.leanback.widget.*
 import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflowtv.interfaces.TvCheckFirstItem
 import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
@@ -61,6 +63,10 @@ class TvSeasonBrowse : VerticalGridSupportFragment() {
     }
 
     private fun fragmentObservers() {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
+            (parentFragment as TvEpisodesFragment).changeLoadingState(it)
+        }
+
         viewModel.numOfSeasons.observe(viewLifecycleOwner) {
             val seasonCount = Array(it!!) { i -> (i * 1) + 1 }.toList()
 
