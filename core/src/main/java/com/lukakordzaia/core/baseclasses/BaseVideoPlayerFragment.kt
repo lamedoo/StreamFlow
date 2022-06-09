@@ -44,11 +44,11 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     private var numOfSeasons: Int = 0
 
     protected abstract val autoBackPress: AutoBackPress
-    private lateinit var tracker: ProgressTracker
+    private var tracker: ProgressTracker? = null
 
     protected var playerView: PlayerView? = null
-    protected var subtitleButton: ImageButton? = null
-    protected var playerTitle: TextView? = null
+    private var subtitleButton: ImageButton? = null
+    private var playerTitle: TextView? = null
     protected var nextButton: ImageButton? = null
     protected var exoDuration: TextView? = null
     protected var continueWatchingDialog: ContinueWatchingDialogBinding? = null
@@ -256,7 +256,9 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
     override fun onDestroy() {
         autoBackPress.cancel()
-        tracker.cancel()
+        tracker?.cancel()
+
+        player.release()
 
         super.onDestroy()
     }
@@ -272,7 +274,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
 
             if (isPlaying) autoBackPress.cancel() else autoBackPress.start()
 
-            if (isPlaying) tracker.start() else tracker.cancel()
+            if (isPlaying) tracker?.start() else tracker?.cancel()
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
