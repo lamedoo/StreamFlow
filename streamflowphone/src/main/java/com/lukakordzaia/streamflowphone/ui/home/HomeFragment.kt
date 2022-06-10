@@ -59,7 +59,9 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
         super.onViewCreated(view, savedInstanceState)
         viewModel.checkAuthDatabase()
 
-        viewModel.checkGithubReleases(getString(R.string.version_number, requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName))
+        viewModel.checkGithubReleases(
+            getString(R.string.version_number_check, requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName)
+        )
 
         fragmentSetUi()
         fragmentListeners()
