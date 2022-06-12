@@ -15,10 +15,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.setVisibleOrGone
-import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneTvShowBottomSheetBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseBottomSheetVM
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
@@ -86,6 +86,8 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
 
         viewModel.seasonEpisodes.observe(viewLifecycleOwner) {
             episodeAdapter.setEpisodeList(it)
+
+            viewModel.chosenEpisode?.let { episode -> episodeAdapter.setChosenEpisode(episode) }
         }
     }
 
@@ -93,8 +95,7 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
             if (info != null) {
                 seasonAdapter.setChosenSeason(info.season)
                 viewModel.getSeasonFiles(args.titleId, info.season)
-
-                episodeAdapter.setChosenEpisode(info.episode)
+                viewModel.chosenEpisode = info.episode
             } else {
                 viewModel.getSeasonFiles(args.titleId, 1)
             }
