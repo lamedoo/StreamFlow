@@ -5,7 +5,7 @@
     android:padding="@dimen/fragment_padding"
     android:clickable="true"
     android:focusable="true"
-    android:background="#99282A38"
+    android:background="#991e222e"
     android:focusableInTouchMode="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">

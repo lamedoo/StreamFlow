@@ -7,7 +7,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#03282A38" />
+                android:color="#031e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -22,7 +22,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#05282A38" />
+                android:color="#051e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -37,7 +37,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#08282A38" />
+                android:color="#081e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -51,7 +51,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#0A282A38" />
+                android:color="#0A1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -64,7 +64,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#0D282A38" />
+                android:color="#0D1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -77,7 +77,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#0F282A38" />
+                android:color="#0F1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -90,7 +90,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#12282A38" />
+                android:color="#121e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -103,7 +103,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#14282A38" />
+                android:color="#141e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -116,7 +116,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#17282A38" />
+                android:color="#171e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -129,7 +129,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#1A282A38" />
+                android:color="#1A1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -142,7 +142,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#1C282A38" />
+                android:color="#1C1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -155,7 +155,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#1F282A38" />
+                android:color="#1F1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -168,7 +168,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#21282A38" />
+                android:color="#211e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -181,7 +181,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#24282A38" />
+                android:color="#241e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -194,7 +194,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#26282A38" />
+                android:color="#261e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -207,7 +207,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#29282A38" />
+                android:color="#291e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -220,7 +220,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#2B282A38" />
+                android:color="#2B1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -233,7 +233,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#2E282A38" />
+                android:color="#2E1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -246,7 +246,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#30282A38" />
+                android:color="#301e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -259,7 +259,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#33282A38" />
+                android:color="#331e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -273,7 +273,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#36282A38" />
+                android:color="#361e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -286,7 +286,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#38282A38" />
+                android:color="#381e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -299,7 +299,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#3B282A38" />
+                android:color="#3B1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -312,7 +312,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#3D282A38" />
+                android:color="#3D1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -325,7 +325,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#40282A38" />
+                android:color="#401e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -338,7 +338,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#42282A38" />
+                android:color="#421e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -351,7 +351,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#45282A38" />
+                android:color="#451e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -364,7 +364,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#47282A38" />
+                android:color="#471e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -377,7 +377,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#4A282A38" />
+                android:color="#4A1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
@@ -390,7 +390,7 @@
                 android:top="1dp" />
             <solid
                 android:width="1dp"
-                android:color="#4D282A38" />
+                android:color="#4D1e222e" />
                     <corners android:bottomLeftRadius="10dp"
                         android:topLeftRadius="500dp"
                         android:topRightRadius="10dp"/>
