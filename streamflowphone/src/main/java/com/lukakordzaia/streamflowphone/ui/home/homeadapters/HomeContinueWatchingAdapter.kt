@@ -10,7 +10,6 @@ import com.lukakordzaia.streamflowphone.databinding.RvDbTitleItemBinding
 
 class HomeContinueWatchingAdapter(
     private val onWatchedTitleClick: (continueWatchingModel: ContinueWatchingModel) -> Unit,
-    private val onInfoClick: (titleId: Int) -> Unit,
     private val onMoreMenuClick: (titleId: Int, titleName: String) -> Unit
 ) : RecyclerView.Adapter<HomeContinueWatchingAdapter.ViewHolder>() {
     private var list: List<ContinueWatchingModel> = ArrayList()
@@ -38,7 +37,7 @@ class HomeContinueWatchingAdapter(
 
     inner class ViewHolder(val view: RvDbTitleItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: ContinueWatchingModel) {
-            view.itemPoster.setImage(model.poster, true)
+            view.itemPoster.setImage(model.cover, true)
 
             view.continueWatchingInfo.text = if (model.isTvShow) {
                 model.watchedDuration.titlePosition(model.season, model.episode)
@@ -51,10 +50,6 @@ class HomeContinueWatchingAdapter(
 
             view.root.setOnClickListener {
                 onWatchedTitleClick(model)
-            }
-
-            view.itemDetails.setOnClickListener {
-                onInfoClick(model.id)
             }
 
             view.itemMore.setOnClickListener {

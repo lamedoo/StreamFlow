@@ -1,28 +1,25 @@
 package com.lukakordzaia.streamflowphone.ui.home
 
-import android.app.DownloadManager
 import android.content.Context
-import android.os.Environment
-import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.core.utils.AppConstants
+import com.lukakordzaia.core.BuildConfig
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.core.domain.domainmodels.GithubReleaseModel
 import com.lukakordzaia.core.domain.domainmodels.NewSeriesModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.usecases.*
-import com.lukakordzaia.core.network.*
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.ResultDomain
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.utils.DownloadHelper
 import com.lukakordzaia.core.utils.Event
-import kotlinx.coroutines.*
-import java.io.*
-import java.net.MalformedURLException
-import java.net.URL
-import java.nio.channels.Channels
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val githubReleasesUseCase: GithubReleasesUseCase,
@@ -92,17 +89,19 @@ class HomeViewModel(
     }
 
     fun checkGithubReleases(currentVersion: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (val result = githubReleasesUseCase.invoke()) {
-                is ResultDomain.Success -> {
-                    if (currentVersion != result.data.tag) {
-                        result.data.downloadUrl?.let {
-                            _releaseUrl.postValue(Event(result.data))
+        if (!BuildConfig.DEBUG) {
+            viewModelScope.launch(Dispatchers.IO) {
+                when (val result = githubReleasesUseCase.invoke()) {
+                    is ResultDomain.Success -> {
+                        if (currentVersion != result.data.tag) {
+                            result.data.downloadUrl?.let {
+                                _releaseUrl.postValue(Event(result.data))
+                            }
                         }
                     }
-                }
-                is ResultDomain.Error -> {
+                    is ResultDomain.Error -> {
 
+                    }
                 }
             }
         }
