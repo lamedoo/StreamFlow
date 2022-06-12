@@ -24,7 +24,7 @@ class TvWatchedCardPresenter : Presenter() {
         val dbTitle = item as ContinueWatchingModel
         val cardView = viewHolder.view as TvWatchedCardView
 
-        cardView.setPoster(dbTitle.poster)
+        cardView.setPoster(dbTitle.cover)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {}

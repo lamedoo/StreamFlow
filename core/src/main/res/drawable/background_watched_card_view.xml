@@ -8,9 +8,6 @@
             android:centerY="0.3"
             android:type="linear"
             android:angle="90" />
-        <corners
-            android:bottomLeftRadius="10dp"
-            android:bottomRightRadius="10dp"/>
     </shape>
 </item>
 </layer-list>

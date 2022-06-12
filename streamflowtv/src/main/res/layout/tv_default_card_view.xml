@@ -7,11 +7,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/card_poster"
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:scaleType="fitXY"
+        app:shapeAppearanceOverlay="@style/roundedCornersImageView"
         tools:src="@drawable/friends_poster"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

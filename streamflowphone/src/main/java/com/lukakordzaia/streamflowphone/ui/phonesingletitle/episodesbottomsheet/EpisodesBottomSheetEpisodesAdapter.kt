@@ -56,7 +56,7 @@ class EpisodesBottomSheetEpisodesAdapter(
             view.itemPoster.setImage(model.cover, false)
 
             view.itemSeekBar.setVisibleOrGone(model.titleDuration?.toInt() != 0)
-            if (model.titleDuration?.toInt() != 0) {
+            if (model.titleDuration?.toInt() != 0 && model.titleDuration != null) {
                 view.itemSeekBar.max = model.titleDuration!!.toInt()
                 view.itemSeekBar.progress = model.watchedDuration!!.toInt()
             }

@@ -11,6 +11,8 @@
             <stroke
                 android:width="3dp"
                 android:color="@color/accent_color"/>
+            <corners
+                android:radius="10dp"/>
         </shape>
     </item>
     <item android:state_selected="true" >
@@ -24,6 +26,8 @@
             <stroke
                 android:width="3dp"
                 android:color="@color/accent_color"/>
+            <corners
+                android:radius="10dp"/>
         </shape>
     </item>
 </selector>
