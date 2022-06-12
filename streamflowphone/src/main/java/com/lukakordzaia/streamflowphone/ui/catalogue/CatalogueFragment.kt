@@ -91,8 +91,8 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
     }
 
     private fun genresContainer() {
-        val genreLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        genresAdapter = GenresAdapter() { genreId: Int, genreName: String ->
+        val genreLayout = GridLayoutManager(requireActivity(), 3, GridLayoutManager.HORIZONTAL, false)
+        genresAdapter = GenresAdapter { genreId: Int, genreName: String ->
             viewModel.onSingleGenrePressed(genreId, genreName)
         }
         binding.rvGenres.layoutManager = genreLayout
@@ -100,8 +100,8 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
     }
 
     private fun studiosContainer() {
-        val studioLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        studiosAdapter = StudiosAdapter() { studioId: Int, studioName: String ->
+        val studioLayout = GridLayoutManager(requireActivity(), 3, GridLayoutManager.HORIZONTAL, false)
+        studiosAdapter = StudiosAdapter { studioId: Int, studioName: String ->
             viewModel.onSingleStudioPressed(studioId, studioName)
         }
         binding.rvStudios.layoutManager = studioLayout

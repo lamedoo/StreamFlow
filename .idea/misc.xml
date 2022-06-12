@@ -104,6 +104,7 @@
         <entry key="core/src/main/res/drawable/background_movie_day_play_phone.xml" value="0.1665" />
         <entry key="core/src/main/res/drawable/background_play_icon_round_phone.xml" value="0.157" />
         <entry key="core/src/main/res/drawable/background_rv_continue_watching.xml" value="0.214" />
+        <entry key="core/src/main/res/drawable/background_rv_genres_phone.xml" value="0.2285" />
         <entry key="core/src/main/res/drawable/background_rv_season_phone.xml" value="0.2285" />
         <entry key="core/src/main/res/drawable/background_seasons_card_tv.xml" value="0.2165" />
         <entry key="core/src/main/res/drawable/background_watched_card_view.xml" value="0.156" />
@@ -123,7 +124,9 @@
         <entry key="streamflowphone/src/main/res/layout/phone_single_title_details.xml" value="0.3333333333333333" />
         <entry key="streamflowphone/src/main/res/layout/rv_choose_details_episodes_item.xml" value="0.3333333333333333" />
         <entry key="streamflowphone/src/main/res/layout/rv_db_title_item.xml" value="0.37604166666666666" />
+        <entry key="streamflowphone/src/main/res/layout/rv_genre_item.xml" value="0.3333333333333333" />
         <entry key="streamflowphone/src/main/res/layout/rv_home_item.xml" value="0.37604166666666666" />
+        <entry key="streamflowphone/src/main/res/layout/rv_studio_item.xml" value="0.3333333333333333" />
         <entry key="streamflowphone/src/main/res/xml/file_paths.xml" value="0.3333333333333333" />
         <entry key="streamflowtv/src/main/res/layout/activity_tv_search.xml" value="0.19630192502532928" />
         <entry key="streamflowtv/src/main/res/layout/activity_tv_watchlist.xml" value="0.1947463768115942" />

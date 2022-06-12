@@ -37,7 +37,7 @@ class TrailersAdapter(
     inner class ViewHolder(val view: RvTrailerItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: SingleTitleModel) {
             view.rvTrailerName.text = model.displayName
-            view.rvTrailerPoster.setImage(model.poster, true)
+            view.rvTrailerPoster.setImage(model.cover, true)
 
             view.root.setOnClickListener {
                 onTrailerClick(model.id, model.trailer)
