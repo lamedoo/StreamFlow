@@ -13,16 +13,17 @@ class BuildMediaSource {
                 .setUri(Uri.parse(titleMediaItemsUri.titleFileUri))
                 .build()
         } else {
-            val subtitle = MediaItem.Subtitle(
-                Uri.parse(titleMediaItemsUri.titleSubUri),
-                MimeTypes.TEXT_VTT,
-                null,
-                C.SELECTION_FLAG_DEFAULT
-            )
+            val subtitle = MediaItem.SubtitleConfiguration
+                .Builder(Uri.parse(titleMediaItemsUri.titleSubUri))
+                .setMimeType(MimeTypes.TEXT_VTT)
+                .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
+                .build()
+
+
 
             MediaItem.Builder()
                 .setUri(Uri.parse(titleMediaItemsUri.titleFileUri))
-                .setSubtitles(listOf(subtitle))
+                .setSubtitleConfigurations(listOf(subtitle))
                 .build()
         }
     }
