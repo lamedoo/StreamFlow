@@ -1,13 +1,12 @@
 package com.lukakordzaia.core.videoplayer
 
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
-import com.lukakordzaia.core.domain.domainmodels.PlayerDurationInfo
 
 
-class MediaPlayerClass(private val player: SimpleExoPlayer) {
+class MediaPlayerClass(private val player: ExoPlayer) {
 
     fun initPlayer(playerView: PlayerView?, currentWindow: Int, playbackPosition: Long) {
         playerView?.player = player

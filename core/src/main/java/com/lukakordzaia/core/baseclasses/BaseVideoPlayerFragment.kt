@@ -10,14 +10,13 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.viewbinding.ViewBinding
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.text.Cue
 import com.google.android.exoplayer2.ui.CaptionStyleCompat
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.util.Util
-import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.R
 import com.lukakordzaia.core.databinding.ContinueWatchingDialogBinding
 import com.lukakordzaia.core.domain.domainmodels.TitleMediaItemsUri
@@ -36,7 +35,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     protected lateinit var videoPlayerData: VideoPlayerData
 
     protected lateinit var mediaPlayer: MediaPlayerClass
-    protected lateinit var player: SimpleExoPlayer
+    protected lateinit var player: ExoPlayer
 
     protected var mediaItemsPlayed = 0
     var episodeHasEnded = false
@@ -96,7 +95,7 @@ abstract class BaseVideoPlayerFragment<VB: ViewBinding> : BaseFragmentVM<VB, Vid
     }
 
     private fun setUpPlayer() {
-        player = SimpleExoPlayer.Builder(requireContext()).build()
+        player = ExoPlayer.Builder(requireContext()).build()
         mediaPlayer = MediaPlayerClass(player)
     }
 
