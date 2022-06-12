@@ -112,7 +112,7 @@ class EpisodesBottomSheetFragment : BaseBottomSheetVM<FragmentPhoneTvShowBottomS
                 if (it == viewModel.continueWatchingDetails.value?.season) {
                     episodeAdapter.setChosenEpisode(viewModel.continueWatchingDetails.value!!.episode)
                 } else {
-                    episodeAdapter.setChosenEpisode(-1)
+                    episodeAdapter.setChosenEpisode(null)
                 }
             },
             {
