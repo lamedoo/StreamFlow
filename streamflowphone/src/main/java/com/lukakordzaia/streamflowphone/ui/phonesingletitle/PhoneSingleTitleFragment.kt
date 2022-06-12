@@ -15,20 +15,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
+import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowphone.R
-import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
-import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneSingleTitleBinding
+import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneSingleTitleNewBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
-class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBinding, PhoneSingleTitleViewModel>() {
+class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNewBinding, PhoneSingleTitleViewModel>() {
     private val args: PhoneSingleTitleFragmentArgs by navArgs()
 
     override val viewModel by viewModel<PhoneSingleTitleViewModel>()
@@ -39,8 +39,8 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     private lateinit var phoneSingleTitleCastAdapter: PhoneSingleTitleCastAdapter
     private lateinit var phoneSingleTitleRelatedAdapter: PhoneSingleTitleRelatedAdapter
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleBinding
-        get() = FragmentPhoneSingleTitleBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleNewBinding
+        get() = FragmentPhoneSingleTitleNewBinding::inflate
 
     private var languages: List<String> = emptyList()
 
@@ -165,11 +165,11 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
         }
 
         viewModel.titleGenres.observe(viewLifecycleOwner) {
-            binding.titleGenre.text = TextUtils.join(", ", it)
+            binding.titleDescription.titleGenre.text = TextUtils.join(", ", it)
         }
 
         viewModel.titleDirector.observe(viewLifecycleOwner) {
-            binding.titleDirector.text = it.originalName
+            binding.titleDescription.titleDirector.text = it.originalName
         }
 
         viewModel.castData.observe(viewLifecycleOwner) {
@@ -212,7 +212,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
     }
 
     private fun titleDetailsContainer(info: SingleTitleModel) {
-        binding.titleName.text = info.displayName
+        binding.titleDescription.titleName.text = info.displayName
 
         binding.singleTitleCover.setImage(info.cover, false)
 
@@ -220,7 +220,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleBin
             startTrailer(info)
         }
 
-        binding.titleDescription.text = info.description
+        binding.titleDescription.titleDescription.text = info.description
         binding.infoDetails.imdbScore.text = getString(R.string.imdb_score, info.imdbScore)
         binding.infoDetails.year.text = info.releaseYear
         binding.infoDetails.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
