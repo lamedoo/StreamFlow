@@ -61,6 +61,8 @@ class HomeViewModel(
     private val _releaseUrl = MutableLiveData<Event<GithubReleaseModel>>()
     val releaseUrl: LiveData<Event<GithubReleaseModel>> = _releaseUrl
 
+    var screenIsOnTop = MutableLiveData<Boolean>()
+
     init {
         fetchContent(1)
     }

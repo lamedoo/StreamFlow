@@ -89,12 +89,7 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
         }
 
         binding.fragmentScroll.setOnScrollChangeListener { _: View, _: Int, scrollY: Int, _: Int, _: Int ->
-            if (scrollY > 0) {
-                binding.toolbar.root.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.primaryColor, null))
-                binding.toolbar.root.background.alpha = 255
-            } else {
-                binding.toolbar.root.background.alpha = 0
-            }
+            viewModel.screenIsOnTop.value = scrollY <= 0
         }
     }
 
@@ -146,6 +141,15 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
         viewModel.releaseUrl.observe(viewLifecycleOwner, EventObserver {
             downloadReleaseDialog(it)
         })
+
+        viewModel.screenIsOnTop.observe(viewLifecycleOwner) {
+            binding.toolbar.root.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.primaryColor, null))
+            if (it) {
+                binding.toolbar.root.background.alpha = 0
+            } else {
+                binding.toolbar.root.background.alpha = 255
+            }
+        }
     }
 
     private fun movieDayContainer(movie: SingleTitleModel) {
