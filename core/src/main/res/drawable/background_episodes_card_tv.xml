@@ -2,16 +2,32 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true" >
         <shape>
-            <solid android:color="@color/secondary_color" />
-            <stroke android:color="@color/accent_color" android:width="2dp" />
-            <corners android:bottomLeftRadius="10dp" android:bottomRightRadius="10dp" />
+            <solid
+                android:color="@color/transparent" />
+            <stroke
+                android:color="@color/accent_color"
+                android:width="2dp" />
+            <corners
+                android:radius="10dp" />
         </shape>
     </item>
     <item android:state_selected="true" >
         <shape>
-            <solid android:color="@color/secondary_color" />
-            <stroke android:color="@color/accent_color" android:width="2dp" />
-            <corners android:bottomLeftRadius="10dp" android:bottomRightRadius="10dp" />
+            <solid
+                android:color="@color/transparent" />
+            <stroke
+                android:color="@color/accent_color"
+                android:width="2dp" />
+            <corners
+                android:radius="10dp" />
+        </shape>
+    </item>
+    <item android:state_focused="false">
+        <shape>
+            <solid
+                android:color="@color/transparent" />
+            <corners
+                android:radius="10dp" />
         </shape>
     </item>
 </selector>
