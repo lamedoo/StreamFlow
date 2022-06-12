@@ -254,7 +254,7 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:nextFocusDown="@id/next_details"
-                android:background="@drawable/background_button_phone">
+                android:background="@drawable/background_single_title_button_tv">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -289,7 +289,7 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:nextFocusDown="@id/next_details"
-                android:background="@drawable/background_button_phone"
+                android:background="@drawable/background_single_title_button_tv"
                 android:visibility="gone"
                 tools:visibility="visible">
 
@@ -327,7 +327,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_gravity="center"
                 android:padding="15dp"
-                android:background="@drawable/background_button_phone"
+                android:background="@drawable/background_single_title_button_tv"
                 android:nextFocusDown="@id/next_details"/>
 
             <LinearLayout
@@ -342,7 +342,7 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:nextFocusDown="@id/next_details"
-                android:background="@drawable/background_button_phone"
+                android:background="@drawable/background_single_title_button_tv"
                 android:visibility="gone"
                 tools:visibility="visible">
 

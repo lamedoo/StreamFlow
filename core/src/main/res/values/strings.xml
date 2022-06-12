@@ -107,4 +107,5 @@
     <string name="authorization_is_successful">ავტორიზაცია განხორციელდა წარმატებით</string>
     <string name="actors">მსახიობები</string>
     <string name="episodes">ეპიზოდები</string>
+    <string name="continue_play">გააგრელე</string>
 </resources>

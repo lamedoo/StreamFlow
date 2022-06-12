@@ -5,7 +5,6 @@
     android:id="@+id/tv_sidebar_collapsed"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@color/secondary_color"
     android:gravity="center"
     android:orientation="vertical"
     android:translationZ="0.5dp"
