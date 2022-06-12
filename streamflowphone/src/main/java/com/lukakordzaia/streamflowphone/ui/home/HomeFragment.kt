@@ -149,12 +149,16 @@ class HomeFragment : BaseFragmentPhoneVM<FragmentPhoneHomeBinding, HomeViewModel
     }
 
     private fun movieDayContainer(movie: SingleTitleModel) {
-        binding.movieDayContainer.setOnClickListener {
+        binding.movieDay.movieDayMore.setOnClickListener {
             viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, movie.id)
         }
 
-        binding.movieDayName.text = movie.displayName
-        binding.movieDayCover.setImage(movie.cover, false)
+        binding.movieDay.playButton.setOnClickListener {
+            viewModel.onSingleTitlePressed(AppConstants.NAV_HOME_TO_SINGLE, movie.id)
+        }
+
+        binding.movieDay.movieDayName.text = movie.displayName
+        binding.movieDay.movieDayCover.setImage(movie.cover, false)
     }
 
     private fun continueWatchingContainer() {
