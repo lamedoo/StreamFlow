@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryColor"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/tv_details_progressBar"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:indeterminateTint="@color/accent_color"
+        android:visibility="visible"
+        tools:visibility="gone"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@color/primaryColor">
+
+        <ImageView
+            android:id="@+id/background_poster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/friends_cover" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_single_title_cover_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/title_info"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.9">
+
+            <include
+                android:id="@+id/back_button_info"
+                layout="@layout/tv_back_button_info_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/title_name"
+                app:layout_constraintStart_toStartOf="@id/title_name" />
+
+            <TextView
+                android:id="@+id/title_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="50dp"
+                android:focusable="false"
+                android:textColor="@color/secondary_text_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
+                android:textSize="35sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.5"
+                tools:text="Friends" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/title_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_name">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:id="@+id/year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="5dp"
+                        android:paddingEnd="5dp"
+                        tools:text="2015"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:text="@string/middle_dot"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color"/>
+
+                    <TextView
+                        android:id="@+id/duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        tools:text="1:37:43"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:text="@string/middle_dot"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color"/>
+
+                    <TextView
+                        android:id="@+id/imdb_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        tools:text="8.6"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/accent_color" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:text="@string/middle_dot"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color"/>
+
+                    <TextView
+                        android:id="@+id/country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        tools:text="USA"
+                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                        android:textColor="@color/general_text_color" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/title_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:maxLines="5"
+                android:padding="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/secondary_text_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_details"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.5"
+                tools:text="Upon witnessing a man's head cracked open with an axe, 16-year-old Yuri Honjou trembles in fear and confusion as she flees from the masked assailant, only to find out she's trapped in an abandoned building where every door is mysteriously locked. Desperately searching for a way out, Yuri runs to the rooftop, but a world with no signs of life stands before her, surrounded by high-rise buildings. Though filled with despair, once she learns that her brother is also in this strange place, Yuri is determined to find him and escape. However, she soon finds that there are more masked murderers in the area, anxious to terrorize their newfound victims and satiate their sickest desires, leaving Yuri to question if they will be able to make it out alive." />
+
+            <TextView
+                android:id="@+id/title_director_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:text="@string/director"
+                android:textColor="@color/secondary_text_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_description"/>
+
+            <TextView
+                android:id="@+id/title_director"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                tools:text="N/A"
+                android:textColor="@color/general_text_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                app:layout_constraintTop_toBottomOf="@id/title_director_header"
+                app:layout_constraintStart_toStartOf="@id/title_director_header"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.5"/>
+
+            <TextView
+                android:id="@+id/title_genre_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/genre"
+                android:textColor="@color/secondary_text_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
+                android:textSize="15sp"
+                app:layout_constraintTop_toBottomOf="@id/title_director"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/title_genre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                tools:text="კომედია, ტრაგედია, ეროტიკა"
+                android:textColor="@color/general_text_color"
+                android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+                app:layout_constraintTop_toBottomOf="@id/title_genre_header"
+                app:layout_constraintStart_toStartOf="@id/title_genre_header"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.5"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/no_files_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/title_will_be_added_soon"
+            android:textSize="25sp"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/buttons_row"
+            app:layout_constraintBottom_toBottomOf="@id/buttons_row"
+            tools:visibility="gone" />
+
+        <TextView
+            android:id="@+id/continue_watching_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:layout_marginTop="10dp"
+            tools:text="ს1 ე24"
+            android:shadowColor="@color/trueBlack"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="3"
+            android:textStyle="bold"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+            android:textColor="@color/general_text_color"
+            app:layout_constraintBottom_toTopOf="@id/continue_watching_seekBar"
+            app:layout_constraintStart_toStartOf="@id/continue_watching_seekBar"
+            app:layout_constraintEnd_toEndOf="@id/continue_watching_seekBar" />
+
+        <SeekBar
+            android:id="@+id/continue_watching_seekBar"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:thumbTint="@color/general_text_color"
+            android:thumb="@color/accent_color"
+            android:progressTint="@color/accent_color"
+            tools:progress="50"
+            android:progressBackgroundTint="@color/general_text_color"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            app:layout_constraintEnd_toEndOf="@id/buttons_row"
+            app:layout_constraintStart_toStartOf="@id/buttons_row"
+            app:layout_constraintBottom_toTopOf="@id/buttons_row" />
+
+        <LinearLayout
+            android:id="@+id/buttons_row"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.lukakordzaia.streamflowtv.customviews.TvSingleTitleButtonView
+                android:id="@+id/play_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/watch"
+                app:icon="@drawable/icon_play_general"
+                app:icon_tint="@color/white"
+                android:background="@drawable/background_single_title_button_tv"
+                android:layout_marginBottom="5dp" />
+
+            <com.lukakordzaia.streamflowtv.customviews.TvSingleTitleButtonView
+                android:id="@+id/episodes_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/episodes"
+                app:icon="@drawable/icon_playlist"
+                app:icon_tint="@color/white"
+                android:background="@drawable/background_single_title_button_tv"
+                android:layout_marginBottom="5dp"/>
+
+            <com.lukakordzaia.streamflowtv.customviews.TvSingleTitleButtonView
+                android:id="@+id/replay_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/start_over"
+                app:icon="@drawable/icon_replay"
+                app:icon_tint="@color/white"
+                android:background="@drawable/background_single_title_button_tv"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <com.lukakordzaia.streamflowtv.customviews.TvSingleTitleButtonView
+                android:id="@+id/trailer_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/trailer"
+                app:icon="@drawable/icon_play"
+                app:icon_tint="@color/white"
+                android:background="@drawable/background_single_title_button_tv"
+                android:layout_marginBottom="5dp"/>
+
+            <com.lukakordzaia.streamflowtv.customviews.TvSingleTitleButtonView
+                android:id="@+id/delete_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/delete_from_list"
+                app:icon="@drawable/icon_remove"
+                app:icon_tint="@color/red"
+                android:background="@drawable/background_single_title_button_tv"
+                android:layout_marginBottom="5dp"/>
+
+            <LinearLayout
+                android:id="@+id/favorite_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:padding="12dp"
+                android:nextFocusDown="@id/next_details"
+                android:nextFocusRight="@id/favorite_container"
+                android:background="@drawable/background_button_favorite_tv">
+
+                <ProgressBar
+                    android:id="@+id/favorite_progressBar"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:indeterminateTint="@color/accent_color"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <ImageView
+                    android:id="@+id/favorite_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_favorite"
+                    android:tint="@color/general_text_color"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/button_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:textColor="@color/secondary_text_color"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+                    android:text="@string/save"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center"
+                    android:nextFocusDown="@id/next_details" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/next_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/next_details_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/helvetica_neue_lt_geo_caps_55_roman"
+                android:text="@string/cast_similar"
+                android:textColor="@color/general_text_color" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_arrow_down" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

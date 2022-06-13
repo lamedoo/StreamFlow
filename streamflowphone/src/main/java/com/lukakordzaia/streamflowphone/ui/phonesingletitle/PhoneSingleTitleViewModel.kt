@@ -8,10 +8,14 @@ import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.usecases.*
-import com.lukakordzaia.core.network.*
+import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.ResultDomain
 import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.core.utils.AppConstants
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class PhoneSingleTitleViewModel(
     private val singleTitleUseCase: SingleTitleUseCase,
@@ -173,7 +177,10 @@ class PhoneSingleTitleViewModel(
                 is ResultDomain.Error -> {
                     when (result.exception) {
                         AppConstants.NO_INTERNET_ERROR -> setNoInternet()
-                        else -> newToastMessage("ვერ მოხერხდა დამატება - ${result.exception}")
+                        else -> {
+                            favoriteLoader.value = LoadingState.LOADED
+                            newToastMessage("ვერ მოხერხდა დამატება - ${result.exception}")
+                        }
                     }
                 }
             }
@@ -192,7 +199,10 @@ class PhoneSingleTitleViewModel(
                 is ResultDomain.Error -> {
                     when (result.exception) {
                         AppConstants.NO_INTERNET_ERROR -> setNoInternet()
-                        else -> newToastMessage("ვერ მოხერხდა წაშლა - ${result.exception}")
+                        else -> {
+                            favoriteLoader.value = LoadingState.LOADED
+                            newToastMessage("ვერ მოხერხდა წაშლა - ${result.exception}")
+                        }
                     }
                 }
             }
