@@ -8,6 +8,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:translationZ="0.5dp"
+    android:background="@color/primaryColor"
     app:layout_constraintStart_toStartOf="parent">
 
     <LinearLayout
