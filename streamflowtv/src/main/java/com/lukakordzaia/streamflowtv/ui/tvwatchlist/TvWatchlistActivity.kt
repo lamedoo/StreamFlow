@@ -1,28 +1,21 @@
 package com.lukakordzaia.streamflowtv.ui.tvwatchlist
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.domain.domainmodels.ContinueWatchingModel
 import com.lukakordzaia.core.domain.domainmodels.TvInfoModel
-import com.lukakordzaia.core.utils.applyBundle
-import com.lukakordzaia.core.utils.setDrawableBackground
-import com.lukakordzaia.core.utils.setImage
-import com.lukakordzaia.core.utils.setVisible
+import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
 import com.lukakordzaia.streamflowtv.baseclasses.activities.BaseSidebarFragmentActivity
 import com.lukakordzaia.streamflowtv.databinding.ActivityTvWatchlistBinding
-import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 import com.lukakordzaia.streamflowtv.interfaces.TvHasFavoritesListener
 import com.lukakordzaia.streamflowtv.interfaces.TvIsVerticalFirstRow
+import com.lukakordzaia.streamflowtv.interfaces.TvTitleSelected
 
 class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBinding>(), TvTitleSelected, TvHasFavoritesListener, TvIsVerticalFirstRow {
-    private var hasFavorites = true
     private var isTop = true
     private var type = AppConstants.WATCHLIST_MOVIES
 
@@ -47,12 +40,6 @@ class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBindin
         binding.watchlistMovies.setOnClickListener {
             fragmentType(AppConstants.WATCHLIST_MOVIES)
         }
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (!hasFavorites) {
-                binding.noFavoritesContainer.setVisible()
-            }
-        }, 2500)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -107,7 +94,7 @@ class TvWatchlistActivity: BaseSidebarFragmentActivity<ActivityTvWatchlistBindin
     }
 
     override fun hasFavorites(has: Boolean) {
-        hasFavorites = has
+        binding.noFavoritesContainer.setVisibleOrGone(!has)
     }
 
     fun buttonFocusability(focusable: Boolean) {

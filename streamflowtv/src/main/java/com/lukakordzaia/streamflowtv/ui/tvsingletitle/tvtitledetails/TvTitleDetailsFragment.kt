@@ -45,7 +45,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsNewBinding, 
     }
 
     private var languages: List<String> = emptyList()
-    private var hasFocus: Boolean = false
     private var startedWatching = false
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvTitleDetailsNewBinding
@@ -98,7 +97,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsNewBinding, 
             if (hasFocus) {
                 (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TvRelatedFragment())
             }
-            this.hasFocus = hasFocus
         }
     }
 
@@ -110,6 +108,9 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsNewBinding, 
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner) {
             binding.noFilesContainer.setVisibleOrGone(it)
             binding.buttonsRow.setVisibleOrInvisible(!it)
+
+
+            binding.favoriteContainer.requestFocus()
         }
 
         viewModel.getSingleTitleResponse.observe(viewLifecycleOwner) {

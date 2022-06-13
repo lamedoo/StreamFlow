@@ -35,4 +35,9 @@ class TvSingleTitleButtonView(context: Context, attrs: AttributeSet?) : LinearLa
         title = newTitle
         binding.buttonTitle.text = title
     }
+
+    fun setViewFocusability(isFocusable: Boolean) {
+        binding.root.isFocusable = isFocusable
+        binding.root.isFocusableInTouchMode = isFocusable
+    }
 }
