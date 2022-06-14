@@ -3,17 +3,19 @@
     <item android:state_pressed="true" >
         <shape>
             <solid android:color="@color/accent_color"/>
-            <corners android:radius="5dp"/>
+            <corners android:radius="20dp"/>
         </shape>
     </item>
     <item android:state_pressed="false">
         <shape>
             <gradient
-                android:startColor="#333642"
-                android:endColor="@color/secondary_color"
-                android:angle="90" >
+                android:startColor="@color/secondary_color"
+                android:endColor="@color/accent_color"
+                android:centerColor="@color/accent_color"
+                android:centerY="0.8"
+                android:angle="1" >
             </gradient>
-            <corners android:radius="5dp"/>
+            <corners android:radius="20dp"/>
         </shape>
     </item>
 </selector>

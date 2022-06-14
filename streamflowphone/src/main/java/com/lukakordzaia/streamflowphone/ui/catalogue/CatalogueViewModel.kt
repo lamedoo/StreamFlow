@@ -3,7 +3,6 @@ package com.lukakordzaia.streamflowphone.ui.catalogue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.usecases.AllGenresUseCase
@@ -13,7 +12,11 @@ import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.ResultDomain
 import com.lukakordzaia.core.network.models.imovies.response.categories.GetGenresResponse
 import com.lukakordzaia.core.network.models.imovies.response.categories.GetTopStudiosResponse
-import kotlinx.coroutines.*
+import com.lukakordzaia.core.utils.AppConstants
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class CatalogueViewModel(
     private val topTrailersUseCase: TopTrailersUseCase,
@@ -29,7 +32,11 @@ class CatalogueViewModel(
     private val _topTrailerList = MutableLiveData<List<SingleTitleModel>>()
     val topTrailerList: LiveData<List<SingleTitleModel>> = _topTrailerList
 
+    private val _selectedTab = MutableLiveData<String>()
+    val selectedTab: LiveData<String> = _selectedTab
+
     init {
+        setSelectedTab(CatalogueFragment.GENRES_TAB)
         fetchContent()
     }
 
@@ -85,6 +92,10 @@ class CatalogueViewModel(
                 }
             }
         }
+    }
+
+    fun setSelectedTab(type: String) {
+        _selectedTab.value = type
     }
 
     fun fetchContent() {

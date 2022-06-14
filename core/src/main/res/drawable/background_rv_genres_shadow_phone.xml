@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#031e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+
+
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#051e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+
+
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#081e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#0A1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#0D1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#0F1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#121e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#141e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#171e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#1A1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#1C1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#1F1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#211e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#241e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#261e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#291e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#2B1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#2E1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#301e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#331e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#361e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#381e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#3B1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#3D1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#401e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#421e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#451e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#471e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#4A1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <padding
+                android:left="1dp"
+                android:top="1dp" />
+            <solid
+                android:width="1dp"
+                android:color="#4D1e222e" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+        </shape>
+    </item>
+
+
+    <item>
+        <selector>
+            <item android:state_selected="true">
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+                </shape>
+            </item>
+            <item android:state_pressed="true">
+                <shape android:shape="rectangle">
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+                    <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+            <item android:state_enabled="true">
+                <shape android:shape="rectangle">
+                    <corners android:bottomLeftRadius="10dp"
+                        android:topLeftRadius="500dp"
+                        android:topRightRadius="500dp"/>
+                    <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+</layer-list>

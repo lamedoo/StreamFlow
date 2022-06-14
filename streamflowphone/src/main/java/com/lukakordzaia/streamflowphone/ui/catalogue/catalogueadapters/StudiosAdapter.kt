@@ -1,6 +1,5 @@
 package com.lukakordzaia.streamflowphone.ui.catalogue.catalogueadapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +33,7 @@ class StudiosAdapter(private val onStudiosClick: (studioId: Int, studioName: Str
 
     inner class ViewHolder(val view: RvStudioItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: GetTopStudiosResponse.Data) {
+            view.rvStudioCover.setImage(model.backgroundImage, false)
             view.rvStudioPoster.setImage(model.poster, true)
             view.rvStudioPoster.setOnClickListener {
                 onStudiosClick(model.id, model.name)
