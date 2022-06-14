@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_arrow_left"
-            android:background="@color/transparent"
+            android:background="@drawable/background_button_player"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/player_title"
             app:layout_constraintBottom_toBottomOf="@id/player_title"
@@ -61,7 +61,7 @@
             android:src="@drawable/icon_subtitles_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/transparent"
+            android:background="@drawable/background_button_player"
             app:layout_constraintTop_toTopOf="@id/player_title"
             app:layout_constraintBottom_toBottomOf="@id/player_title"
             app:layout_constraintEnd_toEndOf="parent"/>

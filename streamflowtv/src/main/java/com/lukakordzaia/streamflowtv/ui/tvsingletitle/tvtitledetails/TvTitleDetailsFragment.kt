@@ -108,9 +108,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsNewBinding, 
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner) {
             binding.noFilesContainer.setVisibleOrGone(it)
             binding.buttonsRow.setVisibleOrInvisible(!it)
-
-
-            binding.favoriteContainer.requestFocus()
         }
 
         viewModel.getSingleTitleResponse.observe(viewLifecycleOwner) {
