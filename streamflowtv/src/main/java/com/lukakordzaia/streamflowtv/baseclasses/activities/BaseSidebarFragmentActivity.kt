@@ -1,21 +1,18 @@
 package com.lukakordzaia.streamflowtv.baseclasses.activities
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.leanback.app.RowsSupportFragment
 import androidx.leanback.widget.ListRowPresenter
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
-import com.lukakordzaia.core.utils.AppConstants
-import com.lukakordzaia.core.databinding.DialogSyncDatabaseBinding
 import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.utils.createToast
 import com.lukakordzaia.core.utils.setGone
 import com.lukakordzaia.core.utils.setVisibleOrGone
@@ -59,7 +56,7 @@ abstract class BaseSidebarFragmentActivity<VB : ViewBinding> : BaseFragmentActiv
     }
 
     private fun initObservers() {
-        profileViewModel.generalLoader.observe(this, {
+        profileViewModel.generalLoader.observe(this) {
             when (it) {
                 LoadingState.LOADING -> {}
                 LoadingState.LOADED -> {
@@ -70,7 +67,7 @@ abstract class BaseSidebarFragmentActivity<VB : ViewBinding> : BaseFragmentActiv
                     startActivity(intent)
                 }
             }
-        })
+        }
     }
 
     fun setSidebar(tvSidebar: TvSidebarBinding) {
@@ -166,10 +163,10 @@ abstract class BaseSidebarFragmentActivity<VB : ViewBinding> : BaseFragmentActiv
         sidebar.signOut.setVisibleOrGone(isLoggedIn)
 
         if (isLoggedIn) {
-            profileViewModel.userData.observe(this, {
+            profileViewModel.userData.observe(this) {
                 sidebar.profileUsername.text = getString(R.string.hello_user, it.displayName).uppercase()
                 Glide.with(this).load(it.avatar.large).into(sidebar.profilePhoto)
-            })
+            }
         }
     }
 

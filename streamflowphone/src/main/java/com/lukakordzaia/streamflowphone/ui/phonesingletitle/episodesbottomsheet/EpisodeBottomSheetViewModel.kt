@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.SeasonEpisodesModel
@@ -13,6 +12,7 @@ import com.lukakordzaia.core.domain.usecases.SingleTitleFilesUseCase
 import com.lukakordzaia.core.domain.usecases.SingleTitleUseCase
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.ResultDomain
+import com.lukakordzaia.core.utils.AppConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -29,6 +29,8 @@ class EpisodeBottomSheetViewModel(
 
     private val _continueWatchingDetails = MediatorLiveData<ContinueWatchingRoom?>()
     val continueWatchingDetails: LiveData<ContinueWatchingRoom?> = _continueWatchingDetails
+
+    var chosenEpisode: Int? = null
 
     fun checkAuthDatabase(titleId: Int) {
         if (sharedPreferences.getLoginToken() == "") {

@@ -7,7 +7,6 @@ import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.usecases.WatchlistUseCase
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.network.ResultData
 import com.lukakordzaia.core.network.ResultDomain
 import com.lukakordzaia.core.utils.AppConstants
 import kotlinx.coroutines.launch
@@ -15,7 +14,7 @@ import kotlinx.coroutines.launch
 class TvWatchlistViewModel(
     private val watchlistUseCase: WatchlistUseCase
 ) : BaseViewModel() {
-    val noFavorites = MutableLiveData<Boolean>()
+    val hasFavorites = MutableLiveData<Boolean>()
 
     private val _userWatchlist = MutableLiveData<List<SingleTitleModel>>()
     val userWatchlist: LiveData<List<SingleTitleModel>> = _userWatchlist
@@ -28,7 +27,9 @@ class TvWatchlistViewModel(
                     val data = result.data
 
                     _userWatchlist.value = data
-                    noFavorites.value = data.isNullOrEmpty()
+                    if (page == 1) {
+                        hasFavorites.value = data.isNotEmpty()
+                    }
 
                     setGeneralLoader(LoadingState.LOADED)
                 }

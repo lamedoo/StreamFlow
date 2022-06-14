@@ -5,7 +5,7 @@
     <string name="movie">ფილმი</string>
     <string name="middle_dot">·</string>
     <string name="continue_watching">განაგრძეთ ყურება</string>
-    <string name="watch">ყურება</string>
+    <string name="watch">უყურე</string>
     <string name="trailer">ტრეილერი</string>
     <string name="episodes_and_more">ეპიზოდები და მეტი</string>
     <string name="search">ძიება</string>
@@ -107,4 +107,6 @@
     <string name="authorization_is_successful">ავტორიზაცია განხორციელდა წარმატებით</string>
     <string name="actors">მსახიობები</string>
     <string name="episodes">ეპიზოდები</string>
+    <string name="continue_play">გააგრძელე</string>
+    <string name="save">შენახვა</string>
 </resources>

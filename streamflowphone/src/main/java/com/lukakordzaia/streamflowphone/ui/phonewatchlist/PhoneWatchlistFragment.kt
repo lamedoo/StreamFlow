@@ -38,7 +38,6 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
         fragmentListeners()
         fragmentObservers()
         favMoviesContainer()
-        setButtons(AppConstants.WATCHLIST_MOVIES)
     }
 
     private fun authCheck() {
@@ -87,6 +86,10 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
         viewModel.noFavorites.observe(viewLifecycleOwner) {
             binding.favoriteNoMovies.setVisibleOrGone(it)
         }
+
+        viewModel.selectedTab.observe(viewLifecycleOwner) {
+            setButtons(it)
+        }
     }
 
     private fun favMoviesContainer() {
@@ -123,7 +126,7 @@ class PhoneWatchlistFragment : BaseFragmentPhoneVM<FragmentPhoneWatchlistBinding
 
         page = 1
         viewModel.getUserWatchlist(page, type)
-        setButtons(type)
+        viewModel.setSelectedTab(type)
 
         this.type = type
     }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/movie_day_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:visibility="visible"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/movie_day_cover"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/friends_cover"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:background="@drawable/background_movie_day_phone"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/movie_day_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:maxLines="2"
+        android:textColor="@color/general_text_color"
+        android:textSize="22sp"
+        android:textAlignment="center"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        android:shadowColor="@color/trueBlack"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="3"
+        app:layout_constraintBottom_toTopOf="@id/movie_day_tag"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/title_name" />
+
+    <TextView
+        android:id="@+id/movie_day_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="@font/helvetica_neue_lt_geo_caps_65_medium"
+        android:textSize="15sp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="5dp"
+        android:text="@string/movie_of_the_day"
+        android:textColor="@color/accent_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/movie_day_cover"/>
+
+    <LinearLayout
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/background_movie_day_play_phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/movie_day_name">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_play_general"
+            android:tint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/title_trailer"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/watch"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/helvetica_neue_lt_geo_caps_65_medium"
+            android:textColor="@color/general_text_color"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/movie_day_more"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:padding="8dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/icon_info"
+        android:background="@drawable/background_play_icon"
+        app:layout_constraintTop_toTopOf="@id/play_button"
+        app:layout_constraintBottom_toBottomOf="@id/play_button"
+        app:layout_constraintStart_toEndOf="@id/play_button"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

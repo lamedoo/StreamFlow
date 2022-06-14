@@ -6,11 +6,11 @@
     <color name="green_light">#009b7b</color>
     <color name="green_dark">#009c7c</color>
 
-    <color name="primaryColor">#282A38</color>
-    <color name="secondary_color">#3C3F4D</color>
+    <color name="primaryColor">#1e222e</color>
+    <color name="secondary_color">#2b2f3b</color>
     <color name="general_text_color">#cdcdd1</color>
     <color name="secondary_text_color">#F1F1F1</color>
-    <color name="accent_color">#FFB700</color>
+    <color name="accent_color">#9073ee</color>
     <color name="text_on_accent_color">@color/white</color>
 
     <color name="transparent">@android:color/transparent</color>

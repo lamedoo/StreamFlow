@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@drawable/background_single_titles_details_phone"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/title_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/general_text_color"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:text="@string/default_data"
+        android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="ფილმის სახელი"/>
+
+    <TextView
+        android:id="@+id/title_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        tools:text="აღწერა ვერ მოიძებნა"
+        android:textAlignment="center"
+        android:textColor="@color/general_text_color"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_name"/>
+
+    <TextView
+        android:id="@+id/title_director_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/director"
+        android:textColor="@color/secondary_text_color"
+        android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_description"/>
+
+    <TextView
+        android:id="@+id/title_director"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        tools:text="N/A"
+        android:textColor="@color/general_text_color"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        app:layout_constraintTop_toBottomOf="@id/title_director_header"
+        app:layout_constraintStart_toStartOf="@id/title_director_header"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/title_genre_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/genre"
+        android:textColor="@color/secondary_text_color"
+        android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/title_director"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/title_genre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        tools:text="კომედია, ტრაგედია, ეროტიკა"
+        android:textColor="@color/general_text_color"
+        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
+        app:layout_constraintTop_toBottomOf="@id/title_genre_header"
+        app:layout_constraintStart_toStartOf="@id/title_genre_header"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

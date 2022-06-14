@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,10 @@ import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
 import com.lukakordzaia.core.utils.*
 import com.lukakordzaia.streamflowtv.R
-import com.lukakordzaia.streamflowtv.databinding.FragmentTvTitleDetailsBinding
+import com.lukakordzaia.streamflowtv.databinding.FragmentTvTitleDetailsNewBinding
 import com.lukakordzaia.streamflowtv.ui.login.TvLoginActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.TvSingleTitleActivity
 import com.lukakordzaia.streamflowtv.ui.tvsingletitle.tvepisodes.TvEpisodesActivity
@@ -29,7 +31,7 @@ import com.lukakordzaia.streamflowtv.ui.tvvideoplayer.TvVideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvTitleDetailsViewModel>() {
+class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsNewBinding, TvTitleDetailsViewModel>() {
     private var titleId: Int = 0
     private var isTvShow: Boolean = false
     private var fromWatchlist: Int? = null
@@ -38,15 +40,15 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
     override val viewModel by viewModel<TvTitleDetailsViewModel>()
     override val reload: () -> Unit = {
         viewModel.getSingleTitleData(titleId)
+        viewModel.getTitleDirector(titleId)
         viewModel.getAvailableLanguages(titleId)
     }
 
     private var languages: List<String> = emptyList()
-    private var hasFocus: Boolean = false
     private var startedWatching = false
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvTitleDetailsBinding
-        get() = FragmentTvTitleDetailsBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTvTitleDetailsNewBinding
+        get() = FragmentTvTitleDetailsNewBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,6 +72,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
     private fun callData() {
         viewModel.getSingleTitleData(titleId)
+        viewModel.getTitleDirector(titleId)
         viewModel.getAvailableLanguages(titleId)
     }
 
@@ -94,7 +97,6 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
             if (hasFocus) {
                 (requireActivity() as TvSingleTitleActivity).setCurrentFragment(TvRelatedFragment())
             }
-            this.hasFocus = hasFocus
         }
     }
 
@@ -110,6 +112,10 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
 
         viewModel.getSingleTitleResponse.observe(viewLifecycleOwner) {
             setTitleInfo(it)
+        }
+
+        viewModel.titleDirector.observe(viewLifecycleOwner) {
+            setTitleDirector(it)
         }
 
         viewModel.favoriteLoader.observe(viewLifecycleOwner) {
@@ -177,8 +183,14 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         binding.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
         binding.titleDescription.text = info.description
 
+        binding.titleGenre.text = info.genres?.let { TextUtils.join(", ", it) }
+
         info.visibility?.let { binding.deleteButton.setVisibleOrGone(it) }
         binding.episodesButton.setVisibleOrGone(info.isTvShow)
+    }
+
+    private fun setTitleDirector(director: GetSingleTitleCastResponse.Data) {
+        binding.titleDirector.text = director.originalName
     }
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
@@ -190,6 +202,7 @@ class TvTitleDetailsFragment : BaseFragmentVM<FragmentTvTitleDetailsBinding, TvT
         }
 
         if (info != null) {
+            binding.playButton.setNewTitle(getString(R.string.continue_play))
             binding.continueWatchingSeekBar.max = info.titleDuration.toInt()
             binding.continueWatchingSeekBar.progress = info.watchedDuration.toInt()
 

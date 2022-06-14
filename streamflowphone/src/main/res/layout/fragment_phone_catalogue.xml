@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/fragment_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,45 +42,52 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.lukakordzaia.streamflowphone.customviews.CPhoneHeaderView
-                    android:id="@+id/genres_header"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/genres"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="35dp"
-                    app:title="@string/genres"
-                    app:arrow_visibility="false"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_trailers" />
+                    android:text="@string/genres"
+                    android:textSize="25sp"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/secondary_color"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_75_bold"
+                    app:layout_constraintTop_toBottomOf="@id/rv_trailers"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/studios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/studios"
+                    android:textSize="25sp"
+                    android:textColor="@color/secondary_color"
+                    android:fontFamily="@font/helvetica_neue_lt_geo_75_bold"
+                    app:layout_constraintTop_toTopOf="@id/genres"
+                    app:layout_constraintStart_toEndOf="@id/genres"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_genres"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
                     android:layout_marginTop="15dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/genres_header" />
-
-                <com.lukakordzaia.streamflowphone.customviews.CPhoneHeaderView
-                    android:id="@+id/studios_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="35dp"
-                    app:title="@string/studios"
-                    app:arrow_visibility="false"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_genres" />
+                    android:clipToPadding="false"
+                    android:paddingBottom="100dp"
+                    app:layout_constraintTop_toBottomOf="@id/genres" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_studios"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/studios_header" />
+                    android:clipToPadding="false"
+                    android:paddingBottom="100dp"
+                    app:layout_constraintTop_toBottomOf="@id/genres" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

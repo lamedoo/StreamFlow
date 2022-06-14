@@ -3,7 +3,7 @@
     android:id="@+id/tv_default_card_root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_episodes_card_tv"
+    android:background="@drawable/background_similar_card_tv"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -11,6 +11,7 @@
         android:id="@+id/card_poster"
         android:layout_width="130dp"
         android:layout_height="180dp"
+        android:padding="2dp"
         android:scaleType="fitXY"
         tools:src="@drawable/friends_poster"
         app:layout_constraintTop_toTopOf="parent"

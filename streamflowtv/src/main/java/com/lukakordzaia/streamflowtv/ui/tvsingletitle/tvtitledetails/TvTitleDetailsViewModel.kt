@@ -4,18 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lukakordzaia.core.utils.AppConstants
 import com.lukakordzaia.core.baseclasses.BaseViewModel
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.usecases.*
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.ResultDomain
+import com.lukakordzaia.core.network.models.imovies.response.singletitle.GetSingleTitleCastResponse
+import com.lukakordzaia.core.utils.AppConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TvTitleDetailsViewModel(
     private val singleTitleUseCase: SingleTitleUseCase,
+    private val singleTitleCastUseCase: SingleTitleCastUseCase,
     private val singleTitleFilesUseCase: SingleTitleFilesUseCase,
     private val addWatchlistUseCase: AddWatchlistUseCase,
     private val deleteWatchlistUseCase: DeleteWatchlistUseCase,
@@ -25,6 +27,9 @@ class TvTitleDetailsViewModel(
 ) : BaseViewModel() {
     val hideContinueWatchingLoader = MutableLiveData<LoadingState>()
     val favoriteLoader = MutableLiveData<LoadingState>()
+
+    private val _titleDirector = MutableLiveData<GetSingleTitleCastResponse.Data>()
+    val titleDirector: LiveData<GetSingleTitleCastResponse.Data> = _titleDirector
 
     private val _singleTitleData = MutableLiveData<SingleTitleModel>()
     val getSingleTitleResponse: LiveData<SingleTitleModel> = _singleTitleData
@@ -41,12 +46,7 @@ class TvTitleDetailsViewModel(
     private val _addToFavorites = MutableLiveData<Boolean>()
     val addToFavorites: LiveData<Boolean> = _addToFavorites
 
-    private val _titleGenres = MutableLiveData<List<String>>()
-    val titleGenres: LiveData<List<String>> = _titleGenres
-    private val fetchTitleGenres: MutableList<String> = ArrayList()
-
     fun getSingleTitleData(titleId: Int) {
-        fetchTitleGenres.clear()
         viewModelScope.launch {
             setGeneralLoader(LoadingState.LOADING)
             when (val result = singleTitleUseCase.invoke(titleId)) {
@@ -56,15 +56,32 @@ class TvTitleDetailsViewModel(
 
                     setGeneralLoader(LoadingState.LOADED)
 
-                    data.genres?.let { fetchTitleGenres.addAll(it) }
-                    _titleGenres.postValue(fetchTitleGenres)
-
                     _addToFavorites.postValue(data.watchlist ?: false)
                 }
                 is ResultDomain.Error -> {
                     when (result.exception) {
                         AppConstants.NO_INTERNET_ERROR -> setNoInternet()
                         else -> newToastMessage("ინფორმაცია - ${result.exception}")
+                    }
+                }
+            }
+        }
+    }
+
+    fun getTitleDirector(titleId: Int) {
+        viewModelScope.launch {
+            when (val result = singleTitleCastUseCase.invoke(Pair(titleId, "director"))) {
+                is ResultDomain.Success -> {
+                    val data = result.data.data
+
+                    if (data.isNotEmpty()) {
+                        _titleDirector.postValue(data[0])
+                    }
+                }
+                is ResultDomain.Error -> {
+                    when (result.exception) {
+                        AppConstants.NO_INTERNET_ERROR -> {}
+                        else -> newToastMessage("რეჟისორი - ${result.exception}")
                     }
                 }
             }
@@ -178,7 +195,10 @@ class TvTitleDetailsViewModel(
                 is ResultDomain.Error -> {
                     when (result.exception) {
                         AppConstants.NO_INTERNET_ERROR -> setNoInternet()
-                        else -> newToastMessage("ვერ მოხერხდა დამატება - ${result.exception}")
+                        else -> {
+                            favoriteLoader.value = LoadingState.LOADED
+                            newToastMessage("ვერ მოხერხდა დამატება - ${result.exception}")
+                        }
                     }
                 }
             }
@@ -202,7 +222,10 @@ class TvTitleDetailsViewModel(
                 is ResultDomain.Error -> {
                     when (result.exception) {
                         AppConstants.NO_INTERNET_ERROR -> setNoInternet()
-                        else -> newToastMessage("ვერ მოხერხდა წაშლა - ${result.exception}")
+                        else -> {
+                            favoriteLoader.value = LoadingState.LOADED
+                            newToastMessage("ვერ მოხერხდა წაშლა - ${result.exception}")
+                        }
                     }
                 }
             }

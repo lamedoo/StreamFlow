@@ -66,7 +66,7 @@ class TvMainViewModel(
     }
 
     fun checkGithubReleases(currentVersion: String) {
-        if (BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             viewModelScope.launch(Dispatchers.IO) {
                 when (val result = githubReleasesUseCase.invoke()) {
                     is ResultDomain.Success -> {

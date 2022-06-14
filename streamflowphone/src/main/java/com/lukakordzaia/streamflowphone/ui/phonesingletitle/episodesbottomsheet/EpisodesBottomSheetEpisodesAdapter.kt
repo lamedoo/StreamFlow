@@ -14,14 +14,14 @@ class EpisodesBottomSheetEpisodesAdapter(
     private val onChosenEpisode: (position: Int) -> Unit
 ) : RecyclerView.Adapter<EpisodesBottomSheetEpisodesAdapter.ViewHolder>() {
     private var list: List<SeasonEpisodesModel> = ArrayList()
-    private var chosenEpisode: Int = -1
+    private var chosenEpisode: Int? = null
 
     fun setEpisodeList(list: List<SeasonEpisodesModel>) {
         this.list = list
         notifyDataSetChanged()
     }
 
-    fun setChosenEpisode(episodeId: Int) {
+    fun setChosenEpisode(episodeId: Int? = null) {
         chosenEpisode = episodeId
         notifyDataSetChanged()
     }
@@ -44,9 +44,12 @@ class EpisodesBottomSheetEpisodesAdapter(
 
     inner class ViewHolder(val view: RvChooseDetailsEpisodesItemBinding) : RecyclerView.ViewHolder(view.root) {
         fun bind(model: SeasonEpisodesModel, position: Int) {
-            val isChosen = position == chosenEpisode - 1
+            var isChosen = false
 
-            onChosenEpisode(chosenEpisode)
+            chosenEpisode?.let {
+                isChosen = position == it - 1
+                onChosenEpisode(it)
+            }
 
             view.currentIndicator.setVisibleOrGone(isChosen)
 

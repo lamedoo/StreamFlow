@@ -45,6 +45,7 @@ abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTv
         observeTitleDetails(info)
 
         if (continueWatchingDetails != null) {
+            binding.titleInfo.continueHeader.setVisible()
             binding.titleInfo.continueWatchingSeekBar.setVisible()
             binding.titleInfo.continueWatchingSeason.setVisible()
 
@@ -57,6 +58,7 @@ abstract class BaseInfoFragmentActivity : BaseSidebarFragmentActivity<ActivityTv
             binding.titleInfo.continueWatchingSeekBar.max = continueWatchingDetails.titleDuration.toInt()
             binding.titleInfo.continueWatchingSeekBar.progress = continueWatchingDetails.watchedDuration.toInt()
         } else {
+            binding.titleInfo.continueHeader.setGone()
             binding.titleInfo.continueWatchingSeason.setGone()
             binding.titleInfo.continueWatchingSeekBar.setGone()
         }

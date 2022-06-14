@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
+import com.lukakordzaia.core.utils.setColor
 import com.lukakordzaia.core.utils.setGone
+import com.lukakordzaia.core.utils.setVisible
 import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneCatalogueBinding
@@ -37,8 +40,19 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        fragmentListeners()
         fragmentSetUi()
         fragmentObservers()
+    }
+
+    private fun fragmentListeners() {
+        binding.genres.setOnClickListener {
+            viewModel.setSelectedTab(GENRES_TAB)
+        }
+
+        binding.studios.setOnClickListener {
+            viewModel.setSelectedTab(STUDIOS_TAB)
+        }
     }
 
     private fun fragmentSetUi() {
@@ -64,6 +78,10 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
 
         viewModel.topGetTopStudiosResponse.observe(viewLifecycleOwner) {
             studiosAdapter.setStudioList(it)
+        }
+
+        viewModel.selectedTab.observe(viewLifecycleOwner) {
+            setButtons(it)
         }
     }
 
@@ -91,21 +109,36 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
     }
 
     private fun genresContainer() {
-        val genreLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        genresAdapter = GenresAdapter() { genreId: Int, genreName: String ->
+        genresAdapter = GenresAdapter { genreId: Int, genreName: String ->
             viewModel.onSingleGenrePressed(genreId, genreName)
         }
-        binding.rvGenres.layoutManager = genreLayout
+        binding.rvGenres.layoutManager = LinearLayoutManager(requireContext())
         binding.rvGenres.adapter = genresAdapter
     }
 
     private fun studiosContainer() {
-        val studioLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
-        studiosAdapter = StudiosAdapter() { studioId: Int, studioName: String ->
+        studiosAdapter = StudiosAdapter { studioId: Int, studioName: String ->
             viewModel.onSingleStudioPressed(studioId, studioName)
         }
-        binding.rvStudios.layoutManager = studioLayout
+        binding.rvStudios.layoutManager = LinearLayoutManager(requireContext())
         binding.rvStudios.adapter = studiosAdapter
+    }
+
+    private fun setButtons(type: String) {
+        when (type) {
+            GENRES_TAB -> {
+                binding.genres.setColor(R.color.accent_color)
+                binding.studios.setColor(R.color.secondary_color)
+                binding.rvGenres.setVisible()
+                binding.rvStudios.setGone()
+            }
+            STUDIOS_TAB -> {
+                binding.genres.setColor(R.color.secondary_color)
+                binding.studios.setColor(R.color.accent_color)
+                binding.rvGenres.setGone()
+                binding.rvStudios.setVisible()
+            }
+        }
     }
 
     private fun startVideoPlayer(titleId: Int, trailerUrl: String?) {
@@ -134,5 +167,10 @@ class CatalogueFragment : BaseFragmentPhoneVM<FragmentPhoneCatalogueBinding, Cat
             rvTrailers.adapter = null
         }
         super.onDestroyView()
+    }
+
+    companion object {
+        const val GENRES_TAB = "genres"
+        const val STUDIOS_TAB = "studios"
     }
 }

@@ -25,6 +25,13 @@ class WatchlistViewModel(
     private val _hasMorePage = MutableLiveData(true)
     val hasMorePage: LiveData<Boolean> = _hasMorePage
 
+    private val _selectedTab = MutableLiveData<String>()
+    val selectedTab: LiveData<String> = _selectedTab
+
+    init {
+        setSelectedTab(AppConstants.WATCHLIST_MOVIES)
+    }
+
     fun onSingleTitlePressed(titleId: Int) {
         navigateToNewFragment(PhoneWatchlistFragmentDirections.actionFavoritesFragmentToSingleTitleFragmentNav(titleId))
     }
@@ -79,5 +86,9 @@ class WatchlistViewModel(
     fun clearWatchlist() {
         fetchUserWatchlist.clear()
         _userWatchlist.value = fetchUserWatchlist
+    }
+
+    fun setSelectedTab(type: String) {
+        _selectedTab.value = type
     }
 }
