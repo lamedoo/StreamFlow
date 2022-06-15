@@ -23,6 +23,8 @@ class ProfileViewModel(
     private val userDataUseCase: UserDataUseCase,
     private val dbDeleteAllContinueWatchingUseCase: DbDeleteAllContinueWatchingUseCase
 ) : BaseViewModel() {
+    val loginLoader = MutableLiveData(LoadingState.LOADED)
+
     private val _userData = MutableLiveData<GetUserDataResponse.Data>()
     val userData: LiveData<GetUserDataResponse.Data> = _userData
 
@@ -31,23 +33,30 @@ class ProfileViewModel(
     }
 
     fun userLogin(loginBody: PostLoginBody) {
+        loginLoader.postValue(LoadingState.LOADING)
         setGeneralLoader(LoadingState.LOADING)
-        viewModelScope.launch {
-            when (val result = userLoginUseCase.invoke(loginBody)) {
-                is ResultDomain.Success -> {
-                    val data = result.data
+        if (loginBody.username.isNullOrEmpty() || loginBody.password.isNullOrEmpty()) {
+            newToastMessage("გთხოვთ შეიყვანოთ სახელი და პაროლი")
+        } else {
+            viewModelScope.launch {
+                when (val result = userLoginUseCase.invoke(loginBody)) {
+                    is ResultDomain.Success -> {
+                        val data = result.data
 
-                    sharedPreferences.saveLoginToken(data.accessToken)
-                    sharedPreferences.saveLoginRefreshToken(data.refreshToken)
-                    sharedPreferences.saveUsername(loginBody.username)
-                    sharedPreferences.savePassword(loginBody.password)
+                        sharedPreferences.saveLoginToken(data.accessToken)
+                        sharedPreferences.saveLoginRefreshToken(data.refreshToken)
+                        sharedPreferences.saveUsername(loginBody.username!!)
+                        sharedPreferences.savePassword(loginBody.password!!)
 
-                    setGeneralLoader(LoadingState.LOADED)
-                }
-                is ResultDomain.Error -> {
-                    when (result.exception) {
-                        AppConstants.NO_INTERNET_ERROR -> setNoInternet()
-                        else -> newToastMessage("დაფიქსირდა გარკვეული შეცდომა, გთხოვთ სცადოთ თავიდან")
+                        loginLoader.postValue(LoadingState.LOADED)
+                        setGeneralLoader(LoadingState.LOADED)
+                    }
+                    is ResultDomain.Error -> {
+                        loginLoader.postValue(LoadingState.ERROR)
+                        when (result.exception) {
+                            AppConstants.NO_INTERNET_ERROR -> setNoInternet()
+                            else -> newToastMessage("დაფიქსირდა გარკვეული შეცდომა, გთხოვთ სცადოთ თავიდან")
+                        }
                     }
                 }
             }

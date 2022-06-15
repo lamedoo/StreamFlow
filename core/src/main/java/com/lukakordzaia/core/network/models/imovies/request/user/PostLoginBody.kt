@@ -8,9 +8,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class PostLoginBody(
     @SerializedName("password")
-    val password: String,
+    val password: String?,
     @SerializedName("username")
-    val username: String,
+    val username: String?,
     @SerializedName("client_id")
     val clientId: Int = 3,
     @SerializedName("grant_type")
