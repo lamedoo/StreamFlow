@@ -54,23 +54,19 @@ class TvLoginFragment: BaseFragmentVM<FragmentTvLoginBinding, TvProfileViewModel
             clearFocus(binding.usernameInput)
             clearFocus(binding.passwordInput)
 
-            if (!binding.usernameInput.text.isNullOrEmpty() && !binding.passwordInput.text.isNullOrEmpty()) {
-                viewModel.userLogin(
-                    PostLoginBody(
-                    binding.passwordInput.text.toString(),
-                    binding.usernameInput.text.toString()
-                )
-                )
-            }
+            viewModel.userLogin(PostLoginBody(
+                binding.passwordInput.text.toString(),
+                binding.usernameInput.text.toString()
+            ))
         }
     }
 
     private fun fragmentObservers() {
-        viewModel.loginLoader.observe(viewLifecycleOwner, {
+        viewModel.loginLoader.observe(viewLifecycleOwner) {
             binding.loginLoader.setVisibleOrGone(it == LoadingState.LOADING)
-        })
+        }
 
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             when (it) {
                 LoadingState.LOADING -> {
                 }
@@ -84,7 +80,7 @@ class TvLoginFragment: BaseFragmentVM<FragmentTvLoginBinding, TvProfileViewModel
                     requireActivity().finish()
                 }
             }
-        })
+        }
     }
 
     private fun onEditorActionListener(view: EditText) {

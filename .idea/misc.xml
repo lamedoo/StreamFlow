@@ -99,6 +99,8 @@
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/tv_details_season_item.xml" value="0.3625" />
         <entry key="..\:/Users/testa/StudioProjects/StreamFlow/streamflowtv/src/main/res/layout/tv_sidebar.xml" value="0.3625" />
         <entry key="core/src/main/res/drawable/background_alert_dialog.xml" value="0.1665" />
+        <entry key="core/src/main/res/drawable/background_bottom_nav.xml" value="0.247" />
+        <entry key="core/src/main/res/drawable/background_button.xml" value="0.247" />
         <entry key="core/src/main/res/drawable/background_button_favorite_tv.xml" value="0.2285" />
         <entry key="core/src/main/res/drawable/background_button_phone.xml" value="0.2285" />
         <entry key="core/src/main/res/drawable/background_button_player.xml" value="0.3105" />
@@ -111,6 +113,7 @@
         <entry key="core/src/main/res/drawable/background_play_icon.xml" value="0.2285" />
         <entry key="core/src/main/res/drawable/background_play_icon_round_phone.xml" value="0.157" />
         <entry key="core/src/main/res/drawable/background_play_icon_round_tv.xml" value="0.2285" />
+        <entry key="core/src/main/res/drawable/background_profile_tabs_phone.xml" value="0.2635" />
         <entry key="core/src/main/res/drawable/background_rv_continue_watching.xml" value="0.214" />
         <entry key="core/src/main/res/drawable/background_rv_genres_phone.xml" value="0.2285" />
         <entry key="core/src/main/res/drawable/background_rv_genres_shadow_phone.xml" value="0.23" />
@@ -125,12 +128,16 @@
         <entry key="core/src/main/res/drawable/background_top_title_cover_tv.xml" value="0.2835" />
         <entry key="core/src/main/res/drawable/background_watched_card_view.xml" value="0.156" />
         <entry key="core/src/main/res/drawable/icon_play_general.xml" value="0.2285" />
+        <entry key="core/src/main/res/drawable/logo_imovies.xml" value="0.181" />
+        <entry key="core/src/main/res/drawable/logo_streamflow_mini.xml" value="0.247" />
         <entry key="core/src/main/res/layout/dialog_download_release.xml" value="0.3282051282051282" />
         <entry key="core/src/main/res/layout/dialog_general_alert.xml" value="0.4036458333333333" />
         <entry key="core/src/main/res/xml/file_paths.xml" value="0.33229166666666665" />
+        <entry key="streamflowphone/src/main/res/layout/activity_main.xml" value="0.2736212056434374" />
         <entry key="streamflowphone/src/main/res/layout/fragment_phone_catalogue.xml" value="0.3333333333333333" />
         <entry key="streamflowphone/src/main/res/layout/fragment_phone_home.xml" value="0.25" />
-        <entry key="streamflowphone/src/main/res/layout/fragment_phone_profile.xml" value="0.3333333333333333" />
+        <entry key="streamflowphone/src/main/res/layout/fragment_phone_login.xml" value="0.27276613937580163" />
+        <entry key="streamflowphone/src/main/res/layout/fragment_phone_profile.xml" value="0.25" />
         <entry key="streamflowphone/src/main/res/layout/fragment_phone_single_title.xml" value="0.335" />
         <entry key="streamflowphone/src/main/res/layout/fragment_phone_single_title_new.xml" value="0.3333333333333333" />
         <entry key="streamflowphone/src/main/res/layout/fragment_phone_video_player.xml" value="0.33161290322580644" />
@@ -139,6 +146,7 @@
         <entry key="streamflowphone/src/main/res/layout/main_top_toolbar.xml" value="0.3333333333333333" />
         <entry key="streamflowphone/src/main/res/layout/phone_exoplayer_controller_layout.xml" value="0.3333333333333333" />
         <entry key="streamflowphone/src/main/res/layout/phone_movie_day_container.xml" value="0.3333333333333333" />
+        <entry key="streamflowphone/src/main/res/layout/phone_profile_item.xml" value="0.27191107310816587" />
         <entry key="streamflowphone/src/main/res/layout/phone_single_title_cast_similar.xml" value="0.3333333333333333" />
         <entry key="streamflowphone/src/main/res/layout/phone_single_title_description.xml" value="0.33229166666666665" />
         <entry key="streamflowphone/src/main/res/layout/phone_single_title_details.xml" value="0.3333333333333333" />
@@ -147,11 +155,15 @@
         <entry key="streamflowphone/src/main/res/layout/rv_genre_item.xml" value="0.2736212056434374" />
         <entry key="streamflowphone/src/main/res/layout/rv_home_item.xml" value="0.37604166666666666" />
         <entry key="streamflowphone/src/main/res/layout/rv_studio_item.xml" value="0.3333333333333333" />
+        <entry key="streamflowphone/src/main/res/menu/bottom_navigation_menu.xml" value="0.2736212056434374" />
+        <entry key="streamflowphone/src/main/res/menu/watched_menu.xml" value="0.2736212056434374" />
         <entry key="streamflowphone/src/main/res/xml/file_paths.xml" value="0.3333333333333333" />
         <entry key="streamflowtv/src/main/res/layout/activity_tv_base.xml" value="0.25" />
+        <entry key="streamflowtv/src/main/res/layout/activity_tv_login.xml" value="0.21666666666666667" />
         <entry key="streamflowtv/src/main/res/layout/activity_tv_search.xml" value="0.19630192502532928" />
         <entry key="streamflowtv/src/main/res/layout/activity_tv_watchlist.xml" value="0.1947463768115942" />
         <entry key="streamflowtv/src/main/res/layout/fragment_tv_episodes.xml" value="0.25" />
+        <entry key="streamflowtv/src/main/res/layout/fragment_tv_login.xml" value="0.2515625" />
         <entry key="streamflowtv/src/main/res/layout/fragment_tv_title_details.xml" value="0.30052083333333335" />
         <entry key="streamflowtv/src/main/res/layout/fragment_tv_title_details_new.xml" value="0.335" />
         <entry key="streamflowtv/src/main/res/layout/fragment_tv_video_player.xml" value="0.4036458333333333" />
