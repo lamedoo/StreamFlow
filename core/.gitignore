@@ -1,1 +1,6 @@
 /build
+.idea
+!.idea/
+.idea/*
+!/.idea/codeStyles/
+*.iml

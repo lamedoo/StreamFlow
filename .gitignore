@@ -14,3 +14,7 @@
 .cxx
 local.properties
 /app/release/
+.idea
+!.idea/
+.idea/*
+!/.idea/codeStyles/

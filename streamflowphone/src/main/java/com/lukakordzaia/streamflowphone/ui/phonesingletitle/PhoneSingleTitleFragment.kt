@@ -12,23 +12,24 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.appbar.AppBarLayout
 import com.lukakordzaia.core.adapters.ChooseLanguageAdapter
 import com.lukakordzaia.core.database.continuewatchingdb.ContinueWatchingRoom
 import com.lukakordzaia.core.databinding.DialogChooseLanguageBinding
 import com.lukakordzaia.core.domain.domainmodels.SingleTitleModel
 import com.lukakordzaia.core.domain.domainmodels.VideoPlayerData
 import com.lukakordzaia.core.network.LoadingState
-import com.lukakordzaia.core.utils.*
+import com.lukakordzaia.core.utils.setImage
+import com.lukakordzaia.core.utils.setVisible
+import com.lukakordzaia.core.utils.setVisibleOrGone
+import com.lukakordzaia.core.utils.titlePosition
 import com.lukakordzaia.streamflowphone.R
-import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneSingleTitleNewBinding
+import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneSingleTitleOldBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseFragmentPhoneVM
 import com.lukakordzaia.streamflowphone.ui.videoplayer.VideoPlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
-import kotlin.math.abs
 
-class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNewBinding, PhoneSingleTitleViewModel>() {
+class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleOldBinding, PhoneSingleTitleViewModel>() {
     private val args: PhoneSingleTitleFragmentArgs by navArgs()
 
     override val viewModel by viewModel<PhoneSingleTitleViewModel>()
@@ -39,8 +40,8 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNew
     private lateinit var phoneSingleTitleCastAdapter: PhoneSingleTitleCastAdapter
     private lateinit var phoneSingleTitleRelatedAdapter: PhoneSingleTitleRelatedAdapter
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleNewBinding
-        get() = FragmentPhoneSingleTitleNewBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPhoneSingleTitleOldBinding
+        get() = FragmentPhoneSingleTitleOldBinding::inflate
 
     private var languages: List<String> = emptyList()
 
@@ -58,7 +59,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNew
     }
 
     private fun fragmentSetUi() {
-        binding.singleTitleAppbar.setExpanded(true)
+//        binding.singleTitleAppbar.setExpanded(true)
         castContainer()
         relatedContainer()
     }
@@ -67,73 +68,6 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNew
         binding.playButton.setOnClickListener {
             languagePickerDialog()
         }
-
-        binding.playButtonBottom.setOnClickListener {
-            binding.playButton.callOnClick()
-        }
-
-        binding.episodesButtonBottom.setOnClickListener {
-            binding.episodesButton.callOnClick()
-        }
-
-        binding.replayButtonBottom.setOnClickListener {
-            binding.replayButton.callOnClick()
-        }
-
-        binding.singleTitleAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appbar, verticalOffset ->
-            var offsetPercent = 0F
-            var playButtonAlpha = 0F
-
-            try {
-                offsetPercent = (abs(verticalOffset).toFloat() * 100F) / (appbar.totalScrollRange.toFloat())
-                playButtonAlpha = 1F - ((offsetPercent) / 80F)
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-
-            val playButtonBottomAlpha = if (offsetPercent >= 80F) {
-                (-4F) + ((offsetPercent) / 20F)
-            } else {
-                0F
-            }
-
-            if (abs(verticalOffset) == binding.singleTitleAppbar.totalScrollRange) {
-                binding.singleTitleDetailsScroll.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.primaryColor
-                    )
-                )
-            } else {
-                binding.singleTitleDetailsScroll.setDrawableBackground(R.drawable.background_single_title_cover_phone)
-            }
-
-            if (abs(verticalOffset) == appbar.totalScrollRange) {
-                binding.playButton.alpha = 0F
-                binding.replayButton.alpha = 0F
-                binding.continueWatchingInfo.alpha = 0F
-                binding.continueWatchingSeekBar.alpha = 0F
-                binding.playButtonBottomContainer.alpha = 1F
-                binding.episodesButton.apply {
-                    if (titleInfo.isTvShow) {
-                        alpha = 0F
-                        isClickable = false
-                    }
-                }
-            } else {
-                binding.playButton.alpha = playButtonAlpha
-                binding.replayButton.alpha = playButtonAlpha
-                binding.continueWatchingInfo.alpha = playButtonAlpha
-                binding.continueWatchingSeekBar.alpha = playButtonAlpha
-                binding.playButtonBottomContainer.alpha = playButtonBottomAlpha
-                binding.episodesButton.apply {
-                    if (titleInfo.isTvShow) {
-                        alpha = playButtonAlpha
-                        isClickable = true
-                    }
-                }
-            }
-        })
 
         binding.singleTitleBackButton.setOnClickListener {
             requireActivity().onBackPressed()
@@ -190,7 +124,6 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNew
 
         viewModel.movieNotYetAdded.observe(viewLifecycleOwner) {
             binding.playButton.setVisibleOrGone(!it)
-            binding.playButtonBottom.setVisibleOrGone(!it)
             binding.noFilesContainer.setVisibleOrGone(it)
         }
     }
@@ -226,7 +159,6 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNew
         binding.infoDetails.duration.text = if (info.isTvShow) getString(R.string.season_number, info.seasonNum.toString()) else info.duration
 
         binding.episodesButton.setVisibleOrGone(info.isTvShow)
-        binding.episodesButtonBottom.setVisibleOrGone(info.isTvShow)
         if (info.isTvShow) {
             binding.episodesButton.setOnClickListener {
                 viewModel.onEpisodesPressed(info.id, info.displayName!!, info.seasonNum!!)
@@ -236,13 +168,10 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNew
 
     private fun checkContinueWatching(info: ContinueWatchingRoom?) {
         binding.continueWatchingSeekBar.setVisibleOrGone(info != null)
-        binding.continueWatchingSeekBarBottom.setVisibleOrGone(info != null)
 
         if (info != null) {
             binding.continueWatchingSeekBar.max = info.titleDuration.toInt()
             binding.continueWatchingSeekBar.progress = info.watchedDuration.toInt()
-            binding.continueWatchingSeekBarBottom.max = info.titleDuration.toInt()
-            binding.continueWatchingSeekBarBottom.progress = info.watchedDuration.toInt()
 
             val time = if (info.isTvShow) {
                 info.watchedDuration.titlePosition(info.season, info.episode)
@@ -250,11 +179,9 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNew
                 info.watchedDuration.titlePosition(null, null)
             }
             binding.continueWatchingInfo.text = time
-            binding.continueWatchingInfoBottom.text = time
 
             if (!info.isTvShow) {
                 binding.replayButton.setVisible()
-                binding.replayButtonBottom.setVisible()
             }
 
             binding.playButton.setOnClickListener {
@@ -273,7 +200,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNew
     }
 
     private fun castContainer() {
-        val castLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        val castLayout = GridLayoutManager(requireActivity(), 2, GridLayoutManager.HORIZONTAL, false)
         phoneSingleTitleCastAdapter = PhoneSingleTitleCastAdapter {
             viewModel.newToastMessage(it)
         }
@@ -282,7 +209,7 @@ class PhoneSingleTitleFragment : BaseFragmentPhoneVM<FragmentPhoneSingleTitleNew
     }
 
     private fun relatedContainer() {
-        val relatedLayout = GridLayoutManager(requireActivity(), 1, GridLayoutManager.HORIZONTAL, false)
+        val relatedLayout = GridLayoutManager(requireActivity(), 2, GridLayoutManager.HORIZONTAL, false)
         phoneSingleTitleRelatedAdapter = PhoneSingleTitleRelatedAdapter {
             viewModel.onRelatedTitlePressed(it)
         }

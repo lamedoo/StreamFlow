@@ -37,20 +37,17 @@
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="100dp"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                    android:minHeight="75dp"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    android:background="@drawable/background_single_title_cover_phone_new">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/single_title_cover"
                         android:layout_width="match_parent"
                         android:layout_height="450dp"
                         android:scaleType="centerCrop"
-                        tools:src="@drawable/friends_cover" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/background_single_title_cover_phone"/>
+                        tools:src="@drawable/friends_cover"
+                        app:shapeAppearanceOverlay="@style/roundedCornersTitleCover"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
@@ -132,7 +129,6 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toTopOf="@id/title_trailer"
                             tools:visibility="gone" />
-
 
                         <ImageView
                             android:id="@+id/play_button"
@@ -219,7 +215,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/trailer"
-                            android:layout_marginBottom="40dp"
+                            android:layout_marginBottom="15dp"
                             android:padding="10dp"
                             android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
                             android:drawableEnd="@drawable/icon_trailer"
@@ -240,7 +236,6 @@
                 android:id="@+id/single_title_details_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/fragment_padding"
                 android:background="@color/primaryColor"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:scrollbarThumbHorizontal="@null"
@@ -248,112 +243,36 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/title_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:textColor="@color/general_text_color"
-                        android:textSize="25sp"
-                        android:textAlignment="center"
-                        android:text="@string/default_data"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_caps_75_bold"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="ფილმის სახელი"/>
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:layout_marginBottom="100dp">
 
                     <include
                         android:id="@+id/info_details"
                         layout="@layout/phone_single_title_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:padding="10dp"
-                        app:layout_constraintTop_toBottomOf="@id/title_name"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
 
-                    <TextView
-                        android:id="@+id/title_description_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:layout_gravity="center"
-                        android:textSize="15sp"
-                        android:text="@string/description"
-                        android:textColor="@color/secondary_text_color"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/info_details"/>
-
-                    <TextView
+                    <include
                         android:id="@+id/title_description"
-                        android:layout_width="0dp"
+                        layout="@layout/phone_single_title_description"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        tools:text="აღწერა ვერ მოიძებნა"
-                        android:textColor="@color/general_text_color"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
-                        app:layout_constraintStart_toEndOf="@id/title_description_header"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/title_description_header"/>
-
-                    <TextView
-                        android:id="@+id/title_director_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/director"
-                        android:textColor="@color/secondary_text_color"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
-                        android:textSize="15sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/title_description"/>
-
-                    <TextView
-                        android:id="@+id/title_director"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        tools:text="N/A"
-                        android:textColor="@color/general_text_color"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
-                        app:layout_constraintTop_toTopOf="@id/title_director_header"
-                        app:layout_constraintStart_toEndOf="@id/title_director_header"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-
-                    <TextView
-                        android:id="@+id/title_genre_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/genre"
-                        android:textColor="@color/secondary_text_color"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_65_medium"
-                        android:textSize="15sp"
-                        app:layout_constraintTop_toBottomOf="@id/title_director"
-                        app:layout_constraintStart_toStartOf="parent"/>
-
-                    <TextView
-                        android:id="@+id/title_genre"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        tools:text="კომედია, ტრაგედია, ეროტიკა"
-                        android:textColor="@color/general_text_color"
-                        android:fontFamily="@font/helvetica_neue_lt_geo_55_roman"
-                        app:layout_constraintTop_toTopOf="@id/title_genre_header"
-                        app:layout_constraintStart_toEndOf="@id/title_genre_header"
-                        app:layout_constraintEnd_toEndOf="parent" />
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintTop_toBottomOf="@id/info_details"/>
 
                     <include
                         android:id="@+id/single_title_cast_similar"
                         layout="@layout/phone_single_title_cast_similar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        app:layout_constraintTop_toBottomOf="@id/title_genre"/>
+                        android:layout_marginTop="15dp"
+                        app:layout_constraintTop_toBottomOf="@id/title_description"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
