@@ -26,8 +26,7 @@
         app:layout_constraintTop_toBottomOf="@id/logo"
         app:layout_constraintWidth_default="percent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.6">
+        app:layout_constraintWidth_percent="0.4">
 
             <EditText
                 android:id="@+id/username_input"
@@ -80,5 +79,33 @@
             android:indeterminateTint="@color/accent_color" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="250dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/secondary_color"
+        app:layout_constraintTop_toTopOf="@id/qr_code"
+        app:layout_constraintStart_toEndOf="@id/input_container"
+        app:layout_constraintEnd_toStartOf="@id/qr_code"/>
+
+    <ImageView
+        android:id="@+id/qr_code"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/imovies_qr"
+        app:layout_constraintTop_toTopOf="@id/input_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/input_container"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/register_qr_text"
+        app:layout_constraintTop_toBottomOf="@id/qr_code"
+        app:layout_constraintStart_toStartOf="@id/qr_code"
+        app:layout_constraintEnd_toEndOf="@id/qr_code"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

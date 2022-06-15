@@ -109,4 +109,5 @@
     <string name="episodes">ეპიზოდები</string>
     <string name="continue_play">გააგრძელე</string>
     <string name="save">შენახვა</string>
+    <string name="register_qr_text">რეგისტრაციის გასავლელად დაასკანერეთ</string>
 </resources>

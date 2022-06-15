@@ -9,6 +9,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.lukakordzaia.core.network.LoadingState
 import com.lukakordzaia.core.network.models.imovies.request.user.PostLoginBody
 import com.lukakordzaia.core.utils.hideKeyboard
+import com.lukakordzaia.core.utils.setVisibleOrGone
 import com.lukakordzaia.streamflowphone.R
 import com.lukakordzaia.streamflowphone.databinding.FragmentPhoneLoginBinding
 import com.lukakordzaia.streamflowphone.ui.baseclasses.BaseFragmentPhoneVM
@@ -49,12 +50,10 @@ class LoginFragment: BaseFragmentPhoneVM<FragmentPhoneLoginBinding, ProfileViewM
             clearFocus(binding.usernameInput)
             clearFocus(binding.passwordInput)
 
-            if (!binding.usernameInput.text.isNullOrEmpty() && !binding.passwordInput.text.isNullOrEmpty()) {
-                viewModel.userLogin(PostLoginBody(
-                    binding.passwordInput.text.toString(),
-                    binding.usernameInput.text.toString()
-                ))
-            }
+            viewModel.userLogin(PostLoginBody(
+                binding.passwordInput.text.toString(),
+                binding.usernameInput.text.toString()
+            ))
         }
 
         onEditorActionListener(binding.usernameInput)
@@ -62,12 +61,16 @@ class LoginFragment: BaseFragmentPhoneVM<FragmentPhoneLoginBinding, ProfileViewM
     }
 
     private fun fragmentObservers() {
-        viewModel.generalLoader.observe(viewLifecycleOwner, {
+        viewModel.loginLoader.observe(viewLifecycleOwner) {
+            binding.loginLoader.setVisibleOrGone(it == LoadingState.LOADING)
+        }
+
+        viewModel.generalLoader.observe(viewLifecycleOwner) {
             if (it == LoadingState.LOADED) {
                 viewModel.newToastMessage(getString(R.string.authorization_is_successful))
                 requireActivity().onBackPressed()
             }
-        })
+        }
     }
 
     private fun clearFocus(view: TextInputEditText) {
