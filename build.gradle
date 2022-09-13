@@ -4,8 +4,8 @@ buildscript {
         sdk_version = 31
         min_sdk_version = 23
 
-        version_code = 67
-        version_name = "2.8.1"
+        version_code = 68
+        version_name = "2.8.2"
 
         gradle_version = '7.2.1'
         kotlin_version = "1.6.21"
