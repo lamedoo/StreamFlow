@@ -28,7 +28,7 @@ interface ImoviesNetwork {
     suspend fun getUserData() : Response<GetUserDataResponse>
 
     @GET(EndPoints.MOVIE_OF_THE_DAY)
-    suspend fun getMovieDay() : Response <GetTitlesResponse>
+    suspend fun getMovieDay() : Response<GetTitlesResponse>
 
     @GET(EndPoints.NEW_MOVIES)
     suspend fun getNewMovies(@Query(PAGE) page: Int) : Response<GetTitlesResponse>
