@@ -47,7 +47,7 @@ class WatchlistViewModel(
                 is ResultDomain.Success -> {
                     val data = result.data
 
-                    _hasMorePage.value = data[0].hasMorePage
+                    if (data.isNotEmpty())_hasMorePage.value = data[0].hasMorePage
 
                     noFavorites.value = data.isNullOrEmpty()
 
